@@ -26,6 +26,9 @@ balanced = [
 mcp = [
     "mcp>=2.3,<3",
 ]
+pdf-fast = [
+    "pypdfium2==5.14.0",
+]
 
 [dependency-groups]
 dev = [

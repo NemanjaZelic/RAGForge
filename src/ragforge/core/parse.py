@@ -12,8 +12,17 @@ from ragforge.core.identity import document_id
 from ragforge.core.pdf import PdfError, PdfOptions, PdfPageReport, extract_pdf
 from ragforge.core.scan import FORMATS, ScanLimits, ScannedDocument
 from ragforge.core.source import SourceError, checked_stat, is_link, read_file
+from ragforge.types import ContractModel
 
 PARSER_VERSION = "text-v1"
+HTML_PARSER_VERSION = "html-main-v2"
+
+
+class TextOptions(ContractModel):
+    """Explicit legacy policies; UTF-8 and control rejection remain the default."""
+
+    fallback_encoding: Literal["none", "latin-1"] = "none"
+    control_characters: Literal["reject", "escape"] = "reject"
 
 
 class ParseError(ValueError):
@@ -47,6 +56,8 @@ def load_document(
     limits: ScanLimits | None = None,
     *,
     pdf_options: PdfOptions | None = None,
+    pdf_backend: Literal["pypdf", "pdfium"] = "pypdf",
+    text_options: TextOptions | None = None,
 ) -> ParsedDocument:
     limits = limits or ScanLimits()
     # Validate identity/path again even if a caller bypassed model construction.
@@ -71,7 +82,14 @@ def load_document(
             raise ParseError("source changed since scan")
     except (OSError, SourceError) as error:
         raise ParseError(f"{record.source_path!r}: {error}") from error
-    return parse_document(collection_id, record, raw, pdf_options=pdf_options)
+    return parse_document(
+        collection_id,
+        record,
+        raw,
+        pdf_options=pdf_options,
+        pdf_backend=pdf_backend,
+        text_options=text_options,
+    )
 
 
 def _section(headings: dict[int, str]) -> str | None:
@@ -261,12 +279,46 @@ class _HTMLText(HTMLParser):
             self.parts.append(data)
 
 
+class _MainHTMLText(_HTMLText):
+    """Prefer an authored main landmark; generic HTML retains the existing fallback."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.found = False
+        self.scope: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if not self.found:
+            if tag != "main" and not (tag == "div" and dict(attrs).get("role") == "main"):
+                return
+            self.found = True
+        elif not self.scope:
+            return
+        if tag not in self.VOID:
+            self.scope.append(tag)
+        super().handle_starttag(tag, attrs)
+
+    def handle_endtag(self, tag: str) -> None:
+        if not self.scope:
+            return
+        super().handle_endtag(tag)
+        if tag in self.scope:
+            last = len(self.scope) - 1 - self.scope[::-1].index(tag)
+            del self.scope[last:]
+
+    def handle_data(self, data: str) -> None:
+        if self.scope:
+            super().handle_data(data)
+
+
 def parse_document(
     collection_id: str,
     record: ScannedDocument,
     raw: bytes,
     *,
     pdf_options: PdfOptions | None = None,
+    pdf_backend: Literal["pypdf", "pdfium"] = "pypdf",
+    text_options: TextOptions | None = None,
 ) -> ParsedDocument:
     if record.document_id != document_id(collection_id, record.source_path):
         raise ParseError("document identity does not match collection and path")
@@ -276,7 +328,12 @@ def parse_document(
         raise ParseError("source format does not match extension")
     if record.format == "pdf":
         try:
-            extracted = extract_pdf(raw, pdf_options)
+            if pdf_backend == "pdfium":
+                from ragforge.core.pdf_fast import extract_pdfium
+
+                extracted = extract_pdfium(raw, pdf_options)
+            else:
+                extracted = extract_pdf(raw, pdf_options)
         except PdfError as error:
             raise ParseError(str(error)) from error
         pdf_blocks = tuple(TextBlock(text, page=number) for number, text in extracted.pages)
@@ -289,21 +346,39 @@ def parse_document(
             parser_version=extracted.parser_version,
             page_reports=extracted.reports,
         )
+    text_options = text_options or TextOptions()
+    warnings: list[str] = []
+    suffix = ""
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as error:
-        raise ParseError(
-            "source must be UTF-8 (optional BOM); invalid bytes are not replaced"
-        ) from error
+        if text_options.fallback_encoding != "latin-1":
+            raise ParseError(
+                "source must be UTF-8 (optional BOM); invalid bytes are not replaced"
+            ) from error
+        text = raw.decode("latin-1")
+        warnings.append("decoded using explicitly selected latin-1 fallback")
+        suffix += ";encoding-latin-1"
     text = text.replace("\r\n", "\n").replace("\r", "\n")
     if any(ord(char) < 32 and char not in "\n\t\f" for char in text):
-        raise ParseError("source contains unsupported control characters")
-    warnings: list[str] = []
+        if text_options.control_characters != "escape":
+            raise ParseError("source contains unsupported control characters")
+        text = "".join(
+            f"\\x{ord(char):02x}" if ord(char) < 32 and char not in "\n\t\f" else char
+            for char in text
+        )
+        warnings.append("control characters escaped under explicit legacy text policy")
+        suffix += ";controls-escaped-v1"
     if record.format == "markdown":
-        blocks, warnings = _markdown(text)
+        blocks, markdown_warnings = _markdown(text)
+        warnings.extend(markdown_warnings)
     elif record.format == "html":
-        parser = _HTMLText()
-        parser.feed(text)
+        scoped = _MainHTMLText()
+        scoped.feed(text)
+        scoped.close()
+        parser: _HTMLText = scoped if scoped.found else _HTMLText()
+        if not scoped.found:
+            parser.feed(text)
         parser.close()
         parser.flush()
         blocks = parser.blocks
@@ -317,4 +392,11 @@ def parse_document(
         )
     if not blocks:
         warnings.append("no extractable text")
-    return ParsedDocument(collection_id, record, tuple(blocks), tuple(warnings))
+    return ParsedDocument(
+        collection_id,
+        record,
+        tuple(blocks),
+        tuple(warnings),
+        parser_version=(HTML_PARSER_VERSION if record.format == "html" else PARSER_VERSION)
+        + suffix,
+    )

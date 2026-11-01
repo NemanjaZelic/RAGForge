@@ -140,3 +140,18 @@ ne tvrdi se završen v0.1 release dok reprezentativni quality uslovi ne prođu.
 [Detalji i povezivanje](MCP.md). RF-008B nezavisna evaluacija odabranog LLM agenta
 na reprezentativnim korpusima ostaje otvorena. Test setovi drugog agenta nisu
 menjani. Naredni mrežni korak je RF-010 sa auth i izolacijom pre produkcione preporuke.
+
+
+## Full-source benchmark integration and ingestion checkpoints
+
+- Integrated the prepared 18,434-document snapshots and independent fixture tests;
+  native questions/contexts stay local, with no label promotion or source changes.
+- Added resumable per-document journals, bounded parser processes, optional PDFium,
+  explicit legacy-text policies, cache-bound bundle builds, streamed chunk/ID work,
+  and finite larger index/file capacities. See [SCALING.md](SCALING.md).
+- Full local checks: 203 passed, 3 Windows platform skips with external-data and
+  real-model checks enabled. New worker OS memory/deadline and resume checks pass.
+- Actual default scan limits reject the large 3GPP/RFC inputs. A configured audit
+  over all three complete collections is running under the 65 GB storage policy;
+  completed audit counts and retrieval measurements will be reported separately.
+- These engineering checks do not approve draft labels or complete the release gate.

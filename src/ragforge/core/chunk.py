@@ -3,6 +3,7 @@
 import hashlib
 import json
 import re
+from collections.abc import Iterator
 from typing import Annotated, Literal, Self
 
 from pydantic import Field, model_validator
@@ -61,13 +62,13 @@ def _location(path: str, block: TextBlock, text: str, line_offset: int) -> Sourc
     )
 
 
-def chunk_document(
+def iter_chunks(
     document: ParsedDocument,
     config: ChunkConfig | None = None,
     *,
     max_chunks: int = 10000,
     max_output_chars: int = 10000000,
-) -> list[Chunk]:
+) -> Iterator[Chunk]:
     config = config or ChunkConfig()
     if type(max_chunks) is not int or max_chunks < 1:
         raise ValueError("max_chunks must be a positive integer")
@@ -75,7 +76,7 @@ def chunk_document(
         raise ValueError("max_output_chars must be a positive integer")
     output_chars = 0
     config_hash = pipeline_hash(document, config)
-    chunks: list[Chunk] = []
+    ordinal = 0
     for block_index, block in enumerate(document.blocks):
         start = 0
         line_offset = 0
@@ -93,12 +94,11 @@ def chunk_document(
                         end = lower + candidates[-1].end()
             text = block.text[start:end]
             if text.strip():
-                if len(chunks) >= max_chunks:
+                if ordinal >= max_chunks:
                     raise ValueError("max_chunks exceeded")
                 output_chars += len(text)
                 if output_chars > max_output_chars:
                     raise ValueError("max_output_chars exceeded")
-                ordinal = len(chunks)
                 payload = [
                     "ragforge-chunk-v1",
                     document.record.document_id,
@@ -109,23 +109,34 @@ def chunk_document(
                 chunk_id = hashlib.sha256(
                     json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
                 ).hexdigest()
-                chunks.append(
-                    Chunk(
-                        collection_id=document.collection_id,
-                        document_id=document.record.document_id,
-                        chunk_id=chunk_id,
-                        ordinal=ordinal,
-                        text=text,
-                        source=_location(document.record.source_path, block, text, line_offset),
-                        kind=block.kind,
-                        block_index=block_index,
-                        char_start=start,
-                        char_end=end,
-                    )
+                yield Chunk(
+                    collection_id=document.collection_id,
+                    document_id=document.record.document_id,
+                    chunk_id=chunk_id,
+                    ordinal=ordinal,
+                    text=text,
+                    source=_location(document.record.source_path, block, text, line_offset),
+                    kind=block.kind,
+                    block_index=block_index,
+                    char_start=start,
+                    char_end=end,
                 )
+                ordinal += 1
             if end == len(block.text):
                 break
             next_start = max(start + 1, end - config.overlap_chars)
             line_offset += block.text.count("\n", start, next_start)
             start = next_start
-    return chunks
+
+
+def chunk_document(
+    document: ParsedDocument,
+    config: ChunkConfig | None = None,
+    *,
+    max_chunks: int = 10000,
+    max_output_chars: int = 10000000,
+) -> list[Chunk]:
+    """Compatibility list API; index builds consume iter_chunks without materialization."""
+    return list(
+        iter_chunks(document, config, max_chunks=max_chunks, max_output_chars=max_output_chars)
+    )

@@ -24,6 +24,7 @@ from ragforge.artifacts.manifest import (
 from ragforge.artifacts.verification import build_identity, bundle_files, verify_bundle
 from ragforge.core.chunk import CHUNKER_VERSION, ChunkConfig
 from ragforge.core.embedding import ONNXEmbedder, file_hash, model_spec
+from ragforge.core.limits import MAX_DENSE_ROWS
 from ragforge.core.parse import load_document
 from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanLimits, scan_corpus
@@ -70,7 +71,24 @@ def build_bundle(
     allow_incomplete: bool = False,
     threads: int = 4,
     pdf_options: PdfOptions | None = None,
+    ingest_job: Path | None = None,
+    max_index_chunks: int = 100000,
+    max_index_text_chars: int = 100000000,
 ) -> BundleManifest:
+    if ingest_job is not None:
+        from ragforge.jobs.ingest import read_configuration
+
+        cached = read_configuration(ingest_job)
+        if cached.collection_id != collection_id:
+            raise ValueError("ingestion cache belongs to another collection")
+        if pdf_options is not None and pdf_options != cached.pdf_options:
+            raise ValueError("PDF configuration must match the ingestion job")
+        if scan_limits is not None and scan_limits != ScanLimits(**cached.scan_limits):
+            raise ValueError("scan configuration must match the ingestion job")
+        pdf_options = cached.pdf_options
+        scan_limits = ScanLimits(**cached.scan_limits)
+    if not 1 <= max_index_chunks <= MAX_DENSE_ROWS or max_index_text_chars < 1:
+        raise ValueError("invalid index chunk/text capacity")
     config = chunk_config or ChunkConfig()
     limits = scan_limits or ScanLimits()
     if profile not in ("minimal", "balanced"):
@@ -100,12 +118,24 @@ def build_bundle(
         collection_path = stage / "collections" / collection_id
         collection_path.mkdir(parents=True)
         database = collection_path / "index.sqlite"
-        documents = (
-            load_document(source, collection_id, record, limits, pdf_options=pdf_options)
-            for record in report.documents
-        )
+        if ingest_job is not None:
+            from ragforge.jobs.ingest import cached_documents
+
+            documents = cached_documents(ingest_job, report)
+        else:
+            documents = (
+                load_document(source, collection_id, record, limits, pdf_options=pdf_options)
+                for record in report.documents
+            )
         summary = create_index(
-            database, collection_id, title, documents, config, allow_incomplete=allow_incomplete
+            database,
+            collection_id,
+            title,
+            documents,
+            config,
+            allow_incomplete=allow_incomplete,
+            max_chunks=max_index_chunks,
+            max_output_chars=max_index_text_chars,
         )
         if not summary.chunk_count:
             raise ValueError("corpus contains no searchable text chunks")

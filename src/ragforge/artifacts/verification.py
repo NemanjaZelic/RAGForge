@@ -10,6 +10,11 @@ from pydantic import TypeAdapter
 
 from ragforge.artifacts.manifest import BundleManifest
 from ragforge.core.embedding import file_hash, model_spec
+from ragforge.core.limits import (
+    MAX_BUNDLE_FILE_BYTES,
+    MAX_BUNDLE_TOTAL_BYTES,
+    MAX_DENSE_ROWS,
+)
 from ragforge.core.source import is_link
 from ragforge.core.sqlite import SQLiteEngine
 from ragforge.types import RelativePath
@@ -86,7 +91,7 @@ def verify_bundle(root: Path) -> BundleManifest:
         path = files[record.path]
         size = path.stat().st_size
         total += size
-        if size > 2 * 1024**3 or total > 4 * 1024**3:
+        if size > MAX_BUNDLE_FILE_BYTES or total > MAX_BUNDLE_TOTAL_BYTES:
             raise ValueError("bundle exceeds supported verification byte limits")
         if size != record.size_bytes or file_hash(path) != record.sha256:
             raise ValueError(f"bundle checksum mismatch: {record.path}")
@@ -138,7 +143,7 @@ def verify_bundle(root: Path) -> BundleManifest:
                 "fortran_order": False,
                 "shape": (rows, dense.dimensions),
             }
-            if header != expected_header or not 1 <= rows <= 100000:
+            if header != expected_header or not 1 <= rows <= MAX_DENSE_ROWS:
                 raise ValueError("dense header does not match SQLite/model")
             if (root / dense.path).stat().st_size != 10 + length + rows * dense.dimensions * 4:
                 raise ValueError("dense byte size does not match header")

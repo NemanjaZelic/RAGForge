@@ -1,0 +1,29 @@
+{
+  "kind": "actual_product_default_scan",
+  "results": [
+    {
+      "corpus_id": "3gpp-etsi",
+      "exit_code": 2,
+      "seconds": 24.308,
+      "command": "ragforge scan INPUT --collection 3gpp-etsi",
+      "error": "{\"error\": \"'rel-15/ts/13714502/ts_13714502v152000p.pdf': max_total_bytes exceeded\"}"
+    },
+    {
+      "corpus_id": "ietf-rfcs",
+      "exit_code": 2,
+      "seconds": 147.068,
+      "command": "ragforge scan INPUT --collection ietf-rfcs",
+      "error": "{\"error\": \"'rfc9877.txt': max_total_bytes exceeded\"}"
+    },
+    {
+      "corpus_id": "kernel-6.18",
+      "exit_code": 2,
+      "seconds": 0.696,
+      "command": "ragforge scan INPUT --collection kernel-6.18",
+      "error": "{\"error\": \"1 validation error for constrained-str\\n  String should match pattern '^[a-z0-9][a-z0-9_-]*$' [type=string_pattern_mismatch, input_value='kernel-6.18', input_type=str]\\n    For further information visit https://errors.pydantic.dev/2.14/v/string_pattern_mismatch\"}",
+      "configuration_error": true,
+      "note": "The corpus ID contains a dot; its valid collection ID is kernel-6-18. Full ingestion uses the snapshot collection ID."
+    }
+  ],
+  "scope": "Actual CLI argument/default-limit probe; not a successful full-corpus scan"
+}

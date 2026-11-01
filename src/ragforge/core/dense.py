@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ragforge.core.embedding import ONNXEmbedder
+from ragforge.core.limits import MAX_DENSE_ROWS
 from ragforge.core.sqlite import SQLiteEngine
 
 if TYPE_CHECKING:
@@ -24,15 +25,15 @@ def write_dense(database: Path, destination: Path, embedder: ONNXEmbedder) -> in
     engine = SQLiteEngine(database)
     with engine._connect() as connection:
         count = int(connection.execute("SELECT count(*) FROM chunks").fetchone()[0])
-        if not 1 <= count <= 100000:
-            raise ValueError("dense index requires 1-100000 chunks")
+        if not 1 <= count <= MAX_DENSE_ROWS:
+            raise ValueError("dense index row count exceeds supported capacity")
         matrix = np.lib.format.open_memmap(
             destination, mode="w+", dtype="<f4", shape=(count, embedder.spec.dimensions)
         )
         try:
             cursor = connection.execute("SELECT text FROM chunks ORDER BY chunk_id")
             start = 0
-            while rows := cursor.fetchmany(8):
+            while rows := cursor.fetchmany(32):
                 vectors = embedder.encode([row["text"] for row in rows])
                 matrix[start : start + len(rows)] = vectors
                 start += len(rows)
@@ -46,19 +47,17 @@ class DenseStore:
     def __init__(self, path: Path, database: SQLiteEngine, dimensions: int) -> None:
         import numpy as np
 
+        self.database = database
         with database._connect() as connection:
-            rows = connection.execute(
-                "SELECT chunk_id,document_id FROM chunks ORDER BY chunk_id"
-            ).fetchall()
-        self.chunk_ids = [str(row["chunk_id"]) for row in rows]
-        self.document_ids = [str(row["document_id"]) for row in rows]
+            self.count = int(connection.execute("SELECT count(*) FROM chunks").fetchone()[0])
         matrix = np.load(path, mmap_mode="r", allow_pickle=False, max_header_size=4096)
-        if matrix.dtype != np.dtype("<f4") or matrix.shape != (len(rows), dimensions):
+        if matrix.dtype != np.dtype("<f4") or matrix.shape != (self.count, dimensions):
             raise ValueError("dense shape/dtype does not match SQLite/model")
-        if not 1 <= len(rows) <= 100000:
+        if not 1 <= self.count <= MAX_DENSE_ROWS:
             raise ValueError("dense row count is outside supported bounds")
-        for start in range(0, len(rows), 4096):
-            block = matrix[start : start + 4096]
+        self.block_rows = min(4096, max(1, (16 * 1024**2) // (dimensions * 4)))
+        for start in range(0, self.count, self.block_rows):
+            block = matrix[start : start + self.block_rows]
             if not np.isfinite(block).all() or not np.allclose(
                 np.linalg.norm(block, axis=1), 1, atol=0.001
             ):
@@ -72,18 +71,23 @@ class DenseStore:
 
         allowed = set(document_ids) if document_ids is not None else None
         best: list[tuple[str, float]] = []
-        for start in range(0, len(self.chunk_ids), 4096):
-            stop = min(start + 4096, len(self.chunk_ids))
-            scores = self.matrix[start:stop] @ vector
-            if not np.isfinite(scores).all():
-                raise ValueError("nonfinite dense similarity")
-            candidates = [
-                (self.chunk_ids[index], float(scores[index - start]))
-                for index in range(start, stop)
-                if allowed is None or self.document_ids[index] in allowed
-            ]
-            candidates.sort(key=lambda item: (-item[1], item[0]))
-            best = sorted(best + candidates[:limit], key=lambda item: (-item[1], item[0]))[:limit]
+        with self.database._connect() as connection:
+            cursor = connection.execute("SELECT chunk_id,document_id FROM chunks ORDER BY chunk_id")
+            for start in range(0, self.count, self.block_rows):
+                rows = cursor.fetchmany(self.block_rows)
+                stop = start + len(rows)
+                scores = self.matrix[start:stop] @ vector
+                if not np.isfinite(scores).all():
+                    raise ValueError("nonfinite dense similarity")
+                candidates = [
+                    (str(row["chunk_id"]), float(scores[index]))
+                    for index, row in enumerate(rows)
+                    if allowed is None or row["document_id"] in allowed
+                ]
+                candidates.sort(key=lambda item: (-item[1], item[0]))
+                best = sorted(best + candidates[:limit], key=lambda item: (-item[1], item[0]))[
+                    :limit
+                ]
         return best
 
 

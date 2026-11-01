@@ -335,6 +335,11 @@ def build(
     max_total_bytes: int = typer.Option(512 * 1024 * 1024, min=1),
     max_entries: int = typer.Option(100000, min=1),
     threads: int = typer.Option(4, min=1, max=32),
+    ingest_job: Annotated[
+        Path | None, typer.Option(help="Verified source-bound parsing journal.")
+    ] = None,
+    max_index_chunks: int = typer.Option(100000, min=1, max=5000000),
+    max_index_text_chars: int = typer.Option(100000000, min=1),
 ) -> None:
     """Build and verify a portable data bundle; never downloads or deploys."""
     try:
@@ -352,8 +357,15 @@ def build(
                 overlap_chars=overlap_chars,
             ),
             allow_incomplete=allow_incomplete,
-            pdf_options=PdfOptions(max_pages=pdf_max_pages, allow_partial=allow_partial_pdf),
-            scan_limits=ScanLimits(max_file_bytes, max_total_bytes, max_entries),
+            pdf_options=PdfOptions(max_pages=pdf_max_pages, allow_partial=allow_partial_pdf)
+            if ingest_job is None
+            else None,
+            scan_limits=ScanLimits(max_file_bytes, max_total_bytes, max_entries)
+            if ingest_job is None
+            else None,
+            ingest_job=ingest_job,
+            max_index_chunks=max_index_chunks,
+            max_index_text_chars=max_index_text_chars,
             threads=threads,
         )
     except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
@@ -447,6 +459,100 @@ def integrate(
 
     try:
         result = create_integration(artifact, output, description=description)
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result, ensure_ascii=True))
+
+
+@app.command()
+def ingest(
+    root: Annotated[Path, typer.Argument(help="Complete source corpus; no sampling.")],
+    job: Annotated[Path, typer.Option("--job", help="New or explicitly resumed parsing journal.")],
+    collection: str = typer.Option("default", "--collection"),
+    resume: bool = typer.Option(False),
+    retry_failed: bool = typer.Option(False),
+    continue_on_error: bool = typer.Option(False),
+    text_fallback: str = typer.Option("none", help="none or explicitly selected latin-1 fallback."),
+    escape_controls: bool = typer.Option(False, help="Represent legacy control bytes visibly."),
+    pdf_backend: str = typer.Option("pypdf", help="pypdf or optional pdfium; always isolated."),
+    pdf_max_pages: int = typer.Option(500, min=1, max=10000),
+    pdf_max_text_chars: int = typer.Option(2000000, min=1),
+    pdf_max_document_stream_bytes: int = typer.Option(64 * 1024**2, min=1),
+    allow_partial_pdf: bool = typer.Option(False),
+    max_file_bytes: int = typer.Option(32 * 1024**2, min=1),
+    max_total_bytes: int = typer.Option(512 * 1024**2, min=1),
+    max_entries: int = typer.Option(100000, min=1),
+    worker_memory_mib: int = typer.Option(512, min=128, max=4096),
+    document_timeout_seconds: int = typer.Option(300, min=1, max=86400),
+    storage_root: Annotated[
+        Path | None, typer.Option(help="Aggregate benchmark storage root.")
+    ] = None,
+    storage_budget_bytes: int = typer.Option(65_000_000_000, min=1),
+    reserve_free_bytes: int = typer.Option(15_000_000_000, min=0),
+) -> None:
+    """Parse every source with OS-bounded workers; checkpoint each outcome for resume."""
+    from ragforge.core.parse import TextOptions
+    from ragforge.jobs.budget import StorageBudget
+    from ragforge.jobs.ingest import ingest_corpus
+
+    def progress(event: dict[str, Any]) -> None:
+        if event["attempted"] % 25 == 0 or event["status"] == "error":
+            typer.echo(json.dumps(event, ensure_ascii=True), err=True)
+
+    try:
+        if text_fallback not in {"none", "latin-1"}:
+            raise ValueError("unknown text fallback encoding")
+        if pdf_backend not in {"pypdf", "pdfium"}:
+            raise ValueError("unknown PDF backend")
+        storage = (
+            StorageBudget(
+                storage_root,
+                limit_bytes=storage_budget_bytes,
+                reserve_free_bytes=reserve_free_bytes,
+            )
+            if storage_root is not None
+            else None
+        )
+        result = ingest_corpus(
+            root,
+            job,
+            collection_id=collection,
+            limits=ScanLimits(max_file_bytes, max_total_bytes, max_entries),
+            pdf_options=PdfOptions(
+                max_pages=pdf_max_pages,
+                max_text_chars=pdf_max_text_chars,
+                max_document_stream_bytes=pdf_max_document_stream_bytes,
+                allow_partial=allow_partial_pdf,
+            ),
+            pdf_backend="pdfium" if pdf_backend == "pdfium" else "pypdf",
+            text_options=TextOptions(
+                fallback_encoding="latin-1" if text_fallback == "latin-1" else "none",
+                control_characters="escape" if escape_controls else "reject",
+            ),
+            resume=resume,
+            retry_failed=retry_failed,
+            continue_on_error=continue_on_error,
+            worker_memory_mib=worker_memory_mib,
+            document_timeout_seconds=document_timeout_seconds,
+            storage=storage,
+            progress=progress,
+        )
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result, ensure_ascii=True))
+    if result["status_counts"].get("error", 0):
+        raise typer.Exit(code=2)
+
+
+@app.command("job-status")
+def inspect_job(job: Path) -> None:
+    """Inspect completed, partial, failed and pending document counts without parsing."""
+    from ragforge.jobs.ingest import job_status
+
+    try:
+        result = job_status(job)
     except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error

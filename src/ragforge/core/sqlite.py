@@ -14,7 +14,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from ragforge.core.chunk import ChunkConfig, chunk_document
+from ragforge.core.chunk import ChunkConfig, iter_chunks
 from ragforge.core.contracts import (
     CollectionDescription,
     FetchContextRequest,
@@ -112,14 +112,14 @@ def create_index(
                     ):
                         raise RetrievalError("index chunk/text budget exceeded")
                     parts = (
-                        chunk_document(
+                        iter_chunks(
                             document,
                             config,
                             max_chunks=max_chunks - chunk_count,
                             max_output_chars=max_output_chars - text_chars,
                         )
                         if document.blocks
-                        else []
+                        else iter(())
                     )
                     connection.execute(
                         "INSERT INTO documents VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -152,7 +152,7 @@ def create_index(
                             (cursor.lastrowid, part.text),
                         )
                         text_chars += len(part.text)
-                    chunk_count += len(parts)
+                        chunk_count += 1
                     document_count += 1
                     incomplete_count += int(incomplete)
                 connection.execute("INSERT INTO chunk_fts(chunk_fts) VALUES('optimize')")
