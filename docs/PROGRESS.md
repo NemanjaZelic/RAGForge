@@ -68,7 +68,17 @@ limiti i eksplicitna delimična obrada; 113 testova prolazi, 3 skip-a.
 Tri originalna PDF fixture-a vizuelno su proverena; realni RFC 9110 pilot
 ima 194/194 extracted stranice. [Granice i pilot](PDF.md).
 
-Sledeći zadatak je RF-003: stvarni SQLite FTS5/BM25 engine. Realni retrieval
-benchmark sa PDF-om ostaje RF-006 release uslov.
-Retrieval/build/use još nisu implementirani. Pravi dense/hybrid
+RF-003 je završen: SQLite FTS5/BM25 engine i stvarni index/search/context.
+132 passed, 3 skipped; sve lokalne provere prolaze. Offline MD+PDF CLI E2E
+proverava kopirani indeks, ćirilicu i PDF page citate.
+Mini baseline: Recall@5=1.0, MRR@10=1.0 na 16 document-level razvojnih
+pozitivnih upita; 2/4 negativna daju rezultate. Realni PDF smoke: 3/3
+očekivane stranice na prvom mestu. [Granice](RETRIEVAL.md).
+
+PDF commit abae50f ima uspešan Windows/Linux Python 3.11/3.13 CI:
+https://github.com/NemanjaZelic/RAGForge/actions/runs/41278248319
+
+Slede RF-009 izbor i pilot CPU query modela/dense backend-a, pa RF-004
+bundle integritet i RF-005 build/use. Širi RF-006 benchmark ostaje uslov.
+Bundle build/use još nisu implementirani. Pravi dense/hybrid
 ostaju obavezan deo v0.1 prema RELEASE-SCOPE.md.

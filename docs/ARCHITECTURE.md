@@ -15,10 +15,10 @@ Jedna distribucija `ragforge`, Python >=3.11, `src` layout:
 - `examples/mini-docs/`, `examples/eval.jsonl`: originalni mali razvojni korpus.
 - `tests/`: ugovori, lokalna CLI provera i fixtures.
 
-Typer i Pydantic su trenutno instalirane početne runtime zavisnosti.
-Pre v0.1 treba dodati podržan PDF parser i CPU embedding/dense sloj za glavni
-balanced tok. Minimal instalacija može ostati bez ML dela; HTTP/MCP su kasnije.
-`uv.lock` trenutno zaključava samo postojeću Fazu 0.
+Runtime zavisnosti su Typer, Pydantic i zaključani pypdf; lokalni SQLite
+FTS5 koristi standardnu biblioteku. CPU embedding/dense sloj još treba dodati
+za balanced tok; HTTP/MCP su kasnije. ReportLab/Pillow su samo dev fixture alati.
+Lockfile obuhvata implementiranu F1 osnovu.
 
 ## Minimalni bundle v1 — nacrt
 
@@ -76,7 +76,7 @@ Validacija teksta putanje sama ne potvrđuje da fizički fajl ostaje unutar root
 ## Ugovor pretrage v1 — nacrt
 
 `RetrievalEngine` je Python Protocol za `retrieve`, `fetch_context` i
-`list_collections`; konkretni engine još nije implementiran.
+`list_collections`; RF-003 SQLiteEngine ga sada implementira za BM25.
 Request modeli ograničavaju query na 8192 znaka, top_k na 1–50 i tekst odgovora
 na najviše 100000 znakova ukupno. Ograničenja su znakovi, ne tokeni.
 Prazan/whitespace query se odbija. Verzija odgovora je `contract_version="1"`.
@@ -182,3 +182,10 @@ Implementirani zajednički source reader, MD/TXT/HTML parser i deterministički
 chunker. Tačna encoding, source-map i budget pravila: [PARSING.md](PARSING.md).
 TextBlock ima opcioni page/line provenance za obavezni RF-007 PDF adapter.
 Chunk CLI je pregled fragmentacije, bez indeksa ili retrieval simulacije.
+
+## RF-003 — implementirani lokalni engine
+
+Jedna metadata/FTS5 baza, read-only SQLiteEngine i stvarni development
+index/search/context CLI. Detalji scoring-a, scope-a, output limita i merne
+granice su u [RETRIEVAL.md](RETRIEVAL.md). RF-009 proširuje isti ugovor
+dense/hybrid metodama; RF-004 tek pakuje i verifikuje bundle.

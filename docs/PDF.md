@@ -58,8 +58,9 @@ i offline CLI podproces sa blokiranim socket/DNS pozivima.
 194/194 extracted stranice, 461098 izdvojenih znakova, bez warnings.
 PDF i izdvojeni tekst su samo u lokalnom ignorisanom cache-u.
 U repo-u su URL, prava/izvor, hash, verzije, konfiguracija i rezultati.
-Ovo je parser smoke/pilot; retrieval benchmark nad istim stvarnim PDF-om
-ostaje release provera u RF-006 kada engine bude dostupan.
+Ovo je parser smoke/pilot; [BM25 PDF smoke](benchmarks/bm25-rfc9110-smoke.json) dodaje 3 proverena
+page probe-a nad 600 chunk-ova. Širi retrieval benchmark i dense/hybrid
+poređenje ostaju RF-006 release uslov.
 
 Zvanične granice:
 [pypdf configuration](https://pypdf.readthedocs.io/en/6.21.4/modules/configuration.html),

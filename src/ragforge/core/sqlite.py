@@ -1,0 +1,308 @@
+"""Standalone development SQLite/FTS5 index; bundle verification comes in RF-004."""
+
+import json
+import os
+import re
+import sqlite3
+import stat
+import unicodedata
+from collections.abc import Iterable, Iterator
+from contextlib import closing, contextmanager
+from dataclasses import asdict
+from pathlib import Path
+from typing import Annotated
+
+from pydantic import Field
+
+from ragforge.core.chunk import ChunkConfig, chunk_document
+from ragforge.core.contracts import (
+    CollectionDescription,
+    FetchContextRequest,
+    RetrievalResponse,
+    RetrievedChunk,
+    RetrieveRequest,
+    SourceLocation,
+)
+from ragforge.core.identity import document_id
+from ragforge.core.parse import ParsedDocument
+from ragforge.types import ContractModel
+
+APPLICATION_ID = 0x52464731
+SCHEMA_VERSION = 1
+SCHEMA = """
+PRAGMA foreign_keys=ON;
+PRAGMA journal_mode=DELETE;
+PRAGMA synchronous=FULL;
+PRAGMA application_id=1380337457;
+PRAGMA user_version=1;
+CREATE TABLE collections(collection_id TEXT PRIMARY KEY, title TEXT NOT NULL);
+CREATE TABLE documents(
+    document_id TEXT PRIMARY KEY, collection_id TEXT NOT NULL REFERENCES collections,
+    source_path TEXT NOT NULL UNIQUE, content_sha256 TEXT NOT NULL,
+    parser_version TEXT NOT NULL, warnings_json TEXT NOT NULL, pages_json TEXT NOT NULL
+);
+CREATE TABLE chunks(
+    rowid INTEGER PRIMARY KEY, collection_id TEXT NOT NULL REFERENCES collections,
+    document_id TEXT NOT NULL REFERENCES documents, chunk_id TEXT NOT NULL UNIQUE,
+    ordinal INTEGER NOT NULL, text TEXT NOT NULL, source_json TEXT NOT NULL,
+    UNIQUE(document_id, ordinal)
+);
+CREATE VIRTUAL TABLE chunk_fts USING fts5(
+    text, content='chunks', content_rowid='rowid', tokenize='unicode61 remove_diacritics 2'
+);
+"""
+
+
+class RetrievalError(ValueError):
+    pass
+
+
+class IndexSummary(ContractModel):
+    collection_id: str
+    document_count: Annotated[int, Field(ge=0)]
+    chunk_count: Annotated[int, Field(ge=0)]
+    incomplete_document_count: Annotated[int, Field(ge=0)]
+
+
+def create_index(
+    path: Path,
+    collection_id: str,
+    title: str,
+    documents: Iterable[ParsedDocument],
+    config: ChunkConfig | None = None,
+    *,
+    allow_incomplete: bool = False,
+    max_chunks: int = 100000,
+    max_output_chars: int = 100000000,
+) -> IndexSummary:
+    """Create a new owned database. Existing files are never overwritten.
+
+    A failed new index is removed; this is not an atomic portable bundle build.
+    Sources must have passed load_document's byte/provenance verification.
+    """
+    CollectionDescription(collection_id=collection_id, title=title, document_count=0, chunk_count=0)
+    if type(max_chunks) is not int or max_chunks < 1:
+        raise RetrievalError("max_chunks must be a positive integer")
+    if type(max_output_chars) is not int or max_output_chars < 1:
+        raise RetrievalError("max_output_chars must be a positive integer")
+    config = config or ChunkConfig()
+    path = path.absolute()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    os.close(descriptor)
+    owned = path.lstat()
+    document_count = chunk_count = incomplete_count = text_chars = 0
+    try:
+        with closing(sqlite3.connect(path)) as connection:
+            connection.executescript(SCHEMA)
+            with connection:
+                connection.execute("INSERT INTO collections VALUES (?, ?)", (collection_id, title))
+                for document in documents:
+                    if document.collection_id != collection_id:
+                        raise RetrievalError("document belongs to another collection")
+                    if document.record.document_id != document_id(
+                        collection_id, document.record.source_path
+                    ):
+                        raise RetrievalError("invalid document identity")
+                    incomplete = any(r.status != "extracted" for r in document.page_reports)
+                    if incomplete and not allow_incomplete:
+                        raise RetrievalError("incomplete PDF requires explicit allow_incomplete")
+                    if document.blocks and (
+                        chunk_count >= max_chunks or text_chars >= max_output_chars
+                    ):
+                        raise RetrievalError("index chunk/text budget exceeded")
+                    parts = (
+                        chunk_document(
+                            document,
+                            config,
+                            max_chunks=max_chunks - chunk_count,
+                            max_output_chars=max_output_chars - text_chars,
+                        )
+                        if document.blocks
+                        else []
+                    )
+                    connection.execute(
+                        "INSERT INTO documents VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        (
+                            document.record.document_id,
+                            collection_id,
+                            document.record.source_path,
+                            document.record.content_sha256,
+                            document.parser_version,
+                            json.dumps(document.warnings),
+                            json.dumps([asdict(r) for r in document.page_reports]),
+                        ),
+                    )
+                    for part in parts:
+                        cursor = connection.execute(
+                            "INSERT INTO chunks(collection_id,document_id,chunk_id,"
+                            "ordinal,text,source_json) "
+                            "VALUES (?, ?, ?, ?, ?, ?)",
+                            (
+                                collection_id,
+                                part.document_id,
+                                part.chunk_id,
+                                part.ordinal,
+                                part.text,
+                                part.source.model_dump_json(),
+                            ),
+                        )
+                        connection.execute(
+                            "INSERT INTO chunk_fts(rowid,text) VALUES (?,?)",
+                            (cursor.lastrowid, part.text),
+                        )
+                        text_chars += len(part.text)
+                    chunk_count += len(parts)
+                    document_count += 1
+                    incomplete_count += int(incomplete)
+                connection.execute("INSERT INTO chunk_fts(chunk_fts) VALUES('optimize')")
+        return IndexSummary(
+            collection_id=collection_id,
+            document_count=document_count,
+            chunk_count=chunk_count,
+            incomplete_document_count=incomplete_count,
+        )
+    except BaseException:
+        # Remove only the regular file created by this call, after closing SQLite.
+        current = path.lstat()
+        if stat.S_ISREG(current.st_mode) and (current.st_dev, current.st_ino) == (
+            owned.st_dev,
+            owned.st_ino,
+        ):
+            path.unlink()
+        raise
+
+
+def plain_query(query: str) -> str | None:
+    """Literal Unicode alphanumeric terms with OR; never expose raw FTS syntax."""
+    terms = list(dict.fromkeys(re.findall(r"[^\W_]+", unicodedata.normalize("NFC", query))))
+    if len(terms) > 64:
+        raise RetrievalError("query exceeds 64 literal terms")
+    return " OR ".join('"' + term + '"' for term in terms) or None
+
+
+class SQLiteEngine:
+    """One read-only local lexical engine, shared by all future adapters."""
+
+    def __init__(self, database: Path) -> None:
+        self.database = database.absolute()
+        with self._connect():
+            pass
+
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        try:
+            if not stat.S_ISREG(self.database.lstat().st_mode):
+                raise RetrievalError("index must be a regular file, not a symlink")
+            with closing(
+                sqlite3.connect(self.database.resolve().as_uri() + "?mode=ro", uri=True)
+            ) as connection:
+                connection.row_factory = sqlite3.Row
+                connection.execute("PRAGMA query_only=ON")
+                connection.execute("PRAGMA trusted_schema=OFF")
+                connection.setlimit(sqlite3.SQLITE_LIMIT_LENGTH, 2000000)
+                if connection.execute("PRAGMA application_id").fetchone()[0] != APPLICATION_ID:
+                    raise RetrievalError("not a RAGForge development index")
+                if connection.execute("PRAGMA user_version").fetchone()[0] != SCHEMA_VERSION:
+                    raise RetrievalError("unsupported SQLite index schema version")
+                if connection.execute("SELECT count(*) FROM collections").fetchone()[0] != 1:
+                    raise RetrievalError("index must contain exactly one collection")
+                yield connection
+        except (OSError, sqlite3.Error) as error:
+            raise RetrievalError(f"cannot use SQLite index: {error}") from error
+
+    @staticmethod
+    def _collection(connection: sqlite3.Connection, requested: str | None) -> str:
+        collection: str = connection.execute("SELECT collection_id FROM collections").fetchone()[0]
+        if requested is not None and requested != collection:
+            raise RetrievalError("unknown collection")
+        return collection
+
+    @staticmethod
+    def _chunk(row: sqlite3.Row, score: float) -> RetrievedChunk:
+        return RetrievedChunk(
+            collection_id=row["collection_id"],
+            document_id=row["document_id"],
+            chunk_id=row["chunk_id"],
+            text=row["text"],
+            source=SourceLocation.model_validate_json(row["source_json"]),
+            rank_score=score,
+            retrieval_method="bm25",
+        )
+
+    def list_collections(self) -> list[CollectionDescription]:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT collection_id,title,(SELECT count(*) FROM documents) AS document_count,"
+                "(SELECT count(*) FROM chunks) AS chunk_count FROM collections"
+            ).fetchone()
+            return [CollectionDescription.model_validate(dict(row))]
+
+    def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
+        if request.search_method not in (None, "bm25"):
+            raise RetrievalError(
+                "standalone SQLite index supports only bm25; no dense/hybrid fallback"
+            )
+        with self._connect() as connection:
+            collection = self._collection(connection, request.collection_id)
+            query = plain_query(request.query)
+            if query is None:
+                return RetrievalResponse(contract_version="1", results=[])
+            sql = (
+                "SELECT c.*, -bm25(chunk_fts) AS score FROM chunk_fts "
+                "JOIN chunks c ON c.rowid=chunk_fts.rowid "
+                "WHERE chunk_fts MATCH ? AND c.collection_id=?"
+            )
+            params: list[str | int] = [query, collection]
+            if request.filters is not None:
+                ids = request.filters.document_ids
+                sql += " AND c.document_id IN (" + ",".join("?" for _ in ids) + ")"
+                params.extend(ids)
+            sql += " ORDER BY score DESC, c.chunk_id ASC LIMIT ?"
+            params.append(request.top_k)
+            rows = connection.execute(sql, params).fetchall()
+            results: list[RetrievedChunk] = []
+            remaining = request.max_output_chars
+            for row in rows:
+                if len(row["text"]) > remaining:
+                    if not results:
+                        raise RetrievalError(
+                            "max_output_chars is too small for the highest ranked chunk"
+                        )
+                    break
+                results.append(self._chunk(row, float(row["score"])))
+                remaining -= len(row["text"])
+            return RetrievalResponse(contract_version="1", results=results)
+
+    def fetch_context(self, request: FetchContextRequest) -> RetrievalResponse:
+        with self._connect() as connection:
+            collection = self._collection(connection, request.collection_id)
+            anchor = connection.execute(
+                "SELECT * FROM chunks WHERE collection_id=? AND chunk_id=?",
+                (collection, request.chunk_id),
+            ).fetchone()
+            if anchor is None:
+                raise RetrievalError("unknown chunk in collection")
+            if len(anchor["text"]) > request.max_output_chars:
+                raise RetrievalError("max_output_chars is too small for the anchor chunk")
+            rows = connection.execute(
+                "SELECT * FROM chunks WHERE collection_id=? AND document_id=? "
+                "AND ordinal BETWEEN ? AND ? ORDER BY abs(ordinal-?),chunk_id",
+                (
+                    collection,
+                    anchor["document_id"],
+                    anchor["ordinal"] - request.neighbors,
+                    anchor["ordinal"] + request.neighbors,
+                    anchor["ordinal"],
+                ),
+            ).fetchall()
+            selected: list[RetrievedChunk] = []
+            remaining = request.max_output_chars
+            for row in rows:
+                if len(row["text"]) <= remaining:
+                    selected.append(self._chunk(row, 0.0))
+                    remaining -= len(row["text"])
+            # Context is unranked: zero scores, stable contract tie order.
+            return RetrievalResponse(
+                contract_version="1", results=sorted(selected, key=lambda chunk: chunk.chunk_id)
+            )

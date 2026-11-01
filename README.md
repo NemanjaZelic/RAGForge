@@ -2,8 +2,8 @@
 
 Portable document retrieval for agents. Local execution is the default.
 
-**Development stage: Phase 1 started (RF-000/001/002 complete; RF-007 PDF adapter implemented).**
-Document indexing and search are the next milestone; they are not implemented yet.
+**Development stage: Phase 1 started (RF-000/001/002/003 complete; RF-007 PDF adapter implemented).**
+Standalone BM25 indexing and cited local search now work. Balanced/hybrid bundles are the next milestone.
 
 Start with the [current working plan](docs/PROJECT-PLAN.md).
 The original proposal is preserved in [docs/RAGForge-Project-Plan.md](docs/RAGForge-Project-Plan.md).
@@ -31,6 +31,8 @@ cd D:\RAGForge
 .\scripts\dev.ps1 run ragforge doctor
 .\scripts\dev.ps1 run ragforge scan examples/mini-docs --collection mini
 .\scripts\dev.ps1 run ragforge chunk examples/mini-docs --collection mini
+.\scripts\dev.ps1 run ragforge index examples/mini-docs .cache/demo.sqlite --collection mini
+.\scripts\dev.ps1 run ragforge search .cache/demo.sqlite rollback
 .\scripts\dev.ps1 run ragforge schema manifest
 ```
 
@@ -51,7 +53,7 @@ uv run python scripts/export_schemas.py --check
 
 ## Implemented
 
-- Typer CLI: corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
+- Typer CLI: index/search/context, corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
 - Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.
   Scan inventories bytes; it does not parse PDF text or build a searchable index.
 - Text-bearing PDF parsing, physical page citations, page status and explicit partial mode;
@@ -60,6 +62,8 @@ uv run python scripts/export_schemas.py --check
 - Strict UTF-8 MD/TXT/HTML parsing, Markdown headings/fenced code, deterministic bounded chunks,
   verified source bytes and source citations. HTML script/style/head/template data is excluded;
   HTML source line numbers remain unknown. See [parser limits](docs/PARSING.md).
+- Real SQLite FTS5/BM25 engine: literal queries, filters, read-only results and scoped context.
+  See [retrieval behavior and measured baseline](docs/RETRIEVAL.md).
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
 - Synthetic manifest examples in `examples/manifests/`; these are not built bundles.
 - Small original document corpus and 20 development queries with authored relevance labels.
@@ -76,7 +80,7 @@ lightweight query option on the same bundle and the benchmark baseline.
 `mixed documents → parse/chunk → BM25 + dense → bundle → hybrid query → cited source`
 
 Planned commands such as `build`, `use`, `integrate` and `deploy` are not advertised
-as working commands. No dense model or retrieval engine is implemented yet.
+as working commands. The BM25 engine is implemented; dense/hybrid and bundle build/use are pending.
 The planned v0.1 balanced path requires a locally available embedding model;
 HTTP hosting, GPU, cloud accounts and Docker are not required.
 

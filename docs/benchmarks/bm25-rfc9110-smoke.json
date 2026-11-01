@@ -1,0 +1,375 @@
+{
+  "all_expected_pages_in_first_5": true,
+  "index_sha256": "3dddb22f73cb21138278264ee7ae32baff8ae3d163d7816c0dbe15da3c0eff0c",
+  "kind": "real-pdf-bm25-smoke",
+  "limitations": [
+    "Three authored exact-term probes on one RFC; not a held-out quality set.",
+    "Page labels checked against the source PDF independently of chunk boundaries.",
+    "Only BM25; dense/hybrid and multi-corpus evaluation remain RF-006 work.",
+    "No source PDF or extracted source text redistributed."
+  ],
+  "method": "bm25",
+  "parser_version": "pdf-pypdf-6.21.4-plain-v1-c3eb2826f87270dcb77653a4be51f47d077dfa6f41fe752a45a9c98df2e53822",
+  "results": [
+    {
+      "expected_page_in_first_5": true,
+      "expected_physical_page": 138,
+      "hits": [
+        {
+          "chunk_id": "718ef13684433b2f0e256b7f09952cd41832dd1b3bff3ed5df95816bcb43d284",
+          "rank_score": 12.159374996016535,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 138,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "f89d599e2ef1d4cacbad257df3e580e2784ffc15fbe92563d1103666b44b9112",
+          "rank_score": 8.423721806110807,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 162,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "a56805d5b6773bbd36806335903e9b8ec2e12318d5821e60c2a5d8958a8d0f92",
+          "rank_score": 7.850154374960724,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 9,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "3907436a6c7ad5524d7458fcc5dcf719cbe11d31faddc3cb65cca8c3b71ffb7d",
+          "rank_score": 7.472916387650715,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 183,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "4baa9974700c3865fe9ed47c45f5df5bf69696112afe9dbd07343d962928900a",
+          "rank_score": 7.303273158605866,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 139,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "a0e993028bbe5ef274070070034bc539b153861a3114b1a70dca694c23e47524",
+          "rank_score": 6.604723148654301,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 138,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "5c2005eccec0d5dc08b5bad30a0b5f1cff2b05646962609ee1458f82cc12eaaa",
+          "rank_score": 4.415122212763273,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 132,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "69cf15fbb24502b7c926ab7094f407dcf87cfe8ff72546bf22662a934338a855",
+          "rank_score": 4.262003578546842,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 135,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "4f12425c08ee0f49fbd27e057cb479d92e1cfd6bcf51e1d33c068a9b4989715e",
+          "rank_score": 4.1884885364945506,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 126,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "ab37de512be9d8b4d90ddd16c1f7e13a11311bdd77610a325b65089e499a9e41",
+          "rank_score": 3.3374350580590195,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 159,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        }
+      ],
+      "latency_seconds": 0.00213189993519336,
+      "query": "404 Not Found"
+    },
+    {
+      "expected_page_in_first_5": true,
+      "expected_physical_page": 73,
+      "hits": [
+        {
+          "chunk_id": "72614d97c2a29612b234893be2331bef3f3809b127efdce4b65522580b0628c9",
+          "rank_score": 7.150304586052236,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 73,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "89f038400d930ff88dc0e3708e726f3aed945b3a6d34b0e11a9d3c6d589bdd20",
+          "rank_score": 6.312475246644232,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 73,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "bb80c3f58f056ed7bc56b29083a068857c1bf953a26d627ea2687d2f60a2a362",
+          "rank_score": 4.891389643648805,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 160,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "e7c9b362ffc278c347c9c8795e19c3a4516a0a2001c37df14ba47a13d9d69166",
+          "rank_score": 3.8559634253923774,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 6,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "8e7902df9f69a41d6e592dc55dcdd3938d73d451c923bf68c9c61ad601f96093",
+          "rank_score": 3.722772009655434,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 74,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "95e79fe7811ade5f7d7dbb1fd2d0ddf222cf99673fd4f4180d5ba634f221820b",
+          "rank_score": 3.722772009655434,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 142,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "fb448b7586f9de875c263acfcb3138339e31e50e6f4de99459d0c63353305335",
+          "rank_score": 3.6287643250936146,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 144,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "c5187e39cde5dd3306ecadc552ed2a1b72b50b7fcac6262f94c8a833aa5e1fd4",
+          "rank_score": 3.5984746849891645,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 78,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "2a60cb3e9069b553d46c0133431a7f1fda9239bcaf2d8e5d8ca2f83f6f5e6cef",
+          "rank_score": 3.55886642406526,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 73,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "ed41220014a9ea7de75a7990848ed705e14169867a616a076ef16507d9480079",
+          "rank_score": 3.4543075219067934,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 144,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        }
+      ],
+      "latency_seconds": 0.0009185000089928508,
+      "query": "idempotent"
+    },
+    {
+      "expected_page_in_first_5": true,
+      "expected_physical_page": 89,
+      "hits": [
+        {
+          "chunk_id": "dc98faf26a97bca31e6588e495122f2ea3f311e0d3b2ca18686c1dd59d2808e9",
+          "rank_score": 10.071203005048027,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 89,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "8e7902df9f69a41d6e592dc55dcdd3938d73d451c923bf68c9c61ad601f96093",
+          "rank_score": 8.187469641860218,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 74,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "d56747b29ae44987c86748676f6cd8f580833a31701f8072047bd24ef6a15c2b",
+          "rank_score": 8.126406623028883,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 89,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "a1dd8218e098a1e69b09d799252bd4862ab12f6e4d5cd9b203f27a08dfb9f1a9",
+          "rank_score": 7.333286429944149,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 90,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "a9ff5925521e501ee50cee6478a46a4fc065be78c1a01dbd92b4097d88efee2b",
+          "rank_score": 5.910392502201672,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 175,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "a3bae2fdfbe36e92c59765d1e5f374ff5476ea1eaf06bae72573b7c653a02455",
+          "rank_score": 5.873552553289743,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 143,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "f5929c63d06d6c7b5c0aa6b390680de46c258c647df77390ad86ac8619333658",
+          "rank_score": 5.8596053908516215,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 140,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "e7c9b362ffc278c347c9c8795e19c3a4516a0a2001c37df14ba47a13d9d69166",
+          "rank_score": 5.5755824620205265,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 6,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "d8155e900cfadda06ea7b31835a3f29753f4ad4cda5b646726f8b2d35d638190",
+          "rank_score": 5.336906120827539,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 165,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        },
+        {
+          "chunk_id": "89f038400d930ff88dc0e3708e726f3aed945b3a6d34b0e11a9d3c6d589bdd20",
+          "rank_score": 5.185006831607216,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "page": 73,
+            "path": "rfc9110.pdf",
+            "section": null
+          }
+        }
+      ],
+      "latency_seconds": 0.0012379999971017241,
+      "query": "Retry-After"
+    }
+  ],
+  "source_license_url": "https://trustee.ietf.org/license-info",
+  "source_page_count": 194,
+  "source_sha256": "60b30efa1048900833d1758440247fe8ac85a3134f2327388dcb24e07d814c89",
+  "source_url": "https://www.rfc-editor.org/rfc/rfc9110.pdf",
+  "sqlite": "3.49.1",
+  "top_k": 10
+}

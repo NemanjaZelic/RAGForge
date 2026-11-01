@@ -14,15 +14,16 @@ import typer
 from ragforge import __version__
 from ragforge.artifacts.manifest import BundleManifest
 from ragforge.core.chunk import Chunk, ChunkConfig, chunk_document
-from ragforge.core.contracts import RetrievalResponse, RetrieveRequest
+from ragforge.core.contracts import FetchContextRequest, RetrievalResponse, RetrieveRequest
 from ragforge.core.parse import load_document
 from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
+from ragforge.core.sqlite import SQLiteEngine, create_index
 from ragforge.types import ContractModel
 
 app = typer.Typer(
     name="ragforge",
-    help="Portable document retrieval. Corpus scan, contracts and diagnostics.",
+    help="Local document indexing, cited BM25 search and corpus diagnostics.",
     no_args_is_help=True,
     invoke_without_command=True,
     add_completion=False,
@@ -81,7 +82,9 @@ def doctor() -> None:
                 "python": platform.python_version(),
                 "sqlite": sqlite3.sqlite_version,
                 "fts5": available,
-                "retrieval_implemented": False,
+                "retrieval_implemented": True,
+                "retrieval_methods": ["bm25"],
+                "bundle_implemented": False,
             },
             sort_keys=True,
         )
@@ -114,7 +117,7 @@ def scan(
     except (ScanError, ValueError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
-    typer.echo(report.model_dump_json())
+    typer.echo(json.dumps(report.model_dump(mode="json"), ensure_ascii=True))
 
 
 @app.command()
@@ -190,3 +193,97 @@ def chunk(
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
     typer.echo(json.dumps(result, ensure_ascii=True))
+
+
+@app.command()
+def index(
+    root: Annotated[Path, typer.Argument(help="Corpus directory.")],
+    database: Annotated[Path, typer.Argument(help="New standalone development SQLite file.")],
+    collection: str = typer.Option("default", "--collection"),
+    title: str = typer.Option("Documents"),
+    chunk_size_chars: int = typer.Option(1000, min=1, max=100000),
+    overlap_chars: int = typer.Option(100, min=0),
+    max_file_bytes: int = typer.Option(32 * 1024 * 1024, min=1),
+    max_total_bytes: int = typer.Option(512 * 1024 * 1024, min=1),
+    max_entries: int = typer.Option(100000, min=1),
+    max_chunks: int = typer.Option(100000, min=1),
+    max_index_text_chars: int = typer.Option(100000000, min=1),
+    allow_partial_pdf: bool = typer.Option(False),
+    allow_incomplete: bool = typer.Option(
+        False, help="Explicitly index PDFs with unextracted pages."
+    ),
+) -> None:
+    """Create a real BM25 development index; not the planned balanced bundle."""
+    try:
+        limits = ScanLimits(max_file_bytes, max_total_bytes, max_entries)
+        report = scan_corpus(root, collection, limits)
+        pdf_options = PdfOptions(allow_partial=allow_partial_pdf)
+        documents = (
+            load_document(root, collection, record, limits, pdf_options=pdf_options)
+            for record in report.documents
+        )
+        summary = create_index(
+            database,
+            collection,
+            title,
+            documents,
+            ChunkConfig(chunk_size_chars=chunk_size_chars, overlap_chars=overlap_chars),
+            allow_incomplete=allow_incomplete,
+            max_chunks=max_chunks,
+            max_output_chars=max_index_text_chars,
+        )
+    except (ValueError, OSError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(summary.model_dump(mode="json"), ensure_ascii=True))
+
+
+@app.command()
+def search(
+    database: Annotated[Path, typer.Argument(help="Standalone development SQLite index.")],
+    query: Annotated[str, typer.Argument(help="Plain literal query; no FTS operators.")],
+    collection: str | None = typer.Option(None, "--collection"),
+    top_k: int = typer.Option(5, min=1, max=50),
+    max_output_chars: int = typer.Option(16000, min=1, max=100000),
+    search_method: str = typer.Option("bm25", help="Only bm25 is implemented for this index."),
+) -> None:
+    """Return real lexical search results with source citations as JSON."""
+    try:
+        request = RetrieveRequest.model_validate(
+            {
+                "query": query,
+                "collection_id": collection,
+                "top_k": top_k,
+                "max_output_chars": max_output_chars,
+                "search_method": search_method,
+            }
+        )
+        result = SQLiteEngine(database).retrieve(request)
+    except (ValueError, OSError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result.model_dump(mode="json"), ensure_ascii=True))
+
+
+@app.command()
+def context(
+    database: Annotated[Path, typer.Argument(help="Standalone development SQLite index.")],
+    chunk_id: Annotated[str, typer.Argument(help="Exact chunk ID from search.")],
+    collection: str = typer.Option("default", "--collection"),
+    neighbors: int = typer.Option(1, min=0, max=5),
+    max_output_chars: int = typer.Option(16000, min=1, max=100000),
+) -> None:
+    """Fetch an exact chunk and bounded neighbors within the same document."""
+    try:
+        result = SQLiteEngine(database).fetch_context(
+            FetchContextRequest(
+                collection_id=collection,
+                chunk_id=chunk_id,
+                neighbors=neighbors,
+                max_output_chars=max_output_chars,
+            )
+        )
+    except (ValueError, OSError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result.model_dump(mode="json"), ensure_ascii=True))

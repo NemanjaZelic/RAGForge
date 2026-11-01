@@ -3,7 +3,7 @@
 Implementirano: MD/TXT/HTML parser, zajednički ograničeni source reader,
 deterministički chunker i `ragforge chunk ROOT --collection ID` pregled.
 PDF adapter je implementiran u RF-007; detalji, page status i limiti su u
-[PDF.md](PDF.md). Build i pretraga još nisu implementirani.
+[PDF.md](PDF.md). BM25 index/search su implementirani u RF-003; bundle build/use još nisu.
 
 ## Encoding i integritet
 
@@ -81,8 +81,7 @@ unutar chunkera pre nagomilavanja izlaza. Ovi limiti broje tekst, ne JSON
 bajtove; metadata/escape overhead povećavaju veličinu serijalizovanog JSON-a.
 
 Prekoračenje, encoding greška, promenjeni source ili nečitljiv PDF daju
-exit 2 i JSON error na stderr bez delimičnog stdout-a. CLI ne pravi indeks,
-ne čuva bundle i ne tvrdi da retrieval postoji.
+exit 2 i JSON error na stderr bez delimičnog stdout-a. Chunk preview ne pravi indeks ili bundle; zasebni index/search koriste RF-003 engine.
 
 ```powershell
 .\scripts\dev.ps1 run ragforge chunk examples/mini-docs --collection mini

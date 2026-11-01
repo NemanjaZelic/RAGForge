@@ -1,0 +1,2021 @@
+{
+  "build_seconds": 0.034925100044347346,
+  "configuration": {
+    "chunk_size_chars": 1000,
+    "chunker_version": "chars-v1",
+    "max_output_chars": 100000,
+    "overlap_chars": 100,
+    "parser_versions": [
+      "text-v1"
+    ],
+    "query_mode": "literal Unicode alphanumeric terms OR",
+    "search_method": "bm25",
+    "tokenizer": "unicode61 remove_diacritics 2",
+    "top_k": 10
+  },
+  "configuration_sha256": "68c2808b1b9570c84ded357a59c8aee82f8e033ae5468c3275ad38e71219e253",
+  "corpus_sha256": "1e402d2c4463d797b781a007d9ac2c20b59b9cced94739133f7dc4ae4f54ea28",
+  "kind": "development-mini-bm25",
+  "latency_p50_seconds": 0.0008819500217214227,
+  "latency_p95_seconds": 0.0014436999335885048,
+  "limitations": [
+    "20 development questions on 6 tiny documents; not a representative benchmark.",
+    "Positive labels identify documents, not exact evidence spans.",
+    "Recall uses relevant document IDs within first 5 chunks; MRR uses first 10 chunks.",
+    "Unanswerable questions are reported separately; no abstention threshold exists.",
+    "Warm local timings include opening a read-only SQLite connection per query.",
+    "Standalone index; bundle E2E and dense/hybrid comparison are pending."
+  ],
+  "mrr_at_10": 1.0,
+  "negative_queries": 4,
+  "negative_queries_with_results": 2,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "positive_queries": 16,
+  "producer_version": "0.1.0.dev0",
+  "python": "3.13.5",
+  "queries_sha256": "15f39e0ce559a566d75933949dfca6dc13d9023e656819ce544b8e1573d9b376",
+  "recall_at_5": 1.0,
+  "results": [
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0017136000096797943,
+      "query": "How are access tokens sent to the service?",
+      "query_id": "q01",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 9.09575552879859,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 4.235269423249115,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Refresh tokens"
+          }
+        },
+        {
+          "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 2.602135357326484,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Health checks"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.8884461603705909,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.3241858757281788,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 0.985900973230394,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 1.3243784269923699e-06,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.2967828989418365e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0011471000034362078,
+      "query": "How long does an access token last?",
+      "query_id": "q02",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 7.566362147845769,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "32a0c03d73666c7d17d22bdacc63ec11891767040fc2aec7826c8b4b0c4d518f",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 3.2066184990957716,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Minimal profile"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 3.1372730118997474,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 2.8553821085018787,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Refresh tokens"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.0100020335857258,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 0.911061373862559,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0011158999986946583,
+      "query": "What happens when a rotated refresh token is reused?",
+      "query_id": "q03",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 10.945412690461925,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Refresh tokens"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 2.496226499220064,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 2.149966401752027,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 2.087041933968433,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.5673819742489272e-06,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.3703564727954972e-06,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.3325549149821206e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.3119701106480815e-06,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.2967828989418365e-06,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.750106791969244e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0014436999335885048,
+      "query": "What happens to writes after a transaction fails?",
+      "query_id": "q04",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 6.23525228672204,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 2.8892704932254296,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 2.864455415498253,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 2.4040471154436096,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 2.281655733470794,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.8884465378100197,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.379888330772164,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Refresh tokens"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.3119701106480815e-06,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.750106791969244e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0010131000308319926,
+      "query": "Can a savepoint be used for partial rollback?",
+      "query_id": "q05",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 8.22961199993074,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 4.4717246377263224,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.8884465378100197,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.8884461603705909,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.6568415129773035,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Health checks"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 1.380764795092126,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.3325549149821206e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.3119701106480815e-06,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Refresh tokens"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0007585000712424517,
+      "query": "How should a transient transaction conflict be retried?",
+      "query_id": "q06",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 6.589626207307113,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 2.281655733470794,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 2.2816555364452924,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.3119701106480815e-06,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.2967828989418365e-06,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Refresh tokens"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.750106791969244e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.19343469942604e-07,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "32a0c03d73666c7d17d22bdacc63ec11891767040fc2aec7826c8b4b0c4d518f",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 8.856339121156272e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Minimal profile"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0007323999889194965,
+      "query": "Which endpoint provides the private service health check?",
+      "query_id": "q07",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 12.222511878037592,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Health checks"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 1.3243784269923699e-06,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.2967828989418365e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.2152269399707176e-06,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.750106791969244e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.557207160054434e-07,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 9.19343469942604e-07,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0007245000451803207,
+      "query": "What must pass before switching the active bundle?",
+      "query_id": "q08",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 12.56329861113458,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 3.6496378467111867,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 2.194577198209861,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 2.087041933968433,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.591283367692532,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.248582875875407,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 1.3243784269923699e-06,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.2152269399707176e-06,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0007251000497490168,
+      "query": "How can an operator recover from a failed bundle update?",
+      "query_id": "q09",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 7.063685698957624,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 3.1370284943419566,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 2.602135732587589,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.8350856886881493,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "32a0c03d73666c7d17d22bdacc63ec11891767040fc2aec7826c8b4b0c4d518f",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.3874177464873383,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Minimal profile"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.3350632497723738,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.0932255668958537,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 0.9859015592722229,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 0.9110622031463594,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.3325549149821206e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0007264999439939857,
+      "query": "Does the minimal profile need an embedding model or GPU?",
+      "query_id": "q10",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "32a0c03d73666c7d17d22bdacc63ec11891767040fc2aec7826c8b4b0c4d518f",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 20.277775180758045,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Minimal profile"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 3.1372740069951153,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 1.6049833099326682,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.3514633831409992,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Health checks"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.3350644649993137,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.0100033303686247,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 0.985900973230394,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.750106791969244e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0007460999768227339,
+      "query": "Can a local query download models or use a network fallback?",
+      "query_id": "q11",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 12.642287040762712,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 3.4191601752297953,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 2.4991725639451055,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.8884465378100197,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.6234013254556556,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.3514623880456313,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Health checks"
+          }
+        },
+        {
+          "chunk_id": "32a0c03d73666c7d17d22bdacc63ec11891767040fc2aec7826c8b4b0c4d518f",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.2028011000406118,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Minimal profile"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 0.6939214409754825,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.5673819742489272e-06,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.3703564727954972e-06,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0007425999501720071,
+      "query": "Does a moved bundle still require a compatible runtime?",
+      "query_id": "q12",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 9.447710767093199,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 2.0440505797678425,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.8350856886881493,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "32a0c03d73666c7d17d22bdacc63ec11891767040fc2aec7826c8b4b0c4d518f",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.8192025238762577,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Minimal profile"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.761192228244637,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 0.9859015592722229,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.3703564727954972e-06,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.3325549149821206e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Refresh tokens"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.0160249276652571e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0009531999239698052,
+      "query": "Koji dijakritici se \u010duvaju u prikazu izvora?",
+      "query_id": "q13",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "2b8d92daf0e7c58b2a7fdcaecd652e2ccbae4e6bf7c2e44c898fdb988f7ab190",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 8.720981413410307,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > Latinica"
+          }
+        },
+        {
+          "chunk_id": "e45e1d8ec78bc286c0b439b0c36e6b09ab773a8e602b9f0b8169f0300d0898e5",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 4.74390523727029,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > Ograni\u010denja"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0008821000810712576,
+      "query": "\u0414\u0430 \u043b\u0438 \u045b\u0438\u0440\u0438\u043b\u0438\u0447\u043d\u0430 \u043f\u0440\u0435\u0442\u0440\u0430\u0433\u0430 \u0437\u0430\u0445\u0442\u0435\u0432\u0430 \u043c\u0440\u0435\u0436\u043d\u043e \u043f\u0440\u0435\u0432\u043e\u0452\u0435\u045a\u0435?",
+      "query_id": "q14",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "2102a772e3fddd0ca5e7a753aad582c3c077ac32e970517931afe6b7a8921e0e",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 2.602134362231116,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > \u0106irilica"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0008817999623715878,
+      "query": "Da li BM25 automatski pretvara latinicu u \u0107irilicu?",
+      "query_id": "q15",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "e45e1d8ec78bc286c0b439b0c36e6b09ab773a8e602b9f0b8169f0300d0898e5",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 6.830946155213796,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > Ograni\u010denja"
+          }
+        },
+        {
+          "chunk_id": "2b8d92daf0e7c58b2a7fdcaecd652e2ccbae4e6bf7c2e44c898fdb988f7ab190",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 2.737232677317425,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > Latinica"
+          }
+        },
+        {
+          "chunk_id": "32a0c03d73666c7d17d22bdacc63ec11891767040fc2aec7826c8b4b0c4d518f",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.8192016382423455,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Minimal profile"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "relevant",
+      "latency_seconds": 0.0010697999969124794,
+      "query": "What is the quoted malicious instruction in the adversarial fixture?",
+      "query_id": "q16",
+      "recall_at_5": 1.0,
+      "reciprocal_rank_at_10": 1.0,
+      "results": [
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 9.159233405663333,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 2.087041933968433,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 2.0027935517556963,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.7243621648996448,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.2967828989418365e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Health checks"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.557207160054434e-07,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "ceacf8c8621cf2b228cc13edcfb7162b5b75498a690f936d588fc3fe00a52ff9",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 9.19343469942604e-07,
+          "source": {
+            "line_end": 14,
+            "line_start": 12,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Data and runtime"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "unanswerable",
+      "latency_seconds": 0.0011035000206902623,
+      "query": "What is the company's quarterly revenue?",
+      "query_id": "q17",
+      "recall_at_5": null,
+      "reciprocal_rank_at_10": null,
+      "results": [
+        {
+          "chunk_id": "2b8d92daf0e7c58b2a7fdcaecd652e2ccbae4e6bf7c2e44c898fdb988f7ab190",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 2.4991712313901906,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > Latinica"
+          }
+        },
+        {
+          "chunk_id": "d73110403e87eb0bd1b242eca0d8fecdbbc8f112468a83451b6267fe489397ae",
+          "document_id": "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+          "rank_score": 2.1499668968466534,
+          "source": {
+            "line_end": 9,
+            "line_start": 1,
+            "page": null,
+            "path": "untrusted.md",
+            "section": "Adversarial fixture"
+          }
+        },
+        {
+          "chunk_id": "9bc35484b902b7bd1a8ef83fd41b426944fc5e54d0187016577dec7973563f24",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 2.087041933968433,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Revocation"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.2967828989418365e-06,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+          "document_id": "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+          "rank_score": 1.2152269399707176e-06,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "authentication.md",
+            "section": "Authentication > Access tokens"
+          }
+        },
+        {
+          "chunk_id": "1af97a20bfe65ab8a057a266f17860365efde081137eb962ee3c36d73a639348",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Savepoints"
+          }
+        },
+        {
+          "chunk_id": "694ef90528f2e5e3a08b6a6cabf1d90ad4c1ac55b8bd48a2e002367a58f7c8bf",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Rollback"
+          }
+        },
+        {
+          "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.950953678474116e-07,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Health checks"
+          }
+        },
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 9.750106791969244e-07,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 9.557207160054434e-07,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "unanswerable",
+      "latency_seconds": 0.0009833999210968614,
+      "query": "Which Kubernetes chart version must I install?",
+      "query_id": "q18",
+      "recall_at_5": null,
+      "reciprocal_rank_at_10": null,
+      "results": [
+        {
+          "chunk_id": "eef81c068b97c45700ed27d3c0e5853d0e781d8c6ddc06d59e0131caf81c01b1",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 3.6261929271899933,
+          "source": {
+            "line_end": 10,
+            "line_start": 7,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Bundle updates"
+          }
+        },
+        {
+          "chunk_id": "e45e1d8ec78bc286c0b439b0c36e6b09ab773a8e602b9f0b8169f0300d0898e5",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 2.087040917943505,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > Ograni\u010denja"
+          }
+        },
+        {
+          "chunk_id": "2b8d92daf0e7c58b2a7fdcaecd652e2ccbae4e6bf7c2e44c898fdb988f7ab190",
+          "document_id": "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+          "rank_score": 1.9631686055312823,
+          "source": {
+            "line_end": 6,
+            "line_start": 3,
+            "page": null,
+            "path": "lokalizacija.md",
+            "section": "Lokalizacija > Latinica"
+          }
+        },
+        {
+          "chunk_id": "74b657394750d8808a7abc3485dce890c0dcd0ad4ebdb979e74ea042405ae743",
+          "document_id": "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+          "rank_score": 1.8884452410271209,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "deployment.md",
+            "section": "Deployment > Recovery"
+          }
+        },
+        {
+          "chunk_id": "e8a54e52b2d3a49aafe4f8de46d580dc67a456c5bf85ede9634e37c680bc9617",
+          "document_id": "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+          "rank_score": 1.591282411971816,
+          "source": {
+            "line_end": 13,
+            "line_start": 11,
+            "page": null,
+            "path": "transactions.md",
+            "section": "Transactions > Retry"
+          }
+        },
+        {
+          "chunk_id": "e06af9f2ebcd4d967ce6e97544b44b48568a4ff8a4f0472bfa43b355801fef4d",
+          "document_id": "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+          "rank_score": 1.2086762249794671,
+          "source": {
+            "line_end": 11,
+            "line_start": 7,
+            "page": null,
+            "path": "offline.md",
+            "section": "Offline retrieval > Network policy"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "unanswerable",
+      "latency_seconds": 0.0007230000337585807,
+      "query": "Koji je broj telefona korisni\u010dke podr\u0161ke?",
+      "query_id": "q19",
+      "recall_at_5": null,
+      "reciprocal_rank_at_10": null,
+      "results": []
+    },
+    {
+      "kind": "unanswerable",
+      "latency_seconds": 0.0006846000906080008,
+      "query": "\u041a\u043e\u0458\u0430 \u0431\u0430\u043d\u043a\u0430 \u043e\u0431\u0440\u0430\u0452\u0443\u0458\u0435 \u043f\u043b\u0430\u045b\u0430\u045a\u0430?",
+      "query_id": "q20",
+      "recall_at_5": null,
+      "reciprocal_rank_at_10": null,
+      "results": []
+    }
+  ],
+  "sqlite": "3.49.1",
+  "summary": {
+    "chunk_count": 21,
+    "collection_id": "mini",
+    "document_count": 6,
+    "incomplete_document_count": 0
+  }
+}

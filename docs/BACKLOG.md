@@ -74,7 +74,13 @@ prijavljuju, bez tihog preskakanja ili automatskog OCR download-a.
 Done: stvarni PDF fixtures i najmanje jedan realni PDF u v0.1 benchmark-u,
 tačne stranice u citatu i dokumentovane granice parsera.
 
-### RF-003 — SQLite FTS5 i retrieval
+### RF-003 — SQLite FTS5 i retrieval [završeno]
+
+Implementirano: stvarni SQLiteEngine, index/search/context razvojni CLI,
+read-only retrieval, literal query, scope/filter/output granice i kontekst.
+132 lokalna testa prolaze, 3 platform skip-a. [Detalji](RETRIEVAL.md).
+Postoje mini BM25 baseline i tri realna PDF page probe-a; balanced bundle
+i širi RF-006 benchmark još nisu gotovi.
 
 Jedna kolekcija; metadata i FTS u jednoj bazi; parametrizovan SQL; bezbedna
 normalizacija običnog upita; veći javni score znači bolji rang.
@@ -121,6 +127,10 @@ izveštaj sa citatima i latencijom; isti test na Windows i Linux CI.
 Za potpuno mrežno izolovan OS test dodati poseban Linux job pre v0.1 release-a.
 
 Detaljna metodologija: [TESTING-PLAN.md](TESTING-PLAN.md).
+
+Razvojni međukorak: index/search/context offline MD+PDF CLI E2E i mini
+BM25 report su implementirani. Ovo ne zatvara RF-006A jer traži konačni
+bundle build/use, a RF-006 i dalje traži dense/hybrid poređenje i OS izolaciju.
 
 - [ ] RF-006A: postojeći mini-korpus i 20 pitanja ostaju brza razvojna provera;
   implementirati stvarni build/query E2E. To nije dokaz kvaliteta na realnim docs.
