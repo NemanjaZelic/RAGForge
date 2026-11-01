@@ -21,10 +21,41 @@ jobs:
         with:
           version: "0.13.6"
           python-version: ${{ matrix.python }}
-      - run: uv sync --locked
+      - run: uv sync --locked --all-extras
       - run: uv run --no-sync pytest
       - run: uv run --no-sync ruff check .
       - run: uv run --no-sync ruff format --check .
       - run: uv run --no-sync mypy
       - run: uv run --no-sync python scripts/export_schemas.py --check
       - run: uv build
+  real-model:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: windows-latest
+            python: "3.13"
+    runs-on: ${{ matrix.os }}
+    env:
+      RAGFORGE_MODEL_DIR: .cache/real-model
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.6"
+          python-version: ${{ matrix.python }}
+      - run: uv sync --locked --all-extras
+      - uses: actions/cache@v4
+        id: model-cache
+        with:
+          path: .cache/real-model
+          key: e5-small-${{ runner.os }}-614241f-${{ hashFiles('scripts/prepare_models.py', 'src/ragforge/core/embedding.py') }}
+      - if: steps.model-cache.outputs.cache-hit != 'true'
+        run: uv run --no-sync python scripts/prepare_models.py e5-small .cache/real-model
+      - name: Pretrained model offline build and query
+        run: uv run --no-sync pytest tests/test_real_model.py -q
+      - name: Linux OS network isolation
+        if: runner.os == 'Linux'
+        run: sudo --preserve-env=RAGFORGE_MODEL_DIR unshare --net .venv/bin/python -m pytest tests/test_real_model.py -q

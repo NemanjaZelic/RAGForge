@@ -22,6 +22,17 @@
           "minLength": 1,
           "title": "Parser Version",
           "type": "string"
+        },
+        "pdf_options": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PdfOptions"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -65,6 +76,7 @@
           "items": {
             "$ref": "#/$defs/DocumentRecord"
           },
+          "maxItems": 100000,
           "minItems": 1,
           "title": "Documents",
           "type": "array"
@@ -187,6 +199,55 @@
         "size_bytes"
       ],
       "title": "FileRecord",
+      "type": "object"
+    },
+    "PdfOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "allow_partial": {
+          "default": false,
+          "title": "Allow Partial",
+          "type": "boolean"
+        },
+        "max_document_stream_bytes": {
+          "default": 67108864,
+          "minimum": 1,
+          "title": "Max Document Stream Bytes",
+          "type": "integer"
+        },
+        "max_page_text_chars": {
+          "default": 200000,
+          "minimum": 1,
+          "title": "Max Page Text Chars",
+          "type": "integer"
+        },
+        "max_pages": {
+          "default": 500,
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Max Pages",
+          "type": "integer"
+        },
+        "max_stream_bytes": {
+          "default": 8388608,
+          "minimum": 1,
+          "title": "Max Stream Bytes",
+          "type": "integer"
+        },
+        "max_stream_operations": {
+          "default": 500000,
+          "minimum": 1,
+          "title": "Max Stream Operations",
+          "type": "integer"
+        },
+        "max_text_chars": {
+          "default": 2000000,
+          "minimum": 1,
+          "title": "Max Text Chars",
+          "type": "integer"
+        }
+      },
+      "title": "PdfOptions",
       "type": "object"
     },
     "QueryModel": {
@@ -336,6 +397,7 @@
       "items": {
         "$ref": "#/$defs/FileRecord"
       },
+      "maxItems": 10000,
       "minItems": 1,
       "title": "Files",
       "type": "array"

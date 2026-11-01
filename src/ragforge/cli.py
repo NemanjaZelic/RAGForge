@@ -12,9 +12,17 @@ from typing import Annotated, Any
 import typer
 
 from ragforge import __version__
+from ragforge.artifacts.builder import build_bundle
 from ragforge.artifacts.manifest import BundleManifest
+from ragforge.artifacts.verification import verify_bundle
 from ragforge.core.chunk import Chunk, ChunkConfig, chunk_document
-from ragforge.core.contracts import FetchContextRequest, RetrievalResponse, RetrieveRequest
+from ragforge.core.contracts import (
+    FetchContextRequest,
+    RetrievalEngine,
+    RetrievalResponse,
+    RetrieveRequest,
+)
+from ragforge.core.engine import BundleEngine
 from ragforge.core.parse import load_document
 from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
@@ -267,17 +275,21 @@ def search(
 
 @app.command()
 def context(
-    database: Annotated[Path, typer.Argument(help="Standalone development SQLite index.")],
+    database: Annotated[Path, typer.Argument(help="Bundle directory or standalone SQLite index.")],
     chunk_id: Annotated[str, typer.Argument(help="Exact chunk ID from search.")],
-    collection: str = typer.Option("default", "--collection"),
+    collection: str | None = typer.Option(None, "--collection"),
     neighbors: int = typer.Option(1, min=0, max=5),
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
 ) -> None:
     """Fetch an exact chunk and bounded neighbors within the same document."""
     try:
-        result = SQLiteEngine(database).fetch_context(
+        engine: RetrievalEngine = (
+            BundleEngine(database) if database.is_dir() else SQLiteEngine(database)
+        )
+        selected = collection or engine.list_collections()[0].collection_id
+        result = engine.fetch_context(
             FetchContextRequest(
-                collection_id=collection,
+                collection_id=selected,
                 chunk_id=chunk_id,
                 neighbors=neighbors,
                 max_output_chars=max_output_chars,
@@ -287,3 +299,114 @@ def context(
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
     typer.echo(json.dumps(result.model_dump(mode="json"), ensure_ascii=True))
+
+
+class BuildProfile(StrEnum):
+    balanced = "balanced"
+    minimal = "minimal"
+
+
+@app.command()
+def build(
+    root: Annotated[Path, typer.Argument(help="Local MD/TXT/HTML/PDF corpus.")],
+    output: Annotated[Path, typer.Option("--output", help="New bundle version directory.")],
+    profile: Annotated[BuildProfile, typer.Option()] = BuildProfile.balanced,
+    model: Annotated[
+        Path | None, typer.Option(help="Prepared local query model directory.")
+    ] = None,
+    collection: str = typer.Option("default", "--collection"),
+    title: str = typer.Option("Documents"),
+    chunk_size_chars: int = typer.Option(1000, min=1, max=100000),
+    overlap_chars: int = typer.Option(100, min=0),
+    compute: str = typer.Option("local", help="Only local compute is implemented."),
+    offline: bool = typer.Option(
+        False, "--offline", help="Explicit assertion; build is always offline."
+    ),
+    allow_incomplete: bool = typer.Option(False),
+    allow_partial_pdf: bool = typer.Option(False),
+    pdf_max_pages: int = typer.Option(500, min=1, max=10000),
+    max_file_bytes: int = typer.Option(32 * 1024 * 1024, min=1),
+    max_total_bytes: int = typer.Option(512 * 1024 * 1024, min=1),
+    max_entries: int = typer.Option(100000, min=1),
+    threads: int = typer.Option(4, min=1, max=32),
+) -> None:
+    """Build and verify a portable data bundle; never downloads or deploys."""
+    try:
+        if compute != "local":
+            raise ValueError("only local build compute is implemented")
+        manifest = build_bundle(
+            root,
+            output,
+            collection_id=collection,
+            title=title,
+            profile="balanced" if profile == BuildProfile.balanced else "minimal",
+            model_directory=model,
+            chunk_config=ChunkConfig(
+                chunk_size_chars=chunk_size_chars,
+                overlap_chars=overlap_chars,
+            ),
+            allow_incomplete=allow_incomplete,
+            pdf_options=PdfOptions(max_pages=pdf_max_pages, allow_partial=allow_partial_pdf),
+            scan_limits=ScanLimits(max_file_bytes, max_total_bytes, max_entries),
+            threads=threads,
+        )
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(
+        json.dumps(
+            {
+                "build_id": manifest.build_id,
+                "profile": manifest.profile,
+                "collection_id": collection,
+                "files": len(manifest.files),
+                "offline": True,
+            }
+        )
+    )
+
+
+@app.command()
+def use(
+    artifact: Annotated[Path, typer.Argument(help="Verified local bundle directory.")],
+    query: str = typer.Option(..., "--query"),
+    mode: str = typer.Option("local", help="Only local runtime is implemented."),
+    search_method: str | None = typer.Option(
+        None, help="bm25, dense or hybrid; bundle default if omitted."
+    ),
+    collection: str | None = typer.Option(None, "--collection"),
+    top_k: int = typer.Option(5, min=1, max=50),
+    max_output_chars: int = typer.Option(16000, min=1, max=100000),
+    threads: int = typer.Option(4, min=1, max=32),
+) -> None:
+    """Query the same local engine; balanced defaults to hybrid, minimal to BM25."""
+    try:
+        if mode != "local":
+            raise ValueError("only local runtime mode is implemented")
+        request = RetrieveRequest.model_validate(
+            {
+                "query": query,
+                "collection_id": collection,
+                "top_k": top_k,
+                "max_output_chars": max_output_chars,
+                "search_method": search_method,
+            }
+        )
+        result = BundleEngine(artifact, threads=threads).retrieve(request)
+    except (ValueError, OSError, RuntimeError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result.model_dump(mode="json"), ensure_ascii=True))
+
+
+@app.command()
+def verify(artifact: Path) -> None:
+    """Verify paths, versions, complete inventory and checksums before runtime."""
+    try:
+        manifest = verify_bundle(artifact)
+    except (ValueError, OSError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(
+        json.dumps({"valid": True, "build_id": manifest.build_id, "profile": manifest.profile})
+    )

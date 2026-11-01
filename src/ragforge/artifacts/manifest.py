@@ -5,6 +5,7 @@ from typing import Annotated, Literal, Self
 from pydantic import Field, model_validator
 
 from ragforge.core.identity import document_id
+from ragforge.core.pdf import PdfOptions
 from ragforge.types import ContractModel, Identifier, RelativePath, SearchMethod, Sha256
 
 
@@ -43,13 +44,13 @@ class CollectionManifest(ContractModel):
     title: Annotated[str, Field(min_length=1, max_length=256)]
     database_path: RelativePath
     dense_index: DenseIndex | None = None
-    documents: Annotated[list[DocumentRecord], Field(min_length=1)]
+    documents: Annotated[list[DocumentRecord], Field(min_length=1, max_length=100000)]
 
     @model_validator(mode="after")
     def unique_document_identity(self) -> Self:
         paths = [doc.source_path for doc in self.documents]
-        if len(set(paths)) != len(paths):
-            raise ValueError("duplicate source path in collection")
+        if len({path.casefold() for path in paths}) != len(paths):
+            raise ValueError("duplicate or case-colliding source path in collection")
         for doc in self.documents:
             if doc.document_id != document_id(self.collection_id, doc.source_path):
                 raise ValueError("document_id does not match collection and source path")
@@ -57,6 +58,7 @@ class CollectionManifest(ContractModel):
 
 
 class BuildConfiguration(ContractModel):
+    pdf_options: PdfOptions | None = None
     parser_version: Annotated[str, Field(min_length=1)]
     chunker_version: Annotated[str, Field(min_length=1)]
     chunk_size_chars: Annotated[int, Field(ge=1)]
@@ -87,7 +89,7 @@ class BundleManifest(ContractModel):
     index_schema_version: Literal[1]
     sqlite_build_version: Annotated[str, Field(min_length=1)]
     collections: Annotated[list[CollectionManifest], Field(min_length=1, max_length=1)]
-    files: Annotated[list[FileRecord], Field(min_length=1)]
+    files: Annotated[list[FileRecord], Field(min_length=1, max_length=10000)]
     build_configuration: BuildConfiguration
     runtime: RuntimeRequirements
     licenses: Annotated[list[str], Field(min_length=1)]
@@ -108,8 +110,10 @@ class BundleManifest(ContractModel):
             raise ValueError("case collision in file inventory")
         if any(path.split("/")[0].casefold() == "manifest.json" for path in paths):
             raise ValueError("manifest path is reserved")
+        file_keys = {path.casefold() for path in paths}
         for path in paths:
-            if any(other.startswith(path + "/") for other in paths):
+            parts = path.casefold().split("/")
+            if any("/".join(parts[:index]) in file_keys for index in range(1, len(parts))):
                 raise ValueError("inventory file cannot also be a directory")
         capabilities = set(self.capabilities)
         if len(capabilities) != len(self.capabilities):

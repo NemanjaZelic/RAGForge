@@ -1,0 +1,2165 @@
+{
+  "candidates": [
+    {
+      "build_or_reuse_seconds": 2.4395695000421256,
+      "bundle_build_id": "4bf241eb8fdb7c2de5177d329b12c35bc4c460c97e38145864b223f0d5f6e4f1",
+      "candidate": "e5-small",
+      "dimensions": 384,
+      "graph_sha256": "dd476dd0c2514e9b9be83aeb3853fac0763e0bdf4a71645407587d77c48a2d88",
+      "license": "MIT",
+      "methods": {
+        "bm25": {
+          "constructor_seconds": 0.1578942999476567,
+          "first_query_seconds": 0.003670700010843575,
+          "mrr_at_10": 1.0,
+          "negative_with_results": 2,
+          "queries": [
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q01",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q02",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 6
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q03",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q04",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q05",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q06",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q07",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q08",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q09",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q10",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q11",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q12",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q13",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c"
+              ],
+              "returned": 2
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q14",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c"
+              ],
+              "returned": 1
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q15",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 3
+            },
+            {
+              "first_source": "untrusted.md",
+              "kind": "relevant",
+              "query_id": "q16",
+              "ranked_document_ids": [
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q17",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "unanswerable",
+              "query_id": "q18",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 6
+            },
+            {
+              "first_source": null,
+              "kind": "unanswerable",
+              "query_id": "q19",
+              "ranked_document_ids": [],
+              "returned": 0
+            },
+            {
+              "first_source": null,
+              "kind": "unanswerable",
+              "query_id": "q20",
+              "ranked_document_ids": [],
+              "returned": 0
+            }
+          ],
+          "recall_at_5": 1.0,
+          "warm_p50_seconds": 0.0013969000428915024
+        },
+        "dense": {
+          "constructor_seconds": 0.18233350000809878,
+          "first_query_seconds": 1.0557255999883637,
+          "mrr_at_10": 1.0,
+          "negative_with_results": 4,
+          "queries": [
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q01",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q02",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q03",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q04",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q05",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q06",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q07",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q08",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q09",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q10",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q11",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q12",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q13",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q14",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q15",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "untrusted.md",
+              "kind": "relevant",
+              "query_id": "q16",
+              "ranked_document_ids": [
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "unanswerable",
+              "query_id": "q17",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "unanswerable",
+              "query_id": "q18",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "unanswerable",
+              "query_id": "q19",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q20",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            }
+          ],
+          "recall_at_5": 1.0,
+          "warm_p50_seconds": 0.006566199939697981
+        },
+        "hybrid": {
+          "constructor_seconds": 0.3917954999487847,
+          "first_query_seconds": 1.1307993000373244,
+          "mrr_at_10": 1.0,
+          "negative_with_results": 4,
+          "queries": [
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q01",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q02",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q03",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q04",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q05",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q06",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q07",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q08",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q09",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q10",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q11",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q12",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q13",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q14",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q15",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "untrusted.md",
+              "kind": "relevant",
+              "query_id": "q16",
+              "ranked_document_ids": [
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q17",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "unanswerable",
+              "query_id": "q18",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "unanswerable",
+              "query_id": "q19",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q20",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            }
+          ],
+          "recall_at_5": 1.0,
+          "warm_p50_seconds": 0.007622999954037368
+        }
+      },
+      "model_id": "intfloat/multilingual-e5-small",
+      "model_package_bytes": 135928851,
+      "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3"
+    },
+    {
+      "build_or_reuse_seconds": 0.7363163999980316,
+      "bundle_build_id": "f63366da0cbb6bdca2c79f302e4b7c9238435d9fb916c81703ec9fd991fb15c9",
+      "candidate": "minilm",
+      "dimensions": 384,
+      "graph_sha256": "b941bf19f1f1283680f449fa6a7336bb5600bdcd5f84d10ddc5cd72218a0fd21",
+      "license": "Apache-2.0",
+      "methods": {
+        "bm25": {
+          "constructor_seconds": 0.2252483000047505,
+          "first_query_seconds": 0.0024280999787151814,
+          "mrr_at_10": 1.0,
+          "negative_with_results": 2,
+          "queries": [
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q01",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q02",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 6
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q03",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q04",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q05",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q06",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q07",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q08",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q09",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q10",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q11",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q12",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q13",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c"
+              ],
+              "returned": 2
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q14",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c"
+              ],
+              "returned": 1
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q15",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 3
+            },
+            {
+              "first_source": "untrusted.md",
+              "kind": "relevant",
+              "query_id": "q16",
+              "ranked_document_ids": [
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q17",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "unanswerable",
+              "query_id": "q18",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 6
+            },
+            {
+              "first_source": null,
+              "kind": "unanswerable",
+              "query_id": "q19",
+              "ranked_document_ids": [],
+              "returned": 0
+            },
+            {
+              "first_source": null,
+              "kind": "unanswerable",
+              "query_id": "q20",
+              "ranked_document_ids": [],
+              "returned": 0
+            }
+          ],
+          "recall_at_5": 1.0,
+          "warm_p50_seconds": 0.0014709000242874026
+        },
+        "dense": {
+          "constructor_seconds": 0.04047860007267445,
+          "first_query_seconds": 0.21155139990150928,
+          "mrr_at_10": 1.0,
+          "negative_with_results": 4,
+          "queries": [
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q01",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q02",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q03",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q04",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q05",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q06",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q07",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q08",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q09",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q10",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q11",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q12",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q13",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q14",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q15",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "untrusted.md",
+              "kind": "relevant",
+              "query_id": "q16",
+              "ranked_document_ids": [
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "unanswerable",
+              "query_id": "q17",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "unanswerable",
+              "query_id": "q18",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q19",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q20",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            }
+          ],
+          "recall_at_5": 1.0,
+          "warm_p50_seconds": 0.003947199904359877
+        },
+        "hybrid": {
+          "constructor_seconds": 0.054812700022011995,
+          "first_query_seconds": 0.2092362999683246,
+          "mrr_at_10": 1.0,
+          "negative_with_results": 4,
+          "queries": [
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q01",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q02",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "relevant",
+              "query_id": "q03",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q04",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q05",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "transactions.md",
+              "kind": "relevant",
+              "query_id": "q06",
+              "ranked_document_ids": [
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q07",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q08",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "relevant",
+              "query_id": "q09",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q10",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q11",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "offline.md",
+              "kind": "relevant",
+              "query_id": "q12",
+              "ranked_document_ids": [
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q13",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q14",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "relevant",
+              "query_id": "q15",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "untrusted.md",
+              "kind": "relevant",
+              "query_id": "q16",
+              "ranked_document_ids": [
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "authentication.md",
+              "kind": "unanswerable",
+              "query_id": "q17",
+              "ranked_document_ids": [
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "deployment.md",
+              "kind": "unanswerable",
+              "query_id": "q18",
+              "ranked_document_ids": [
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q19",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "134a2749d710e8b2e3d830cd7148fb925d9f183f3be3096d467cf63d6df33ff5"
+              ],
+              "returned": 10
+            },
+            {
+              "first_source": "lokalizacija.md",
+              "kind": "unanswerable",
+              "query_id": "q20",
+              "ranked_document_ids": [
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "3ded391752d57c508f19f159d5f4e941891b3a107291724b8754d6cf4778768c",
+                "d30a9946342d787c499ed2c40932fe5727c68cb46bd8e706b3ebd838c649601c",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "9e7c0ff270aa1e6b827b49be097b90781a8c02818f9e94c9d947bd4fd67ff6a3",
+                "ba5a8737244921558dc81f0527763d01cde8e98205c5572300455bf3bbaf5abe",
+                "87dfcdd84a30b3896e214964f9eea3902b4ed26de51e0a511defe78551bacbdd"
+              ],
+              "returned": 10
+            }
+          ],
+          "recall_at_5": 1.0,
+          "warm_p50_seconds": 0.0050811999244615436
+        }
+      },
+      "model_id": "sentence-transformers/all-MiniLM-L6-v2",
+      "model_package_bytes": 23535508,
+      "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+    }
+  ],
+  "kind": "cpu-model-implementation-pilot",
+  "limits": [
+    "20 development questions with document-level labels, not held-out relevance evidence.",
+    "No abstention threshold; negative results are listed rather than scored as successes.",
+    "Local CPU timings only; no global optimum or semantic quality guarantee."
+  ],
+  "platform": "Windows-11-10.0.26200-SP0",
+  "processor": "Intel64 Family 6 Model 140 Stepping 2, GenuineIntel",
+  "python": "3.13.5",
+  "queries_sha256": "15f39e0ce559a566d75933949dfca6dc13d9023e656819ce544b8e1573d9b376",
+  "selected_initial_model": "intfloat/multilingual-e5-small",
+  "selection_reason": [
+    "Initial multilingual profile including Serbian use; MiniLM card targets English.",
+    "Both candidates were loaded and measured on the same existing development fixtures.",
+    "CPU/size tradeoff is provisional; external test sets are separate."
+  ],
+  "sqlite": "3.49.1",
+  "threads": 4,
+  "versions": {
+    "numpy": "2.4.6",
+    "onnxruntime": "1.31.1",
+    "tokenizers": "0.23.3"
+  }
+}

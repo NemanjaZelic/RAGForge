@@ -25,7 +25,7 @@ from ragforge.core.contracts import (
 )
 from ragforge.core.identity import document_id
 from ragforge.core.parse import ParsedDocument
-from ragforge.types import ContractModel
+from ragforge.types import ContractModel, SearchMethod
 
 APPLICATION_ID = 0x52464731
 SCHEMA_VERSION = 1
@@ -219,7 +219,7 @@ class SQLiteEngine:
         return collection
 
     @staticmethod
-    def _chunk(row: sqlite3.Row, score: float) -> RetrievedChunk:
+    def _chunk(row: sqlite3.Row, score: float, method: SearchMethod = "bm25") -> RetrievedChunk:
         return RetrievedChunk(
             collection_id=row["collection_id"],
             document_id=row["document_id"],
@@ -227,7 +227,7 @@ class SQLiteEngine:
             text=row["text"],
             source=SourceLocation.model_validate_json(row["source_json"]),
             rank_score=score,
-            retrieval_method="bm25",
+            retrieval_method=method,
         )
 
     def list_collections(self) -> list[CollectionDescription]:
@@ -238,18 +238,16 @@ class SQLiteEngine:
             ).fetchone()
             return [CollectionDescription.model_validate(dict(row))]
 
-    def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
-        if request.search_method not in (None, "bm25"):
-            raise RetrievalError(
-                "standalone SQLite index supports only bm25; no dense/hybrid fallback"
-            )
+    def rank_bm25(self, request: RetrieveRequest, limit: int) -> list[tuple[str, float]]:
+        if not 1 <= limit <= 50:
+            raise RetrievalError("candidate limit must be between 1 and 50")
         with self._connect() as connection:
             collection = self._collection(connection, request.collection_id)
             query = plain_query(request.query)
             if query is None:
-                return RetrievalResponse(contract_version="1", results=[])
+                return []
             sql = (
-                "SELECT c.*, -bm25(chunk_fts) AS score FROM chunk_fts "
+                "SELECT c.chunk_id, -bm25(chunk_fts) AS score FROM chunk_fts "
                 "JOIN chunks c ON c.rowid=chunk_fts.rowid "
                 "WHERE chunk_fts MATCH ? AND c.collection_id=?"
             )
@@ -259,20 +257,42 @@ class SQLiteEngine:
                 sql += " AND c.document_id IN (" + ",".join("?" for _ in ids) + ")"
                 params.extend(ids)
             sql += " ORDER BY score DESC, c.chunk_id ASC LIMIT ?"
-            params.append(request.top_k)
-            rows = connection.execute(sql, params).fetchall()
+            params.append(limit)
+            return [
+                (str(row["chunk_id"]), float(row["score"]))
+                for row in connection.execute(sql, params)
+            ]
+
+    def ranked_response(
+        self, ranks: list[tuple[str, float]], request: RetrieveRequest, method: SearchMethod
+    ) -> RetrievalResponse:
+        with self._connect() as connection:
+            collection = self._collection(connection, request.collection_id)
             results: list[RetrievedChunk] = []
             remaining = request.max_output_chars
-            for row in rows:
+            for chunk_id, score in ranks:
+                row = connection.execute(
+                    "SELECT * FROM chunks WHERE collection_id=? AND chunk_id=?",
+                    (collection, chunk_id),
+                ).fetchone()
+                if row is None:
+                    raise RetrievalError("ranked chunk is missing from collection")
                 if len(row["text"]) > remaining:
                     if not results:
                         raise RetrievalError(
                             "max_output_chars is too small for the highest ranked chunk"
                         )
                     break
-                results.append(self._chunk(row, float(row["score"])))
+                results.append(self._chunk(row, score, method))
                 remaining -= len(row["text"])
             return RetrievalResponse(contract_version="1", results=results)
+
+    def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
+        if request.search_method not in (None, "bm25"):
+            raise RetrievalError(
+                "standalone SQLite index supports only bm25; no dense/hybrid fallback"
+            )
+        return self.ranked_response(self.rank_bm25(request, request.top_k), request, "bm25")
 
     def fetch_context(self, request: FetchContextRequest) -> RetrievalResponse:
         with self._connect() as connection:

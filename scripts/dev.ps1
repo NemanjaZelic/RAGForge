@@ -28,7 +28,7 @@ if ($Action -eq 'setup') {
         & (Join-Path $projectRoot '.tools\Scripts\python.exe') -m pip install --disable-pip-version-check 'uv==0.13.6'
         Assert-Exit 'Install uv'
     }
-    & $uvPath sync --locked
+    & $uvPath sync --locked --all-extras
     Assert-Exit 'Sync development environment'
 } else {
     if (-not (Test-Path -LiteralPath $uvPath)) {
