@@ -11,7 +11,8 @@ Ovo je operativni redosled; nije zamena originalne specifikacije niti procena ro
 - [x] Originalni mini-korpus i 20 autorski označenih razvojnih upita.
 - [x] Izolovani alati, cache i okruženje na D; zaključane zavisnosti.
 - [x] GitHub Actions konfiguracija za Windows i Linux.
-- [ ] Prvo izvršavanje CI na GitHub-u (repo nije objavljen).
+- [x] Prvo izvršavanje CI na privatnom GitHub repo-u; Windows/Linux i
+  Python 3.11/3.13 prolaze, uključujući RF-002. Rezultati su u PROGRESS.md.
 
 Lokalna validacija i precizni rezultati su u PREPARATION.md.
 F0 ne znači da je retrieval MVP gotov.

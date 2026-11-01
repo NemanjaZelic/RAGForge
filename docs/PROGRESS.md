@@ -13,9 +13,16 @@ Datum: 2026-11-01. Kanonska radna kopija: `D:\RAGForge`.
   nečitljivi i zamenjeni fajlovi, NFC, Windows junction i CLI offline subprocess.
   71 uspešan test, 3 preskočena zbog case-insensitive filesystem-a i nedostatka
   privilegije za symlink. Ti testovi ostaju aktivni za druge CI platforme.
-  Ruff, mypy i schema drift prolaze. GitHub CI još nije pokrenut.
+  Ruff, mypy i schema drift prolaze. Prvi GitHub CI naknadno uspešno izvršen; detalji ispod.
 - `7ae1a59` GitHub maintenance alat dodatno ima 6 testova koji sprečavaju slanje u javni
-  ili pogrešan repo i proveravaju remote HEAD. Ukupno: 77 passed, 3 skipped.
+  ili pogrešan repo i proveravaju remote HEAD. Tada ukupno: 77 passed, 3 skipped.
+
+- [2f5164c](https://github.com/NemanjaZelic/RAGForge/commit/2f5164c894ca1206d0856747221c939106b71466)
+  RF-002: provereni MD/TXT/HTML parser, deterministički bounded chunker,
+  tačni MD/TXT redovi, HTML bez izmišljenih redova, code blokovi i chunk CLI.
+  Lokalno 102 passed, 3 skipped; sve obavezne provere prolaze.
+  Mini-korpus: 6 dokumenata, 21 chunk, 2840 izlaznih tekstualnih znakova.
+  Ovo je funkcionalna ingestion provera, bez benchmark tvrdnje o retrieval kvalitetu.
 
 Originalni plan je sačuvan neizmenjen; njegov SHA-256 ostaje
 `1023b17b63b39957b71dfbf490099c89537f34434bdb16fbb907cc478dde6524`.
@@ -40,6 +47,14 @@ ispisuje/čuva kredencijale. Proverava nalog, privatnost, identitet repo-a,
 Posle push-a poredi remote main SHA sa lokalnim HEAD. `--open` otvara formu;
 bez `--create`/`--push` nema API upisa ni slanja koda. Ovo je zaseban
 maintenance alat; lokalni scan/retrieval ga ne uvoze i nemaju mrežne pozive.
+
+## GitHub CI — potvrđeno
+
+[RF-002 CI run](https://github.com/NemanjaZelic/RAGForge/actions/runs/41277555420)
+završen je uspešno za commit 2f5164c: Ubuntu i Windows, Python 3.11 i 3.13.
+Svaki job izvršava pytest, lint, format, mypy, schema drift i izgradnju wheel/sdist.
+Prethodni početni CI run 41277114172 takođe je uspešan.
+Lokalna tri preskakanja su platform/privilege zavisna; ne predstavljaju CI grešku.
 
 ## Sledeći korak
 
