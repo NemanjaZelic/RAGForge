@@ -22,14 +22,15 @@ def test_help_and_version_are_real_commands() -> None:
     assert version.output.strip() == __version__
 
 
-def test_doctor_reports_implemented_engine_without_claiming_bundle() -> None:
+def test_doctor_reports_implemented_bundle_and_search_methods() -> None:
     result = runner.invoke(app, ["doctor"])
     assert result.exit_code == 0
     report = json.loads(result.output)
     assert report["fts5"] is True
     assert report["retrieval_implemented"] is True
-    assert report["bundle_implemented"] is False
-    assert report["retrieval_methods"] == ["bm25"]
+    assert report["bundle_implemented"] is True
+    assert report["retrieval_methods"] == ["bm25", "dense", "hybrid"]
+    assert report["balanced_dependencies_available"] is True
 
 
 @pytest.mark.parametrize("name", ["manifest", "retrieve-request", "retrieval-response"])

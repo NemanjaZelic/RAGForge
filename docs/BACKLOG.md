@@ -87,7 +87,13 @@ normalizacija običnog upita; veći javni score znači bolji rang.
 Done: retrieve vraća ugovorene rezultate; prazna i nepostojeća kolekcija imaju
 jasno ponašanje; apostrofi/operatori/ćirilica/dijakritici ne ruše query.
 
-### RF-009 — Obavezni dense i hybrid u v0.1
+### RF-009 — Obavezni dense i hybrid u v0.1 [implementirano]
+
+Implementirano: lokalni ONNX CPU provider, NumPy exact cosine backend i RRF
+nad istim SQLite izvorima. Izmerena dva pinovana kandidata; početni višejezični
+izbor je E5-small, privremeno do reprezentativne evaluacije. Offline model
+build/query radi na Windows/Linux CI. [Detalji](LOCAL-BUNDLES.md).
+Reprezentativne test setove priprema drugi agent; ovaj korak ih ne menja.
 
 Jedan CPU query embedding model, jedan embedded dense backend i RRF nad
 istim kolekcijama/izvorima kao BM25. Balanced je podrazumevani build profil.
@@ -96,7 +102,12 @@ Done: pravi semantic/hybrid upit bez mreže, lokalno dostupan model,
 parafrazirana golden pitanja i poređenje BM25/dense/hybrid pod istim uslovima.
 Ovaj zadatak je premešten iz F2 u F1; reranker i više modela ostaju kasnije.
 
-### RF-004 — Builder i integritet bundle-a
+### RF-004 — Builder i integritet bundle-a [završeno]
+
+Implementirano: staging build, no-replace publikacija na Windows/Linux,
+potpun inventar, checksum i cross-component provere; nema automatskog download-a
+ili deploy-a. Testovi odbijaju kvarove, lažne inventare i racing prazni cilj.
+Odluka o licenci samog projekta i korpusa ostaje NOASSERTION.
 
 Zatvorena SQLite baza, dense indeks i lokalno query-model pakovanje za balanced;
 potpuni inventar, licence/verzije/hash-evi; build u staging-u; bez prepisivanja
@@ -104,7 +115,13 @@ postojećeg paketa po defaultu. Minimal profil ostaje manji BM25-only paket.
 Done: kvar fajla, lažni hash, neočekivana putanja i nepoznata verzija se odbijaju;
 neuspešan build ne kvari stari paket; nema WAL/SHM zavisnosti u izvezenom bundle-u.
 
-### RF-005 — Stvarni build/use/context CLI
+### RF-005 — Stvarni build/use/context CLI [lokalni tok završen]
+
+Implementirano: build/use/verify/context nad bundle engine-om, balanced/hybrid
+default i eksplicitni bm25/dense izbor. --compute/--mode prihvataju samo local.
+Kopirani balanced paket prolazi socket/DNS-blocked build/use sa stvarnim
+pretrained modelom. Linux CI dodatno prolazi unshare --net.
+MCP/shared/cloud tokovi ostaju F2 i naredne faze.
 
 Implementirati komande iz plana nad istim engine-om, stabilan JSON na stdout,
 dijagnostiku na stderr, nedvosmislene exit kodove.
@@ -128,12 +145,14 @@ Za potpuno mrežno izolovan OS test dodati poseban Linux job pre v0.1 release-a.
 
 Detaljna metodologija: [TESTING-PLAN.md](TESTING-PLAN.md).
 
-Razvojni međukorak: index/search/context offline MD+PDF CLI E2E i mini
-BM25 report su implementirani. Ovo ne zatvara RF-006A jer traži konačni
-bundle build/use, a RF-006 i dalje traži dense/hybrid poređenje i OS izolaciju.
+Mini razvojni baseline i BM25/dense/hybrid upoređenje postoje na istim
+postojećim pitanjima. OS offline build/query provera sada je u Linux CI.
+To ne zatvara širi RF-006: reprezentativni korpusi, nezavisni evidence labels
+i final holdout pripadaju zasebnom test-set poslu drugog agenta.
 
-- [ ] RF-006A: postojeći mini-korpus i 20 pitanja ostaju brza razvojna provera;
-  implementirati stvarni build/query E2E. To nije dokaz kvaliteta na realnim docs.
+- [x] RF-006A: mini-korpus/20 pitanja i stvarni bundle build/query E2E su
+  implementirani, uključujući kopiranje, BM25 bez ML imports i stvarni offline
+  pretrained-model upit na Windows/Linux. To nije dokaz kvaliteta na realnim docs.
 - [ ] RF-006B: odabrati i pinovati 3 raznovrsna realna korpusa, zabeležiti izvore,
   hash-eve i licence; napraviti 30 pilot pitanja po korpusu sa proverom oznaka.
 - [ ] RF-006C: izmeriti proizvod na pilotu i proširiti ka 5 korpusa sa po
@@ -147,7 +166,7 @@ bundle build/use, a RF-006 i dalje traži dense/hybrid poređenje i OS izolaciju
 - [ ] Isti evaluator za BM25 baseline, dense, hybrid i RF-013 optimizer, bez ulepšavanja
   rezultata povećanjem outputa ili ponovnim podešavanjem na završnom testu.
 
-Spoljašnji korpusi i golden skupovi su planirani, još nisu preuzeti/izrađeni.
+Reprezentativne korpuse i golden skupove priprema drugi agent u zasebnoj isporuci.
 Pilot ne blokira prvi mali demo; realni benchmark je potreban pre širih
 tvrdnji o kvalitetu proizvoda i automatskoj optimizaciji.
 
@@ -205,5 +224,5 @@ RF-014: jedan serverless BM25 PoC sa merenjima i eksplicitnom matricom podrške.
 - Licenca javnog projekta: Apache-2.0 ili MIT prema originalnom predlogu.
 - Realan reprezentativni korpus, jezici i ciljevi kvaliteta/veličine/latencije.
 - Prvi agent za podršku uz generic MCP.
-- Jedan dense backend i model za v0.1 biraju se kroz rani pilot; dodatni modeli kasnije.
+- Početni pilot bira E5-small i exact cosine; potvrda kvaliteta sledi na novom test setu.
 - Mrežni/cloud provider se ne bira za F0/F1.

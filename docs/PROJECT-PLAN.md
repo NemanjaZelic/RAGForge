@@ -30,3 +30,7 @@ Ostale ranije preporuke korisnik je prihvatio; PDF i hybrid se ne odlažu.
 Važeći usvojeni obim je u RELEASE-SCOPE.md, koji ima prednost pri neslaganju.
 Optimizer je odvojeni opcioni završni korak; njegova prva verzija može raditi
 lokalno bez čekanja cloud ili serverless podrške.
+
+Implementacioni napredak: RF-009/004/005 lokalni balanced tok je implementiran.
+[LOCAL-BUNDLES.md](LOCAL-BUNDLES.md) ima stvarne komande, format i granice.
+Mini razvojni pilot ne zamenjuje reprezentativne test setove drugog agenta.

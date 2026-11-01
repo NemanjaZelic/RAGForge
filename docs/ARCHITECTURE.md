@@ -16,8 +16,7 @@ Jedna distribucija `ragforge`, Python >=3.11, `src` layout:
 - `tests/`: ugovori, lokalna CLI provera i fixtures.
 
 Runtime zavisnosti su Typer, Pydantic i zaključani pypdf; lokalni SQLite
-FTS5 koristi standardnu biblioteku. CPU embedding/dense sloj još treba dodati
-za balanced tok; HTTP/MCP su kasnije. ReportLab/Pillow su samo dev fixture alati.
+FTS5 koristi standardnu biblioteku. Opcioni balanced CPU sloj koristi ONNX Runtime, Tokenizers i NumPy; HTTP/MCP su kasnije. ReportLab/Pillow su samo dev fixture alati.
 Lockfile obuhvata implementiranu F1 osnovu.
 
 ## Minimalni bundle v1 — nacrt
@@ -48,8 +47,7 @@ Sama validacija šeme nije verifikacija sadržaja paketa ili bezbednosti SQLite-
 Minimalni bundle ne uključuje Python interpreter ili univerzalne binarne fajlove.
 Potrebna je kompatibilna instalacija RAGForge runtime-a. Samostalno OS/arch
 pakovanje dolazi zasebno. RF-000 modeli i šeme sada opisuju minimal i balanced profil, lokalni query model,
-dense indeks i podržane metode. Backend i model još nisu izabrani pilotom. Ova dokumentacija ne
-tvrdi da trenutni kod već gradi ili pretražuje hybrid bundle.
+dense indeks i podržane metode. Početni pilot bira E5-small i NumPy exact cosine; izbor je privremen do šire evaluacije. RF-009/004/005 sada grade i pretražuju stvarni lokalni hybrid bundle.
 
 ## Identitet i provenance
 
@@ -189,3 +187,13 @@ Jedna metadata/FTS5 baza, read-only SQLiteEngine i stvarni development
 index/search/context CLI. Detalji scoring-a, scope-a, output limita i merne
 granice su u [RETRIEVAL.md](RETRIEVAL.md). RF-009 proširuje isti ugovor
 dense/hybrid metodama; RF-004 tek pakuje i verifikuje bundle.
+
+## RF-009/004/005 — implementirani lokalni balanced tok
+
+[LOCAL-BUNDLES.md](LOCAL-BUNDLES.md) opisuje pinovani ONNX CPU model,
+exact cosine/RRF, lazy inference, bundle inventar i atomic no-replace build.
+BundleEngine jedinstveno rutira metode; SQLiteEngine ostaje zajednički
+metadata/FTS backend. BM25 ne učitava ML biblioteke ili dense matricu.
+Query model/descriptor/licence su lokalno spakovani i hash verifikovani.
+Parser konfiguracija, uključujući PDF opcije, eksplicitno je u manifestu.
+Reprezentativni quality gate ostaje odvojeni RF-006 test-set posao.

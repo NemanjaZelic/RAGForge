@@ -94,3 +94,24 @@ Slede RF-009 izbor i pilot CPU query modela/dense backend-a, pa RF-004
 bundle integritet i RF-005 build/use. Širi RF-006 benchmark ostaje uslov.
 Bundle build/use još nisu implementirani. Pravi dense/hybrid
 ostaju obavezan deo v0.1 prema RELEASE-SCOPE.md.
+
+## Lokalni balanced tok — nova isporuka
+
+- 5aa0c88: lokalni CPU ONNX provider, exact cosine/RRF, verifikovani
+  minimal/balanced bundle-i i stvarni build/use/verify/context.
+- [CI 41281667303](https://github.com/NemanjaZelic/RAGForge/actions/runs/41281667303)
+  prošao je svih 6 poslova: Windows/Linux Python 3.11/3.13 provere i stvarni
+  pinovani E5 build/query na Windows/Linux; Linux OS network namespace
+  build/query korak takođe prolazi.
+- Lokalno je proveren kompletan skup sa stvarnim E5 modelom: 158 passed,
+  3 Windows platform/privilege skip-a; naknadni PDF bundle test takođe prolazi.
+- [Pilot dva modela](benchmarks/model-runtime-pilot.json) meri isti postojeći
+  mini-skup za BM25/dense/hybrid. Pozitivne document-level metrike su 1.0;
+  dense/hybrid vraćaju rezultate na 4/4 negativna upita. To nije dokaz
+  abstention-a ili kvaliteta na reprezentativnim korpusima.
+- Modeli, alati, cache i lokalni bundle-i ostaju na D i van Git izvora.
+  Code/model licence se ne mešaju: početni model MIT, projekat/korpus NOASSERTION.
+
+RF-009 implementacija i RF-004/005 lokalni tok su završeni uz navedene granice.
+Test setove priprema zaseban agent. Slede njihova evaluacija i agent/MCP sloj;
+ne tvrdi se završen v0.1 release dok reprezentativni quality uslovi ne prođu.

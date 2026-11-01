@@ -6,6 +6,7 @@ import sqlite3
 from contextlib import closing
 from dataclasses import asdict
 from enum import StrEnum
+from importlib.util import find_spec
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -91,8 +92,11 @@ def doctor() -> None:
                 "sqlite": sqlite3.sqlite_version,
                 "fts5": available,
                 "retrieval_implemented": True,
-                "retrieval_methods": ["bm25"],
-                "bundle_implemented": False,
+                "retrieval_methods": ["bm25", "dense", "hybrid"],
+                "balanced_dependencies_available": all(
+                    find_spec(name) is not None for name in ("numpy", "onnxruntime", "tokenizers")
+                ),
+                "bundle_implemented": True,
             },
             sort_keys=True,
         )

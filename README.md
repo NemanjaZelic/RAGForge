@@ -2,8 +2,10 @@
 
 Portable document retrieval for agents. Local execution is the default.
 
-**Development stage: Phase 1 started (RF-000/001/002/003 complete; RF-007 PDF adapter implemented).**
-Standalone BM25 indexing and cited local search now work. Balanced/hybrid bundles are the next milestone.
+**Development stage: local balanced build/use implemented (RF-009/004/005).**
+Portable minimal/balanced bundles, local BM25/dense/hybrid search and source
+citations now work. Broader evaluation and agent integrations remain in the plan.
+See [local bundle behavior and limits](docs/LOCAL-BUNDLES.md).
 
 Start with the [current working plan](docs/PROJECT-PLAN.md).
 The original proposal is preserved in [docs/RAGForge-Project-Plan.md](docs/RAGForge-Project-Plan.md).
@@ -53,7 +55,7 @@ uv run python scripts/export_schemas.py --check
 
 ## Implemented
 
-- Typer CLI: index/search/context, corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
+- Typer CLI: build/use/verify/context, standalone index/search, corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
 - Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.
   Scan inventories bytes; it does not parse PDF text or build a searchable index.
 - Text-bearing PDF parsing, physical page citations, page status and explicit partial mode;
@@ -64,6 +66,9 @@ uv run python scripts/export_schemas.py --check
   HTML source line numbers remain unknown. See [parser limits](docs/PARSING.md).
 - Real SQLite FTS5/BM25 engine: literal queries, filters, read-only results and scoped context.
   See [retrieval behavior and measured baseline](docs/RETRIEVAL.md).
+- Local ONNX CPU embeddings, exact cosine vectors and RRF over the same SQLite sources.
+- Balanced defaults to hybrid; explicit BM25 never imports/loads embedding libraries.
+- Verified bundle inventories, copied query model/licenses and atomic publication to a new directory.
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
 - Synthetic manifest examples in `examples/manifests/`; these are not built bundles.
 - Small original document corpus and 20 development queries with authored relevance labels.
@@ -79,10 +84,11 @@ lightweight query option on the same bundle and the benchmark baseline.
 
 `mixed documents → parse/chunk → BM25 + dense → bundle → hybrid query → cited source`
 
-Planned commands such as `build`, `use`, `integrate` and `deploy` are not advertised
-as working commands. The BM25 engine is implemented; dense/hybrid and bundle build/use are pending.
-The planned v0.1 balanced path requires a locally available embedding model;
-HTTP hosting, GPU, cloud accounts and Docker are not required.
+The local `build`, `use`, `verify` and `context` commands work on the same engine.
+Model preparation is explicit and separate; build/query never download anything.
+The initial multilingual model candidate is a pinned quantized E5-small.
+Representative quality evaluation is a separate workstream and still gates v0.1.
+Agent/MCP and remote/cloud adapters remain later milestones.
 
 The bundle data format and the executable runtime are separate. A bundle is not
 a universal executable for every operating system.
@@ -91,3 +97,19 @@ Project license is still a proposal in the source plan; no license choice or
 public release has been made.
 
 Private GitHub setup and progress: [docs/PROGRESS.md](docs/PROGRESS.md).
+
+## Local balanced quickstart
+
+Development setup installs the optional balanced dependencies. Once, while online,
+prepare the pinned public model (skip this if the directory is already prepared):
+
+```powershell
+.\scripts\dev.ps1 run python scripts/prepare_models.py e5-small models/e5-small
+.\scripts\dev.ps1 run ragforge build examples/mini-docs --output kb/mini-v1 --model models/e5-small --collection mini --offline
+.\scripts\dev.ps1 run ragforge use kb/mini-v1 --mode local --query "How are access tokens sent?"
+.\scripts\dev.ps1 run ragforge use kb/mini-v1 --query rollback --search-method bm25
+```
+
+Use a new output directory for each build. Minimal build uses `--profile minimal`
+and needs no model/ML dependencies. Bundles contain data and a local query model;
+a compatible runtime installation is still required on the receiving machine.
