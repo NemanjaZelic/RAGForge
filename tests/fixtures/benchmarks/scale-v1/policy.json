@@ -1,0 +1,42 @@
+{
+  "schema_version": "1",
+  "production_dataset_policy": "complete_frozen_collection_no_cherry_picked_guides",
+  "smoke_dataset_is_release_quality_evidence": false,
+  "native_context_negative_is_global_negative": false,
+  "required_tracks": [
+    "ingestion",
+    "retrieval_evidence",
+    "version_scope",
+    "resources"
+  ],
+  "primary_source": "official_ETSI_PDF_inventory",
+  "primary_cataloged_pdf_files": 4709,
+  "primary_listed_source_bytes": 3557060805,
+  "raw_and_input_required_bytes": 7114121610,
+  "alternative_tspec_markdown_files": 15420,
+  "alternative_tspec_markdown_bytes": 4727725277,
+  "native_qa_cases_prepared": 4763,
+  "full_corpus_retrieval_ready": false,
+  "test_set_locked": false,
+  "full_corpus_source_mapping": "pending",
+  "large_source_download": "complete_raw_and_input_verified",
+  "storage_budget_bytes": 65000000000,
+  "acquisition_budget_bytes": 15000000000,
+  "storage_budget_scope": [
+    "raw_sources",
+    "input_copies",
+    "extracted_text",
+    "build_staging",
+    "indexes",
+    "benchmark_models",
+    "results"
+  ],
+  "product_execution": "not_run",
+  "whole_corpus_holdout": "kernel-6-18",
+  "supplementary_draft_queries": 240,
+  "multi_document_draft_queries": 40,
+  "version_scope_draft_queries": 42,
+  "actual_source_files": 18434,
+  "actual_input_bytes": 4243558798,
+  "current_storage_bytes": 8548393425
+}

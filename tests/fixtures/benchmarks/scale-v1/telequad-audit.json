@@ -1,0 +1,5125 @@
+{
+  "upstream": "EricssonResearch/TeleQuAD",
+  "revision": "efb7f586b81f5b1d16805b7df4771c6e02d0c7dc",
+  "status": "native_data_acquired_no_product_execution",
+  "license": "CC-BY-ND-4.0 per upstream README; originals unchanged, local use; no derived dataset redistributed",
+  "extractive": {
+    "questions": 4485,
+    "paragraph_records": 536,
+    "unique_source_strings": 369,
+    "unique_spec_versions": 14,
+    "unique_query_ids": 4485,
+    "span_audit": {
+      "answerable_in_provided_context": 4262,
+      "answer_span_exact_exclusive": 6474,
+      "unanswerable_in_provided_context": 223,
+      "answer_span_mismatch": 2
+    },
+    "unanswerability_scope": "Only the supplied paragraph; NOT proof of absence from the full corpus.",
+    "split_status": "preserve native data; group by source specification family before any local split",
+    "strict_full_corpus_retrieval_eligible": false
+  },
+  "tabular": {
+    "questions": 278,
+    "unique_document_versions": 36,
+    "status": "Draft TeleQuAD-v1-full-Tabular",
+    "source_files": [
+      "22104-i30.doc",
+      "22261-ic0.doc",
+      "22847-i20.docx",
+      "22859-i20.docx",
+      "22867-i20.docx",
+      "22874-i20.docx",
+      "22878-i20.doc",
+      "23041-i30.doc",
+      "23247-i40.docx",
+      "23256-i30.docx",
+      "23281-i60.docx",
+      "23304-i50.docx",
+      "23316-i40.docx",
+      "23379-i90.docx",
+      "23401-i50.docx",
+      "23433-i20.docx",
+      "23540-i40.docx",
+      "23554-i60.docx",
+      "24080-i40.docx",
+      "26117-i10.docx",
+      "26118-i00.docx",
+      "26132-i10.docx",
+      "26501-i50.docx",
+      "26531-i10.docx",
+      "26532-i10.docx",
+      "26806-i00.docx",
+      "26925-i10.docx",
+      "26926-i10.docx",
+      "26928-i00.docx",
+      "28105-i20.docx",
+      "29116-i00.doc",
+      "29118-i00.docx",
+      "29122-i40.doc",
+      "29128-i00.docx",
+      "29172-i10.docx",
+      "32256-i20.docx"
+    ],
+    "page_semantics": "upstream DOCX pagination; not assumed to be physical ETSI PDF pages",
+    "strict_full_corpus_retrieval_eligible": false
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/EricssonResearch/TeleQuAD/efb7f586b81f5b1d16805b7df4771c6e02d0c7dc/README.md",
+      "size_bytes": 4445,
+      "sha256": "5066c57dba6172b776567f97dd3636f62da9e4baea06a1e9d101887725880b55"
+    },
+    {
+      "path": "extractive/v4/README.md",
+      "url": "https://raw.githubusercontent.com/EricssonResearch/TeleQuAD/efb7f586b81f5b1d16805b7df4771c6e02d0c7dc/extractive/v4/README.md",
+      "size_bytes": 2286,
+      "sha256": "592283219d9407d0b2f0624c8b251b043cdac47ef501f33a8658759a0c2cc655"
+    },
+    {
+      "path": "extractive/v4/TeleQuAD-v4-full.json",
+      "url": "https://raw.githubusercontent.com/EricssonResearch/TeleQuAD/efb7f586b81f5b1d16805b7df4771c6e02d0c7dc/extractive/v4/TeleQuAD-v4-full.json",
+      "size_bytes": 4176236,
+      "sha256": "c46a4ab82d385869a6a6b09573a0d6e1abcece8e68b71b4dbf7102f48b0b3954"
+    },
+    {
+      "path": "tabular/README.md",
+      "url": "https://raw.githubusercontent.com/EricssonResearch/TeleQuAD/efb7f586b81f5b1d16805b7df4771c6e02d0c7dc/tabular/README.md",
+      "size_bytes": 1899,
+      "sha256": "f16ad8ddbc5cf9488f939a7e9e66c91ea0fa0abc1577933162179b15daf71965"
+    },
+    {
+      "path": "tabular/v1/TeleQuAD-v1-full-Tabular.json",
+      "url": "https://raw.githubusercontent.com/EricssonResearch/TeleQuAD/efb7f586b81f5b1d16805b7df4771c6e02d0c7dc/tabular/v1/TeleQuAD-v1-full-Tabular.json",
+      "size_bytes": 1272862,
+      "sha256": "0551612632385060159e91be55f0d211ed9cd46bae0fd60d1232992dfbab061c"
+    }
+  ],
+  "source_records": [
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "1",
+      "title": "3GPP-Specs#23273-g50#30",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "2",
+      "title": "3GPP-Specs#23009-g00#72",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "3",
+      "title": "3GPP-Specs#23009-g00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "4",
+      "title": "3GPP-Specs#23273-g50#27",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "5",
+      "title": "3GPP-Specs#23097-g00#01",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "6",
+      "title": "3GPP-Specs#23273-g50#53",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#29",
+      "upstream_docid": "7",
+      "title": "3GPP-Specs#21915-f00#29",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "8",
+      "title": "3GPP-Specs#23273-g50#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "9",
+      "title": "3GPP-Specs#23012-g00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#33",
+      "upstream_docid": "10",
+      "title": "3GPP-Specs#32240-f50#33",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "11",
+      "title": "3GPP-Specs#23009-g00#45",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#30",
+      "upstream_docid": "12",
+      "title": "3GPP-Specs#38305-f70#30",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/delegates-corner/writing-a-new-spec",
+      "upstream_docid": "13",
+      "title": "Write a new Spec",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#32",
+      "upstream_docid": "14",
+      "title": "3GPP-Specs#32240-f50#32",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/SDR_Amarisoft.html",
+      "upstream_docid": "15",
+      "title": "SDR: Callbox Classsic/Mini",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "16",
+      "title": "3GPP-Specs#23009-g00#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#55",
+      "upstream_docid": "17",
+      "title": "3GPP-Specs#21915-f00#55",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#11",
+      "upstream_docid": "18",
+      "title": "3GPP-Specs#25996-f00#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "19",
+      "title": "3GPP-Specs#23273-g50#39",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "20",
+      "title": "3GPP-Specs#23009-g00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ct/ct1-mm-cc-sm-lu/home/19-specifications-groups/34-uniform-resource-name-urn-list",
+      "upstream_docid": "21",
+      "title": "Uniform Resource Identifier (URI) list",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#17",
+      "upstream_docid": "22",
+      "title": "3GPP-Specs#21915-f00#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#26",
+      "upstream_docid": "23",
+      "title": "3GPP-Specs#21915-f00#26",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#73",
+      "upstream_docid": "24",
+      "title": "3GPP-Specs#21915-f00#73",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_MTC.html",
+      "upstream_docid": "25",
+      "title": "IoT: MTC",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_NB_FrameStructure_UL.html",
+      "upstream_docid": "26",
+      "title": "NB-IoT: FrameStructure UL",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "27",
+      "title": "3GPP-Specs#23009-g00#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "28",
+      "title": "3GPP-Specs#23009-g00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#08",
+      "upstream_docid": "29",
+      "title": "3GPP-Specs#25996-f00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "30",
+      "title": "3GPP-Specs#23012-g00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_Category0.html",
+      "upstream_docid": "31",
+      "title": "IoT: Category 1/0",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#14",
+      "upstream_docid": "32",
+      "title": "3GPP-Specs#25996-f00#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "33",
+      "title": "3GPP-Specs#23012-g00#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#20",
+      "upstream_docid": "34",
+      "title": "3GPP-Specs#45009-f00#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#96",
+      "upstream_docid": "35",
+      "title": "3GPP-Specs#21915-f00#96",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23108-g00",
+      "upstream_docid": "36",
+      "title": "3GPP-Specs#23108-g00#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23108",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#38",
+      "upstream_docid": "37",
+      "title": "3GPP-Specs#25211-f00#38",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications/specification-numbering/2044-spec-file-name-conventions",
+      "upstream_docid": "38",
+      "title": "Spec file name conventions",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#49",
+      "upstream_docid": "39",
+      "title": "3GPP-Specs#21915-f00#49",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/WLAN_Overview.html",
+      "upstream_docid": "40",
+      "title": "WiFi: Overview",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#43",
+      "upstream_docid": "41",
+      "title": "3GPP-Specs#32240-f50#43",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/105-son",
+      "upstream_docid": "42",
+      "title": "SON",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#03",
+      "upstream_docid": "43",
+      "title": "3GPP-Specs#21915-f00#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#18",
+      "upstream_docid": "44",
+      "title": "3GPP-Specs#25211-f00#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/BasicProcedure_LTE_MIMO.html",
+      "upstream_docid": "45",
+      "title": "Comm. Tech.: MIMO",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "46",
+      "title": "3GPP-Specs#23009-g00#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#38",
+      "upstream_docid": "47",
+      "title": "3GPP-Specs#32240-f50#38",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "48",
+      "title": "3GPP-Specs#23012-g00#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#67",
+      "upstream_docid": "49",
+      "title": "3GPP-Specs#38305-f70#67",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications/60-confidentiality-algorithms",
+      "upstream_docid": "50",
+      "title": "Confidentiality Algorithms",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#91",
+      "upstream_docid": "51",
+      "title": "3GPP-Specs#21915-f00#91",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "52",
+      "title": "3GPP-Specs#23273-g50#25",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "53",
+      "title": "3GPP-Specs#23097-g00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#43",
+      "upstream_docid": "54",
+      "title": "3GPP-Specs#21915-f00#43",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#09",
+      "upstream_docid": "55",
+      "title": "3GPP-Specs#25211-f00#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/1612-ue-category",
+      "upstream_docid": "56",
+      "title": "LTE ue-Category",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "57",
+      "title": "3GPP-Specs#23012-g00#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#18",
+      "upstream_docid": "58",
+      "title": "3GPP-Specs#38305-f70#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "59",
+      "title": "3GPP-Specs#23009-g00#50",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#54",
+      "upstream_docid": "60",
+      "title": "3GPP-Specs#21915-f00#54",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#07",
+      "upstream_docid": "61",
+      "title": "3GPP-Specs#52008-f00#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "62",
+      "title": "3GPP-Specs#23273-g50#50",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_NB_LTE.html",
+      "upstream_docid": "63",
+      "title": "IoT: NB-IoT",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/LR_LPWAN_LoRa.html",
+      "upstream_docid": "64",
+      "title": "IoT: LoRa",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#65",
+      "upstream_docid": "65",
+      "title": "3GPP-Specs#38305-f70#65",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#58",
+      "upstream_docid": "66",
+      "title": "3GPP-Specs#38305-f70#58",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "67",
+      "title": "3GPP-Specs#23273-g50#36",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#37",
+      "upstream_docid": "68",
+      "title": "3GPP-Specs#32240-f50#37",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#08",
+      "upstream_docid": "69",
+      "title": "3GPP-Specs#52008-f00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#72",
+      "upstream_docid": "70",
+      "title": "3GPP-Specs#21915-f00#72",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#39",
+      "upstream_docid": "71",
+      "title": "3GPP-Specs#25211-f00#39",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#12",
+      "upstream_docid": "72",
+      "title": "3GPP-Specs#25996-f00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "73",
+      "title": "3GPP-Specs#23273-g50#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#66",
+      "upstream_docid": "74",
+      "title": "3GPP-Specs#21915-f00#66",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#27",
+      "upstream_docid": "75",
+      "title": "3GPP-Specs#38305-f70#27",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "76",
+      "title": "3GPP-Specs#23009-g00#82",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/news-events/2128-r6_geran",
+      "upstream_docid": "77",
+      "title": "End of an era as RAN6 closes",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#62",
+      "upstream_docid": "78",
+      "title": "3GPP-Specs#38305-f70#62",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "79",
+      "title": "3GPP-Specs#23273-g50#51",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#72",
+      "upstream_docid": "80",
+      "title": "3GPP-Specs#38305-f70#72",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "81",
+      "title": "3GPP-Specs#23009-g00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#55",
+      "upstream_docid": "82",
+      "title": "3GPP-Specs#38305-f70#55",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#31",
+      "upstream_docid": "83",
+      "title": "3GPP-Specs#21915-f00#31",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#98",
+      "upstream_docid": "84",
+      "title": "3GPP-Specs#21915-f00#98",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#10",
+      "upstream_docid": "85",
+      "title": "3GPP-Specs#25996-f00#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21111-f20#09",
+      "upstream_docid": "86",
+      "title": "3GPP-Specs#21111-f20#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21111",
+      "version_code": "f20",
+      "release": 15,
+      "version": "15.2.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "87",
+      "title": "3GPP-Specs#23097-g00#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_ErrorCorrection.html",
+      "upstream_docid": "88",
+      "title": "Comm. Tech.: Error Correction",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#69",
+      "upstream_docid": "89",
+      "title": "3GPP-Specs#21915-f00#69",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#04",
+      "upstream_docid": "90",
+      "title": "3GPP-Specs#45009-f00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "91",
+      "title": "3GPP-Specs#23273-g50#34",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "92",
+      "title": "3GPP-Specs#23273-g50#43",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#39",
+      "upstream_docid": "93",
+      "title": "3GPP-Specs#32240-f50#39",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "94",
+      "title": "3GPP-Specs#23273-g50#31",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#16",
+      "upstream_docid": "95",
+      "title": "3GPP-Specs#32240-f50#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#01",
+      "upstream_docid": "96",
+      "title": "3GPP-Specs#25211-f00#01",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "97",
+      "title": "3GPP-Specs#23009-g00#54",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ran-plenary/ran2-radio-layer-2-and-radio-layer-3-rr",
+      "upstream_docid": "98",
+      "title": "RAN2 - Radio layer 2 and Radio layer 3 RR",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "99",
+      "title": "3GPP-Specs#23097-g00#25",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#25",
+      "upstream_docid": "100",
+      "title": "3GPP-Specs#21915-f00#25",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ran-plenary/ran5-mobile-terminal-conformance-testing/home",
+      "upstream_docid": "101",
+      "title": "Home",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#63",
+      "upstream_docid": "102",
+      "title": "3GPP-Specs#38305-f70#63",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "103",
+      "title": "3GPP-Specs#23273-g50#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#15",
+      "upstream_docid": "104",
+      "title": "3GPP-Specs#45009-f00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#29",
+      "upstream_docid": "105",
+      "title": "3GPP-Specs#25211-f00#29",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#22",
+      "upstream_docid": "106",
+      "title": "3GPP-Specs#25996-f00#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "107",
+      "title": "3GPP-Specs#23273-g50#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "108",
+      "title": "3GPP-Specs#23009-g00#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#07",
+      "upstream_docid": "109",
+      "title": "3GPP-Specs#38305-f70#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#15",
+      "upstream_docid": "110",
+      "title": "3GPP-Specs#21915-f00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#47",
+      "upstream_docid": "111",
+      "title": "3GPP-Specs#21915-f00#47",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#51",
+      "upstream_docid": "112",
+      "title": "3GPP-Specs#32240-f50#51",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_TimeInvarience.html",
+      "upstream_docid": "113",
+      "title": "Comm. Tech.: Time Invarience",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21111-f20#06",
+      "upstream_docid": "114",
+      "title": "3GPP-Specs#21111-f20#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21111",
+      "version_code": "f20",
+      "release": 15,
+      "version": "15.2.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/98-lte",
+      "upstream_docid": "115",
+      "title": "LTE",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ct/wg6",
+      "upstream_docid": "116",
+      "title": "CT WG6 - Smart Card Application Aspects",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ran-plenary/ran3-iu,-iub,-iur,-s1,-x2-and-utran-e-utran",
+      "upstream_docid": "117",
+      "title": "RAN3 - Iu, Iub, Iur, S1, X2 and UTRAN/E-UTRAN",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#17",
+      "upstream_docid": "118",
+      "title": "3GPP-Specs#25996-f00#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "119",
+      "title": "3GPP-Specs#23009-g00#58",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#11",
+      "upstream_docid": "120",
+      "title": "3GPP-Specs#45009-f00#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "121",
+      "title": "3GPP-Specs#23009-g00#69",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#09",
+      "upstream_docid": "122",
+      "title": "3GPP-Specs#25996-f00#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "123",
+      "title": "3GPP-Specs#23097-g00#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_Communication_PseudoRandom.html",
+      "upstream_docid": "124",
+      "title": "Comm. Tech.: Pseudo Random",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#16",
+      "upstream_docid": "125",
+      "title": "3GPP-Specs#25211-f00#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#07",
+      "upstream_docid": "126",
+      "title": "3GPP-Specs#45009-f00#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "127",
+      "title": "3GPP-Specs#23097-g00#24",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#12",
+      "upstream_docid": "128",
+      "title": "3GPP-Specs#45009-f00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#54",
+      "upstream_docid": "129",
+      "title": "3GPP-Specs#38305-f70#54",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "130",
+      "title": "3GPP-Specs#23273-g50#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#84",
+      "upstream_docid": "131",
+      "title": "3GPP-Specs#21915-f00#84",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#16",
+      "upstream_docid": "132",
+      "title": "3GPP-Specs#45009-f00#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "133",
+      "title": "3GPP-Specs#23009-g00#89",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/2090-unmanned-aerial-systems-over-5g",
+      "upstream_docid": "134",
+      "title": "Unmanned Aerial Systems over 5G ",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#64",
+      "upstream_docid": "135",
+      "title": "3GPP-Specs#21915-f00#64",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "136",
+      "title": "3GPP-Specs#23097-g00#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#17",
+      "upstream_docid": "137",
+      "title": "3GPP-Specs#38305-f70#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_BL_CE.html",
+      "upstream_docid": "138",
+      "title": "IoT: LTE-M1",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "139",
+      "title": "3GPP-Specs#23009-g00#41",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#90",
+      "upstream_docid": "140",
+      "title": "3GPP-Specs#21915-f00#90",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#23",
+      "upstream_docid": "141",
+      "title": "3GPP-Specs#25996-f00#23",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#57",
+      "upstream_docid": "142",
+      "title": "3GPP-Specs#21915-f00#57",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "143",
+      "title": "3GPP-Specs#23273-g50#23",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23016-g00",
+      "upstream_docid": "144",
+      "title": "3GPP-Specs#23016-g00#01",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23016",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "145",
+      "title": "3GPP-Specs#23012-g00#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "146",
+      "title": "3GPP-Specs#23012-g00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#44",
+      "upstream_docid": "147",
+      "title": "3GPP-Specs#32240-f50#44",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "148",
+      "title": "3GPP-Specs#23009-g00#60",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Mobile/m_Cellular_Measurement.html",
+      "upstream_docid": "149",
+      "title": "Comm. Tech.: Measurement",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#20",
+      "upstream_docid": "150",
+      "title": "3GPP-Specs#52008-f00#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#40",
+      "upstream_docid": "151",
+      "title": "3GPP-Specs#32240-f50#40",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "152",
+      "title": "3GPP-Specs#23273-g50#44",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "153",
+      "title": "3GPP-Specs#23009-g00#79",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "154",
+      "title": "3GPP-Specs#23273-g50#38",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23016-g00",
+      "upstream_docid": "155",
+      "title": "3GPP-Specs#23016-g00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23016",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#22",
+      "upstream_docid": "156",
+      "title": "3GPP-Specs#21915-f00#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#47",
+      "upstream_docid": "157",
+      "title": "3GPP-Specs#25211-f00#47",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "158",
+      "title": "3GPP-Specs#23012-g00#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#27",
+      "upstream_docid": "159",
+      "title": "3GPP-Specs#25211-f00#27",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "160",
+      "title": "3GPP-Specs#23273-g50#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#38",
+      "upstream_docid": "161",
+      "title": "3GPP-Specs#21915-f00#38",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#48",
+      "upstream_docid": "162",
+      "title": "3GPP-Specs#21915-f00#48",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "163",
+      "title": "3GPP-Specs#23009-g00#33",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#102",
+      "upstream_docid": "164",
+      "title": "3GPP-Specs#21915-f00#102",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "165",
+      "title": "3GPP-Specs#23273-g50#01",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#26",
+      "upstream_docid": "166",
+      "title": "3GPP-Specs#25211-f00#26",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "167",
+      "title": "3GPP-Specs#23009-g00#84",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "168",
+      "title": "3GPP-Specs#23009-g00#85",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "169",
+      "title": "3GPP-Specs#23012-g00#01",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "170",
+      "title": "3GPP-Specs#23273-g50#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#48",
+      "upstream_docid": "171",
+      "title": "3GPP-Specs#38305-f70#48",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "172",
+      "title": "3GPP-Specs#23012-g00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "173",
+      "title": "3GPP-Specs#23097-g00#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#21",
+      "upstream_docid": "174",
+      "title": "3GPP-Specs#38305-f70#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/sa-plenary",
+      "upstream_docid": "175",
+      "title": "TSG SA",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "176",
+      "title": "3GPP-Specs#23012-g00#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/108-conformance-testing-ue",
+      "upstream_docid": "177",
+      "title": "Conformance Testing (UE)",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#09",
+      "upstream_docid": "178",
+      "title": "3GPP-Specs#38305-f70#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/SDR_OpenAirInterface.html",
+      "upstream_docid": "179",
+      "title": "SDR: OpenAirInterface",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_Convolution.html",
+      "upstream_docid": "180",
+      "title": "Comm. Tech.: Convolution",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "181",
+      "title": "3GPP-Specs#23273-g50#46",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#19",
+      "upstream_docid": "182",
+      "title": "3GPP-Specs#45009-f00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "183",
+      "title": "3GPP-Specs#23009-g00#35",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "184",
+      "title": "3GPP-Specs#23009-g00#64",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#34",
+      "upstream_docid": "185",
+      "title": "3GPP-Specs#38305-f70#34",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "186",
+      "title": "3GPP-Specs#23273-g50#29",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "187",
+      "title": "3GPP-Specs#23009-g00#55",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "188",
+      "title": "3GPP-Specs#23009-g00#78",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#30",
+      "upstream_docid": "189",
+      "title": "3GPP-Specs#32240-f50#30",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/WLAN_PHY_Frames.html",
+      "upstream_docid": "190",
+      "title": "WiFi: PHY Frame",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#81",
+      "upstream_docid": "191",
+      "title": "3GPP-Specs#21915-f00#81",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#33",
+      "upstream_docid": "192",
+      "title": "3GPP-Specs#38305-f70#33",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "193",
+      "title": "3GPP-Specs#23273-g50#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#17",
+      "upstream_docid": "194",
+      "title": "3GPP-Specs#25211-f00#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "195",
+      "title": "3GPP-Specs#23012-g00#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#26",
+      "upstream_docid": "196",
+      "title": "3GPP-Specs#38305-f70#26",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#02",
+      "upstream_docid": "197",
+      "title": "3GPP-Specs#32240-f50#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "198",
+      "title": "3GPP-Specs#23009-g00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#44",
+      "upstream_docid": "199",
+      "title": "3GPP-Specs#21915-f00#44",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#22",
+      "upstream_docid": "200",
+      "title": "3GPP-Specs#25211-f00#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#21",
+      "upstream_docid": "201",
+      "title": "3GPP-Specs#25996-f00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "202",
+      "title": "3GPP-Specs#23097-g00#23",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#05",
+      "upstream_docid": "203",
+      "title": "3GPP-Specs#45009-f00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#41",
+      "upstream_docid": "204",
+      "title": "3GPP-Specs#21915-f00#41",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#95",
+      "upstream_docid": "205",
+      "title": "3GPP-Specs#21915-f00#95",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#19",
+      "upstream_docid": "206",
+      "title": "3GPP-Specs#32240-f50#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#14",
+      "upstream_docid": "207",
+      "title": "3GPP-Specs#21915-f00#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#24",
+      "upstream_docid": "208",
+      "title": "3GPP-Specs#25211-f00#24",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#68",
+      "upstream_docid": "209",
+      "title": "3GPP-Specs#21915-f00#68",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ran-plenary/ran2-radio-layer-2-and-radio-layer-3-rr/home",
+      "upstream_docid": "210",
+      "title": "Home",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#04",
+      "upstream_docid": "211",
+      "title": "3GPP-Specs#25211-f00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#17",
+      "upstream_docid": "212",
+      "title": "3GPP-Specs#52008-f00#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "213",
+      "title": "3GPP-Specs#23273-g50#42",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/SDR_Amarisoft_NR.html",
+      "upstream_docid": "214",
+      "title": "SDR: Callbox PRO",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/WLAN_WiFi_Direct.html",
+      "upstream_docid": "215",
+      "title": "WiFi: WiFi Direct",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#79",
+      "upstream_docid": "216",
+      "title": "3GPP-Specs#21915-f00#79",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#66",
+      "upstream_docid": "217",
+      "title": "3GPP-Specs#38305-f70#66",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#20",
+      "upstream_docid": "218",
+      "title": "3GPP-Specs#21915-f00#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#08",
+      "upstream_docid": "219",
+      "title": "3GPP-Specs#38305-f70#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "220",
+      "title": "3GPP-Specs#23273-g50#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "221",
+      "title": "3GPP-Specs#23273-g50#48",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "222",
+      "title": "3GPP-Specs#23097-g00#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#18",
+      "upstream_docid": "223",
+      "title": "3GPP-Specs#45009-f00#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "224",
+      "title": "3GPP-Specs#23097-g00#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#20",
+      "upstream_docid": "225",
+      "title": "3GPP-Specs#38305-f70#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#77",
+      "upstream_docid": "226",
+      "title": "3GPP-Specs#21915-f00#77",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "227",
+      "title": "3GPP-Specs#23097-g00#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#54",
+      "upstream_docid": "228",
+      "title": "3GPP-Specs#32240-f50#54",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#24",
+      "upstream_docid": "229",
+      "title": "3GPP-Specs#38305-f70#24",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "230",
+      "title": "3GPP-Specs#23009-g00#48",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "231",
+      "title": "3GPP-Specs#23009-g00#31",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "232",
+      "title": "3GPP-Specs#23009-g00#43",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/working-procedures",
+      "upstream_docid": "233",
+      "title": "Working Procedures",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "234",
+      "title": "3GPP-Specs#23009-g00#76",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#35",
+      "upstream_docid": "235",
+      "title": "3GPP-Specs#21915-f00#35",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#17",
+      "upstream_docid": "236",
+      "title": "3GPP-Specs#32240-f50#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "237",
+      "title": "3GPP-Specs#23009-g00#87",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#14",
+      "upstream_docid": "238",
+      "title": "3GPP-Specs#45009-f00#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "239",
+      "title": "3GPP-Specs#23097-g00#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ct/ct1-mm-cc-sm-lu",
+      "upstream_docid": "240",
+      "title": "CT WG1 - User Equipment - Core Network protocols",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#43",
+      "upstream_docid": "241",
+      "title": "3GPP-Specs#25211-f00#43",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23016-g00",
+      "upstream_docid": "242",
+      "title": "3GPP-Specs#23016-g00#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23016",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#82",
+      "upstream_docid": "243",
+      "title": "3GPP-Specs#21915-f00#82",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "244",
+      "title": "3GPP-Specs#23273-g50#41",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#02",
+      "upstream_docid": "245",
+      "title": "3GPP-Specs#52008-f00#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#04",
+      "upstream_docid": "246",
+      "title": "3GPP-Specs#25996-f00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "247",
+      "title": "3GPP-Specs#23097-g00#28",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#11",
+      "upstream_docid": "248",
+      "title": "3GPP-Specs#21915-f00#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#37",
+      "upstream_docid": "249",
+      "title": "3GPP-Specs#21915-f00#37",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/news-events/2136-r17_delay",
+      "upstream_docid": "250",
+      "title": "Firm decision on Rel-17 delay in December",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#59",
+      "upstream_docid": "251",
+      "title": "3GPP-Specs#21915-f00#59",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "252",
+      "title": "3GPP-Specs#23097-g00#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "253",
+      "title": "3GPP-Specs#23009-g00#62",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/RF_Measurement_UMTS.html",
+      "upstream_docid": "254",
+      "title": "2G/3G: RF Measurement",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#36",
+      "upstream_docid": "255",
+      "title": "3GPP-Specs#21915-f00#36",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "256",
+      "title": "3GPP-Specs#23273-g50#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "257",
+      "title": "3GPP-Specs#23097-g00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_ChannelModel.html",
+      "upstream_docid": "258",
+      "title": "Comm. Tech.: Channel Model",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_NB_NPSS.html",
+      "upstream_docid": "259",
+      "title": "NB-IoT: NPSS",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#41",
+      "upstream_docid": "260",
+      "title": "3GPP-Specs#38305-f70#41",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "261",
+      "title": "3GPP-Specs#23009-g00#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#35",
+      "upstream_docid": "262",
+      "title": "3GPP-Specs#32240-f50#35",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/tsg-t-closed/t-wg3-closed",
+      "upstream_docid": "263",
+      "title": "T3 - SIM/USIM (closed)",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#24",
+      "upstream_docid": "264",
+      "title": "3GPP-Specs#21915-f00#24",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "265",
+      "title": "3GPP-Specs#23009-g00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#04",
+      "upstream_docid": "266",
+      "title": "3GPP-Specs#32240-f50#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#34",
+      "upstream_docid": "267",
+      "title": "3GPP-Specs#25211-f00#34",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#11",
+      "upstream_docid": "268",
+      "title": "3GPP-Specs#38305-f70#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#101",
+      "upstream_docid": "269",
+      "title": "3GPP-Specs#21915-f00#101",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#34",
+      "upstream_docid": "270",
+      "title": "3GPP-Specs#21915-f00#34",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Mobile/m_Cellular_WhatIsIt.html",
+      "upstream_docid": "271",
+      "title": "Comm. Tech.: Celluar System",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#18",
+      "upstream_docid": "272",
+      "title": "3GPP-Specs#32240-f50#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "273",
+      "title": "3GPP-Specs#23273-g50#26",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "274",
+      "title": "3GPP-Specs#23097-g00#30",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/IoT_WhatToChoose.html",
+      "upstream_docid": "275",
+      "title": "IoT: What to choose",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#21",
+      "upstream_docid": "276",
+      "title": "3GPP-Specs#45009-f00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "277",
+      "title": "3GPP-Specs#23009-g00#77",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#57",
+      "upstream_docid": "278",
+      "title": "3GPP-Specs#38305-f70#57",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#03",
+      "upstream_docid": "279",
+      "title": "3GPP-Specs#38305-f70#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#12",
+      "upstream_docid": "280",
+      "title": "3GPP-Specs#25211-f00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#32",
+      "upstream_docid": "281",
+      "title": "3GPP-Specs#25211-f00#32",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#18",
+      "upstream_docid": "282",
+      "title": "3GPP-Specs#25996-f00#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#28",
+      "upstream_docid": "283",
+      "title": "3GPP-Specs#21915-f00#28",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#23",
+      "upstream_docid": "284",
+      "title": "3GPP-Specs#45009-f00#23",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#18",
+      "upstream_docid": "285",
+      "title": "3GPP-Specs#21915-f00#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21111-f20#02",
+      "upstream_docid": "286",
+      "title": "3GPP-Specs#21111-f20#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21111",
+      "version_code": "f20",
+      "release": 15,
+      "version": "15.2.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#50",
+      "upstream_docid": "287",
+      "title": "3GPP-Specs#38305-f70#50",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_UMTS_MAC_c_sh.html",
+      "upstream_docid": "288",
+      "title": "2G/3G: MAC-c/sh",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#12",
+      "upstream_docid": "289",
+      "title": "3GPP-Specs#38305-f70#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_BL_CE_MPDCCH.html",
+      "upstream_docid": "290",
+      "title": "LTE - M1: MPDCCH/DCI",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/WLAN_DCF.html",
+      "upstream_docid": "291",
+      "title": "WiFi: DCF",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#44",
+      "upstream_docid": "292",
+      "title": "3GPP-Specs#25211-f00#44",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#63",
+      "upstream_docid": "293",
+      "title": "3GPP-Specs#21915-f00#63",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_UMTS_eCall.html",
+      "upstream_docid": "294",
+      "title": "2G/3G: eCall",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#04",
+      "upstream_docid": "295",
+      "title": "3GPP-Specs#52008-f00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#19",
+      "upstream_docid": "296",
+      "title": "3GPP-Specs#25211-f00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#47",
+      "upstream_docid": "297",
+      "title": "3GPP-Specs#38305-f70#47",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#06",
+      "upstream_docid": "298",
+      "title": "3GPP-Specs#25996-f00#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#31",
+      "upstream_docid": "299",
+      "title": "3GPP-Specs#32240-f50#31",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#05",
+      "upstream_docid": "300",
+      "title": "3GPP-Specs#32240-f50#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ran-plenary/ran_ah1-itu",
+      "upstream_docid": "301",
+      "title": "RAN_AH1 (ITU)",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#45",
+      "upstream_docid": "302",
+      "title": "3GPP-Specs#25211-f00#45",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#64",
+      "upstream_docid": "303",
+      "title": "3GPP-Specs#38305-f70#64",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#43",
+      "upstream_docid": "304",
+      "title": "3GPP-Specs#38305-f70#43",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_LTE_U.html",
+      "upstream_docid": "305",
+      "title": "LTE Adv: LTE-U",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_ImpulseResponse.html",
+      "upstream_docid": "306",
+      "title": "Comm. Tech.: Impulse Response",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#16",
+      "upstream_docid": "307",
+      "title": "3GPP-Specs#21915-f00#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#02",
+      "upstream_docid": "308",
+      "title": "3GPP-Specs#25996-f00#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#52",
+      "upstream_docid": "309",
+      "title": "3GPP-Specs#21915-f00#52",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_UMTS_MAC_d.html",
+      "upstream_docid": "310",
+      "title": "2G/3G: MAC-d",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ran-plenary/ran4-radio-performance-and-protocol-aspects",
+      "upstream_docid": "311",
+      "title": "RAN4 - Radio performance and protocol aspects ...",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#38",
+      "upstream_docid": "312",
+      "title": "3GPP-Specs#38305-f70#38",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#25",
+      "upstream_docid": "313",
+      "title": "3GPP-Specs#25211-f00#25",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#49",
+      "upstream_docid": "314",
+      "title": "3GPP-Specs#38305-f70#49",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#74",
+      "upstream_docid": "315",
+      "title": "3GPP-Specs#21915-f00#74",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/news-events/partners-news/1507-small-cell-forum-completes-1st-lte",
+      "upstream_docid": "316",
+      "title": "Small Cell Forum Completes 1st LTE Plugfest",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#40",
+      "upstream_docid": "317",
+      "title": "3GPP-Specs#21915-f00#40",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#10",
+      "upstream_docid": "318",
+      "title": "3GPP-Specs#32240-f50#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_BL_CE_CElevel.html",
+      "upstream_docid": "319",
+      "title": "LTE - M1: CE Level",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_NB_FrameStructure_DL.html",
+      "upstream_docid": "320",
+      "title": "NB-IoT: FrameStructure DL",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#46",
+      "upstream_docid": "321",
+      "title": "3GPP-Specs#32240-f50#46",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/2138-nr-lte-dynamic-spectrum-sharing-dss",
+      "upstream_docid": "322",
+      "title": "NR / LTE Dynamic spectrum sharing (DSS)",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#44",
+      "upstream_docid": "323",
+      "title": "3GPP-Specs#38305-f70#44",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#12",
+      "upstream_docid": "324",
+      "title": "3GPP-Specs#21915-f00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#42",
+      "upstream_docid": "325",
+      "title": "3GPP-Specs#38305-f70#42",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/SDR_OpenRan.html",
+      "upstream_docid": "326",
+      "title": "SDR: Open RAN",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#19",
+      "upstream_docid": "327",
+      "title": "3GPP-Specs#52008-f00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#06",
+      "upstream_docid": "328",
+      "title": "3GPP-Specs#25211-f00#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/1576-hetnet",
+      "upstream_docid": "329",
+      "title": "Heterogeneous Networks in LTE",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_Fading.html",
+      "upstream_docid": "330",
+      "title": "Comm. Tech.: Fading",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#36",
+      "upstream_docid": "331",
+      "title": "3GPP-Specs#32240-f50#36",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_LTEU_LTER.html",
+      "upstream_docid": "332",
+      "title": "LTE Adv: LAA/LTE-U",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#56",
+      "upstream_docid": "333",
+      "title": "3GPP-Specs#21915-f00#56",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#61",
+      "upstream_docid": "334",
+      "title": "3GPP-Specs#21915-f00#61",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#50",
+      "upstream_docid": "335",
+      "title": "3GPP-Specs#25211-f00#50",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_Linearity.html",
+      "upstream_docid": "336",
+      "title": "Comm. Tech.: Linearity",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#13",
+      "upstream_docid": "337",
+      "title": "3GPP-Specs#45009-f00#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#22",
+      "upstream_docid": "338",
+      "title": "3GPP-Specs#38305-f70#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#21",
+      "upstream_docid": "339",
+      "title": "3GPP-Specs#52008-f00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#51",
+      "upstream_docid": "340",
+      "title": "3GPP-Specs#21915-f00#51",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#19",
+      "upstream_docid": "341",
+      "title": "3GPP-Specs#25996-f00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#31",
+      "upstream_docid": "342",
+      "title": "3GPP-Specs#38305-f70#31",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#20",
+      "upstream_docid": "343",
+      "title": "3GPP-Specs#25211-f00#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#75",
+      "upstream_docid": "344",
+      "title": "3GPP-Specs#21915-f00#75",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#15",
+      "upstream_docid": "345",
+      "title": "3GPP-Specs#52008-f00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#40",
+      "upstream_docid": "346",
+      "title": "3GPP-Specs#25211-f00#40",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_Coding.html",
+      "upstream_docid": "347",
+      "title": "Comm. Tech.: Coding",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#100",
+      "upstream_docid": "348",
+      "title": "3GPP-Specs#21915-f00#100",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#52",
+      "upstream_docid": "349",
+      "title": "3GPP-Specs#32240-f50#52",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#14",
+      "upstream_docid": "350",
+      "title": "3GPP-Specs#25211-f00#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#34",
+      "upstream_docid": "351",
+      "title": "3GPP-Specs#32240-f50#34",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_Representation.html",
+      "upstream_docid": "352",
+      "title": "Comm. Tech.: Signal Presentation",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#52",
+      "upstream_docid": "353",
+      "title": "3GPP-Specs#38305-f70#52",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#07",
+      "upstream_docid": "354",
+      "title": "3GPP-Specs#25211-f00#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/WLAN_Security.html",
+      "upstream_docid": "355",
+      "title": "WiFi: Security",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#45",
+      "upstream_docid": "356",
+      "title": "3GPP-Specs#32240-f50#45",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#35",
+      "upstream_docid": "357",
+      "title": "3GPP-Specs#25211-f00#35",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#42",
+      "upstream_docid": "358",
+      "title": "3GPP-Specs#21915-f00#42",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#70",
+      "upstream_docid": "359",
+      "title": "3GPP-Specs#21915-f00#70",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#53",
+      "upstream_docid": "360",
+      "title": "3GPP-Specs#25211-f00#53",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#78",
+      "upstream_docid": "361",
+      "title": "3GPP-Specs#21915-f00#78",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#35",
+      "upstream_docid": "362",
+      "title": "3GPP-Specs#38305-f70#35",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#03",
+      "upstream_docid": "363",
+      "title": "3GPP-Specs#25211-f00#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "364",
+      "title": "3GPP-Specs#23009-g00#01",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "365",
+      "title": "3GPP-Specs#23009-g00#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "366",
+      "title": "3GPP-Specs#23009-g00#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "367",
+      "title": "3GPP-Specs#23009-g00#30",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#06",
+      "upstream_docid": "368",
+      "title": "3GPP-Specs#45009-f00#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "369",
+      "title": "3GPP-Specs#23009-g00#44",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/App_Protocol_WebSocket.html",
+      "upstream_docid": "370",
+      "title": "IoT: Web Socket",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "371",
+      "title": "3GPP-Specs#23009-g00#52",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "372",
+      "title": "3GPP-Specs#23009-g00#63",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "373",
+      "title": "3GPP-Specs#23009-g00#68",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "374",
+      "title": "3GPP-Specs#23009-g00#70",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "375",
+      "title": "3GPP-Specs#23009-g00#81",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "376",
+      "title": "3GPP-Specs#23009-g00#86",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "377",
+      "title": "3GPP-Specs#23009-g00#88",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#33",
+      "upstream_docid": "378",
+      "title": "3GPP-Specs#21915-f00#33",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "379",
+      "title": "3GPP-Specs#23012-g00#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "380",
+      "title": "3GPP-Specs#23012-g00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "381",
+      "title": "3GPP-Specs#23012-g00#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "382",
+      "title": "3GPP-Specs#23012-g00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23016-g00",
+      "upstream_docid": "383",
+      "title": "3GPP-Specs#23016-g00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23016",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "384",
+      "title": "3GPP-Specs#23097-g00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "385",
+      "title": "3GPP-Specs#23097-g00#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "386",
+      "title": "3GPP-Specs#23097-g00#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "387",
+      "title": "3GPP-Specs#23097-g00#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23108-g00",
+      "upstream_docid": "388",
+      "title": "3GPP-Specs#23108-g00#01",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23108",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23108-g00",
+      "upstream_docid": "389",
+      "title": "3GPP-Specs#23108-g00#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23108",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "390",
+      "title": "3GPP-Specs#23273-g50#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "391",
+      "title": "3GPP-Specs#23273-g50#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "392",
+      "title": "3GPP-Specs#23273-g50#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "393",
+      "title": "3GPP-Specs#23273-g50#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "394",
+      "title": "3GPP-Specs#23273-g50#17",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "395",
+      "title": "3GPP-Specs#23273-g50#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "396",
+      "title": "3GPP-Specs#23273-g50#24",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "397",
+      "title": "3GPP-Specs#23273-g50#28",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "398",
+      "title": "3GPP-Specs#23273-g50#33",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "399",
+      "title": "3GPP-Specs#23273-g50#35",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "400",
+      "title": "3GPP-Specs#23273-g50#45",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "401",
+      "title": "3GPP-Specs#23273-g50#47",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#19",
+      "upstream_docid": "402",
+      "title": "3GPP-Specs#21915-f00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21111-f20#10",
+      "upstream_docid": "403",
+      "title": "3GPP-Specs#21111-f20#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21111",
+      "version_code": "f20",
+      "release": 15,
+      "version": "15.2.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#15",
+      "upstream_docid": "404",
+      "title": "3GPP-Specs#38305-f70#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_NB_NRS.html",
+      "upstream_docid": "405",
+      "title": "NB-IoT: NRS",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/1763-sc_ptm",
+      "upstream_docid": "406",
+      "title": "SC-PTM, an agile broadcast/multicast mechanism",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#39",
+      "upstream_docid": "407",
+      "title": "3GPP-Specs#21915-f00#39",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#65",
+      "upstream_docid": "408",
+      "title": "3GPP-Specs#21915-f00#65",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Mobile/m_Cellular_ReferenceSignal.html",
+      "upstream_docid": "409",
+      "title": "Comm. Tech.: Reference Signal",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#13",
+      "upstream_docid": "410",
+      "title": "3GPP-Specs#38305-f70#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#68",
+      "upstream_docid": "411",
+      "title": "3GPP-Specs#38305-f70#68",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#05",
+      "upstream_docid": "412",
+      "title": "3GPP-Specs#25211-f00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#08",
+      "upstream_docid": "413",
+      "title": "3GPP-Specs#25211-f00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#37",
+      "upstream_docid": "414",
+      "title": "3GPP-Specs#25211-f00#37",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "415",
+      "title": "3GPP-Specs#23273-g50#49",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#56",
+      "upstream_docid": "416",
+      "title": "3GPP-Specs#38305-f70#56",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#15",
+      "upstream_docid": "417",
+      "title": "3GPP-Specs#25996-f00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/ran-plenary/ran5-mobile-terminal-conformance-testing",
+      "upstream_docid": "418",
+      "title": "RAN5 - Mobile terminal conformance testing",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "419",
+      "title": "3GPP-Specs#23009-g00#32",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#13",
+      "upstream_docid": "420",
+      "title": "3GPP-Specs#52008-f00#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#14",
+      "upstream_docid": "421",
+      "title": "3GPP-Specs#38305-f70#14",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#05",
+      "upstream_docid": "422",
+      "title": "3GPP-Specs#21915-f00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "423",
+      "title": "3GPP-Specs#23009-g00#39",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "424",
+      "title": "3GPP-Specs#23273-g50#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#99",
+      "upstream_docid": "425",
+      "title": "3GPP-Specs#21915-f00#99",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#86",
+      "upstream_docid": "426",
+      "title": "3GPP-Specs#21915-f00#86",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#42",
+      "upstream_docid": "427",
+      "title": "3GPP-Specs#25211-f00#42",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#76",
+      "upstream_docid": "428",
+      "title": "3GPP-Specs#21915-f00#76",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#29",
+      "upstream_docid": "429",
+      "title": "3GPP-Specs#32240-f50#29",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#05",
+      "upstream_docid": "430",
+      "title": "3GPP-Specs#25996-f00#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_ChannelEstimation.html",
+      "upstream_docid": "431",
+      "title": "Comm. Tech.: Channel Estimation",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#11",
+      "upstream_docid": "432",
+      "title": "3GPP-Specs#32240-f50#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "433",
+      "title": "3GPP-Specs#23009-g00#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.3gpp.org/technologies/keywords-acronyms/106-sae",
+      "upstream_docid": "434",
+      "title": "SAE",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Mobile/m_Cellular_MIMO.html",
+      "upstream_docid": "435",
+      "title": "Comm. Tech.: MIMO",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#08",
+      "upstream_docid": "436",
+      "title": "3GPP-Specs#45009-f00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#10",
+      "upstream_docid": "437",
+      "title": "3GPP-Specs#38305-f70#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Handbook_LTE_BL_CE_PUSCH_Subframe.html",
+      "upstream_docid": "438",
+      "title": "LTE - M1: PUSCH Subfame",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "439",
+      "title": "3GPP-Specs#23097-g00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "440",
+      "title": "3GPP-Specs#23273-g50#52",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "441",
+      "title": "3GPP-Specs#23009-g00#27",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "442",
+      "title": "3GPP-Specs#23273-g50#40",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#06",
+      "upstream_docid": "443",
+      "title": "3GPP-Specs#32240-f50#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23016-g00",
+      "upstream_docid": "444",
+      "title": "3GPP-Specs#23016-g00#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23016",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#05",
+      "upstream_docid": "445",
+      "title": "3GPP-Specs#38305-f70#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#30",
+      "upstream_docid": "446",
+      "title": "3GPP-Specs#25211-f00#30",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#21",
+      "upstream_docid": "447",
+      "title": "3GPP-Specs#25211-f00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#48",
+      "upstream_docid": "448",
+      "title": "3GPP-Specs#32240-f50#48",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#11",
+      "upstream_docid": "449",
+      "title": "3GPP-Specs#25211-f00#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "450",
+      "title": "3GPP-Specs#23009-g00#73",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "451",
+      "title": "3GPP-Specs#23097-g00#29",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#42",
+      "upstream_docid": "452",
+      "title": "3GPP-Specs#32240-f50#42",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#49",
+      "upstream_docid": "453",
+      "title": "3GPP-Specs#32240-f50#49",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications-groups/tsg-geran",
+      "upstream_docid": "454",
+      "title": "TSG GERAN - (closed)",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#36",
+      "upstream_docid": "455",
+      "title": "3GPP-Specs#38305-f70#36",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#37",
+      "upstream_docid": "456",
+      "title": "3GPP-Specs#38305-f70#37",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#10",
+      "upstream_docid": "457",
+      "title": "3GPP-Specs#25211-f00#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#28",
+      "upstream_docid": "458",
+      "title": "3GPP-Specs#38305-f70#28",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#92",
+      "upstream_docid": "459",
+      "title": "3GPP-Specs#21915-f00#92",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "460",
+      "title": "3GPP-Specs#23273-g50#07",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21111-f20#04",
+      "upstream_docid": "461",
+      "title": "3GPP-Specs#21111-f20#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21111",
+      "version_code": "f20",
+      "release": 15,
+      "version": "15.2.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "462",
+      "title": "3GPP-Specs#23009-g00#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "463",
+      "title": "3GPP-Specs#23012-g00#23",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "464",
+      "title": "3GPP-Specs#23009-g00#47",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#02",
+      "upstream_docid": "465",
+      "title": "3GPP-Specs#38305-f70#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#16",
+      "upstream_docid": "466",
+      "title": "3GPP-Specs#38305-f70#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#09",
+      "upstream_docid": "467",
+      "title": "3GPP-Specs#45009-f00#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#13",
+      "upstream_docid": "468",
+      "title": "3GPP-Specs#32240-f50#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#31",
+      "upstream_docid": "469",
+      "title": "3GPP-Specs#25211-f00#31",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "470",
+      "title": "3GPP-Specs#23097-g00#19",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "471",
+      "title": "3GPP-Specs#23273-g50#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "472",
+      "title": "3GPP-Specs#23097-g00#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#23",
+      "upstream_docid": "473",
+      "title": "3GPP-Specs#32240-f50#23",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "474",
+      "title": "3GPP-Specs#23009-g00#53",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/LR_WPAN_802_15_4.html",
+      "upstream_docid": "475",
+      "title": "IoT: 802.15.4 MAC",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#45",
+      "upstream_docid": "476",
+      "title": "3GPP-Specs#38305-f70#45",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#03",
+      "upstream_docid": "477",
+      "title": "3GPP-Specs#52008-f00#03",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#25",
+      "upstream_docid": "478",
+      "title": "3GPP-Specs#38305-f70#25",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "479",
+      "title": "3GPP-Specs#23009-g00#51",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#08",
+      "upstream_docid": "480",
+      "title": "3GPP-Specs#32240-f50#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "481",
+      "title": "3GPP-Specs#23012-g00#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#32",
+      "upstream_docid": "482",
+      "title": "3GPP-Specs#38305-f70#32",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#06",
+      "upstream_docid": "483",
+      "title": "3GPP-Specs#38305-f70#06",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21111-f20#11",
+      "upstream_docid": "484",
+      "title": "3GPP-Specs#21111-f20#11",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21111",
+      "version_code": "f20",
+      "release": 15,
+      "version": "15.2.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_Equalizer.html",
+      "upstream_docid": "485",
+      "title": "Comm. Tech.: Equalizer",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21111-f20#05",
+      "upstream_docid": "486",
+      "title": "3GPP-Specs#21111-f20#05",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21111",
+      "version_code": "f20",
+      "release": 15,
+      "version": "15.2.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/LR_WPAN_ZigBee.html",
+      "upstream_docid": "487",
+      "title": "IoT: ZigBee",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "488",
+      "title": "3GPP-Specs#23097-g00#27",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#26",
+      "upstream_docid": "489",
+      "title": "3GPP-Specs#32240-f50#26",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "490",
+      "title": "3GPP-Specs#23097-g00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "491",
+      "title": "3GPP-Specs#23009-g00#23",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "492",
+      "title": "3GPP-Specs#23009-g00#83",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#13",
+      "upstream_docid": "493",
+      "title": "3GPP-Specs#21915-f00#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#09",
+      "upstream_docid": "494",
+      "title": "3GPP-Specs#21915-f00#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#51",
+      "upstream_docid": "495",
+      "title": "3GPP-Specs#38305-f70#51",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#46",
+      "upstream_docid": "496",
+      "title": "3GPP-Specs#21915-f00#46",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "497",
+      "title": "3GPP-Specs#23273-g50#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#15",
+      "upstream_docid": "498",
+      "title": "3GPP-Specs#25211-f00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#45009-f00#24",
+      "upstream_docid": "499",
+      "title": "3GPP-Specs#45009-f00#24",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "45009",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "500",
+      "title": "3GPP-Specs#23009-g00#57",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "501",
+      "title": "3GPP-Specs#23273-g50#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#36",
+      "upstream_docid": "502",
+      "title": "3GPP-Specs#25211-f00#36",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#70",
+      "upstream_docid": "503",
+      "title": "3GPP-Specs#38305-f70#70",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "504",
+      "title": "3GPP-Specs#23012-g00#02",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#46",
+      "upstream_docid": "505",
+      "title": "3GPP-Specs#38305-f70#46",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/IoT_Definition.html",
+      "upstream_docid": "506",
+      "title": "IoT: What is it ?",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#12",
+      "upstream_docid": "507",
+      "title": "3GPP-Specs#52008-f00#12",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/WLAN_802_11ac.html",
+      "upstream_docid": "508",
+      "title": "WiFi: 802.11ac",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#21",
+      "upstream_docid": "509",
+      "title": "3GPP-Specs#21915-f00#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#22",
+      "upstream_docid": "510",
+      "title": "3GPP-Specs#32240-f50#22",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/App_Protocol_MQTT.html",
+      "upstream_docid": "511",
+      "title": "IoT: MQTT",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23273-g50",
+      "upstream_docid": "512",
+      "title": "3GPP-Specs#23273-g50#32",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23273",
+      "version_code": "g50",
+      "release": 16,
+      "version": "16.5.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#10",
+      "upstream_docid": "513",
+      "title": "3GPP-Specs#21915-f00#10",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "514",
+      "title": "3GPP-Specs#23009-g00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25211-f00#48",
+      "upstream_docid": "515",
+      "title": "3GPP-Specs#25211-f00#48",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25211",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#53",
+      "upstream_docid": "516",
+      "title": "3GPP-Specs#21915-f00#53",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "517",
+      "title": "3GPP-Specs#23009-g00#16",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#29",
+      "upstream_docid": "518",
+      "title": "3GPP-Specs#38305-f70#29",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Communication_Encoding.html",
+      "upstream_docid": "519",
+      "title": "Comm. Tech.: Encoding",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#23097-g00",
+      "upstream_docid": "520",
+      "title": "3GPP-Specs#23097-g00#26",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23097",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#97",
+      "upstream_docid": "521",
+      "title": "3GPP-Specs#21915-f00#97",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#52008-f00#09",
+      "upstream_docid": "522",
+      "title": "3GPP-Specs#52008-f00#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "52008",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#04",
+      "upstream_docid": "523",
+      "title": "3GPP-Specs#38305-f70#04",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "524",
+      "title": "3GPP-Specs#23012-g00#15",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "525",
+      "title": "3GPP-Specs#23012-g00#18",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#93",
+      "upstream_docid": "526",
+      "title": "3GPP-Specs#21915-f00#93",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#23012-g00",
+      "upstream_docid": "527",
+      "title": "3GPP-Specs#23012-g00#13",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23012",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/Mobile/m_Cellular_CarrierAggregation.html",
+      "upstream_docid": "528",
+      "title": "Comm. Tech.: CarrierAggregation",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.3gpp.org/specifications/61-asn-1",
+      "upstream_docid": "529",
+      "title": "ASN.1",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "https://www.sharetechnote.com/html/IoT/LR_WPAN_XBee.html",
+      "upstream_docid": "530",
+      "title": "IoT: XBee",
+      "exact_original_mapping": "unresolved"
+    },
+    {
+      "source": "3GPP-Specs#21915-f00#08",
+      "upstream_docid": "531",
+      "title": "3GPP-Specs#21915-f00#08",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "21915",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#25996-f00#20",
+      "upstream_docid": "532",
+      "title": "3GPP-Specs#25996-f00#20",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "25996",
+      "version_code": "f00",
+      "release": 15,
+      "version": "15.0.0"
+    },
+    {
+      "source": "3GPP-Specs#38305-f70#40",
+      "upstream_docid": "533",
+      "title": "3GPP-Specs#38305-f70#40",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "38305",
+      "version_code": "f70",
+      "release": 15,
+      "version": "15.7.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#09",
+      "upstream_docid": "534",
+      "title": "3GPP-Specs#32240-f50#09",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    },
+    {
+      "source": "3GPP-Specs#23009-g00",
+      "upstream_docid": "535",
+      "title": "3GPP-Specs#23009-g00#74",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "23009",
+      "version_code": "g00",
+      "release": 16,
+      "version": "16.0.0"
+    },
+    {
+      "source": "3GPP-Specs#32240-f50#21",
+      "upstream_docid": "536",
+      "title": "3GPP-Specs#32240-f50#21",
+      "exact_original_mapping": "unresolved",
+      "spec_code": "32240",
+      "version_code": "f50",
+      "release": 15,
+      "version": "15.5.0"
+    }
+  ]
+}

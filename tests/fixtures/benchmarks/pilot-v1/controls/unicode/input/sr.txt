@@ -1,0 +1,3 @@
+Čuvaju se č, ć, š, ž i đ.
+Ћирилица остаје ћирилица.
+Latinica ne obećava automatsku transliteraciju.

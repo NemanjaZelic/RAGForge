@@ -1,0 +1,101 @@
+{
+  "kind": "static_source_preflight_not_product_execution",
+  "product_execution": "not_run",
+  "current_code_defaults": {
+    "scan_max_file_bytes": 33554432,
+    "scan_max_total_bytes": 536870912,
+    "pdf_max_pages": 500,
+    "pdf_max_text_chars": 2000000
+  },
+  "over_file_limit": [
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-18/ts/13652101/ts_13652101v181100p.pdf",
+      "size_bytes": 41770280
+    },
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-18/ts/13652301/ts_13652301v181001p.pdf",
+      "size_bytes": 37947308
+    },
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-18/ts/138133/ts_138133v181500p.pdf",
+      "size_bytes": 43705351
+    },
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-19/ts/13652101/ts_13652101v190300p.pdf",
+      "size_bytes": 41753726
+    },
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-19/ts/13652301/ts_13652301v190400p.pdf",
+      "size_bytes": 38092389
+    },
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-19/ts/138133/ts_138133v190600p.pdf",
+      "size_bytes": 49539829
+    },
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-19/ts/13852301/ts_13852301v190600p.pdf",
+      "size_bytes": 40497097
+    },
+    {
+      "corpus_id": "3gpp-etsi",
+      "path": "rel-19/ts/138533/ts_138533v190400p.pdf",
+      "size_bytes": 47168119
+    }
+  ],
+  "over_total_scan_limit": [
+    "3gpp-etsi",
+    "ietf-rfcs"
+  ],
+  "largest_pdf_physical_pages": [
+    6631,
+    7123,
+    5790,
+    6704,
+    6654,
+    6994,
+    6719,
+    6697
+  ],
+  "largest_pdf_files_in_same_order": [
+    {
+      "path": "rel-19/ts/138133/ts_138133v190600p.pdf",
+      "size_bytes": 49539829
+    },
+    {
+      "path": "rel-19/ts/138533/ts_138533v190400p.pdf",
+      "size_bytes": 47168119
+    },
+    {
+      "path": "rel-18/ts/138133/ts_138133v181500p.pdf",
+      "size_bytes": 43705351
+    },
+    {
+      "path": "rel-18/ts/13652101/ts_13652101v181100p.pdf",
+      "size_bytes": 41770280
+    },
+    {
+      "path": "rel-19/ts/13652101/ts_13652101v190300p.pdf",
+      "size_bytes": 41753726
+    },
+    {
+      "path": "rel-19/ts/13852301/ts_13852301v190600p.pdf",
+      "size_bytes": 40497097
+    },
+    {
+      "path": "rel-19/ts/13652301/ts_13652301v190400p.pdf",
+      "size_bytes": 38092389
+    },
+    {
+      "path": "rel-18/ts/13652301/ts_13652301v181001p.pdf",
+      "size_bytes": 37947308
+    }
+  ],
+  "conclusion": "Current defaults cannot ingest these collections unchanged; tests must expose limits, not truncate or silently reduce the corpus."
+}

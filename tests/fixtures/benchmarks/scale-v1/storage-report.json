@@ -1,0 +1,12 @@
+{
+  "measured_storage_roots": [
+    "D:\\RAGForge\\data\\benchmarks",
+    "D:\\RAGForge\\.cache\\benchmark-authoring"
+  ],
+  "current_bytes": 8548393425,
+  "storage_limit_bytes": 65000000000,
+  "remaining_budget_bytes": 56451606575,
+  "free_disk_bytes": 72057729024,
+  "future_index_and_model_bytes": 0,
+  "product_execution": "not_run"
+}

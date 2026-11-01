@@ -1,0 +1,170 @@
+{
+  "schema_version": "1",
+  "dataset_id": "ragforge-real-docs-pilot-v1",
+  "created_on": "2026-11-01",
+  "status": "ai_draft_pending_independent_review",
+  "product_execution": "not_run",
+  "seed": "ragforge-pilot-2026-11-01-v1",
+  "counts": {
+    "corpora": 3,
+    "queries": 90,
+    "answerable": 72,
+    "unanswerable": 18,
+    "queries_per_corpus": 30
+  },
+  "split_policy": {
+    "method": "SHA-256 ordered topic components, deterministic balanced assignment",
+    "per_corpus_per_split": {
+      "answerable": 8,
+      "unanswerable": 2
+    },
+    "test_status": "reserved_for_review_not_yet_locked",
+    "entire_corpus_holdout": null
+  },
+  "corpora": [
+    {
+      "corpus_id": "uv-guides",
+      "snapshot_id": "4f8d71ef8649cdce736eeedd9b728ae1ca169f2d3d03bc00ee0c512901d5d8f8",
+      "title": "uv 0.9.5 bounded guides",
+      "revision": "tag 0.9.5; per-file SHA-256 is authoritative",
+      "category": "small structured guides; Markdown and unchanged README with .txt extension",
+      "rights": "Upstream README declares Apache-2.0 OR MIT; keep upstream notices; docs-specific redistribution review pending.",
+      "license_url": "https://github.com/astral-sh/uv/blob/0.9.5/README.md#license",
+      "language": "en",
+      "file_count": 4,
+      "input_size_bytes": 36193,
+      "input_root": "data/benchmarks/pilot-v1/uv-guides/input",
+      "raw_root": "data/benchmarks/pilot-v1/uv-guides/raw",
+      "retrieval_status": "not_run",
+      "source_distribution": "local-only, excluded by existing /data/ gitignore",
+      "files": [
+        {
+          "path": "README.txt",
+          "url": "https://raw.githubusercontent.com/astral-sh/uv/0.9.5/README.md",
+          "sha256": "10f9251085ad4936e0baf560730d3d49e590a50fc41f6fcef81b2da7286053b3",
+          "size_bytes": 10160,
+          "acquired_at": "2026-11-01T06:08:29.049714+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "filename extension .md -> .txt; bytes unchanged",
+          "document_id": "111ec0f89d93d032f38dcc7c5eeda66bdc4ae658c377b6bfb7d5ebc20b713ae4"
+        },
+        {
+          "path": "projects.md",
+          "url": "https://raw.githubusercontent.com/astral-sh/uv/0.9.5/docs/guides/projects.md",
+          "sha256": "dabeb9c07cc35a02512554d727575f71dac9505293399682e416dc84fcb620e9",
+          "size_bytes": 7364,
+          "acquired_at": "2026-11-01T06:08:29.327270+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "none",
+          "document_id": "293ef17f17b742646c7afb117cde3cda1e3ec7e822bdecadb9e4e8a3a3ef9639"
+        },
+        {
+          "path": "scripts.md",
+          "url": "https://raw.githubusercontent.com/astral-sh/uv/0.9.5/docs/guides/scripts.md",
+          "sha256": "2ca95dabda193e5f64c4fc2190a60770713777b5d1ca270589eff852da7a844f",
+          "size_bytes": 10927,
+          "acquired_at": "2026-11-01T06:08:29.638017+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "none",
+          "document_id": "36f9f66b19011161fb0bef677447fde4bec44f5db7beeb508d8933f93be87055"
+        },
+        {
+          "path": "tools.md",
+          "url": "https://raw.githubusercontent.com/astral-sh/uv/0.9.5/docs/guides/tools.md",
+          "sha256": "f436c1339ef5b7268979ab13112db42051e5f7eda2fd7b438e48003c0af8bcbd",
+          "size_bytes": 7742,
+          "acquired_at": "2026-11-01T06:08:29.902724+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "none",
+          "document_id": "1c2d4bde2e3b748f513b896502068939c1b2562039404fef880294358b2095b1"
+        }
+      ]
+    },
+    {
+      "corpus_id": "python-tutorial",
+      "snapshot_id": "08eccabe1c0368999654c956aade7c6173c49ad8446391f8dc61f0c7a6ffc281",
+      "title": "Python 3.13.0 tutorial chapters 4, 5, 7, 8",
+      "revision": "release/3.13.0; per-file SHA-256 is authoritative",
+      "category": "medium rendered HTML with code examples and numeric tables",
+      "rights": "Python Software Foundation License v2; code examples additionally 0BSD, as stated in frozen HTML footer.",
+      "license_url": "https://docs.python.org/release/3.13.0/license.html",
+      "language": "en",
+      "file_count": 4,
+      "input_size_bytes": 394574,
+      "input_root": "data/benchmarks/pilot-v1/python-tutorial/input",
+      "raw_root": "data/benchmarks/pilot-v1/python-tutorial/raw",
+      "retrieval_status": "not_run",
+      "source_distribution": "local-only, excluded by existing /data/ gitignore",
+      "files": [
+        {
+          "path": "datastructures.html",
+          "url": "https://docs.python.org/release/3.13.0/tutorial/datastructures.html",
+          "sha256": "c7255653197298e6831936d70321b2c6918e59e531da5215ddae930e4e80e40d",
+          "size_bytes": 97184,
+          "acquired_at": "2026-11-01T06:08:30.181182+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "none",
+          "document_id": "ed4fc2fd0fee5d42d23f43680863dd6bb319275aa0b935af33535d11b98f85af"
+        },
+        {
+          "path": "controlflow.html",
+          "url": "https://docs.python.org/release/3.13.0/tutorial/controlflow.html",
+          "sha256": "6ad6bc9c13ff9e3b7f59de2f6dec3b70b6d78bf107d4837bee57cddb6591b4e7",
+          "size_bytes": 137904,
+          "acquired_at": "2026-11-01T06:08:30.436049+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "none",
+          "document_id": "c080e6e8919b4e53efb0d61c6975e934f37b3de61a33861c654536747b231766"
+        },
+        {
+          "path": "errors.html",
+          "url": "https://docs.python.org/release/3.13.0/tutorial/errors.html",
+          "sha256": "1fb7d36a709ce921bd645d182652a19a16c9eb039f6dc8c7df40453c3d799e52",
+          "size_bytes": 83245,
+          "acquired_at": "2026-11-01T06:08:30.642576+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "none",
+          "document_id": "83f588dd5d6fea0d2ae2bb644b52c6ec6f86a4e6c7dd1012097c4b93c44838cd"
+        },
+        {
+          "path": "inputoutput.html",
+          "url": "https://docs.python.org/release/3.13.0/tutorial/inputoutput.html",
+          "sha256": "e024c61e96c7e0699f3eafc73ea1a49faebe4f00030ed9b7f67ffb61244efd2d",
+          "size_bytes": 76241,
+          "acquired_at": "2026-11-01T06:08:30.889590+00:00",
+          "acquisition": "HTTPS download",
+          "transformation": "none",
+          "document_id": "5638fabe144890903756929244a794398a5b20750880a10d1e4aa8c79e40a274"
+        }
+      ]
+    },
+    {
+      "corpus_id": "http-semantics",
+      "snapshot_id": "3b137be2dd8cbc368dcce9838626b5fa966d27b4ddc23c0fc984c001522e6904",
+      "title": "RFC 9110 HTTP Semantics",
+      "revision": "RFC 9110 June 2022 original PDF, not errata-applied",
+      "category": "large single PDF; many related protocol sections; 194 physical pages",
+      "rights": "IETF Trust BCP 78 plus copyright notice in the PDF; existing local copy reused; source not redistributed.",
+      "license_url": "https://trustee.ietf.org/license-info",
+      "language": "en",
+      "file_count": 1,
+      "input_size_bytes": 2858365,
+      "input_root": "data/benchmarks/pilot-v1/http-semantics/input",
+      "raw_root": "data/benchmarks/pilot-v1/http-semantics/raw",
+      "retrieval_status": "not_run",
+      "source_distribution": "local-only, excluded by existing /data/ gitignore",
+      "files": [
+        {
+          "path": "rfc9110.pdf",
+          "url": "https://www.rfc-editor.org/rfc/rfc9110.pdf",
+          "sha256": "60b30efa1048900833d1758440247fe8ac85a3134f2327388dcb24e07d814c89",
+          "size_bytes": 2858365,
+          "acquired_at": "2026-11-01T06:08:30.909983+00:00",
+          "acquisition": "reused existing pinned local copy",
+          "transformation": "none",
+          "document_id": "53c2fca06516af4197a3d126c4f114feff2e639cb6f07a79b2ed65aca81f1ed3"
+        }
+      ]
+    }
+  ]
+}

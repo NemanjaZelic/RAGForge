@@ -1,0 +1,291 @@
+{
+  "product_execution": "not_run",
+  "scenarios": [
+    {
+      "scenario_id": "PILOT-001",
+      "phase": "F1",
+      "title": "Frozen input identity",
+      "status": "not_run",
+      "preconditions": [
+        "Sources prepared separately."
+      ],
+      "actions": [
+        "Verify all raw and input hashes before build."
+      ],
+      "expected_evidence": [
+        "Reject changed/missing/extra input files; no silent snapshot update."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-002",
+      "phase": "F1",
+      "title": "Per-corpus ingestion",
+      "status": "not_run",
+      "preconditions": [
+        "Text PDF and parsers implemented."
+      ],
+      "actions": [
+        "Build each corpus separately; inventory accepted/rejected files and page statuses."
+      ],
+      "expected_evidence": [
+        "No unreported input loss; real source provenance; text-bearing PDF required."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-003",
+      "phase": "F1",
+      "title": "Mixed MD/TXT/HTML/PDF build",
+      "status": "not_run",
+      "preconditions": [
+        "Final build API available."
+      ],
+      "actions": [
+        "Copy the nine existing input files under corpus-prefixed subdirectories into a fresh mixed root.",
+        "Build one collection; remap source paths/document IDs consistently; exclude gold labels."
+      ],
+      "expected_evidence": [
+        "All four formats in one build; source hashes unchanged; mixed check not counted as fourth corpus."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-004",
+      "phase": "F1",
+      "title": "Three-method comparison",
+      "status": "not_run",
+      "preconditions": [
+        "Reviewed frozen labels; real dense model and engine."
+      ],
+      "actions": [
+        "Run BM25, dense, hybrid with top_k=10 and max_output_chars=16000."
+      ],
+      "expected_evidence": [
+        "Separate positive recall/MRR/nDCG and unsupported analysis; actual support and method, no silent fallback."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-005",
+      "phase": "F1",
+      "title": "Offline copied bundle E2E",
+      "status": "not_run",
+      "preconditions": [
+        "Final build/use/context API and local model available."
+      ],
+      "actions": [
+        "Build under OS network isolation; copy closed bundle elsewhere; remove access to original root; query and fetch context."
+      ],
+      "expected_evidence": [
+        "Citations remain valid; no DNS/socket/listening port/HTTP daemon/Docker requirement; compatible runtime dependency recorded."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-006",
+      "phase": "F1",
+      "title": "Balanced BM25 without inference",
+      "status": "not_run",
+      "preconditions": [
+        "Real balanced bundle."
+      ],
+      "actions": [
+        "Block embedding loader/inference and network; explicitly query with bm25."
+      ],
+      "expected_evidence": [
+        "Uses existing FTS; no model inference, download, rebuild or cloud fallback; integrity still checked."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-007",
+      "phase": "F1",
+      "title": "Missing dense model/index",
+      "status": "not_run",
+      "preconditions": [
+        "Real balanced bundle copied to isolated temporary case."
+      ],
+      "actions": [
+        "Remove required model/index in owned copy; request hybrid/dense."
+      ],
+      "expected_evidence": [
+        "Clear integrity/capability failure and recovery guidance; no silent BM25/download/cloud."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-008",
+      "phase": "F1",
+      "title": "Bundle integrity faults",
+      "status": "not_run",
+      "preconditions": [
+        "Final bundle verifier."
+      ],
+      "actions": [
+        "Mutate one byte, remove a file, add unexpected file, introduce unsupported manifest version in separate owned copies."
+      ],
+      "expected_evidence": [
+        "Each corruption rejected before retrieval; original bundle unchanged."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-009",
+      "phase": "F1",
+      "title": "Interrupted build preserves previous bundle",
+      "status": "not_run",
+      "preconditions": [
+        "Final atomic builder and valid existing bundle."
+      ],
+      "actions": [
+        "Cancel/fault build at staging and publish boundaries."
+      ],
+      "expected_evidence": [
+        "Previous bundle still valid; owned staging recoverable; no WAL/SHM dependency."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-010",
+      "phase": "F1",
+      "title": "Source and context correctness",
+      "status": "not_run",
+      "preconditions": [
+        "Real results for positive and multi-section queries."
+      ],
+      "actions": [
+        "Fetch exact collection/chunk context; verify source facts against frozen spans; use bounded neighbors/output."
+      ],
+      "expected_evidence": [
+        "Every required evidence group supported; wrong collection rejected; source locations accurate."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-011",
+      "phase": "F1",
+      "title": "Local privacy and adversarial documents",
+      "status": "not_run",
+      "preconditions": [
+        "Real parser/retrieval; controls/injection and controls/html."
+      ],
+      "actions": [
+        "Build/query canaries with network/process/log observation."
+      ],
+      "expected_evidence": [
+        "Documents never executed; query/snippets/secrets not logged by default; untrusted content not promoted into instructions."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-012",
+      "phase": "F1",
+      "title": "Ingestion edge cases",
+      "status": "not_run",
+      "preconditions": [
+        "Real parser/chunker."
+      ],
+      "actions": [
+        "Use controls cases and existing three PDF fixtures, each isolated."
+      ],
+      "expected_evidence": [
+        "Observed results satisfy each cases.json expectation; explicit partial/error statuses."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-013",
+      "phase": "F1",
+      "title": "Resource measurements",
+      "status": "not_run",
+      "preconditions": [
+        "Frozen hardware/config and runnable product."
+      ],
+      "actions": [
+        "Measure actual build/peak RAM/index size and cold/warm latency median/p95 by corpus and method."
+      ],
+      "expected_evidence": [
+        "Hardware/software/version identities and repetitions; no fabricated zero/missing measurements."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-014",
+      "phase": "F2",
+      "title": "Real agent/tool/citation E2E",
+      "status": "not_run",
+      "preconditions": [
+        "Actual MCP stdio or CLI-capable supported agent."
+      ],
+      "actions": [
+        "Ask positive, multi-section, unsupported and injection questions; record actual tool calls."
+      ],
+      "expected_evidence": [
+        "Real retrieval and grounded citations; insufficient evidence stated; no simulated tool results or hostile instruction execution."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-015",
+      "phase": "F2",
+      "title": "Generated skill and connection separation",
+      "status": "not_run",
+      "preconditions": [
+        "Real integration generator."
+      ],
+      "actions": [
+        "Generate skill/config without installation approval."
+      ],
+      "expected_evidence": [
+        "Valid frontmatter; no copied hostile instructions, endpoint/token hardcode; client config write waits for explicit approval."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-016",
+      "phase": "F3",
+      "title": "Shared parity and authorization",
+      "status": "not_run",
+      "preconditions": [
+        "Real authenticated shared runtime."
+      ],
+      "actions": [
+        "Use same compatible bundle locally and remotely; list/search/fetch as authorized and unauthorized principals."
+      ],
+      "expected_evidence": [
+        "Consistent sources/ranks within documented tolerance; no re-embedding; no collection/document metadata leak or IDOR."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-017",
+      "phase": "F4-F5",
+      "title": "Remote ownership and verified fetch",
+      "status": "not_run",
+      "preconditions": [
+        "Runner implementation and explicit controlled test host."
+      ],
+      "actions": [
+        "Exercise prepare/run/fetch/cleanup with recording provider/SSH boundary, then separately authorized real smoke."
+      ],
+      "expected_evidence": [
+        "Approval before upload/provision; checksum before cleanup; only tool-owned resources touched; keep-instance/cancel/recovery respected."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-018",
+      "phase": "F6",
+      "title": "Optimization split and budget controls",
+      "status": "not_run",
+      "preconditions": [
+        "Real optimizer scheduler with injected clock."
+      ],
+      "actions": [
+        "Exercise first-try/light/high/max; Max cap below 8h; short stagnation; documented convergence; cancel/resume."
+      ],
+      "expected_evidence": [
+        "No test-label leakage; Max automatic budget >=8h; short stagnation alone cannot end early; distinct stop reasons; valid previous bundle retained."
+      ]
+    },
+    {
+      "scenario_id": "PILOT-019",
+      "phase": "F7",
+      "title": "Supported serverless parity and limits",
+      "status": "not_run",
+      "preconditions": [
+        "One actual supported provider/profile and explicit test deployment authorization."
+      ],
+      "actions": [
+        "Run actual on-demand requests and measure cold start, cost/storage/quotas."
+      ],
+      "expected_evidence": [
+        "Same evidence contract for supported profile; unsupported configurations reported, not passed."
+      ]
+    }
+  ]
+}

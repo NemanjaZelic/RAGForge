@@ -1,0 +1,131 @@
+{
+  "authorship": "Original authored diagnostic fixtures, not real documentation corpora",
+  "quality_benchmark_queries": 0,
+  "product_execution": "not_run",
+  "files": [
+    {
+      "path": "empty/input/empty.txt",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "duplicates/input/first.md",
+      "size_bytes": 45,
+      "sha256": "7c339ca4a4575e2dd7f0309869fde97258f1c6a85451595fd1beeeffca9c7f9c"
+    },
+    {
+      "path": "duplicates/input/second.md",
+      "size_bytes": 45,
+      "sha256": "7c339ca4a4575e2dd7f0309869fde97258f1c6a85451595fd1beeeffca9c7f9c"
+    },
+    {
+      "path": "unicode/input/sr.txt",
+      "size_bytes": 129,
+      "sha256": "d8fb4a0bfa64d3478532fdb8fb846588f9ff7efb751e3f084d5f34bde6a6fe64"
+    },
+    {
+      "path": "malformed/input/bad.txt",
+      "size_bytes": 19,
+      "sha256": "a4a36876f7aff423e85a32e1ddfda46c9ad0786850876e0d608b1717444056cf"
+    },
+    {
+      "path": "injection/input/poison.md",
+      "size_bytes": 313,
+      "sha256": "bb6294d32bd270210482a461e77b66d7b5d47787dd3f847d6d41f6a6fb619549"
+    },
+    {
+      "path": "html/input/example.html",
+      "size_bytes": 315,
+      "sha256": "42858e9bf701b3cd19294c591859ede440390cf30aa99a67c8b6fd544dd968eb"
+    },
+    {
+      "path": "table/input/limits.md",
+      "size_bytes": 128,
+      "sha256": "0b5dcf089e338fde93a31e1df28b27183c67692d425ade20b1988cc34a33676e"
+    },
+    {
+      "path": "long-code/input/long.md",
+      "size_bytes": 19267,
+      "sha256": "d0060c22e8521c6a9853c8620ebe6ab5bbac6925796490776a509293277f728a"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "empty",
+      "input": "empty/input",
+      "expected": [
+        "Empty document handled/reported; no fabricated text or evidence."
+      ]
+    },
+    {
+      "case_id": "duplicates",
+      "input": "duplicates/input",
+      "expected": [
+        "Equal content hashes, distinct document IDs and source paths.",
+        "Document-level evaluation deduplicates retrieved chunks per document ID."
+      ]
+    },
+    {
+      "case_id": "unicode",
+      "input": "unicode/input",
+      "expected": [
+        "Preserve Serbian scripts/diacritics and accurate source locations.",
+        "No implicit translation or transliteration service."
+      ]
+    },
+    {
+      "case_id": "malformed",
+      "input": "malformed/input",
+      "expected": [
+        "Explicit encoding failure; no claim of full ingestion success."
+      ]
+    },
+    {
+      "case_id": "injection",
+      "input": "injection/input",
+      "expected": [
+        "Treat document instructions as untrusted text.",
+        "No command execution, upload or system-instruction promotion.",
+        "Canary fact can be cited without following hostile text."
+      ]
+    },
+    {
+      "case_id": "html",
+      "input": "html/input",
+      "expected": [
+        "Visible canary and literal code survive.",
+        "Script/style/template hidden canaries omitted; no script execution/network.",
+        "No invented HTML line numbers."
+      ]
+    },
+    {
+      "case_id": "table",
+      "input": "table/input",
+      "expected": [
+        "Local=12 and shared=24 retain row/column association; cite supporting table."
+      ]
+    },
+    {
+      "case_id": "long-code",
+      "input": "long-code/input",
+      "expected": [
+        "Bound long code block without loss/duplication beyond declared overlap; final prose remains.",
+        "Stable chunking for identical configuration and source bytes."
+      ]
+    }
+  ],
+  "existing_pdf_fixtures": [
+    {
+      "path": "tests/fixtures/pdf/structured.pdf",
+      "expected": "Text, table/code and physical page provenance."
+    },
+    {
+      "path": "tests/fixtures/pdf/image-only.pdf",
+      "expected": "Explicit OCR-needed/no-text report; no OCR/download fallback."
+    },
+    {
+      "path": "tests/fixtures/pdf/mixed.pdf",
+      "expected": "Report unreadable image-only portions; do not count them as indexed text."
+    }
+  ]
+}

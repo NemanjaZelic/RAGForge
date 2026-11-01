@@ -1,0 +1,53 @@
+{
+  "selection_date": "2026-11-01",
+  "before_retrieval_results": true,
+  "seed": "ragforge-pilot-2026-11-01-v1",
+  "method": "Predeclared format/size strata; choose the eligible bounded source in each stratum; SHA-256 seed orders topic groups for split assignment.",
+  "corpus_sampling": "purposive feasibility pilot, not a random population sample",
+  "shortlist": [
+    {
+      "candidate": "uv 0.9.5 bounded guides",
+      "stratum": "small MD/TXT",
+      "selected": true,
+      "reason": "Fixed tag, concise standalone guides and original README; no executed include directives."
+    },
+    {
+      "candidate": "Python 3.13.0 tutorial chapters 4,5,7,8",
+      "stratum": "medium rendered HTML",
+      "selected": true,
+      "reason": "Fixed release HTML with complete code examples, table output and stable anchors."
+    },
+    {
+      "candidate": "RFC 9110 original PDF",
+      "stratum": "large related-sections PDF",
+      "selected": true,
+      "reason": "Existing pinned 194-page real PDF; protocol domain distinct from packaging and Python language usage."
+    },
+    {
+      "candidate": "FastAPI docs",
+      "selected": false,
+      "reason": "Deferred before scoring: requires pinning rendered pages or resolving external example includes; no incomplete includes admitted."
+    },
+    {
+      "candidate": "PostgreSQL manual PDF",
+      "selected": false,
+      "reason": "Deferred before scoring: RFC already supplies the bounded pinned PDF slot; avoid expanding acquisition and annotation workload in the 90-query pilot."
+    },
+    {
+      "candidate": "Docker manuals",
+      "selected": false,
+      "reason": "Deferred before scoring: need a separately bounded versioned manual subset for expansion."
+    }
+  ],
+  "source_sampling_limitation": "No meaningful random draw among multiple eligible corpora per stratum occurred; do not describe this as random representative corpus selection.",
+  "split_algorithm": "Sort connected topic components by SHA-256(seed|corpus|lexicographically-smallest-topic); deterministic dev/tuning/test capacity assignment of four positive topic pairs per split; seeded negative topic ordering, one pair per split.",
+  "gaps_for_expansion": [
+    "A genuinely uneven multi-file README/wiki corpus",
+    "A real non-English corpus, not translations of questions",
+    "At least one whole-corpus holdout once five corpora are available"
+  ],
+  "query_author": "OpenAI Codex",
+  "independent_review": "pending",
+  "quality_thresholds": "unset until independently reviewed pilot and evaluator rules are frozen",
+  "product_execution": "not_run"
+}

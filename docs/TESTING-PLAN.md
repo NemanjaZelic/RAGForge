@@ -1,5 +1,7 @@
 # Plan testiranja proizvoda na stvarnoj dokumentaciji
 
+> Ažuriranje 2026-11-01 po korisničkoj ispravci: ciljni test je velika zbirka poput 3GPP specifikacija. [LARGE-BENCHMARK-PLAN.md](LARGE-BENCHMARK-PLAN.md) ima prednost za obim korpusa i trenutni status. Mali pilot služi samo za smoke/regresione provere.
+
 Status: planirano, nije izvršeno. Datum: 2026-11-01.
 Korisnički predlog: 3–7 različitih dokumentacija i golden skup za svaku.
 Ovaj plan proširuje RF-006 i koristi isti evaluator kao budući RF-013.
