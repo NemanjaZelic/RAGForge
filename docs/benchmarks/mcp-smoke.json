@@ -1,0 +1,59 @@
+{
+  "workflow": "deterministic MCP client; not an LLM evaluation",
+  "protocol_version": "2026-07-28",
+  "tools": [
+    "search_docs",
+    "fetch_context",
+    "list_collections"
+  ],
+  "collections": {
+    "collections": [
+      {
+        "collection_id": "mini",
+        "title": "Documents",
+        "document_count": 6,
+        "chunk_count": 21
+      }
+    ]
+  },
+  "query": "How are access tokens sent to the service?",
+  "evidence": [
+    {
+      "citation": "authentication.md:3-6",
+      "text": "## Access tokens\nClients send an access token in the Authorization header using the Bearer scheme.\nAn access token expires after 15 minutes. Tokens are never written to application logs.\n\n",
+      "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520",
+      "retrieval_method": "hybrid"
+    },
+    {
+      "citation": "authentication.md:7-10",
+      "text": "## Refresh tokens\nRefresh tokens are rotated after every successful refresh.\nReusing a rotated refresh token revokes its token family.\n\n",
+      "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f",
+      "retrieval_method": "hybrid"
+    },
+    {
+      "citation": "deployment.md:3-6",
+      "text": "## Health checks\nThe private service exposes /health for its process health check.\nHealth checks never return document snippets or credentials.\n\n",
+      "chunk_id": "6d80bd66005158d1fbb5281ecd42e40f5d127823b1a4cc0cacd0e3ad15f25018",
+      "retrieval_method": "hybrid"
+    }
+  ],
+  "context": [
+    {
+      "citation": "authentication.md:7-10",
+      "text": "## Refresh tokens\nRefresh tokens are rotated after every successful refresh.\nReusing a rotated refresh token revokes its token family.\n\n",
+      "chunk_id": "2b70e58927961a8b14275cbd1c9a65f2327f99a74031b9dff77904129307187f"
+    },
+    {
+      "citation": "authentication.md:3-6",
+      "text": "## Access tokens\nClients send an access token in the Authorization header using the Bearer scheme.\nAn access token expires after 15 minutes. Tokens are never written to application logs.\n\n",
+      "chunk_id": "45e8881478b2418147dbbe1a269bb3a3fad1238e8ebdbb36902691ab6b7f3520"
+    },
+    {
+      "citation": "authentication.md:1-2",
+      "text": "# Authentication\n\n",
+      "chunk_id": "a67bca96cd17374c4caf3e9081fc278c362956abea7c185a8f99685dae7ec64f"
+    }
+  ],
+  "artifact_build_id": "4bf241eb8fdb7c2de5177d329b12c35bc4c460c97e38145864b223f0d5f6e4f1",
+  "sdk_version": "2.3.0"
+}

@@ -16,7 +16,7 @@ Jedna distribucija `ragforge`, Python >=3.11, `src` layout:
 - `tests/`: ugovori, lokalna CLI provera i fixtures.
 
 Runtime zavisnosti su Typer, Pydantic i zaključani pypdf; lokalni SQLite
-FTS5 koristi standardnu biblioteku. Opcioni balanced CPU sloj koristi ONNX Runtime, Tokenizers i NumPy; HTTP/MCP su kasnije. ReportLab/Pillow su samo dev fixture alati.
+FTS5 koristi standardnu biblioteku. Opcioni balanced CPU sloj koristi ONNX Runtime, Tokenizers i NumPy; Read-only stdio MCP je opcioni adapter nad istim BundleEngine-om; shared HTTP/MCP su kasnije. ReportLab/Pillow su samo dev fixture alati.
 Lockfile obuhvata implementiranu F1 osnovu.
 
 ## Minimalni bundle v1 — nacrt

@@ -32,7 +32,7 @@ from ragforge.types import ContractModel
 
 app = typer.Typer(
     name="ragforge",
-    help="Local document indexing, cited BM25 search and corpus diagnostics.",
+    help="Local hybrid retrieval, portable bundles and read-only MCP.",
     no_args_is_help=True,
     invoke_without_command=True,
     add_completion=False,
@@ -87,7 +87,7 @@ def doctor() -> None:
         json.dumps(
             {
                 "version": __version__,
-                "stage": "phase-1",
+                "stage": "phase-2-local-mcp",
                 "python": platform.python_version(),
                 "sqlite": sqlite3.sqlite_version,
                 "fts5": available,
@@ -97,6 +97,8 @@ def doctor() -> None:
                     find_spec(name) is not None for name in ("numpy", "onnxruntime", "tokenizers")
                 ),
                 "bundle_implemented": True,
+                "mcp_stdio_implemented": True,
+                "mcp_dependency_available": find_spec("mcp") is not None,
             },
             sort_keys=True,
         )
@@ -414,3 +416,38 @@ def verify(artifact: Path) -> None:
     typer.echo(
         json.dumps({"valid": True, "build_id": manifest.build_id, "profile": manifest.profile})
     )
+
+
+@app.command()
+def serve(
+    artifact: Annotated[Path, typer.Argument(help="One verified local bundle directory.")],
+    threads: int = typer.Option(4, min=1, max=32),
+) -> None:
+    """Run read-only MCP over stdio; stdout is reserved for protocol messages."""
+    try:
+        from ragforge.adapters.mcp import create_server
+    except ImportError as error:
+        typer.echo(json.dumps({"error": "MCP support requires the ragforge[mcp] extra."}), err=True)
+        raise typer.Exit(code=2) from error
+    try:
+        create_server(artifact, threads=threads).run(transport="stdio")
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+
+
+@app.command()
+def integrate(
+    artifact: Annotated[Path, typer.Argument(help="Verified local bundle directory.")],
+    output: Annotated[Path, typer.Option("--output", help="New agent files directory.")],
+    description: Annotated[str | None, typer.Option(help="User-authored skill purpose.")] = None,
+) -> None:
+    """Generate a skill and separate MCP config without editing host settings."""
+    from ragforge.adapters.integration import create_integration
+
+    try:
+        result = create_integration(artifact, output, description=description)
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result, ensure_ascii=True))

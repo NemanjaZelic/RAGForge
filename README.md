@@ -2,10 +2,12 @@
 
 Portable document retrieval for agents. Local execution is the default.
 
-**Development stage: local balanced build/use implemented (RF-009/004/005).**
+**Development stage: local balanced build/use and read-only stdio MCP implemented.**
 Portable minimal/balanced bundles, local BM25/dense/hybrid search and source
-citations now work. Broader evaluation and agent integrations remain in the plan.
-See [local bundle behavior and limits](docs/LOCAL-BUNDLES.md).
+citations now work, with an MCP adapter and passive agent skill/config generator.
+Broader retrieval and autonomous-agent evaluation remain in the plan.
+See [local bundle behavior and limits](docs/LOCAL-BUNDLES.md) and
+[MCP setup, tools and limits](docs/MCP.md).
 
 Start with the [current working plan](docs/PROJECT-PLAN.md).
 The original proposal is preserved in [docs/RAGForge-Project-Plan.md](docs/RAGForge-Project-Plan.md).
@@ -55,7 +57,9 @@ uv run python scripts/export_schemas.py --check
 
 ## Implemented
 
-- Typer CLI: build/use/verify/context, standalone index/search, corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
+- Read-only stdio MCP: search_docs/fetch_context/list_collections over the same engine;
+  passive Agent Skills and separate MCP config generator (`integrate`).
+- Typer CLI: build/use/verify/context/serve/integrate, standalone index/search, corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
 - Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.
   Scan inventories bytes; it does not parse PDF text or build a searchable index.
 - Text-bearing PDF parsing, physical page citations, page status and explicit partial mode;

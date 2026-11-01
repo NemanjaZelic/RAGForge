@@ -29,6 +29,8 @@ def test_doctor_reports_implemented_bundle_and_search_methods() -> None:
     assert report["fts5"] is True
     assert report["retrieval_implemented"] is True
     assert report["bundle_implemented"] is True
+    assert report["mcp_stdio_implemented"] is True
+    assert report["mcp_dependency_available"] is True
     assert report["retrieval_methods"] == ["bm25", "dense", "hybrid"]
     assert report["balanced_dependencies_available"] is True
 

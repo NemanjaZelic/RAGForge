@@ -23,6 +23,9 @@ balanced = [
     "onnxruntime>=1.24,<2",
     "tokenizers>=0.22,<1",
 ]
+mcp = [
+    "mcp>=2.3,<3",
+]
 
 [dependency-groups]
 dev = [

@@ -115,3 +115,28 @@ ostaju obavezan deo v0.1 prema RELEASE-SCOPE.md.
 RF-009 implementacija i RF-004/005 lokalni tok su završeni uz navedene granice.
 Test setove priprema zaseban agent. Slede njihova evaluacija i agent/MCP sloj;
 ne tvrdi se završen v0.1 release dok reprezentativni quality uslovi ne prođu.
+
+
+## RF-008A — lokalni MCP i pasivna agent integracija
+
+- `serve` pokreće stvarni stdio MCP nad jednim verifikovanim BundleEngine-om:
+  search_docs/fetch_context/list_collections, strukturisani retrieval ugovor,
+  bounded ulazi i read-only oznake. Podrazumevani balanced/hybrid i eksplicitni
+  BM25/dense daju iste rezultate kao direktni engine.
+- `integrate` atomski pravi novi direktorijum sa validnim Agent Skills fajlom,
+  nepoverljivim metadata reference fajlom i zasebnim generic MCP config-om.
+  Ne menja host podešavanja ili postojeće fajlove. Skill validator prolazi.
+- [Stvarni MCP klijent](../examples/mcp_client.py) poziva discovery, search i context.
+  [Zabeležen razvojni smoke](benchmarks/mcp-smoke.json) vraća hybrid citat
+  `authentication.md:3-6` za prenos access tokena u Authorization/Bearer zaglavlju.
+  Primer je deterministički klijent; nije nezavisna LLM agent evaluacija.
+- Lokalno: 178 passed, 3 Windows platform/privilege skip-a. Pytest, ruff lint/format,
+  mypy i schema drift prolaze. Stvarni pinovani E5 test sada uključuje MCP stdio;
+  postojeći CI ga pokreće na Windows/Linux i u Linux OS network namespace-u.
+- Protokolski testovi proveravaju auto/legacy tok, scope/filter/limit greške i
+  oporavak, relocation, network guard, BM25 bez ML importa i izvorne instrukcije
+  kao nepoverljive podatke. Originalni plan zadržava isti SHA-256.
+
+[Detalji i povezivanje](MCP.md). RF-008B nezavisna evaluacija odabranog LLM agenta
+na reprezentativnim korpusima ostaje otvorena. Test setovi drugog agenta nisu
+menjani. Naredni mrežni korak je RF-010 sa auth i izolacijom pre produkcione preporuke.

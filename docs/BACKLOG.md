@@ -172,10 +172,14 @@ tvrdnji o kvalitetu proizvoda i automatskoj optimizaciji.
 
 ## F2 — Agent-ready nad postojećim v0.1 hybrid engine-om
 
-RF-008: MCP stdio nad istim engine-om, validan skill generator i odvojen config.
+RF-008A implementirano: MCP stdio nad istim engine-om, validan skill generator
+i odvojen pasivni config. Detalji i granice: [MCP.md](MCP.md).
 Done: stvarni MCP klijent poziva search/context; primer agenta citira izvor;
 generisanje ne menja korisnički agent config bez izbora. Testirati hybrid
 podrazumevani tok i eksplicitan BM25 izbor. Dense/hybrid već pripadaju F1.
+
+RF-008B ostaje otvoren: nezavisni LLM agent i reprezentativna evaluacija citata/
+uspeha zadatka. Stvarni deterministički MCP klijent nije zamena za taj benchmark.
 
 ## Posle toga
 

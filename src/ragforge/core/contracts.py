@@ -7,6 +7,10 @@ from pydantic import Field, field_validator, model_validator
 from ragforge.types import ContractModel, Identifier, RelativePath, SearchMethod, Sha256
 
 PositiveInt = Annotated[int, Field(ge=1)]
+QueryText = Annotated[str, Field(min_length=1, max_length=8192, strict=True)]
+TopK = Annotated[int, Field(ge=1, le=50, strict=True)]
+OutputChars = Annotated[int, Field(ge=1, le=100000, strict=True)]
+Neighbors = Annotated[int, Field(ge=0, le=5, strict=True)]
 
 
 class SourceLocation(ContractModel):
@@ -31,10 +35,10 @@ class RetrievalFilters(ContractModel):
 
 
 class RetrieveRequest(ContractModel):
-    query: Annotated[str, Field(min_length=1, max_length=8192)]
+    query: QueryText
     collection_id: Identifier | None = None
-    top_k: Annotated[int, Field(ge=1, le=50)] = 5
-    max_output_chars: Annotated[int, Field(ge=1, le=100000)] = 16000
+    top_k: TopK = 5
+    max_output_chars: OutputChars = 16000
     filters: RetrievalFilters | None = None
     # None resolves to the bundle default; unsupported methods must raise.
     search_method: SearchMethod | None = None
@@ -74,8 +78,8 @@ class RetrievalResponse(ContractModel):
 class FetchContextRequest(ContractModel):
     collection_id: Identifier
     chunk_id: Sha256
-    neighbors: Annotated[int, Field(ge=0, le=5)] = 1
-    max_output_chars: Annotated[int, Field(ge=1, le=100000)] = 16000
+    neighbors: Neighbors = 1
+    max_output_chars: OutputChars = 16000
 
 
 class CollectionDescription(ContractModel):
