@@ -2,7 +2,7 @@
 
 Portable document retrieval for agents. Local execution is the default.
 
-**Development stage: Phase 0 (contracts and project foundation).**
+**Development stage: Phase 1 started (RF-000 contracts complete).**
 Document indexing and search are the next milestone; they are not implemented yet.
 
 Start with the [current working plan](docs/PROJECT-PLAN.md).
@@ -50,7 +50,8 @@ uv run python scripts/export_schemas.py --check
 ## Implemented
 
 - Typer CLI: help, version, SQLite/FTS5 doctor and JSON Schema export.
-- Validated draft manifest and retrieval contracts; engine protocol.
+- Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
+- Synthetic manifest examples in `examples/manifests/`; these are not built bundles.
 - Small original document corpus and 20 development queries with authored relevance labels.
 - Tests, formatting, linting, type checking and GitHub Actions configuration.
 

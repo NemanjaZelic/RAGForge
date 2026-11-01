@@ -47,8 +47,8 @@ Sama validacija šeme nije verifikacija sadržaja paketa ili bezbednosti SQLite-
 
 Minimalni bundle ne uključuje Python interpreter ili univerzalne binarne fajlove.
 Potrebna je kompatibilna instalacija RAGForge runtime-a. Samostalno OS/arch
-pakovanje dolazi zasebno. Postojeći modeli i šeme su još minimal/BM25 nacrt;
-RF-000 ih obavezno proširuje za balanced/dense pre v0.1. Ova dokumentacija ne
+pakovanje dolazi zasebno. RF-000 modeli i šeme sada opisuju minimal i balanced profil, lokalni query model,
+dense indeks i podržane metode. Backend i model još nisu izabrani pilotom. Ova dokumentacija ne
 tvrdi da trenutni kod već gradi ili pretražuje hybrid bundle.
 
 ## Identitet i provenance
@@ -78,8 +78,9 @@ Validacija teksta putanje sama ne potvrđuje da fizički fajl ostaje unutar root
 Request modeli ograničavaju query na 8192 znaka, top_k na 1–50 i tekst odgovora
 na najviše 100000 znakova ukupno. Ograničenja su znakovi, ne tokeni.
 Prazan/whitespace query se odbija. Verzija odgovora je `contract_version="1"`.
-Pre v0.1 ugovor mora dobiti search-method i bm25/dense/hybrid identifikaciju,
-uz postojeće source ID-jeve i granice. Trenutni model prihvata samo BM25.
+Request prihvata `search_method=bm25|dense|hybrid`; null znači default iz
+manifest-a. Rezultat identifikuje izvršenu metodu. Engine mora odbiti nepodržanu
+metodu bez tihog fallback-a. RF-000 definiše ugovor, ne izvršava pretragu.
 
 U v0.1 je dozvoljen samo filter po listi document ID-jeva; proizvoljan
 `filters: object` odlaže stvarnu specifikaciju. ID kolekcije može izostati samo
@@ -133,3 +134,17 @@ proverenih komandi, ne predstavlja OS sandbox ili završeni offline build test.
 Ingestion mora imati limite veličine fajla/ukupnog korpusa i politiku symlink-a.
 Nepouzdan bundle se proverava pre otvaranja; potpisi i arhivsko raspakivanje
 nisu implementirani u Fazi 0.
+
+## RF-000 — implementirani draft ugovori
+
+Balanced zahteva sva tri capability-ja, hybrid default i potpuno inventorisan
+lokalni query model (identitet, pinovana revizija, runtime/verzija, dimenzije,
+licenca i fajlovi pod models/query/). Dense indeks ima backend/verziju,
+dimenzije i metriku; dimenzije modela i indeksa moraju biti jednake. Canonical
+putanja indeksa je collections/<id>/dense.index. Imenovanje backend-a/modela
+je podatak manifest-a; fixture vrednosti nisu izabrani produkcioni backend.
+Minimal ostaje samo BM25, bez dense konfiguracije. L2 udaljenost engine mora
+pretvoriti u higher-is-better score; skorovi nisu uporedivi između metoda.
+Primeri u examples/manifests su sintetički: hash-evi i modeli nisu stvarni
+bundle i ne dokazuju integritet. Python validatori dopunjuju JSON Schema;
+strukturna validacija ne zamenjuje buduću proveru bajtova i model pakovanja.

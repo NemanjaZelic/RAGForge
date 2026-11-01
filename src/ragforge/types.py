@@ -1,7 +1,7 @@
 """Shared wire types. Paths are portable identifiers, not filesystem authorization."""
 
 import unicodedata
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 
@@ -33,3 +33,6 @@ RelativePath = Annotated[
     Field(min_length=1, max_length=1024, pattern=r'^[^\\:\x00-\x1f<>"|?*]+$'),
     AfterValidator(validate_relative_path),
 ]
+
+
+SearchMethod = Literal["bm25", "dense", "hybrid"]

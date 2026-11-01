@@ -20,3 +20,10 @@ separately from recall/MRR. BM25 scores alone do not establish unanswerability.
 
 The adversarial document is intentionally untrusted data. Its presence tests
 retrieval boundaries later; it is not executable and is not copied into skills.
+
+## Manifest contract fixtures
+
+`manifests/minimal.json` and `manifests/balanced.json` are valid synthetic
+contract examples. Repeated placeholder hashes, fixture backend/model identities
+and sizes do not describe real files. No model/backend has been selected and
+these examples cannot be searched or verified as a built bundle.

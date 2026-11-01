@@ -1,0 +1,46 @@
+{
+  "artifact_schema_version": "1",
+  "build_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "producer_version": "0.1.0.dev0",
+  "profile": "minimal",
+  "index_backend": "sqlite-fts5",
+  "index_schema_version": 1,
+  "sqlite_build_version": "3.49.1",
+  "collections": [
+    {
+      "collection_id": "mini",
+      "title": "Test collection",
+      "database_path": "collections/mini/index.sqlite",
+      "documents": [
+        {
+          "document_id": "cd46b15c982807b725c4a448964092742afb6edcc990220e16178a659c6c8caf",
+          "source_path": "example.md",
+          "content_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "collections/mini/index.sqlite",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 100
+    }
+  ],
+  "build_configuration": {
+    "parser_version": "draft-1",
+    "chunker_version": "draft-1",
+    "chunk_size_chars": 1000,
+    "overlap_chars": 100
+  },
+  "runtime": {
+    "python_min": "3.11",
+    "requires_fts5": true,
+    "adapters": [
+      "cli"
+    ]
+  },
+  "licenses": [
+    "test-fixture-only"
+  ]
+}

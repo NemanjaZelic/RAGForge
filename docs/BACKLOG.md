@@ -22,9 +22,10 @@ Usvojeni release uslovi: [RELEASE-SCOPE.md](RELEASE-SCOPE.md).
 Tekstualni PDF i dense/hybrid su obavezni pre v0.1 release-a.
 BM25-only rezultat je interni međukorak ili eksplicitni minimal profil.
 
-### RF-000 — Proširiti Phase 0 ugovore za v0.1
+### RF-000 — Proširiti Phase 0 ugovore za v0.1 [završeno]
 
-Trenutne šeme su minimal/BM25 nacrt. Dodati balanced manifest, identitet i
+Implementirano 2026-11-01; 56 testova i sve lokalne provere prolaze.
+Ugovori ne izvršavaju retrieval. Zadatak: balanced manifest, identitet i
 lokalno pakovanje query modela, dimenziju/metriku dense indeksa, capability-je
 bm25/dense/hybrid i search-method izbor. Sačuvati minimal profil.
 Done: modeli, generisane šeme, primeri i testovi su usklađeni; ništa ne tvrdi

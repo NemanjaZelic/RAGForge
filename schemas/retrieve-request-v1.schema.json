@@ -63,6 +63,23 @@
       "title": "Query",
       "type": "string"
     },
+    "search_method": {
+      "anyOf": [
+        {
+          "enum": [
+            "bm25",
+            "dense",
+            "hybrid"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Search Method"
+    },
     "top_k": {
       "default": 5,
       "maximum": 50,

@@ -50,6 +50,17 @@
           "title": "Database Path",
           "type": "string"
         },
+        "dense_index": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DenseIndex"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "documents": {
           "items": {
             "$ref": "#/$defs/DocumentRecord"
@@ -72,6 +83,52 @@
         "documents"
       ],
       "title": "CollectionManifest",
+      "type": "object"
+    },
+    "DenseIndex": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "minLength": 1,
+          "title": "Backend",
+          "type": "string"
+        },
+        "backend_version": {
+          "minLength": 1,
+          "title": "Backend Version",
+          "type": "string"
+        },
+        "dimensions": {
+          "maximum": 65536,
+          "minimum": 1,
+          "title": "Dimensions",
+          "type": "integer"
+        },
+        "metric": {
+          "enum": [
+            "cosine",
+            "dot",
+            "l2"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+          "title": "Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "backend",
+        "backend_version",
+        "dimensions",
+        "metric"
+      ],
+      "title": "DenseIndex",
       "type": "object"
     },
     "DocumentRecord": {
@@ -132,6 +189,64 @@
       "title": "FileRecord",
       "type": "object"
     },
+    "QueryModel": {
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": {
+          "maximum": 65536,
+          "minimum": 1,
+          "title": "Dimensions",
+          "type": "integer"
+        },
+        "files": {
+          "items": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Files",
+          "type": "array"
+        },
+        "license": {
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "model_id": {
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "revision": {
+          "minLength": 1,
+          "title": "Revision",
+          "type": "string"
+        },
+        "runtime": {
+          "minLength": 1,
+          "title": "Runtime",
+          "type": "string"
+        },
+        "runtime_version": {
+          "minLength": 1,
+          "title": "Runtime Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model_id",
+        "revision",
+        "runtime",
+        "runtime_version",
+        "dimensions",
+        "files",
+        "license"
+      ],
+      "title": "QueryModel",
+      "type": "object"
+    },
     "RuntimeRequirements": {
       "additionalProperties": false,
       "properties": {
@@ -181,6 +296,23 @@
       "title": "Build Id",
       "type": "string"
     },
+    "capabilities": {
+      "default": [
+        "bm25"
+      ],
+      "items": {
+        "enum": [
+          "bm25",
+          "dense",
+          "hybrid"
+        ],
+        "type": "string"
+      },
+      "maxItems": 3,
+      "minItems": 1,
+      "title": "Capabilities",
+      "type": "array"
+    },
     "collections": {
       "items": {
         "$ref": "#/$defs/CollectionManifest"
@@ -189,6 +321,16 @@
       "minItems": 1,
       "title": "Collections",
       "type": "array"
+    },
+    "default_search_method": {
+      "default": "bm25",
+      "enum": [
+        "bm25",
+        "dense",
+        "hybrid"
+      ],
+      "title": "Default Search Method",
+      "type": "string"
     },
     "files": {
       "items": {
@@ -222,9 +364,23 @@
       "type": "string"
     },
     "profile": {
-      "const": "minimal",
+      "enum": [
+        "minimal",
+        "balanced"
+      ],
       "title": "Profile",
       "type": "string"
+    },
+    "query_model": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/QueryModel"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "runtime": {
       "$ref": "#/$defs/RuntimeRequirements"

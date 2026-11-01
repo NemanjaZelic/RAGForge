@@ -25,7 +25,11 @@
           "type": "number"
         },
         "retrieval_method": {
-          "const": "bm25",
+          "enum": [
+            "bm25",
+            "dense",
+            "hybrid"
+          ],
           "title": "Retrieval Method",
           "type": "string"
         },

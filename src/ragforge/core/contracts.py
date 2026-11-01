@@ -4,7 +4,7 @@ from typing import Annotated, Literal, Protocol, Self
 
 from pydantic import Field, field_validator, model_validator
 
-from ragforge.types import ContractModel, Identifier, RelativePath, Sha256
+from ragforge.types import ContractModel, Identifier, RelativePath, SearchMethod, Sha256
 
 PositiveInt = Annotated[int, Field(ge=1)]
 
@@ -36,6 +36,8 @@ class RetrieveRequest(ContractModel):
     top_k: Annotated[int, Field(ge=1, le=50)] = 5
     max_output_chars: Annotated[int, Field(ge=1, le=100000)] = 16000
     filters: RetrievalFilters | None = None
+    # None resolves to the bundle default; unsupported methods must raise.
+    search_method: SearchMethod | None = None
 
     @field_validator("query")
     @classmethod
@@ -52,7 +54,7 @@ class RetrievedChunk(ContractModel):
     text: Annotated[str, Field(min_length=1, max_length=100000)]
     source: SourceLocation
     rank_score: float
-    retrieval_method: Literal["bm25"]
+    retrieval_method: SearchMethod
 
 
 class RetrievalResponse(ContractModel):

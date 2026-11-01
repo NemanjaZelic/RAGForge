@@ -1,0 +1,80 @@
+{
+  "artifact_schema_version": "1",
+  "build_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "producer_version": "0.1.0.dev0",
+  "profile": "balanced",
+  "index_backend": "sqlite-fts5",
+  "index_schema_version": 1,
+  "sqlite_build_version": "3.49.1",
+  "collections": [
+    {
+      "collection_id": "mini",
+      "title": "Test collection",
+      "database_path": "collections/mini/index.sqlite",
+      "documents": [
+        {
+          "document_id": "cd46b15c982807b725c4a448964092742afb6edcc990220e16178a659c6c8caf",
+          "source_path": "example.md",
+          "content_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "dense_index": {
+        "path": "collections/mini/dense.index",
+        "backend": "fixture-backend",
+        "backend_version": "fixture-1",
+        "dimensions": 384,
+        "metric": "cosine"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "collections/mini/index.sqlite",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 100
+    },
+    {
+      "path": "collections/mini/dense.index",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 100
+    },
+    {
+      "path": "models/query/model.bin",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size_bytes": 100
+    }
+  ],
+  "build_configuration": {
+    "parser_version": "draft-1",
+    "chunker_version": "draft-1",
+    "chunk_size_chars": 1000,
+    "overlap_chars": 100
+  },
+  "runtime": {
+    "python_min": "3.11",
+    "requires_fts5": true,
+    "adapters": [
+      "cli"
+    ]
+  },
+  "licenses": [
+    "test-fixture-only"
+  ],
+  "capabilities": [
+    "bm25",
+    "dense",
+    "hybrid"
+  ],
+  "default_search_method": "hybrid",
+  "query_model": {
+    "model_id": "fixture-model",
+    "revision": "fixture-revision",
+    "runtime": "fixture-runtime",
+    "runtime_version": "fixture-1",
+    "dimensions": 384,
+    "files": [
+      "models/query/model.bin"
+    ],
+    "license": "test-fixture-only"
+  }
+}
