@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Literal
 
 from ragforge.core.identity import document_id
+from ragforge.core.pdf import PdfError, PdfOptions, PdfPageReport, extract_pdf
 from ragforge.core.scan import FORMATS, ScanLimits, ScannedDocument
 from ragforge.core.source import SourceError, checked_stat, is_link, read_file
 
@@ -36,10 +37,16 @@ class ParsedDocument:
     blocks: tuple[TextBlock, ...]
     warnings: tuple[str, ...] = ()
     parser_version: str = PARSER_VERSION
+    page_reports: tuple[PdfPageReport, ...] = ()
 
 
 def load_document(
-    root: Path, collection_id: str, record: ScannedDocument, limits: ScanLimits | None = None
+    root: Path,
+    collection_id: str,
+    record: ScannedDocument,
+    limits: ScanLimits | None = None,
+    *,
+    pdf_options: PdfOptions | None = None,
 ) -> ParsedDocument:
     limits = limits or ScanLimits()
     # Validate identity/path again even if a caller bypassed model construction.
@@ -64,7 +71,7 @@ def load_document(
             raise ParseError("source changed since scan")
     except (OSError, SourceError) as error:
         raise ParseError(f"{record.source_path!r}: {error}") from error
-    return parse_document(collection_id, record, raw)
+    return parse_document(collection_id, record, raw, pdf_options=pdf_options)
 
 
 def _section(headings: dict[int, str]) -> str | None:
@@ -254,7 +261,13 @@ class _HTMLText(HTMLParser):
             self.parts.append(data)
 
 
-def parse_document(collection_id: str, record: ScannedDocument, raw: bytes) -> ParsedDocument:
+def parse_document(
+    collection_id: str,
+    record: ScannedDocument,
+    raw: bytes,
+    *,
+    pdf_options: PdfOptions | None = None,
+) -> ParsedDocument:
     if record.document_id != document_id(collection_id, record.source_path):
         raise ParseError("document identity does not match collection and path")
     if len(raw) != record.size_bytes or hashlib.sha256(raw).hexdigest() != record.content_sha256:
@@ -262,7 +275,20 @@ def parse_document(collection_id: str, record: ScannedDocument, raw: bytes) -> P
     if FORMATS.get(Path(record.source_path).suffix.lower()) != record.format:
         raise ParseError("source format does not match extension")
     if record.format == "pdf":
-        raise ParseError("PDF parsing is not implemented yet (RF-007); source was not skipped")
+        try:
+            extracted = extract_pdf(raw, pdf_options)
+        except PdfError as error:
+            raise ParseError(str(error)) from error
+        pdf_blocks = tuple(TextBlock(text, page=number) for number, text in extracted.pages)
+        pdf_warnings = extracted.warnings + (() if pdf_blocks else ("no extractable text",))
+        return ParsedDocument(
+            collection_id,
+            record,
+            pdf_blocks,
+            pdf_warnings,
+            parser_version=extracted.parser_version,
+            page_reports=extracted.reports,
+        )
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as error:

@@ -4,6 +4,7 @@ import json
 import platform
 import sqlite3
 from contextlib import closing
+from dataclasses import asdict
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Any
@@ -15,6 +16,7 @@ from ragforge.artifacts.manifest import BundleManifest
 from ragforge.core.chunk import Chunk, ChunkConfig, chunk_document
 from ragforge.core.contracts import RetrievalResponse, RetrieveRequest
 from ragforge.core.parse import load_document
+from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
 from ragforge.types import ContractModel
 
@@ -126,9 +128,21 @@ def chunk(
     max_entries: int = typer.Option(100000, min=1),
     max_chunks: int = typer.Option(10000, min=1),
     max_output_chars: int = typer.Option(100000, min=1),
+    pdf_max_pages: int = typer.Option(500, min=1, max=10000),
+    pdf_max_stream_bytes: int = typer.Option(8 * 1024 * 1024, min=1),
+    pdf_max_text_chars: int = typer.Option(2000000, min=1),
+    allow_partial_pdf: bool = typer.Option(
+        False, help="Report page errors and keep other PDF pages."
+    ),
 ) -> None:
     """Preview normalized chunks and citations as JSON; does not build an index."""
     try:
+        pdf_options = PdfOptions(
+            max_pages=pdf_max_pages,
+            max_stream_bytes=pdf_max_stream_bytes,
+            max_text_chars=pdf_max_text_chars,
+            allow_partial=allow_partial_pdf,
+        )
         config = ChunkConfig(chunk_size_chars=chunk_size_chars, overlap_chars=overlap_chars)
         limits = ScanLimits(max_file_bytes, max_total_bytes, max_entries)
         report = scan_corpus(root, collection, limits)
@@ -136,7 +150,7 @@ def chunk(
         chunks: list[Chunk] = []
         output_chars = 0
         for record in report.documents:
-            parsed = load_document(root, collection, record, limits)
+            parsed = load_document(root, collection, record, limits, pdf_options=pdf_options)
             if parsed.blocks and len(chunks) >= max_chunks:
                 raise ValueError("max_chunks exceeded")
             if parsed.blocks and output_chars >= max_output_chars:
@@ -161,6 +175,8 @@ def chunk(
                     "content_sha256": record.content_sha256,
                     "warnings": parsed.warnings,
                     "chunk_count": len(parts),
+                    "pages": [asdict(page) for page in parsed.page_reports],
+                    "incomplete": any(page.status != "extracted" for page in parsed.page_reports),
                 }
             )
             chunks.extend(parts)

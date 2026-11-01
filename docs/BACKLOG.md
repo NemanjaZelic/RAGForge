@@ -59,7 +59,12 @@ iz RF-007; parser adapter nije poseban retrieval engine.
 Done: ponovljeni build daje iste identitete i tekst; citati odgovaraju originalu.
 Ne tvrditi tačne HTML redove dok ne postoji proverena provenance mapa.
 
-### RF-007 — Obavezni tekstualni PDF u v0.1
+### RF-007 — Obavezni tekstualni PDF u v0.1 [parser implementiran]
+
+Implementiran parser, page provenance/status, limiti i eksplicitni partial tok;
+113 lokalnih testova prolazi, 3 platform skip-a. Realni RFC 9110 pilot:
+194 extracted stranice. [Detalji i granice](PDF.md). Retrieval benchmark
+sa stvarnim PDF-om ostaje uslov RF-006 pre v0.1.
 
 PDF parser je release zahtev, ne dodatak posle v0.1.
 Ekstrahovati postojeći tekst, čuvati fizičke 1-based stranice i proveriti

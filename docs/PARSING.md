@@ -2,8 +2,8 @@
 
 Implementirano: MD/TXT/HTML parser, zajednički ograničeni source reader,
 deterministički chunker i `ragforge chunk ROOT --collection ID` pregled.
-PDF parsing je sledeći RF-007 zadatak; PDF se sada odbija jasnom greškom i
-ne preskače se tiho. Build i pretraga još nisu implementirani.
+PDF adapter je implementiran u RF-007; detalji, page status i limiti su u
+[PDF.md](PDF.md). Build i pretraga još nisu implementirani.
 
 ## Encoding i integritet
 
@@ -21,7 +21,7 @@ protiv istovremenog neprijateljskog menjanja direktorijuma.
 ## Normalizovani blokovi
 
 `TextBlock` sadrži tekst, section, opcione line_start/line_end/page i kind
-text/code. Ovaj isti oblik koristiće RF-007 PDF adapter, bez novog engine-a.
+text/code. Ovaj isti oblik koristi RF-007 PDF adapter, bez novog engine-a.
 
 - TXT čuva tekst posle encoding/newline normalizacije.
 - Markdown podržava ATX i setext naslove, hijerarhiju sekcija i fenced code
@@ -42,8 +42,7 @@ text/code. Ovaj isti oblik koristiće RF-007 PDF adapter, bez novog engine-a.
 
 Za MD/TXT fizički redovi su 1-based, uključive granice, računati samo po LF
 nakon normalizacije CRLF/CR. Svaki chunk je tačan substring svog bloka.
-Za HTML redovi ostaju null; ne postoji izmišljena source mapa. Page ostaje
-null do PDF adaptera.
+Za HTML redovi ostaju null; ne postoji izmišljena source mapa. Za PDF je page fizička 1-based stranica; redovi ostaju null.
 
 ## Chunking i identitet
 
@@ -81,7 +80,7 @@ znakova za ceo korpus. Overlap se računa ponovo u output budžet; provera je
 unutar chunkera pre nagomilavanja izlaza. Ovi limiti broje tekst, ne JSON
 bajtove; metadata/escape overhead povećavaju veličinu serijalizovanog JSON-a.
 
-Prekoračenje, encoding greška, promenjeni source ili nepodržani PDF daju
+Prekoračenje, encoding greška, promenjeni source ili nečitljiv PDF daju
 exit 2 i JSON error na stderr bez delimičnog stdout-a. CLI ne pravi indeks,
 ne čuva bundle i ne tvrdi da retrieval postoji.
 

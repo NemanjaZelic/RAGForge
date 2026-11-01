@@ -63,7 +63,12 @@ provenance i deterministički chunking. Novi ukupan rezultat: 102 passed,
 3 skipped; pytest, ruff, mypy i schema drift prolaze. Chunk CLI subprocess
 prolazi uz blokirane Python socket/DNS pozive.
 
-Sledeći zadatak je RF-007: obavezni tekstualni PDF adapter, fizičke 1-based
-stranice, stvarni PDF fixtures i prijavljene granice parsiranja.
-Retrieval/build/use još nisu implementirani. PDF parser i pravi dense/hybrid
+RF-007 PDF adapter je implementiran: fizičke stranice, page status, strogi
+limiti i eksplicitna delimična obrada; 113 testova prolazi, 3 skip-a.
+Tri originalna PDF fixture-a vizuelno su proverena; realni RFC 9110 pilot
+ima 194/194 extracted stranice. [Granice i pilot](PDF.md).
+
+Sledeći zadatak je RF-003: stvarni SQLite FTS5/BM25 engine. Realni retrieval
+benchmark sa PDF-om ostaje RF-006 release uslov.
+Retrieval/build/use još nisu implementirani. Pravi dense/hybrid
 ostaju obavezan deo v0.1 prema RELEASE-SCOPE.md.

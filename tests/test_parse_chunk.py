@@ -174,8 +174,8 @@ def test_line_separators_other_than_lf_do_not_invent_physical_lines(tmp_path: Pa
     assert chunk_document(doc)[0].source.line_end == 2
 
 
-def test_pdf_is_explicitly_unsupported_until_adapter_exists(tmp_path: Path) -> None:
-    with pytest.raises(ParseError, match="RF-007"):
+def test_malformed_pdf_is_explicitly_rejected(tmp_path: Path) -> None:
+    with pytest.raises(ParseError, match="PDF"):
         document(tmp_path, b"%PDF fixture not parsed", "doc.pdf")
 
 
@@ -195,7 +195,7 @@ def test_chunk_cli_is_json_and_failures_have_no_partial_stdout(tmp_path: Path) -
     bad = runner.invoke(app, ["chunk", str(tmp_path)])
     assert bad.exit_code == 2
     assert bad.stdout == ""
-    assert "RF-007" in json.loads(bad.stderr)["error"]
+    assert "PDF" in json.loads(bad.stderr)["error"]
 
 
 def test_overlap_output_budget_is_enforced_before_accumulating_chunks(tmp_path: Path) -> None:

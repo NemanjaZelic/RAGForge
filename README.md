@@ -2,7 +2,7 @@
 
 Portable document retrieval for agents. Local execution is the default.
 
-**Development stage: Phase 1 started (RF-000, RF-001 and RF-002 complete).**
+**Development stage: Phase 1 started (RF-000/001/002 complete; RF-007 PDF adapter implemented).**
 Document indexing and search are the next milestone; they are not implemented yet.
 
 Start with the [current working plan](docs/PROJECT-PLAN.md).
@@ -54,6 +54,9 @@ uv run python scripts/export_schemas.py --check
 - Typer CLI: corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
 - Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.
   Scan inventories bytes; it does not parse PDF text or build a searchable index.
+- Text-bearing PDF parsing, physical page citations, page status and explicit partial mode;
+  bounded streams/work, original PDF fixtures and a 194-page real PDF parser pilot.
+  OCR is disabled. See [PDF behavior and limits](docs/PDF.md).
 - Strict UTF-8 MD/TXT/HTML parsing, Markdown headings/fenced code, deterministic bounded chunks,
   verified source bytes and source citations. HTML script/style/head/template data is excluded;
   HTML source line numbers remain unknown. See [parser limits](docs/PARSING.md).
@@ -73,7 +76,7 @@ lightweight query option on the same bundle and the benchmark baseline.
 `mixed documents → parse/chunk → BM25 + dense → bundle → hybrid query → cited source`
 
 Planned commands such as `build`, `use`, `integrate` and `deploy` are not advertised
-as working commands. No dense model or PDF parser is implemented yet.
+as working commands. No dense model or retrieval engine is implemented yet.
 The planned v0.1 balanced path requires a locally available embedding model;
 HTTP hosting, GPU, cloud accounts and Docker are not required.
 
