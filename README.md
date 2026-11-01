@@ -69,7 +69,7 @@ lightweight query option on the same bundle and the benchmark baseline.
 `mixed documents → parse/chunk → BM25 + dense → bundle → hybrid query → cited source`
 
 Planned commands such as `build`, `use`, `integrate` and `deploy` are not advertised
-as working commands. Phase 0 currently has no dense model or PDF implementation.
+as working commands. No dense model or PDF parser is implemented yet.
 The planned v0.1 balanced path requires a locally available embedding model;
 HTTP hosting, GPU, cloud accounts and Docker are not required.
 
