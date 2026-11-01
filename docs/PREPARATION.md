@@ -21,7 +21,8 @@ Git atribut sprečava normalizaciju njegovih krajeva redova.
   Optimizacija je specifikovana, ali još nije implementirana.
 - Jedan Python paket sa Typer CLI-jem, Pydantic modelima i generisanim šemama.
 - Mini-korpus: 6 dokumenata i 20 razvojnih upita; 16 pozitivnih i 4 bez odgovora.
-- Lokalni Git repozitorijum, grana main; bez commit-a, remote-a ili objave.
+- Lokalni Git repozitorijum, grana main. Naknadni commit-i i GitHub status
+  prate se u PROGRESS.md; tekst ispod opisuje originalnu F0 pripremu.
 - CI konfiguracija za Linux/Windows i Python 3.11/3.13; GitHub CI još nije izvršen.
 
 ## Okruženje
@@ -72,8 +73,8 @@ Za vraćanje zavisnosti iz lockfile-a: `scripts/dev.ps1 setup` (potrebna mreža
 ako paketi nisu u cache-u). Za svakodnevne provere i CLI: wrapper koristi već
 instalirano okruženje, bez automatskog preuzimanja i sinhronizacije.
 
-Prvi razvojni zadatak je RF-000: proširiti minimal-only ugovore za balanced
-profil i metode pretrage, zatim RF-001 skeniranje mešanog korpusa.
+RF-000 i RF-001 su sada završeni; rezultati i sledeći zadatak su u PROGRESS.md.
+Slede RF-002 parser/chunker i obavezni RF-007 PDF.
 Parser/chunker, RF-007 PDF i RF-009 dense/hybrid su obavezni F1/v0.1 zadaci.
 BM25-only je interni međukorak i opciona pretraga, ne završen v0.1 proizvod.
 Build/use još nisu implementirani i nisu izloženi kao lažno funkcionalne komande.

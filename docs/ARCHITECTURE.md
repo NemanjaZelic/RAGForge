@@ -68,7 +68,8 @@ tvrdi da trenutni kod već gradi ili pretražuje hybrid bundle.
 - Putanja u citatu je relativna; originalni apsolutni root nije u deljivom bundle-u.
   Redovi su 1-based uključive granice; stranica je 1-based; nepoznato je null.
 
-Symlink i Windows case/Unicode kolizije se proveravaju pri budućem skeniranju.
+RF-001 odbija symlink, Windows reparse/junction i casefold kolizije.
+Nenormalizovana Unicode NFC putanja se odbija bez tihog preimenovanja.
 Validacija teksta putanje sama ne potvrđuje da fizički fajl ostaje unutar root-a.
 
 ## Ugovor pretrage v1 — nacrt
@@ -148,3 +149,28 @@ pretvoriti u higher-is-better score; skorovi nisu uporedivi između metoda.
 Primeri u examples/manifests su sintetički: hash-evi i modeli nisu stvarni
 bundle i ne dokazuju integritet. Python validatori dopunjuju JSON Schema;
 strukturna validacija ne zamenjuje buduću proveru bajtova i model pakovanja.
+
+## RF-001 — politika skeniranja
+
+`ragforge scan ROOT --collection ID` vraća ceo sortirani JSON izveštaj tek
+po uspehu. Hash je SHA-256 sirovih bajtova u blokovima 64 KiB; prazni fajlovi
+se inventarišu i dobijaju hash praznog sadržaja. Podržane ekstenzije su
+.md/.txt/.html/.htm/.pdf bez obzira na veličinu slova. Ostali regularni
+fajlovi se prijavljuju u ignored_paths. Direktorijumi se obilaze bez
+izvršavanja dokumenata; linkovi/reparse tačke se odbijaju i kada bi bili
+ignorisani kao nepodržani format. Sve putanje moraju biti prenosive i NFC;
+casefold kolizije između fajlova i direktorijuma odbijaju se pre hash-ovanja.
+
+Default hard limiti: 32 MiB po podržanom fajlu, 512 MiB ukupno podržanih
+bajtova, 100000 svih unosa uključujući direktorijume i ignorisane fajlove.
+Prekoračenje, greška čitanja ili detektovana zamena/promena fajla obaraju
+ceo scan; CLI daje exit 2, JSON grešku na stderr i prazan stdout. Nepodržani
+regularni fajlovi ne ulaze u byte budžet i sadržaj im se ne čita. Nema
+automatskih isključenja direktorijuma: korisnik bira korpus root.
+
+Root mora biti stabilan tokom rada. Lstat/resolve, O_NOFOLLOW gde postoji,
+fstat i završna provera hvataju linkove i uobičajene promene, ali nisu
+OS sandbox protiv procesa koji istovremeno menja direktorijume. Scan nije
+transakcioni snapshot: parser/builder mora ponovo proveriti source hash i
+čitati iste bajtove koje obrađuje. Taj nastavak pripada RF-002/RF-004.
+Skeniranje PDF-a ne tvrdi da u njemu postoji tekst; provera dolazi u RF-007.

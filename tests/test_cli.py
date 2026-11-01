@@ -46,6 +46,7 @@ def test_schema_is_machine_readable(name: str) -> None:
         ["--help"],
         ["doctor"],
         ["schema", "manifest"],
+        ["scan", str(Path(__file__).resolve().parents[1] / "examples/mini-docs")],
     ],
 )
 def test_cli_subprocess_with_network_calls_blocked(

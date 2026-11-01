@@ -1,22 +1,24 @@
-"""Local diagnostics and schema commands for the Phase 0 foundation."""
+"""Local corpus discovery, diagnostics and draft schema commands."""
 
 import json
 import platform
 import sqlite3
 from contextlib import closing
 from enum import StrEnum
-from typing import Any
+from pathlib import Path
+from typing import Annotated, Any
 
 import typer
 
 from ragforge import __version__
 from ragforge.artifacts.manifest import BundleManifest
 from ragforge.core.contracts import RetrievalResponse, RetrieveRequest
+from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
 from ragforge.types import ContractModel
 
 app = typer.Typer(
     name="ragforge",
-    help="Portable document retrieval. Phase 0: contracts and diagnostics.",
+    help="Portable document retrieval. Corpus scan, contracts and diagnostics.",
     no_args_is_help=True,
     invoke_without_command=True,
     add_completion=False,
@@ -71,7 +73,7 @@ def doctor() -> None:
         json.dumps(
             {
                 "version": __version__,
-                "stage": "phase-0",
+                "stage": "phase-1",
                 "python": platform.python_version(),
                 "sqlite": sqlite3.sqlite_version,
                 "fts5": available,
@@ -88,3 +90,24 @@ def doctor() -> None:
 def schema(name: SchemaName) -> None:
     """Print a draft JSON Schema (not a bundle checksum or authenticity check)."""
     typer.echo(json.dumps(schema_document(name), indent=2, sort_keys=True))
+
+
+@app.command()
+def scan(
+    root: Annotated[
+        Path, typer.Argument(help="Corpus directory; files are hashed, never executed.")
+    ],
+    collection: str = typer.Option("default", "--collection", help="Portable collection slug."),
+    max_file_bytes: int = typer.Option(32 * 1024 * 1024, min=1),
+    max_total_bytes: int = typer.Option(512 * 1024 * 1024, min=1),
+    max_entries: int = typer.Option(100000, min=1),
+) -> None:
+    """Inventory MD/TXT/HTML/PDF locally as JSON; this does not parse or index them."""
+    try:
+        report = scan_corpus(
+            root, collection, ScanLimits(max_file_bytes, max_total_bytes, max_entries)
+        )
+    except (ScanError, ValueError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(report.model_dump_json())

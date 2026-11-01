@@ -2,7 +2,7 @@
 
 Portable document retrieval for agents. Local execution is the default.
 
-**Development stage: Phase 1 started (RF-000 contracts complete).**
+**Development stage: Phase 1 started (RF-000 and RF-001 complete).**
 Document indexing and search are the next milestone; they are not implemented yet.
 
 Start with the [current working plan](docs/PROJECT-PLAN.md).
@@ -29,6 +29,7 @@ cd D:\RAGForge
 .\scripts\dev.ps1 check
 .\scripts\dev.ps1 run ragforge --help
 .\scripts\dev.ps1 run ragforge doctor
+.\scripts\dev.ps1 run ragforge scan examples/mini-docs --collection mini
 .\scripts\dev.ps1 run ragforge schema manifest
 ```
 
@@ -49,7 +50,9 @@ uv run python scripts/export_schemas.py --check
 
 ## Implemented
 
-- Typer CLI: help, version, SQLite/FTS5 doctor and JSON Schema export.
+- Typer CLI: corpus scan, help, version, SQLite/FTS5 doctor and JSON Schema export.
+- Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.
+  Scan inventories bytes; it does not parse PDF text or build a searchable index.
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
 - Synthetic manifest examples in `examples/manifests/`; these are not built bundles.
 - Small original document corpus and 20 development queries with authored relevance labels.
@@ -75,3 +78,5 @@ a universal executable for every operating system.
 
 Project license is still a proposal in the source plan; no license choice or
 public release has been made.
+
+Private GitHub setup and progress: [docs/PROGRESS.md](docs/PROGRESS.md).

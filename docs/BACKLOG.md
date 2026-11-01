@@ -31,7 +31,12 @@ bm25/dense/hybrid i search-method izbor. Sačuvati minimal profil.
 Done: modeli, generisane šeme, primeri i testovi su usklađeni; ništa ne tvrdi
 da trenutna implementacija već pretražuje ili gradi indekse.
 
-### RF-001 — Bezbedan scan i identitet
+### RF-001 — Bezbedan scan i identitet [završeno]
+
+Implementirano 2026-11-01: API i stvarna `scan` CLI komanda, hash u blokovima,
+limiti po fajlu/zbiru/broju unosa. PDF je ovde samo otkriven kao ulaz; provera
+teksta i parser pripadaju RF-007. 71 test prolazi, 3 platform/privilege skip-a;
+Windows junction test prolazi.
 
 MD/TXT/HTML i PDF sa tekstom; sortirane relativne putanje; deterministički document ID; odvojeni
 content hash; eksplicitna politika symlink-a i Unicode/case kolizija.
