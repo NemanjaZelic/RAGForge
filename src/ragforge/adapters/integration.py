@@ -92,7 +92,9 @@ def create_integration(
         config = {
             "mcpServers": {
                 name: {
-                    "command": str(Path(sys.executable).resolve(strict=True)),
+                    # Preserve the venv entry point: resolving its symlink on Linux
+                    # would select the base interpreter without installed extras.
+                    "command": str(Path(sys.executable).absolute()),
                     "args": ["-m", "ragforge", "serve", str(artifact)],
                     "env": {"PYTHONIOENCODING": "utf-8", "OTEL_SDK_DISABLED": "true"},
                 }

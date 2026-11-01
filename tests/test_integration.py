@@ -46,7 +46,7 @@ def test_generated_files_separate_config_from_untrusted_metadata(tmp_path: Path)
     assert metadata["collection"]["title"] == sentinel
     config = json.loads((output / "mcp.json").read_text())
     server = config["mcpServers"][result["server_name"]]
-    assert server["command"] == str(Path(sys.executable).resolve())
+    assert server["command"] == str(Path(sys.executable).absolute())
     assert server["args"] == ["-m", "ragforge", "serve", str(bundle.resolve())]
     assert set(p.relative_to(output).as_posix() for p in output.rglob("*") if p.is_file()) == {
         "mcp.json",
