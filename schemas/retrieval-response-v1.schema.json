@@ -1,0 +1,146 @@
+{
+  "$defs": {
+    "RetrievedChunk": {
+      "additionalProperties": false,
+      "properties": {
+        "chunk_id": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Chunk Id",
+          "type": "string"
+        },
+        "collection_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Collection Id",
+          "type": "string"
+        },
+        "document_id": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "rank_score": {
+          "title": "Rank Score",
+          "type": "number"
+        },
+        "retrieval_method": {
+          "const": "bm25",
+          "title": "Retrieval Method",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceLocation"
+        },
+        "text": {
+          "maxLength": 100000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "collection_id",
+        "document_id",
+        "chunk_id",
+        "text",
+        "source",
+        "rank_score",
+        "retrieval_method"
+      ],
+      "title": "RetrievedChunk",
+      "type": "object"
+    },
+    "SourceLocation": {
+      "additionalProperties": false,
+      "properties": {
+        "line_end": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line End"
+        },
+        "line_start": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line Start"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Page"
+        },
+        "path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+          "title": "Path",
+          "type": "string"
+        },
+        "section": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Section"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "title": "SourceLocation",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "const": "1",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "results": {
+      "items": {
+        "$ref": "#/$defs/RetrievedChunk"
+      },
+      "maxItems": 50,
+      "title": "Results",
+      "type": "array"
+    }
+  },
+  "required": [
+    "contract_version",
+    "results"
+  ],
+  "title": "RetrievalResponse",
+  "type": "object"
+}

@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ragforge"
+version = "0.1.0.dev0"
+description = "Local-first portable document retrieval for agents"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2.10,<3",
+  "typer>=0.15,<1",
+]
+
+[project.scripts]
+ragforge = "ragforge.cli:app"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3,<10",
+  "ruff>=0.11,<1",
+  "mypy>=1.15,<2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ragforge"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/", "tests/", "scripts/", "schemas/", "examples/", "docs/",
+  "README.md", "AGENTS.md", "pyproject.toml", "uv.lock",
+  ".github/workflows/ci.yml", ".editorconfig", ".gitattributes", ".gitignore",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+tmp_path_retention_count = 2
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = [".cache", ".tools", ".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "scripts/export_schemas.py"]

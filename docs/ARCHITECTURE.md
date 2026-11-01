@@ -1,0 +1,135 @@
+# Početne arhitektonske odluke
+
+Status: radni nacrt i usvojeni v0.1 cilj; originalni plan ostaje neizmenjen.
+[RELEASE-SCOPE.md](RELEASE-SCOPE.md) ima prednost nad ranijim minimal-only predlogom.
+V0.1 zahteva tekstualni PDF i dense/hybrid; OCR je kasnije.
+
+## Struktura
+
+Jedna distribucija `ragforge`, Python >=3.11, `src` layout:
+
+- `core/`: tipovi i protokol engine-a; ingestion i retrieval dolaze sledeći.
+- `artifacts/`: manifest i buduća verifikacija/izvoz.
+- `cli.py`: Typer adapter; ne nosi retrieval logiku.
+- `schemas/`: generisani JSON Schema dokumenti.
+- `examples/mini-docs/`, `examples/eval.jsonl`: originalni mali razvojni korpus.
+- `tests/`: ugovori, lokalna CLI provera i fixtures.
+
+Typer i Pydantic su trenutno instalirane početne runtime zavisnosti.
+Pre v0.1 treba dodati podržan PDF parser i CPU embedding/dense sloj za glavni
+balanced tok. Minimal instalacija može ostati bez ML dela; HTTP/MCP su kasnije.
+`uv.lock` trenutno zaključava samo postojeću Fazu 0.
+
+## Minimalni bundle v1 — nacrt
+
+```text
+kb/
+  manifest.json
+  collections/
+    mini/
+      index.sqlite
+```
+
+Prikaz iznad je minimal profil, koji ostaje eksplicitna opcija.
+Podrazumevani balanced paket dodatno sadrži embedded dense indeks i lokalno
+query-model pakovanje sa verzijama, checksum-ima, dimenzijom i runtime zahtevima.
+Jedna SQLite baza sadržaće dokumente, chunk tekst, provenance i FTS5 indeks.
+Manifest sadrži inventar dokumenta, hash svakog podatkovnog fajla, veličine,
+backend/DB verziju, verzije parsera i chunkera i runtime zahteve.
+Hash-evi su SHA-256 nad sirovim bajtovima. Manifest ne hash-uje sam sebe;
+dodatni checksums.txt u v0.1 nije potreban, jer bi duplirao inventar.
+
+Manifest šema ima verziju `1`; ovo je pre-release nacrt, ne objavljen stabilan
+format. Nepoznata verzija i nepoznata polja se odbijaju. Do prvog release-a
+promene zahtevaju ažuriranje modela, primera, šema i testova u istom diff-u.
+Nakon release-a nekompatibilna promena dobija novu verziju.
+Sama validacija šeme nije verifikacija sadržaja paketa ili bezbednosti SQLite-a.
+
+Minimalni bundle ne uključuje Python interpreter ili univerzalne binarne fajlove.
+Potrebna je kompatibilna instalacija RAGForge runtime-a. Samostalno OS/arch
+pakovanje dolazi zasebno. Postojeći modeli i šeme su još minimal/BM25 nacrt;
+RF-000 ih obavezno proširuje za balanced/dense pre v0.1. Ova dokumentacija ne
+tvrdi da trenutni kod već gradi ili pretražuje hybrid bundle.
+
+## Identitet i provenance
+
+- Kolekcija: eksplicitan mali ASCII slug.
+- Putanje: relativne POSIX putanje, bez drive oznake, backslash-a, praznih,
+  dot/dot-dot segmenata ili apsolutnih putanja; Unicode NFC.
+- `document_id`: SHA-256 kanonskog JSON niza
+  `["ragforge-document-v1", collection_id, relative_path]`, UTF-8,
+  `ensure_ascii=False`, `separators=(",", ":")`.
+- Izmena sadržaja ne menja document ID; menja njegov content hash.
+  Preimenovanje menja document ID; praćenje preimenovanja je van v0.1.
+  Dva fajla istog sadržaja zadržavaju dva izvora i različite ID-jeve.
+- Planirani `chunk_id`: identitet dokumenta + content hash + hash konfiguracije
+  parsera/chunkera + ordinal, pod verzionisanim SHA-256 algoritmom.
+  Konačan algoritam i kod dolaze uz chunker.
+- Putanja u citatu je relativna; originalni apsolutni root nije u deljivom bundle-u.
+  Redovi su 1-based uključive granice; stranica je 1-based; nepoznato je null.
+
+Symlink i Windows case/Unicode kolizije se proveravaju pri budućem skeniranju.
+Validacija teksta putanje sama ne potvrđuje da fizički fajl ostaje unutar root-a.
+
+## Ugovor pretrage v1 — nacrt
+
+`RetrievalEngine` je Python Protocol za `retrieve`, `fetch_context` i
+`list_collections`; konkretni engine još nije implementiran.
+Request modeli ograničavaju query na 8192 znaka, top_k na 1–50 i tekst odgovora
+na najviše 100000 znakova ukupno. Ograničenja su znakovi, ne tokeni.
+Prazan/whitespace query se odbija. Verzija odgovora je `contract_version="1"`.
+Pre v0.1 ugovor mora dobiti search-method i bm25/dense/hybrid identifikaciju,
+uz postojeće source ID-jeve i granice. Trenutni model prihvata samo BM25.
+
+U v0.1 je dozvoljen samo filter po listi document ID-jeva; proizvoljan
+`filters: object` odlaže stvarnu specifikaciju. ID kolekcije može izostati samo
+kada postoji tačno jedna kolekcija; konkretni engine to proverava.
+
+Rezultati su uređeni po rank_score opadajuće; za SQLite je to `-bm25(...)`.
+Za hybrid koristiti dokumentovanu RRF rang vrednost, za dense eksplicitnu
+metriku i smer. Kod jednakog score-a sortirati po chunk_id. Score nije confidence i ne poredi
+se između metoda, pipeline-a ili nezavisnih upita.
+`fetch_context` koristi tačan par collection_id/chunk_id i ograničen broj
+susednih chunkova. ACL dolazi pre zajedničkog mrežnog runtime-a.
+
+## Izvršavanje
+
+Build compute i runtime mode ostaju nezavisni. Početne podržane vrednosti su
+`compute=local`, `mode=local`, `profile=balanced` i hybrid pretraga kao cilj v0.1.
+`profile=minimal` ostaje eksplicitni paket bez modela. Nad balanced paketom
+`--search-method bm25` preskače embedding inference i ne radi rebuild.
+Hybrid bez neophodnog modela daje grešku, bez tihog downgrade-a ili download-a.
+Ne dodavati opcije koje tiho glume implementiranu remote podršku.
+Build ne pokreće deployment niti pita o cloudu po završetku.
+
+Read-only runtime ne menja bundle. Build piše u novi staging direktorijum,
+zatvara bazu, proverava sadržaj, pa objavljuje novu verziju bez uništavanja stare.
+Detalje atomskog objavljivanja i checksum verifikaciju implementirati uz builder.
+
+## Opciona optimizacija posle build-a — planirano
+
+Detalji: [OPTIMIZATION-PLAN.md](OPTIMIZATION-PLAN.md).
+Profile određuje dozvoljene komponente; effort određuje obim pretrage;
+compute određuje mesto izvršavanja. Te odluke ostaju nezavisne.
+Trajanje i automatski budžet procenjuju se kalibracijom na stvarnom hardveru
+za konkretan korpus i planirane kandidate. Max ima pod od 8 h budžeta; raniji
+kraj zahteva iscrpljen prostor ili proverenu konvergenciju, uz odvojene statuse
+za prekid, grešku i resursni limit. Globalni optimum se ne garantuje.
+
+Optimizer koristi isti builder i engine, izolovane job direktorijume, keš sa
+hash ključevima i odvojene evaluacione skupove. Novi chunking ili embedding
+model traže novu obradu; potrebni su verifikovani izvori/snapshot.
+Pobednik mora biti potpuno izgrađen i proveren. Prethodni bundle se ne menja
+automatski; query ugovor i agent integracije ne zavise od optimization nivoa.
+Prvi optimizer koristi već podržan balanced/hybrid engine, uz opcioni minimal
+profil. Optuna je eventualni opcioni dodatak.
+Manifest/JSON šeme se sada ne menjaju zbog buduće funkcije.
+
+## Offline i bezbednosna granica
+
+Core i minimalni CLI nemaju mrežne klijente i ne izvršavaju dokumente.
+Trenutni testovi blokiraju socket u CLI podprocesu; to potvrđuje ponašanje
+proverenih komandi, ne predstavlja OS sandbox ili završeni offline build test.
+Ingestion mora imati limite veličine fajla/ukupnog korpusa i politiku symlink-a.
+Nepouzdan bundle se proverava pre otvaranja; potpisi i arhivsko raspakivanje
+nisu implementirani u Fazi 0.

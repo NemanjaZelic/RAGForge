@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "RetrievalFilters": {
+      "additionalProperties": false,
+      "properties": {
+        "document_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Document Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "document_ids"
+      ],
+      "title": "RetrievalFilters",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "collection_id": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Collection Id"
+    },
+    "filters": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RetrievalFilters"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "max_output_chars": {
+      "default": 16000,
+      "maximum": 100000,
+      "minimum": 1,
+      "title": "Max Output Chars",
+      "type": "integer"
+    },
+    "query": {
+      "maxLength": 8192,
+      "minLength": 1,
+      "title": "Query",
+      "type": "string"
+    },
+    "top_k": {
+      "default": 5,
+      "maximum": 50,
+      "minimum": 1,
+      "title": "Top K",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "title": "RetrieveRequest",
+  "type": "object"
+}

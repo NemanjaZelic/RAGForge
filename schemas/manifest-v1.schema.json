@@ -1,0 +1,254 @@
+{
+  "$defs": {
+    "BuildConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "chunk_size_chars": {
+          "minimum": 1,
+          "title": "Chunk Size Chars",
+          "type": "integer"
+        },
+        "chunker_version": {
+          "minLength": 1,
+          "title": "Chunker Version",
+          "type": "string"
+        },
+        "overlap_chars": {
+          "minimum": 0,
+          "title": "Overlap Chars",
+          "type": "integer"
+        },
+        "parser_version": {
+          "minLength": 1,
+          "title": "Parser Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "parser_version",
+        "chunker_version",
+        "chunk_size_chars",
+        "overlap_chars"
+      ],
+      "title": "BuildConfiguration",
+      "type": "object"
+    },
+    "CollectionManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "collection_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Collection Id",
+          "type": "string"
+        },
+        "database_path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+          "title": "Database Path",
+          "type": "string"
+        },
+        "documents": {
+          "items": {
+            "$ref": "#/$defs/DocumentRecord"
+          },
+          "minItems": 1,
+          "title": "Documents",
+          "type": "array"
+        },
+        "title": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "collection_id",
+        "title",
+        "database_path",
+        "documents"
+      ],
+      "title": "CollectionManifest",
+      "type": "object"
+    },
+    "DocumentRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "document_id": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "source_path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+          "title": "Source Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "source_path",
+        "content_sha256"
+      ],
+      "title": "DocumentRecord",
+      "type": "object"
+    },
+    "FileRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "title": "FileRecord",
+      "type": "object"
+    },
+    "RuntimeRequirements": {
+      "additionalProperties": false,
+      "properties": {
+        "adapters": {
+          "items": {
+            "const": "cli",
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "title": "Adapters",
+          "type": "array"
+        },
+        "python_min": {
+          "const": "3.11",
+          "title": "Python Min",
+          "type": "string"
+        },
+        "requires_fts5": {
+          "const": true,
+          "title": "Requires Fts5",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "python_min",
+        "requires_fts5",
+        "adapters"
+      ],
+      "title": "RuntimeRequirements",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_schema_version": {
+      "const": "1",
+      "title": "Artifact Schema Version",
+      "type": "string"
+    },
+    "build_configuration": {
+      "$ref": "#/$defs/BuildConfiguration"
+    },
+    "build_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Build Id",
+      "type": "string"
+    },
+    "collections": {
+      "items": {
+        "$ref": "#/$defs/CollectionManifest"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "title": "Collections",
+      "type": "array"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/FileRecord"
+      },
+      "minItems": 1,
+      "title": "Files",
+      "type": "array"
+    },
+    "index_backend": {
+      "const": "sqlite-fts5",
+      "title": "Index Backend",
+      "type": "string"
+    },
+    "index_schema_version": {
+      "const": 1,
+      "title": "Index Schema Version",
+      "type": "integer"
+    },
+    "licenses": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Licenses",
+      "type": "array"
+    },
+    "producer_version": {
+      "minLength": 1,
+      "title": "Producer Version",
+      "type": "string"
+    },
+    "profile": {
+      "const": "minimal",
+      "title": "Profile",
+      "type": "string"
+    },
+    "runtime": {
+      "$ref": "#/$defs/RuntimeRequirements"
+    },
+    "sqlite_build_version": {
+      "minLength": 1,
+      "title": "Sqlite Build Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "artifact_schema_version",
+    "build_id",
+    "producer_version",
+    "profile",
+    "index_backend",
+    "index_schema_version",
+    "sqlite_build_version",
+    "collections",
+    "files",
+    "build_configuration",
+    "runtime",
+    "licenses"
+  ],
+  "title": "BundleManifest",
+  "type": "object"
+}

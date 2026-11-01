@@ -1,0 +1,36 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local environments, tools, caches and generated files
+.venv/
+.tools/
+.cache/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+node_modules/
+dist/
+build/
+coverage/
+htmlcov/
+.coverage
+
+# User corpora, bundles and models (not examples)
+/data/
+/models/
+/cache/
+/logs/
+/kb/
+*.log
+
+# Editor and OS metadata
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
