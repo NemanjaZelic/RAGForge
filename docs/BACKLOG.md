@@ -43,7 +43,13 @@ content hash; eksplicitna politika symlink-a i Unicode/case kolizija.
 Done: testovi duplih sadržaja, praznih fajlova, traversal-a, velikih fajlova i
 ponovljenog skeniranja. Greške se ne pretvaraju tiho u uspešan build.
 
-### RF-002 — Parser i chunker
+### RF-002 — Parser i chunker [završeno]
+
+Implementirano 2026-11-01: MD/TXT/HTML, verifikovani source bajtovi, zajednički
+TextBlock za budući PDF adapter, tačni fizički redovi za MD/TXT i null redovi
+za HTML, bounded chunking i stvarna chunk CLI komanda.
+102 testa prolaze, 3 platform/privilege skip-a. Detalji: [PARSING.md](PARSING.md).
+PDF adapter ostaje odvojeni obavezni RF-007.
 
 MD naslovi, TXT i HTML tekst bez script/style sadržaja; jasna encoding politika;
 1-based source lokacije kada su stvarno poznate. Deterministički chunking sa

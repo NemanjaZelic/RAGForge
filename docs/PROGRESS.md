@@ -22,34 +22,16 @@ Originalni plan je sačuvan neizmenjen; njegov SHA-256 ostaje
 
 ## GitHub
 
-Poslednja provera: automatsko kreiranje/slanje nije uspelo. Postojeći Git
-credential dobija HTTP 401 od GitHub API-ja; povezani GitHub konektor radi za
-nalog, ali za novi repo trenutno vraća 404 (nije napravljen ili nije dostupan
-konektoru). Nema origin-a, push-a niti izvršenog GitHub CI-ja. Firefox prozor
-potvrđen je sa naslovom "New repository" posle otvaranja pripremljenog URL-a.
+Privatni repo: [NemanjaZelic/RAGForge](https://github.com/NemanjaZelic/RAGForge).
+Pristup je potvrđen GitHub konektorom; standardna Git prijava obnovljena je
+postojećim Git Credential Manager-om. Postavljen je origin i main prati
+origin/main. Prvih pet commit-a uspešno je poslato i remote main potvrđen je
+kao f89790f35583acc9086bc034a8ffda92220686bd. Raniji 401/404 blokatori su rešeni.
 
-Željeni repo: `NemanjaZelic/RAGForge`, obavezno private. Modeli, lokalni
-cache, korpusi, alati i okruženja isključeni su kroz .gitignore. Nema
-odabrane licence ni javnog release-a.
-
-[Otvori pripremljenu formu za novi privatni repo](https://github.com/new?owner=NemanjaZelic&name=RAGForge&visibility=private&description=Portable+local+document+retrieval+for+agents).
-Proveriti da je Private; ne uključivati početni README, .gitignore ili licencu
-jer lokalni repo već ima istoriju. Kliknuti **Create repository**.
-
-Posle kreiranja proveriti pristup novom repo-u preko povezanog GitHub
-konektora. Za standardni Git tok treba obnoviti postojeću GitHub/Git prijavu
-jer sada vraća 401; samo kreiranje repo-a ne popravlja sačuvani Git credential.
-Nakon uspešne Git prijave, iz `D:\RAGForge`:
+Za naredne sinhronizacije, iz D:\RAGForge:
 
 ```powershell
 .\scripts\dev.ps1 run python scripts/github_sync.py --push
-```
-
-Ako Git već ima sačuvan GitHub pristup, alat može i sam da kreira novi
-privatni repo i sačuva commit-e:
-
-```powershell
-.\scripts\dev.ps1 run python scripts/github_sync.py --create --push
 ```
 
 Alat koristi postojeći Git credential helper, ne pravi nove tokene niti
@@ -61,7 +43,12 @@ maintenance alat; lokalni scan/retrieval ga ne uvoze i nemaju mrežne pozive.
 
 ## Sledeći korak
 
-RF-002: normalizovani tekst, provenance i deterministički chunking za
-MD/TXT/HTML, uz ponovnu proveru source hash-a; zatim RF-007 tekstualni PDF.
+RF-002 je završen: normalizovani MD/TXT/HTML tekst, source hash provera,
+provenance i deterministički chunking. Novi ukupan rezultat: 102 passed,
+3 skipped; pytest, ruff, mypy i schema drift prolaze. Chunk CLI subprocess
+prolazi uz blokirane Python socket/DNS pozive.
+
+Sledeći zadatak je RF-007: obavezni tekstualni PDF adapter, fizičke 1-based
+stranice, stvarni PDF fixtures i prijavljene granice parsiranja.
 Retrieval/build/use još nisu implementirani. PDF parser i pravi dense/hybrid
 ostaju obavezan deo v0.1 prema RELEASE-SCOPE.md.

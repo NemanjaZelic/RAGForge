@@ -12,7 +12,9 @@ import typer
 
 from ragforge import __version__
 from ragforge.artifacts.manifest import BundleManifest
+from ragforge.core.chunk import Chunk, ChunkConfig, chunk_document
 from ragforge.core.contracts import RetrievalResponse, RetrieveRequest
+from ragforge.core.parse import load_document
 from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
 from ragforge.types import ContractModel
 
@@ -111,3 +113,64 @@ def scan(
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
     typer.echo(report.model_dump_json())
+
+
+@app.command()
+def chunk(
+    root: Annotated[Path, typer.Argument(help="Corpus directory to parse and chunk.")],
+    collection: str = typer.Option("default", "--collection"),
+    chunk_size_chars: int = typer.Option(1000, min=1, max=100000),
+    overlap_chars: int = typer.Option(100, min=0),
+    max_file_bytes: int = typer.Option(32 * 1024 * 1024, min=1),
+    max_total_bytes: int = typer.Option(512 * 1024 * 1024, min=1),
+    max_entries: int = typer.Option(100000, min=1),
+    max_chunks: int = typer.Option(10000, min=1),
+    max_output_chars: int = typer.Option(100000, min=1),
+) -> None:
+    """Preview normalized chunks and citations as JSON; does not build an index."""
+    try:
+        config = ChunkConfig(chunk_size_chars=chunk_size_chars, overlap_chars=overlap_chars)
+        limits = ScanLimits(max_file_bytes, max_total_bytes, max_entries)
+        report = scan_corpus(root, collection, limits)
+        documents = []
+        chunks: list[Chunk] = []
+        output_chars = 0
+        for record in report.documents:
+            parsed = load_document(root, collection, record, limits)
+            if parsed.blocks and len(chunks) >= max_chunks:
+                raise ValueError("max_chunks exceeded")
+            if parsed.blocks and output_chars >= max_output_chars:
+                raise ValueError("max_output_chars exceeded")
+            parts = (
+                chunk_document(
+                    parsed,
+                    config,
+                    max_chunks=max_chunks - len(chunks),
+                    max_output_chars=max_output_chars - output_chars,
+                )
+                if parsed.blocks
+                else []
+            )
+            output_chars += sum(len(part.text) for part in parts)
+            if output_chars > max_output_chars:
+                raise ValueError("max_output_chars exceeded")
+            documents.append(
+                {
+                    "source_path": record.source_path,
+                    "document_id": record.document_id,
+                    "content_sha256": record.content_sha256,
+                    "warnings": parsed.warnings,
+                    "chunk_count": len(parts),
+                }
+            )
+            chunks.extend(parts)
+        result = {
+            "collection_id": collection,
+            "documents": documents,
+            "ignored_paths": report.ignored_paths,
+            "chunks": [part.model_dump() for part in chunks],
+        }
+    except ValueError as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result, ensure_ascii=True))

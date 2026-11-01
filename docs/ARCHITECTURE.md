@@ -62,9 +62,10 @@ tvrdi da trenutni kod već gradi ili pretražuje hybrid bundle.
 - Izmena sadržaja ne menja document ID; menja njegov content hash.
   Preimenovanje menja document ID; praćenje preimenovanja je van v0.1.
   Dva fajla istog sadržaja zadržavaju dva izvora i različite ID-jeve.
-- Planirani `chunk_id`: identitet dokumenta + content hash + hash konfiguracije
-  parsera/chunkera + ordinal, pod verzionisanim SHA-256 algoritmom.
-  Konačan algoritam i kod dolaze uz chunker.
+- RF-002 `chunk_id`: SHA-256 kanonskog JSON niza
+  [ragforge-chunk-v1, document_id, content_sha256, pipeline_hash, ordinal].
+  Pipeline hash uključuje parser/chunker verzije, veličinu i overlap;
+  tačna serijalizacija i provenance su u [PARSING.md](PARSING.md).
 - Putanja u citatu je relativna; originalni apsolutni root nije u deljivom bundle-u.
   Redovi su 1-based uključive granice; stranica je 1-based; nepoznato je null.
 
@@ -174,3 +175,10 @@ OS sandbox protiv procesa koji istovremeno menja direktorijume. Scan nije
 transakcioni snapshot: parser/builder mora ponovo proveriti source hash i
 čitati iste bajtove koje obrađuje. Taj nastavak pripada RF-002/RF-004.
 Skeniranje PDF-a ne tvrdi da u njemu postoji tekst; provera dolazi u RF-007.
+
+## RF-002 — parser i chunker
+
+Implementirani zajednički source reader, MD/TXT/HTML parser i deterministički
+chunker. Tačna encoding, source-map i budget pravila: [PARSING.md](PARSING.md).
+TextBlock ima opcioni page/line provenance za obavezni RF-007 PDF adapter.
+Chunk CLI je pregled fragmentacije, bez indeksa ili retrieval simulacije.

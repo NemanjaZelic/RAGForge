@@ -1,6 +1,5 @@
 """Deterministic, bounded discovery and hashing. No parsing or document execution."""
 
-import hashlib
 import os
 import stat
 from dataclasses import dataclass
@@ -10,6 +9,16 @@ from typing import Annotated, Literal
 from pydantic import Field, TypeAdapter
 
 from ragforge.core.identity import document_id
+from ragforge.core.source import (
+    SourceError,
+    read_file,
+)
+from ragforge.core.source import (
+    checked_stat as _checked_stat,
+)
+from ragforge.core.source import (
+    is_link as _is_link,
+)
 from ragforge.types import ContractModel, Identifier, RelativePath, Sha256
 
 FORMATS = {".md": "markdown", ".txt": "text", ".html": "html", ".htm": "html", ".pdf": "pdf"}
@@ -17,8 +26,7 @@ _path_adapter: TypeAdapter[str] = TypeAdapter(RelativePath)
 _collection_adapter: TypeAdapter[str] = TypeAdapter(Identifier)
 
 
-class ScanError(ValueError):
-    """No successful report is returned after an unsafe or incomplete scan."""
+ScanError = SourceError
 
 
 @dataclass(frozen=True)
@@ -48,51 +56,9 @@ class ScanReport(ContractModel):
     total_bytes: Annotated[int, Field(ge=0)]
 
 
-def _is_link(info: os.stat_result) -> bool:
-    # Junctions and other Windows reparse points are rejected as well as symlinks.
-    return stat.S_ISLNK(info.st_mode) or bool(
-        getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT
-    )
-
-
-def _stamp(info: os.stat_result) -> tuple[int, int, int, int, int]:
-    return info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns
-
-
-def _checked_stat(path: Path, root: Path) -> os.stat_result:
-    info = path.lstat()
-    if _is_link(info):
-        raise ScanError("symlinks and reparse points are forbidden")
-    if not path.resolve(strict=True).is_relative_to(root):
-        raise ScanError("source escapes corpus root")
-    return info
-
-
 def _hash_file(path: Path, root: Path, remaining: int, limits: ScanLimits) -> tuple[str, int]:
-    before = _checked_stat(path, root)
-    if not stat.S_ISREG(before.st_mode):
-        raise ScanError("source must be a regular file")
-    if before.st_size > limits.max_file_bytes:
-        raise ScanError("max_file_bytes exceeded")
-    if before.st_size > remaining:
-        raise ScanError("max_total_bytes exceeded")
-    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
-    with os.fdopen(os.open(path, flags), "rb") as stream:
-        opened = os.fstat(stream.fileno())
-        if _stamp(opened) != _stamp(before):
-            raise ScanError("source changed while opening")
-        digest, size = hashlib.sha256(), 0
-        while block := stream.read(64 * 1024):
-            size += len(block)
-            if size > limits.max_file_bytes or size > remaining:
-                raise ScanError("source grew beyond scan byte limits")
-            digest.update(block)
-        after = os.fstat(stream.fileno())
-    if size != before.st_size or _stamp(before) != _stamp(after):
-        raise ScanError("source changed while hashing")
-    if _stamp(_checked_stat(path, root)) != _stamp(after):
-        raise ScanError("source replaced while hashing")
-    return digest.hexdigest(), size
+    digest, size, _ = read_file(path, root, limits.max_file_bytes, remaining)
+    return digest, size
 
 
 def scan_corpus(root: Path, collection_id: str, limits: ScanLimits | None = None) -> ScanReport:

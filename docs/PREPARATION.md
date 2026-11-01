@@ -73,8 +73,8 @@ Za vraćanje zavisnosti iz lockfile-a: `scripts/dev.ps1 setup` (potrebna mreža
 ako paketi nisu u cache-u). Za svakodnevne provere i CLI: wrapper koristi već
 instalirano okruženje, bez automatskog preuzimanja i sinhronizacije.
 
-RF-000 i RF-001 su sada završeni; rezultati i sledeći zadatak su u PROGRESS.md.
-Slede RF-002 parser/chunker i obavezni RF-007 PDF.
+RF-000, RF-001 i RF-002 su sada završeni; rezultati i sledeći zadatak su u PROGRESS.md.
+Sledi obavezni RF-007 PDF adapter.
 Parser/chunker, RF-007 PDF i RF-009 dense/hybrid su obavezni F1/v0.1 zadaci.
 BM25-only je interni međukorak i opciona pretraga, ne završen v0.1 proizvod.
 Build/use još nisu implementirani i nisu izloženi kao lažno funkcionalne komande.
