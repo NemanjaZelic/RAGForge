@@ -142,6 +142,11 @@ class ONNXEmbedder:
         if len(output.shape) != 3 or output.shape[-1] != self.spec.dimensions:
             raise ValueError("graph must expose per-token embeddings with expected dimensions")
 
+    def token_lengths(self, texts: list[str]) -> list[int]:
+        """Measure local document tokens for bounded build-time length bucketing."""
+        encoded = self.tokenizer.encode_batch([self.spec.document_prefix + text for text in texts])
+        return [sum(item.attention_mask) for item in encoded]
+
     def encode(self, texts: list[str], *, query: bool = False) -> FloatMatrix:
         import numpy as np
 

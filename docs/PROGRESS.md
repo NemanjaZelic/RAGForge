@@ -155,3 +155,30 @@ menjani. Naredni mrežni korak je RF-010 sa auth i izolacijom pre produkcione pr
   over all three complete collections is running under the 65 GB storage policy;
   completed audit counts and retrieval measurements will be reported separately.
 - These engineering checks do not approve draft labels or complete the release gate.
+
+
+## 2026-11-01 — Full inventory audit and resumable evaluation
+
+The complete 18,434-source inventory was attempted without sampling. Kernel:
+3,857/3,857 parsed; RFC: 9,854/9,854 parsed, with 9 PDF pages without extracted
+text; 3GPP: 4,717 parsed PDFs and 6 extraction-permission failures, all retained
+in the inventory. These are text-layer diagnostics, not semantic completeness.
+Historical RFC decoding/escaping and permission-aware PDF retry were explicit;
+original bytes and frozen labels remain unchanged.
+
+Implemented bounded ingestion, streaming indexing, persistent build/vector/shard
+checkpoints, optional sharded ANN and source-bound actual-engine evaluation.
+Normalized local-only draft banks contain 2,723 mapped native source questions,
+42 version-scoped variants and 240 supplementary questions. No label was promoted
+to independently reviewed ground truth. Context negatives and quarantined spans
+are excluded with explicit reasons.
+
+Local full checks: **220 passed, 3 Windows filesystem skips**, including actual
+pretrained E5 exact/ANN offline build, relocation, query and MCP. Ruff, formatting,
+mypy and schema drift checks passed. This records software verification; full
+scale retrieval measurements are a separate long-running workload.
+
+CPU calibration on the local i7-1195G7 measured approximately 49 segments/s for
+bucketed 350-character inputs (1,024-segment development sample, not corpus
+throughput). An isolated Intel GPU feasibility probe was substantially slower
+and was not adopted. No remote compute or paid service was started.

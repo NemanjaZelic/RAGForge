@@ -6,11 +6,11 @@ import re
 import sqlite3
 import stat
 import unicodedata
-from collections.abc import Iterable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import closing, contextmanager
 from dataclasses import asdict
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 
 from pydantic import Field
 
@@ -74,6 +74,7 @@ def create_index(
     allow_incomplete: bool = False,
     max_chunks: int = 100000,
     max_output_chars: int = 100000000,
+    progress: Callable[[dict[str, Any]], None] | None = None,
 ) -> IndexSummary:
     """Create a new owned database. Existing files are never overwritten.
 
@@ -104,9 +105,16 @@ def create_index(
                         collection_id, document.record.source_path
                     ):
                         raise RetrievalError("invalid document identity")
-                    incomplete = any(r.status != "extracted" for r in document.page_reports)
+                    incomplete = (
+                        any(r.status != "extracted" for r in document.page_reports)
+                        or document.parser_version == "parse-failed-v1"
+                    )
                     if incomplete and not allow_incomplete:
-                        raise RetrievalError("incomplete PDF requires explicit allow_incomplete")
+                        raise RetrievalError(
+                            "failed source requires explicit allow_incomplete"
+                            if document.parser_version == "parse-failed-v1"
+                            else "incomplete PDF requires explicit allow_incomplete"
+                        )
                     if document.blocks and (
                         chunk_count >= max_chunks or text_chars >= max_output_chars
                     ):
@@ -155,6 +163,15 @@ def create_index(
                         chunk_count += 1
                     document_count += 1
                     incomplete_count += int(incomplete)
+                    if progress:
+                        progress(
+                            {
+                                "phase": "index",
+                                "completed_documents": document_count,
+                                "chunks": chunk_count,
+                                "text_chars": text_chars,
+                            }
+                        )
                 connection.execute("INSERT INTO chunk_fts(chunk_fts) VALUES('optimize')")
         return IndexSummary(
             collection_id=collection_id,
@@ -246,6 +263,28 @@ class SQLiteEngine:
             query = plain_query(request.query)
             if query is None:
                 return []
+            if request.filters is None:
+                # FTS5's rank cursor can stop before materializing every matching
+                # row. Consume the complete boundary tie to retain chunk_id order.
+                best: list[tuple[str, float]] = []
+                cursor = connection.execute(
+                    "SELECT rowid,rank FROM chunk_fts WHERE chunk_fts MATCH ? "
+                    "AND rank MATCH 'bm25()' ORDER BY rank",
+                    (query,),
+                )
+                for match in cursor:
+                    score = -float(match["rank"])
+                    if len(best) == limit and score < best[-1][1]:
+                        break
+                    row = connection.execute(
+                        "SELECT chunk_id,collection_id FROM chunks WHERE rowid=?", (match["rowid"],)
+                    ).fetchone()
+                    if row is None or row["collection_id"] != collection:
+                        continue
+                    best = sorted(
+                        best + [(str(row["chunk_id"]), score)], key=lambda item: (-item[1], item[0])
+                    )[:limit]
+                return best
             sql = (
                 "SELECT c.chunk_id, -bm25(chunk_fts) AS score FROM chunk_fts "
                 "JOIN chunks c ON c.rowid=chunk_fts.rowid "

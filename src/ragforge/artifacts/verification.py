@@ -117,36 +117,41 @@ def verify_bundle(root: Path) -> BundleManifest:
 
         dense = collection.dense_index
         assert dense is not None
-        if (dense.backend, dense.backend_version, dense.metric) != (
-            BACKEND,
-            BACKEND_VERSION,
-            "cosine",
-        ):
-            raise ValueError("unsupported dense backend/version/metric")
+        from ragforge.core.ann import BACKEND as ANN_BACKEND
+        from ragforge.core.ann import BACKEND_VERSION as ANN_VERSION
+        from ragforge.core.ann import read_header
+
         with engine._connect() as connection:
             rows = int(connection.execute("SELECT count(*) FROM chunks").fetchone()[0])
-        with (root / dense.path).open("rb") as stream:
-            if stream.read(8) != b"\x93NUMPY\x01\x00":
-                raise ValueError("unsupported dense file version")
-            length_bytes = stream.read(2)
-            if len(length_bytes) != 2:
-                raise ValueError("truncated dense header")
-            length = struct.unpack("<H", length_bytes)[0]
-            if length > 4096:
-                raise ValueError("oversized dense header")
-            try:
-                header = ast.literal_eval(stream.read(length).decode("ascii").strip())
-            except (SyntaxError, UnicodeError, ValueError) as error:
-                raise ValueError("invalid dense header") from error
-            expected_header = {
-                "descr": "<f4",
-                "fortran_order": False,
-                "shape": (rows, dense.dimensions),
-            }
-            if header != expected_header or not 1 <= rows <= MAX_DENSE_ROWS:
-                raise ValueError("dense header does not match SQLite/model")
-            if (root / dense.path).stat().st_size != 10 + length + rows * dense.dimensions * 4:
-                raise ValueError("dense byte size does not match header")
+        if dense.metric != "cosine":
+            raise ValueError("unsupported dense metric")
+        if (dense.backend, dense.backend_version) == (ANN_BACKEND, ANN_VERSION):
+            read_header(root / dense.path, rows=rows, dimensions=dense.dimensions)
+        elif (dense.backend, dense.backend_version) == (BACKEND, BACKEND_VERSION):
+            with (root / dense.path).open("rb") as stream:
+                if stream.read(8) != b"\x93NUMPY\x01\x00":
+                    raise ValueError("unsupported dense file version")
+                length_bytes = stream.read(2)
+                if len(length_bytes) != 2:
+                    raise ValueError("truncated dense header")
+                length = struct.unpack("<H", length_bytes)[0]
+                if length > 4096:
+                    raise ValueError("oversized dense header")
+                try:
+                    header = ast.literal_eval(stream.read(length).decode("ascii").strip())
+                except (SyntaxError, UnicodeError, ValueError) as error:
+                    raise ValueError("invalid dense header") from error
+                expected_header = {
+                    "descr": "<f4",
+                    "fortran_order": False,
+                    "shape": (rows, dense.dimensions),
+                }
+                if header != expected_header or not 1 <= rows <= MAX_DENSE_ROWS:
+                    raise ValueError("dense header does not match SQLite/model")
+                if (root / dense.path).stat().st_size != 10 + length + rows * dense.dimensions * 4:
+                    raise ValueError("dense byte size does not match header")
+        else:
+            raise ValueError("unsupported dense backend/version/metric")
         assert manifest.query_model is not None
         spec = model_spec(root / "models/query", verify=False)
         model = manifest.query_model

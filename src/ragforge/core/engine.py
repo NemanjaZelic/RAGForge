@@ -16,6 +16,7 @@ from ragforge.core.embedding import ONNXEmbedder
 from ragforge.core.sqlite import SQLiteEngine
 
 if TYPE_CHECKING:
+    from ragforge.core.ann import AnnStore
     from ragforge.core.dense import DenseStore
 
 
@@ -27,7 +28,7 @@ class BundleEngine:
         self.sqlite = SQLiteEngine(root / self.collection.database_path)
         self.threads = threads
         self._embedder: ONNXEmbedder | None = None
-        self._dense: DenseStore | None = None
+        self._dense: DenseStore | AnnStore | None = None
 
     def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
         method = request.search_method or self.manifest.default_search_method
@@ -49,20 +50,26 @@ class BundleEngine:
         model = self.manifest.query_model
         if dense is None or model is None:
             raise ValueError("dense/hybrid requires a local query model and dense index")
-        if (dense.backend, dense.backend_version, dense.metric) != (
-            BACKEND,
-            BACKEND_VERSION,
-            "cosine",
-        ):
+        from ragforge.core.ann import BACKEND as ANN_BACKEND
+        from ragforge.core.ann import BACKEND_VERSION as ANN_VERSION
+
+        backend = (dense.backend, dense.backend_version)
+        if dense.metric != "cosine" or backend not in {
+            (BACKEND, BACKEND_VERSION),
+            (ANN_BACKEND, ANN_VERSION),
+        }:
             raise ValueError("unsupported dense backend/version/metric")
         if model.runtime != "onnxruntime-cpu":
             raise ValueError("unsupported local query runtime")
         if self._embedder is None:
             self._embedder = ONNXEmbedder(self.root / "models/query", threads=self.threads)
         if self._dense is None:
-            self._dense = DenseStore(
-                self.root / dense.path, self.sqlite, self._embedder.spec.dimensions
-            )
+            if backend == (ANN_BACKEND, ANN_VERSION):
+                from ragforge.core.ann import AnnStore
+
+                self._dense = AnnStore(self.root / dense.path, self.sqlite, model.dimensions)
+            else:
+                self._dense = DenseStore(self.root / dense.path, self.sqlite, model.dimensions)
         vector = self._embedder.encode([request.query], query=True)[0]
         filters = request.filters.document_ids if request.filters is not None else None
         ranks = self._dense.rank(

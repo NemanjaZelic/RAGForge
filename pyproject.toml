@@ -29,6 +29,9 @@ mcp = [
 pdf-fast = [
     "pypdfium2==5.14.0",
 ]
+scale = [
+    "usearch==2.26.6",
+]
 
 [dependency-groups]
 dev = [

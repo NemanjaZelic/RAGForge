@@ -46,6 +46,7 @@ class IngestConfiguration(ContractModel):
     scan_limits: dict[str, int]
     pdf_options: PdfOptions
     text_options: TextOptions = Field(default_factory=TextOptions)
+    allow_permitted_pdf: bool = False
     pdf_backend: Literal["pypdf", "pdfium"]
     parser_version: str
     worker_memory_mib: Annotated[int, Field(ge=128, le=4096)] = 512
@@ -60,6 +61,7 @@ def configuration(
     memory: int,
     timeout: int,
     text_options: TextOptions | None = None,
+    allow_permitted_pdf: bool = False,
 ) -> IngestConfiguration:
     snapshot = hashlib.sha256(report.model_dump_json().encode()).hexdigest()
     version = (
@@ -74,6 +76,7 @@ def configuration(
         scan_limits=asdict(limits),
         pdf_options=options,
         text_options=text_options or TextOptions(),
+        allow_permitted_pdf=allow_permitted_pdf,
         pdf_backend=backend,
         parser_version=PARSER_VERSION + ";" + HTML_PARSER_VERSION + ";" + version,
         worker_memory_mib=memory,
@@ -169,7 +172,7 @@ class ParseWorker:
                 stderr=self.error_log,
                 text=True,
                 encoding="utf-8",
-                creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
             )
             self.tasks = 0
         process = self.process
@@ -181,6 +184,7 @@ class ParseWorker:
             "scan_limits": self.config.scan_limits,
             "pdf_options": self.config.pdf_options.model_dump(mode="json"),
             "text_options": self.config.text_options.model_dump(mode="json"),
+            "allow_permitted_pdf": self.config.allow_permitted_pdf,
             "pdf_backend": self.config.pdf_backend,
         }
         try:
@@ -228,6 +232,7 @@ def ingest_corpus(
     limits: ScanLimits | None = None,
     pdf_options: PdfOptions | None = None,
     text_options: TextOptions | None = None,
+    allow_permitted_pdf: bool = False,
     pdf_backend: Literal["pypdf", "pdfium"] = "pypdf",
     resume: bool = False,
     retry_failed: bool = False,
@@ -237,6 +242,8 @@ def ingest_corpus(
     storage: StorageBudget | None = None,
     progress: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
+    if allow_permitted_pdf and pdf_backend != "pdfium":
+        raise ValueError("permitted encrypted PDF ingestion requires the PDFium backend")
     limits, options = limits or ScanLimits(), pdf_options or PdfOptions()
     source = source.resolve(strict=True)
     job = job.absolute()
@@ -263,11 +270,17 @@ def ingest_corpus(
             worker_memory_mib,
             document_timeout_seconds,
             text_options,
+            allow_permitted_pdf,
         )
         database = job / "parsed.sqlite"
         if database.exists():
             previous = read_configuration(job)
-            operational = {"worker_memory_mib", "document_timeout_seconds", "text_options"}
+            operational = {
+                "worker_memory_mib",
+                "document_timeout_seconds",
+                "text_options",
+                "allow_permitted_pdf",
+            }
             safe_policy_upgrade = previous.text_options.fallback_encoding in {
                 "none",
                 config.text_options.fallback_encoding,
@@ -276,7 +289,9 @@ def ingest_corpus(
                 config.text_options.control_characters,
             }
             if (
-                previous.model_dump(exclude=operational) != config.model_dump(exclude=operational)
+                (previous.allow_permitted_pdf and not config.allow_permitted_pdf)
+                or previous.model_dump(exclude=operational)
+                != config.model_dump(exclude=operational)
                 or not safe_policy_upgrade
             ):
                 raise ValueError(
@@ -403,7 +418,9 @@ def job_status(job: Path) -> dict[str, Any]:
     }
 
 
-def cached_documents(job: Path, report: ScanReport) -> Iterator[ParsedDocument]:
+def cached_documents(
+    job: Path, report: ScanReport, *, allow_failed: bool = False
+) -> Iterator[ParsedDocument]:
     config = read_configuration(job)
     if config.snapshot_sha256 != hashlib.sha256(report.model_dump_json().encode()).hexdigest():
         raise ValueError("cached source snapshot does not match current scan")
@@ -414,10 +431,21 @@ def cached_documents(job: Path, report: ScanReport) -> Iterator[ParsedDocument]:
         c.setlimit(sqlite3.SQLITE_LIMIT_LENGTH, MAX_PAYLOAD_BYTES + 16384)
         for record in report.documents:
             row = c.execute(
-                "SELECT status,payload,payload_sha256 FROM parsed WHERE document_id=?",
+                "SELECT status,payload,payload_sha256,error FROM parsed WHERE document_id=?",
                 (record.document_id,),
             ).fetchone()
-            if row is None or row[0] == "error" or row[1] is None:
+            if row is None:
+                raise ValueError("cache has pending/failed document; full-source build refused")
+            if row[0] == "error" and allow_failed:
+                yield ParsedDocument(
+                    report.collection_id,
+                    record,
+                    (),
+                    warnings=("SOURCE NOT INDEXED: " + str(row[3]),),
+                    parser_version="parse-failed-v1",
+                )
+                continue
+            if row[0] == "error" or row[1] is None:
                 raise ValueError("cache has pending/failed document; full-source build refused")
             if hashlib.sha256(row[1]).hexdigest() != row[2]:
                 raise ValueError("parsed cache payload checksum mismatch")

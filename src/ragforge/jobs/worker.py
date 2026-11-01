@@ -113,6 +113,7 @@ def main() -> None:
                 pdf_options=PdfOptions.model_validate(task["pdf_options"]),
                 pdf_backend=task["pdf_backend"],
                 text_options=TextOptions.model_validate(task.get("text_options", {})),
+                allow_permitted_pdf=task.get("allow_permitted_pdf", False),
             )
             result = {"document": adapter.dump_python(document, mode="json")}
         except Exception as error:

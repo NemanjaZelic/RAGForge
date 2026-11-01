@@ -32,12 +32,13 @@ class StorageBudget:
         if refresh or time.monotonic() - self.refreshed >= 30:
             total = 0
             for parent, dirs, files in os.walk(self.root, followlinks=False):
+                file_names = set(files)
                 for name in dirs + files:
                     path = Path(parent) / name
                     info = path.lstat()
                     if is_link(info):
                         raise ValueError("links are forbidden in benchmark storage")
-                    if name in files:
+                    if name in file_names:
                         total += info.st_size
             self.used = total
             self.refreshed = time.monotonic()

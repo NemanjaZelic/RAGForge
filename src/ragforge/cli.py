@@ -329,6 +329,9 @@ def build(
         False, "--offline", help="Explicit assertion; build is always offline."
     ),
     allow_incomplete: bool = typer.Option(False),
+    allow_failed_documents: bool = typer.Option(
+        False, help="Retain failed sources visibly with zero chunks."
+    ),
     allow_partial_pdf: bool = typer.Option(False),
     pdf_max_pages: int = typer.Option(500, min=1, max=10000),
     max_file_bytes: int = typer.Option(32 * 1024 * 1024, min=1),
@@ -338,11 +341,27 @@ def build(
     ingest_job: Annotated[
         Path | None, typer.Option(help="Verified source-bound parsing journal.")
     ] = None,
-    max_index_chunks: int = typer.Option(100000, min=1, max=5000000),
+    work_directory: Annotated[
+        Path | None, typer.Option("--job", help="Persistent build checkpoint directory.")
+    ] = None,
+    resume: bool = typer.Option(False),
+    storage_root: Annotated[
+        Path | None, typer.Option(help="Aggregate benchmark storage root.")
+    ] = None,
+    dense_backend: str = typer.Option("exact", help="exact or explicit sharded ann backend."),
+    max_index_chunks: int = typer.Option(100000, min=1, max=8000000),
     max_index_text_chars: int = typer.Option(100000000, min=1),
 ) -> None:
     """Build and verify a portable data bundle; never downloads or deploys."""
+    from ragforge.jobs.budget import StorageBudget
+
+    def progress(event: dict[str, Any]) -> None:
+        if event["phase"] != "index" or event["completed_documents"] % 100 == 0:
+            typer.echo(json.dumps(event, ensure_ascii=True), err=True)
+
     try:
+        if dense_backend not in {"exact", "ann"}:
+            raise ValueError("unknown dense backend")
         if compute != "local":
             raise ValueError("only local build compute is implemented")
         manifest = build_bundle(
@@ -357,6 +376,7 @@ def build(
                 overlap_chars=overlap_chars,
             ),
             allow_incomplete=allow_incomplete,
+            allow_failed_documents=allow_failed_documents,
             pdf_options=PdfOptions(max_pages=pdf_max_pages, allow_partial=allow_partial_pdf)
             if ingest_job is None
             else None,
@@ -366,14 +386,24 @@ def build(
             ingest_job=ingest_job,
             max_index_chunks=max_index_chunks,
             max_index_text_chars=max_index_text_chars,
+            dense_backend="ann" if dense_backend == "ann" else "exact",
+            work_directory=work_directory,
+            resume=resume,
+            storage=StorageBudget(storage_root) if storage_root is not None else None,
+            progress=progress if work_directory is not None else None,
             threads=threads,
         )
     except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
+    from ragforge.artifacts.diagnostics import ingestion_diagnostics
+
     typer.echo(
         json.dumps(
             {
+                "source_coverage": ingestion_diagnostics(
+                    SQLiteEngine(output / manifest.collections[0].database_path)
+                ),
                 "build_id": manifest.build_id,
                 "profile": manifest.profile,
                 "collection_id": collection,
@@ -425,8 +455,19 @@ def verify(artifact: Path) -> None:
     except (ValueError, OSError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
+    from ragforge.artifacts.diagnostics import ingestion_diagnostics
+
     typer.echo(
-        json.dumps({"valid": True, "build_id": manifest.build_id, "profile": manifest.profile})
+        json.dumps(
+            {
+                "valid": True,
+                "build_id": manifest.build_id,
+                "profile": manifest.profile,
+                "source_coverage": ingestion_diagnostics(
+                    SQLiteEngine(artifact / manifest.collections[0].database_path)
+                ),
+            }
+        )
     )
 
 
@@ -473,6 +514,9 @@ def ingest(
     resume: bool = typer.Option(False),
     retry_failed: bool = typer.Option(False),
     continue_on_error: bool = typer.Option(False),
+    allow_permitted_pdf: bool = typer.Option(
+        False, help="Allow empty-password PDFs only when user extraction permission is set."
+    ),
     text_fallback: str = typer.Option("none", help="none or explicitly selected latin-1 fallback."),
     escape_controls: bool = typer.Option(False, help="Represent legacy control bytes visibly."),
     pdf_backend: str = typer.Option("pypdf", help="pypdf or optional pdfium; always isolated."),
@@ -526,6 +570,7 @@ def ingest(
                 allow_partial=allow_partial_pdf,
             ),
             pdf_backend="pdfium" if pdf_backend == "pdfium" else "pypdf",
+            allow_permitted_pdf=allow_permitted_pdf,
             text_options=TextOptions(
                 fallback_encoding="latin-1" if text_fallback == "latin-1" else "none",
                 control_characters="escape" if escape_controls else "reject",
@@ -549,11 +594,62 @@ def ingest(
 @app.command("job-status")
 def inspect_job(job: Path) -> None:
     """Inspect completed, partial, failed and pending document counts without parsing."""
+    from ragforge.jobs.build import build_status
     from ragforge.jobs.ingest import job_status
 
     try:
-        result = job_status(job)
+        result = build_status(job) if (job / "build.json").exists() else job_status(job)
     except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
     typer.echo(json.dumps(result, ensure_ascii=True))
+
+
+@app.command()
+def evaluate(
+    artifact: Annotated[Path, typer.Argument(help="Verified full collection bundle.")],
+    cases: Annotated[Path, typer.Option(help="Frozen source-evidence cases as JSONL.")],
+    source_root: Annotated[Path, typer.Option(help="Frozen original source directory.")],
+    output: Annotated[Path, typer.Option(help="New result/checkpoint directory.")],
+    split: str = typer.Option("dev"),
+    track: str | None = typer.Option(None),
+    methods: Annotated[list[str] | None, typer.Option("--method")] = None,
+    top_k: int = typer.Option(10, min=10, max=50),
+    max_output_chars: int = typer.Option(16000, min=1, max=100000),
+    allow_draft: bool = typer.Option(False),
+    resume: bool = typer.Option(False),
+    pdf_reference_cache: Annotated[
+        Path | None, typer.Option(help="Frozen PDF reference page JSONs.")
+    ] = None,
+) -> None:
+    """Measure actual retrieval and source-span coverage; drafts cannot approve release."""
+    from pydantic import TypeAdapter
+
+    from ragforge.evaluation.runner import evaluate_bundle
+    from ragforge.types import SearchMethod
+
+    try:
+        if split not in {"dev", "tuning", "test"}:
+            raise ValueError("unknown evaluation split")
+        selected = TypeAdapter(list[SearchMethod]).validate_python(methods) if methods else None
+        report = evaluate_bundle(
+            artifact,
+            cases,
+            source_root,
+            output,
+            split="dev" if split == "dev" else ("tuning" if split == "tuning" else "test"),
+            methods=selected,
+            track=track,
+            top_k=top_k,
+            max_output_chars=max_output_chars,
+            allow_draft=allow_draft,
+            resume=resume,
+            pdf_reference_cache=pdf_reference_cache,
+            progress=lambda event: typer.echo(json.dumps(event, ensure_ascii=True), err=True),
+        )
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(report, ensure_ascii=True))
+    if any(row["errors"] for row in report["methods"].values()):
+        raise typer.Exit(code=2)

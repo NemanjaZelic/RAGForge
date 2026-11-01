@@ -15,7 +15,9 @@ from ragforge.core.pdf import PdfBudgetError, PdfError, PdfOptions, PdfPageRepor
 _LOCK = Lock()  # PDFium is process-global and must never run concurrently in threads.
 
 
-def extract_pdfium(raw: bytes, options: PdfOptions | None = None) -> PdfText:
+def extract_pdfium(
+    raw: bytes, options: PdfOptions | None = None, *, allow_permitted: bool = False
+) -> PdfText:
     options = options or PdfOptions()
     if not raw.startswith(b"%PDF-"):
         raise PdfError("invalid PDF header")
@@ -27,11 +29,21 @@ def extract_pdfium(raw: bytes, options: PdfOptions | None = None) -> PdfText:
     reports: list[PdfPageReport] = []
     warnings: list[str] = []
     total = 0
+    permitted_encryption = False
     with _LOCK:
         try:
             with pdfium.PdfDocument(raw) as document:
                 if pdfium.raw.FPDF_GetSecurityHandlerRevision(document) != -1:
-                    raise PdfError("encrypted PDFs are not supported")
+                    if not allow_permitted:
+                        raise PdfError("encrypted PDFs are not supported")
+                    # No password is supplied. Even owner-unlocked documents must
+                    # retain the user's extraction right (PDF permission bit 5).
+                    if not pdfium.raw.FPDF_GetDocUserPermissions(document) & 16:
+                        raise PdfError("PDF user permissions do not permit text extraction")
+                    permitted_encryption = True
+                    warnings.append(
+                        "empty-password PDF opened with explicit text extraction permission"
+                    )
                 count = len(document)
                 if not 1 <= count <= options.max_pages:
                     raise PdfBudgetError("PDF page count exceeds configured bounds")
@@ -73,7 +85,12 @@ def extract_pdfium(raw: bytes, options: PdfOptions | None = None) -> PdfText:
             raise
         except (ValueError, RuntimeError) as error:
             raise PdfError(f"cannot parse PDF with PDFium: {error}") from error
-    identity = {"options": options.model_dump(), "pages": [(r.page, r.status) for r in reports]}
+    identity: dict[str, object] = {
+        "options": options.model_dump(),
+        "pages": [(r.page, r.status) for r in reports],
+    }
+    if permitted_encryption:
+        identity["permitted_empty_password_encryption"] = True
     digest = hashlib.sha256(
         json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

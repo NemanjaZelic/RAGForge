@@ -235,3 +235,33 @@ def test_offline_cli_builds_and_queries_mixed_md_pdf_on_relocated_path(
     unicode = offline_cli(["search", str(copied), "ћирилица čuvanje"])
     assert unicode.returncode == 0, unicode.stderr
     assert json.loads(unicode.stdout)["results"][0]["source"]["path"] == "srpski.md"
+
+
+def test_rank_cursor_matches_exhaustive_bm25_including_boundary_ties(tmp_path: Path):
+    from ragforge.core.parse import load_document
+    from ragforge.core.scan import scan_corpus
+    from ragforge.core.sqlite import plain_query
+
+    root = tmp_path / "sources"
+    root.mkdir()
+    for number in range(80):
+        (root / f"{number}.txt").write_text("identical rollback transaction evidence")
+    database = tmp_path / "index.sqlite"
+    report = scan_corpus(root, "docs")
+    create_index(
+        database, "docs", "Docs", (load_document(root, "docs", r) for r in report.documents)
+    )
+    engine = SQLiteEngine(database)
+    for text in ("rollback", "rollback transaction", "missing", 'rollback OR "transaction"'):
+        request = RetrieveRequest(query=text, top_k=5)
+        with engine._connect() as connection:
+            expected = [
+                (row[0], row[1])
+                for row in connection.execute(
+                    "SELECT c.chunk_id,-bm25(chunk_fts) AS score FROM chunk_fts "
+                    "JOIN chunks c ON c.rowid=chunk_fts.rowid WHERE chunk_fts MATCH ? "
+                    "AND c.collection_id=? ORDER BY score DESC,c.chunk_id LIMIT 5",
+                    (plain_query(text), "docs"),
+                )
+            ]
+        assert engine.rank_bm25(request, 5) == expected

@@ -39,7 +39,7 @@ fallback for pages without one; navigation outside that landmark is excluded.
 A source-bound journal can feed the existing builder:
 
 ```powershell
-.\scripts\dev.ps1 run ragforge build data/benchmarks/scale-v1/ietf-rfcs/input --collection ietf-rfcs --ingest-job data/benchmarks/scale-v1/runs/rfc-job --output data/benchmarks/scale-v1/runs/rfc-bundle --model models/e5-small --chunk-size-chars 350 --overlap-chars 50 --max-index-chunks 5000000 --max-index-text-chars 4000000000 --allow-incomplete
+.\scripts\dev.ps1 run ragforge build data/benchmarks/scale-v1/ietf-rfcs/input --collection ietf-rfcs --ingest-job data/benchmarks/scale-v1/runs/rfc-job --output data/benchmarks/scale-v1/runs/rfc-bundle --model models/e5-small --chunk-size-chars 350 --overlap-chars 50 --max-index-chunks 8000000 --max-index-text-chars 4000000000 --allow-incomplete
 ```
 
 Scan/PDF options come from the journal. The builder refuses pending/failed source
@@ -48,7 +48,7 @@ full document inventory. `--allow-incomplete` explicitly permits recorded PDF pa
 losses; it does not omit failed documents. No sampled corpus is substituted.
 
 Indexing streams chunks; dense lookup streams ordered IDs from SQLite instead of
-materializing millions of Python strings. Finite capacities are 5 million dense
+materializing millions of Python strings. Finite capacities are 8 million dense
 rows, 16 GiB per bundle file, 32 GiB per bundle. These are supported limits, not
 claims of measured performance. Dense float32 blocks stay within 16 MiB for
 validation/scoring. Character chunk limits never silently truncate model tokens.
@@ -64,3 +64,53 @@ Prepared raw/input copies are retained. Detailed run data remains under ignored
 
 Labels remain drafts and final test sets remain unlocked. Ingestion coverage and
 exploratory retrieval measurements are not strict release-quality approval.
+
+
+## Resumable balanced builds and explicit ANN
+
+Use `build --job NEW_JOB --dense-backend ann` for the large benchmark; repeat the
+same command with `--resume` after interruption. `job-status JOB` reports committed
+embedding rows and completed ANN shards. The job binds source bytes, parser cache,
+model, chunking, thread count and embedding pipeline. Completed components are
+hashed, committed vector prefixes validated, and publication remains atomic and
+no-replace. Private unfinished staging is retained for a resumable job.
+
+ANN is an optional extra (`ragforge[scale]`, USearch 2.26.6), never an automatic
+replacement for exact cosine. Bounded shards contain 25,000 rows, f16 vectors,
+HNSW connectivity 16, construction expansion 128 and query expansion 64. Search
+merges candidates from every shard and reranks their stored f16 vectors. This is
+approximate retrieval; document-filtered scoring uses exact stored-vector cosine.
+A framed `dense.index` inventories shard hashes, byte offsets and SQLite row IDs.
+The normal exact backend and BM25 remain available. BM25 imports neither model nor
+ANN runtime. These capacities are engineering limits, not measured quality claims.
+
+Explicit `--allow-permitted-pdf` ingestion can extract an encrypted PDF only when
+it opens without a supplied password and grants text extraction. The default
+still rejects encryption. Disallowed sources stay failures. A diagnostic build
+can retain such records with zero chunks using **both** `--allow-incomplete` and
+`--allow-failed-documents`; verification reports them separately. It never drops
+source inventory or manufactures searchable content for failed inputs.
+
+## Evidence evaluation
+
+`evaluate ARTIFACT --cases CASES.jsonl --source-root ORIGINALS --output NEW_DIR`
+executes the real bundle engine. Use `--split`, optional `--track`, and repeated
+`--method` flags; default methods are the bundle capabilities. Frozen evidence is
+bound to original source hashes, independent canonical offsets and span hashes.
+PDF evidence requires `--pdf-reference-cache` from the original label extractor,
+not product chunks. `scripts/prepare_pdf_evidence_cache.py` reconstructs this cache
+without rewriting labels, using isolated, bounded pypdf workers.
+
+Results include document Recall@5, document MRR@10, mean evidence group coverage,
+and the fraction covering every required group by at least 80%. The coverage
+threshold defines a diagnostic metric, not a release quality target. Repeated
+ambiguous text is uncredited; document hits cannot substitute for evidence from
+all required documents. Context-only negatives are excluded from global-negative
+scoring. Draft labels require `--allow-draft` and cannot approve a release.
+
+A SQLite result journal checkpoints each actual query. Explicit `--resume` binds
+the same artifact, case file, limits, split, track and scorer. Reports separate
+first-query timing, p50/p95 wall latency, setup time, source coverage and actual
+process memory. OS caches are not cleared; process peaks are not whole-machine
+or aggregate-worker peaks. Detailed native QA adaptations remain local and ignored
+by Git. Only aggregate diagnostic reports may be saved to the private repository.

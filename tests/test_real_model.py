@@ -13,8 +13,11 @@ import pytest
 @pytest.mark.skipif(
     not os.environ.get("RAGFORGE_MODEL_DIR"), reason="explicit local real model required"
 )
+@pytest.mark.parametrize("dense_backend", ["exact", "ann"])
 def test_pretrained_model_offline_build_query_and_relocation(
-    tmp_path: Path, offline_cli: Callable[[list[str]], subprocess.CompletedProcess[str]]
+    tmp_path: Path,
+    offline_cli: Callable[[list[str]], subprocess.CompletedProcess[str]],
+    dense_backend: str,
 ) -> None:
     root = Path(__file__).resolve().parents[1]
     model = Path(os.environ["RAGFORGE_MODEL_DIR"]).resolve(strict=True)
@@ -30,6 +33,8 @@ def test_pretrained_model_offline_build_query_and_relocation(
             "--model",
             str(model),
             "--offline",
+            "--dense-backend",
+            dense_backend,
         ]
     )
     assert built.returncode == 0, built.stderr
@@ -60,7 +65,8 @@ def test_pretrained_model_offline_build_query_and_relocation(
 @pytest.mark.skipif(
     not os.environ.get("RAGFORGE_MODEL_DIR"), reason="explicit local real model required"
 )
-def test_pretrained_mcp_stdio_offline(tmp_path: Path, offline_cli) -> None:
+@pytest.mark.parametrize("dense_backend", ["exact", "ann"])
+def test_pretrained_mcp_stdio_offline(tmp_path: Path, offline_cli, dense_backend: str) -> None:
     import asyncio
 
     from mcp_helpers import offline_client
@@ -79,6 +85,8 @@ def test_pretrained_mcp_stdio_offline(tmp_path: Path, offline_cli) -> None:
             "--model",
             str(model),
             "--offline",
+            "--dense-backend",
+            dense_backend,
         ]
     )
     assert built.returncode == 0, built.stderr

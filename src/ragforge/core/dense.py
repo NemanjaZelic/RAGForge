@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import json
+import os
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Literal
 
 from ragforge.core.embedding import ONNXEmbedder
 from ragforge.core.limits import MAX_DENSE_ROWS
@@ -19,7 +22,16 @@ CANDIDATES = 50
 RRF_K = 60
 
 
-def write_dense(database: Path, destination: Path, embedder: ONNXEmbedder) -> int:
+def write_dense(
+    database: Path,
+    destination: Path,
+    embedder: ONNXEmbedder,
+    *,
+    row_order: Literal["chunk_id", "rowid"] = "chunk_id",
+    checkpoint: Path | None = None,
+    identity: str = "",
+    progress: Callable[[dict[str, Any]], None] | None = None,
+) -> int:
     import numpy as np
 
     engine = SQLiteEngine(database)
@@ -27,16 +39,64 @@ def write_dense(database: Path, destination: Path, embedder: ONNXEmbedder) -> in
         count = int(connection.execute("SELECT count(*) FROM chunks").fetchone()[0])
         if not 1 <= count <= MAX_DENSE_ROWS:
             raise ValueError("dense index row count exceeds supported capacity")
+        from ragforge.jobs.build import atomic_json
+
+        start = 0
+        expected = {
+            "identity": identity,
+            "count": count,
+            "dimensions": embedder.spec.dimensions,
+            "row_order": row_order,
+            "embedding_pipeline": "length-buckets-512-batch32-v2",
+        }
+        if checkpoint is not None and checkpoint.exists():
+            if checkpoint.stat().st_size > 4096:
+                raise ValueError("oversized dense checkpoint")
+            state = json.loads(checkpoint.read_text(encoding="utf-8"))
+            if any(state.get(key) != value for key, value in expected.items()):
+                raise ValueError("dense checkpoint identity/shape mismatch")
+            start = state["next_row"]
+            if type(start) is not int or not 0 <= start <= count:
+                raise ValueError("invalid dense checkpoint row")
         matrix = np.lib.format.open_memmap(
-            destination, mode="w+", dtype="<f4", shape=(count, embedder.spec.dimensions)
+            destination,
+            mode="r+" if destination.exists() and checkpoint is not None else "w+",
+            dtype="<f4",
+            shape=(count, embedder.spec.dimensions),
         )
+        if matrix.dtype != np.dtype("<f4") or matrix.shape != (count, embedder.spec.dimensions):
+            raise ValueError("resumed dense matrix shape/dtype mismatch")
         try:
-            cursor = connection.execute("SELECT text FROM chunks ORDER BY chunk_id")
-            start = 0
-            while rows := cursor.fetchmany(32):
-                vectors = embedder.encode([row["text"] for row in rows])
-                matrix[start : start + len(rows)] = vectors
+            for offset in range(0, start, 4096):
+                block = matrix[offset : min(offset + 4096, start)]
+                if not np.isfinite(block).all() or not np.allclose(
+                    np.linalg.norm(block, axis=1), 1, atol=0.001
+                ):
+                    raise ValueError("committed dense prefix is corrupt")
+            cursor = connection.execute(
+                "SELECT text FROM chunks ORDER BY " + row_order + " LIMIT -1 OFFSET ?", (start,)
+            )
+            committed = start
+            while rows := cursor.fetchmany(512):
+                texts = [str(row["text"]) for row in rows]
+                lengths = embedder.token_lengths(texts)
+                order = sorted(range(len(rows)), key=lambda index: lengths[index])
+                for begin in range(0, len(order), 32):
+                    positions = order[begin : begin + 32]
+                    vectors = embedder.encode([texts[index] for index in positions])
+                    matrix[start + np.asarray(positions)] = vectors
                 start += len(rows)
+                if start - committed >= 4096 or start == count:
+                    matrix.flush()
+                    with destination.open("r+b") as data:
+                        os.fsync(data.fileno())
+                    if checkpoint is not None:
+                        atomic_json(checkpoint, {**expected, "next_row": start})
+                    committed = start
+                    if progress:
+                        progress(
+                            {"phase": "dense", "completed_chunks": start, "total_chunks": count}
+                        )
             matrix.flush()
         finally:
             del matrix

@@ -58,6 +58,7 @@ def load_document(
     pdf_options: PdfOptions | None = None,
     pdf_backend: Literal["pypdf", "pdfium"] = "pypdf",
     text_options: TextOptions | None = None,
+    allow_permitted_pdf: bool = False,
 ) -> ParsedDocument:
     limits = limits or ScanLimits()
     # Validate identity/path again even if a caller bypassed model construction.
@@ -89,6 +90,7 @@ def load_document(
         pdf_options=pdf_options,
         pdf_backend=pdf_backend,
         text_options=text_options,
+        allow_permitted_pdf=allow_permitted_pdf,
     )
 
 
@@ -319,6 +321,7 @@ def parse_document(
     pdf_options: PdfOptions | None = None,
     pdf_backend: Literal["pypdf", "pdfium"] = "pypdf",
     text_options: TextOptions | None = None,
+    allow_permitted_pdf: bool = False,
 ) -> ParsedDocument:
     if record.document_id != document_id(collection_id, record.source_path):
         raise ParseError("document identity does not match collection and path")
@@ -331,7 +334,7 @@ def parse_document(
             if pdf_backend == "pdfium":
                 from ragforge.core.pdf_fast import extract_pdfium
 
-                extracted = extract_pdfium(raw, pdf_options)
+                extracted = extract_pdfium(raw, pdf_options, allow_permitted=allow_permitted_pdf)
             else:
                 extracted = extract_pdf(raw, pdf_options)
         except PdfError as error:

@@ -265,3 +265,49 @@ def test_explicit_legacy_policy_can_retry_only_failed_inputs(tmp_path: Path):
     assert len(document.warnings) == 2
     with pytest.raises(ValueError, match="configuration changed"):
         ingest_corpus(source, job, collection_id="docs", resume=True)
+
+
+def test_empty_password_pdf_requires_explicit_policy_and_user_extraction_right(tmp_path: Path):
+    from pypdf import PdfReader, PdfWriter
+    from pypdf.constants import UserAccessPermissions
+
+    from ragforge.core.pdf_fast import extract_pdfium
+
+    permitted = tmp_path / "permitted.pdf"
+    denied = tmp_path / "denied.pdf"
+    for path, rights in (
+        (permitted, UserAccessPermissions.EXTRACT),
+        (denied, UserAccessPermissions.PRINT),
+    ):
+        writer = PdfWriter()
+        for page in PdfReader(PDF).pages:
+            writer.add_page(page)
+        writer.encrypt("", owner_password="test-owner", permissions_flag=rights)
+        writer.write(path)
+        writer.close()
+    with pytest.raises(ValueError, match="encrypted PDFs"):
+        extract_pdfium(permitted.read_bytes())
+    result = extract_pdfium(permitted.read_bytes(), allow_permitted=True)
+    assert len(result.pages) == 2 and "retry_limit" in result.pages[0][1]
+    assert any("explicit text extraction permission" in w for w in result.warnings)
+    with pytest.raises(ValueError, match="do not permit"):
+        extract_pdfium(denied.read_bytes(), allow_permitted=True)
+
+    source = tmp_path / "encrypted-source"
+    source.mkdir()
+    shutil.copyfile(permitted, source / "manual.pdf")
+    job = tmp_path / "encrypted-job"
+    failed = ingest_corpus(
+        source, job, collection_id="docs", pdf_backend="pdfium", continue_on_error=True
+    )
+    assert failed["status_counts"] == {"error": 1}
+    retried = ingest_corpus(
+        source,
+        job,
+        collection_id="docs",
+        pdf_backend="pdfium",
+        allow_permitted_pdf=True,
+        resume=True,
+        retry_failed=True,
+    )
+    assert retried["strict_ready"]
