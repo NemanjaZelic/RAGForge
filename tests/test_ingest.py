@@ -153,7 +153,9 @@ def test_worker_deadline_terminates_actual_process(tmp_path: Path, monkeypatch):
     original = subprocess.Popen
 
     def sleeping_process(*args, **kwargs):
-        return original([sys.executable, "-c", "import time;time.sleep(3600)"], **kwargs)
+        if "ragforge.jobs.worker" in args[0]:
+            return original([sys.executable, "-c", "import time;time.sleep(3600)"], **kwargs)
+        return original(*args, **kwargs)
 
     monkeypatch.setattr(subprocess, "Popen", sleeping_process)
     try:
