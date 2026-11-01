@@ -8,7 +8,7 @@ V0.1 zahteva tekstualni PDF i dense/hybrid; OCR je kasnije.
 
 Jedna distribucija `ragforge`, Python >=3.11, `src` layout:
 
-- `core/`: tipovi i protokol engine-a; ingestion i retrieval dolaze sledeći.
+- `core/`: tipovi/protokol, scan/parse/chunk, PDF adapter i SQLite BM25 engine.
 - `artifacts/`: manifest i buduća verifikacija/izvoz.
 - `cli.py`: Typer adapter; ne nosi retrieval logiku.
 - `schemas/`: generisani JSON Schema dokumenti.

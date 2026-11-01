@@ -56,6 +56,18 @@ Svaki job izvršava pytest, lint, format, mypy, schema drift i izgradnju wheel/s
 Prethodni početni CI run 41277114172 takođe je uspešan.
 Lokalna tri preskakanja su platform/privilege zavisna; ne predstavljaju CI grešku.
 
+## Poslednja isporuka
+
+- abae50f: RF-007 PDF adapter, stvarni fixtures i pinovani realni PDF pilot.
+- 72e8cc3: RF-003 SQLiteEngine, index/search/context CLI, offline mixed MD/PDF
+  E2E, Unicode stdout ispravka i izmereni BM25 mini/PDF smoke izveštaji.
+- [RF-003 CI](https://github.com/NemanjaZelic/RAGForge/actions/runs/41278861087)
+  uspešan je na Windows/Linux i Python 3.11/3.13; uključuje tests, lint,
+  format, mypy, schema drift i wheel/sdist build.
+- Lokalno 132 passed, 3 platform/privilege skipped. Originalni plan ima isti SHA-256.
+  GitHub main i lokalni HEAD se proveravaju posle svakog push-a; lokalni Git bundle
+  checkpoint se osvežava posle isporuke.
+
 ## Sledeći korak
 
 RF-002 je završen: normalizovani MD/TXT/HTML tekst, source hash provera,

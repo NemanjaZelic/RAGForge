@@ -83,4 +83,3 @@ blokiran Python socket/DNS. To nije OS mrežna izolacija; ona ostaje RF-006.
 ```
 
 Ponovljeni index na istoj putanji se odbija; za novi indeks izabrati novu putanju.
-
