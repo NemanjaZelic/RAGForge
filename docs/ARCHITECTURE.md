@@ -197,3 +197,16 @@ metadata/FTS backend. BM25 ne učitava ML biblioteke ili dense matricu.
 Query model/descriptor/licence su lokalno spakovani i hash verifikovani.
 Parser konfiguracija, uključujući PDF opcije, eksplicitno je u manifestu.
 Reprezentativni quality gate ostaje odvojeni RF-006 test-set posao.
+
+
+## Shared transport decision (2026-11-02)
+
+RF-010A uses the MCP SDK's existing Starlette ASGI app for thin REST routes rather
+than introducing FastAPI as a second web stack. CLI, REST and MCP still call one
+BundleEngine through a source-permission wrapper; no retrieval algorithm is
+duplicated. HTTP is an explicit optional extra/listener, not a side effect of
+local build/query. Offline pinned-key RS256 verification binds issuer, resource,
+subject and read scope; token issuance remains with the operator's issuer.
+TLS, strict Host/Origin checks, request bounds and safe errors apply to REST and
+MCP. Operational rollout/version lifecycle remains the following milestone.
+See [SHARED.md](SHARED.md) for the implemented contract and limits.

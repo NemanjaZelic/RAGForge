@@ -1541,6 +1541,11 @@ pdf-fast = [
 scale = [
     { name = "usearch" },
 ]
+shared = [
+    { name = "mcp" },
+    { name = "pyjwt", extra = ["crypto"] },
+    { name = "uvicorn" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -1554,16 +1559,19 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "mcp", marker = "extra == 'mcp'", specifier = ">=2.3,<3" },
+    { name = "mcp", marker = "extra == 'shared'", specifier = ">=2.3,<3" },
     { name = "numpy", marker = "extra == 'balanced'", specifier = ">=2,<2.5" },
     { name = "onnxruntime", marker = "extra == 'balanced'", specifier = ">=1.24,<2" },
     { name = "pydantic", specifier = ">=2.10,<3" },
+    { name = "pyjwt", extras = ["crypto"], marker = "extra == 'shared'", specifier = ">=2.15,<3" },
     { name = "pypdf", specifier = "==6.21.4" },
     { name = "pypdfium2", marker = "extra == 'pdf-fast'", specifier = "==5.14.0" },
     { name = "tokenizers", marker = "extra == 'balanced'", specifier = ">=0.22,<1" },
     { name = "typer", specifier = ">=0.15,<1" },
     { name = "usearch", marker = "extra == 'scale'", specifier = "==2.26.6" },
+    { name = "uvicorn", marker = "extra == 'shared'", specifier = ">=0.54,<1" },
 ]
-provides-extras = ["balanced", "mcp", "pdf-fast", "scale"]
+provides-extras = ["balanced", "mcp", "shared", "pdf-fast", "scale"]
 
 [package.metadata.requires-dev]
 dev = [

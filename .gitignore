@@ -34,3 +34,6 @@ htmlcov/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Local shared auth policies, certificates and operator credentials
+/secrets/

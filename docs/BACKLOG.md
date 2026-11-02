@@ -183,7 +183,12 @@ uspeha zadatka. Stvarni deterministički MCP klijent nije zamena za taj benchmar
 
 ## Posle toga
 
-RF-010: shared HTTP/MCP, auth i izolacija pre production preporuke, parity i rollback.
+RF-010A: implementirani shared REST/stateless MCP HTTP, isti engine/CLI klijent,
+JWT issuer/resource/subject/scope provera, document grants, TLS, Host/Origin/body
+limiti i stvarni minimal/exact/ANN parity testovi. [SHARED.md](SHARED.md).
+RF-010B ostaje: operativni deploy/connection profili, kontrolisana aktivacija i
+rollback verzija, restart/backup šabloni i stvarna provera sa dva udaljena uređaja.
+Ovo još nije production hosting isporuka.
 RF-011: SSH runner; isti builder, preuzimanje i kontrolisani cleanup.
 RF-012: jedan compute provider sa ownership evidencijom i troškovnim recovery-jem.
 

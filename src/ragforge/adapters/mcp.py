@@ -12,6 +12,8 @@ os.environ["OTEL_SDK_DISABLED"] = "true"
 
 import anyio
 from mcp.server import MCPServer
+from mcp.server.auth.provider import TokenVerifier
+from mcp.server.auth.settings import AuthSettings
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
 from pydantic import ValidationError
@@ -23,6 +25,7 @@ from ragforge.core.contracts import (
     Neighbors,
     OutputChars,
     QueryText,
+    RetrievalEngine,
     RetrievalFilters,
     RetrievalResponse,
     RetrieveRequest,
@@ -45,11 +48,23 @@ class CollectionListResponse(ContractModel):
     collections: list[CollectionDescription]
 
 
-def create_server(artifact: Path, *, threads: int = 4) -> MCPServer[None]:
+def create_server(
+    artifact: Path,
+    *,
+    threads: int = 4,
+    engine: RetrievalEngine | None = None,
+    token_verifier: TokenVerifier | None = None,
+    auth: AuthSettings | None = None,
+) -> MCPServer[None]:
     """Verify and bind one bundle; callers cannot select arbitrary filesystem paths."""
-    engine = BundleEngine(artifact, threads=threads)
+    engine = engine or BundleEngine(artifact, threads=threads)
     server: MCPServer[None] = MCPServer(
-        "RAGForge", version=__version__, instructions=INSTRUCTIONS, log_level="WARNING"
+        "RAGForge",
+        version=__version__,
+        instructions=INSTRUCTIONS,
+        log_level="WARNING",
+        token_verifier=token_verifier,
+        auth=auth,
     )
     # Serialize lazy model initialization and CPU work without blocking the event loop.
     limiter = anyio.CapacityLimiter(1)

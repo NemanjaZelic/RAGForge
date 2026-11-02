@@ -2,7 +2,7 @@
 
 Portable document retrieval for agents. Local execution is the default.
 
-**Development stage: local balanced build/use and read-only stdio MCP implemented.**
+**Development stage: local balanced retrieval, stdio MCP and authenticated shared HTTP.**
 Portable minimal/balanced bundles, local BM25/dense/hybrid search and source
 citations now work, with an MCP adapter and passive agent skill/config generator.
 Broader retrieval and autonomous-agent evaluation remain in the plan.
@@ -61,6 +61,8 @@ uv run python scripts/export_schemas.py --check
 
 - Read-only stdio MCP: search_docs/fetch_context/list_collections over the same engine;
   passive Agent Skills and separate MCP config generator (`integrate`).
+- Authenticated REST/stateless MCP HTTP over the same engine, offline RS256 JWT verification,
+  source permissions, TLS and explicit shared CLI client. See [shared setup](docs/SHARED.md).
 - Typer CLI: build/use/verify/context/serve/integrate, resumable ingest/build jobs, evidence evaluation,
   standalone index/search, corpus scan, chunk preview and SQLite/FTS5 diagnostics.
 - Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.
@@ -97,7 +99,8 @@ Model preparation is explicit and separate; build/query never download anything.
 The initial multilingual model candidate is a pinned quantized E5-small.
 Representative quality evaluation is a separate workstream and still gates v0.1.
 Read-only stdio MCP and passive skill/config generation are implemented.
-Independent agent evaluation and remote/cloud adapters remain later milestones.
+Shared REST/MCP HTTP is implemented with explicit JWT policy and TLS controls.
+Independent agent evaluation, operational rollout and remote compute remain later milestones.
 
 The bundle data format and the executable runtime are separate. A bundle is not
 a universal executable for every operating system.

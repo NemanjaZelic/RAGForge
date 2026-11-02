@@ -35,7 +35,9 @@ def test_doctor_reports_implemented_bundle_and_search_methods() -> None:
     assert report["balanced_dependencies_available"] is True
 
 
-@pytest.mark.parametrize("name", ["manifest", "retrieve-request", "retrieval-response"])
+@pytest.mark.parametrize(
+    "name", ["manifest", "retrieve-request", "retrieval-response", "shared-policy"]
+)
 def test_schema_is_machine_readable(name: str) -> None:
     result = runner.invoke(app, ["schema", name])
     assert result.exit_code == 0

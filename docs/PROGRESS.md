@@ -224,3 +224,24 @@ Full local suite after maintenance changes: 225 passed, 3 Windows filesystem ski
 the additional numerical-progress sanitizer regression also passes. All required
 lint, format, type and schema checks pass. CI is rerun on the final commit.
 Large retrieval measurements remain in progress; no final quality claim is made.
+
+
+## 2026-11-02 — Authenticated shared transport (RF-010A)
+
+Implemented optional shared REST/stateless MCP HTTP over the unchanged engine,
+offline pinned-key RS256 verification with issuer/resource/subject/read scope,
+collection/document grants, strict Host/Origin and body limits, TLS controls and
+shared use/context/doctor CLI clients. Client credentials come from an explicit
+environment variable, never a URL or command argument; redirects and environment
+proxies cannot receive them. Public-JWKS preparation creates no tokens/accounts
+and performs no network access. The source remains local and no host was deployed.
+
+Actual loopback REST/MCP tests cover minimal/exact/ANN, parallel scoped callers,
+modern/legacy protocol, forbidden filters/context, invalid tokens, real TLS and
+CLI parity. Full local verification: **237 passed, 3 filesystem skips**, plus
+ruff, formatting, mypy and schema drift checks. [SHARED.md](SHARED.md) describes
+the actual API and remaining RF-010B lifecycle/operational work.
+
+The independent frozen full-corpus benchmark keeps running on its earlier verified
+source snapshot. Its numerical-only private results watcher continues saving
+checkpoint progress. Shared code changes neither its parameters nor its runtime.

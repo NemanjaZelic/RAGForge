@@ -28,6 +28,7 @@ from ragforge.core.parse import load_document
 from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
 from ragforge.core.sqlite import SQLiteEngine, create_index
+from ragforge.shared.policy import SharedPolicy
 from ragforge.types import ContractModel
 
 app = typer.Typer(
@@ -44,6 +45,7 @@ class SchemaName(StrEnum):
     manifest = "manifest"
     retrieve_request = "retrieve-request"
     retrieval_response = "retrieval-response"
+    shared_policy = "shared-policy"
 
 
 def schema_document(name: SchemaName) -> dict[str, Any]:
@@ -51,6 +53,7 @@ def schema_document(name: SchemaName) -> dict[str, Any]:
         SchemaName.manifest: BundleManifest,
         SchemaName.retrieve_request: RetrieveRequest,
         SchemaName.retrieval_response: RetrievalResponse,
+        SchemaName.shared_policy: SharedPolicy,
     }
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -68,8 +71,30 @@ def main(
 
 
 @app.command()
-def doctor() -> None:
+def doctor(
+    endpoint: Annotated[str | None, typer.Option(help="Explicit shared origin to probe.")] = None,
+    token_env: str = typer.Option("RAGFORGE_ACCESS_TOKEN"),
+    ca_file: Annotated[Path | None, typer.Option()] = None,
+) -> None:
     """Check Python and SQLite FTS5 locally; output JSON without using the network."""
+    if endpoint is not None:
+        from ragforge.shared.client import SharedClient
+
+        try:
+            client = SharedClient.from_environment(endpoint, token_env, ca_file=ca_file)
+            report = {
+                "mode": "shared",
+                "health": client.health(),
+                "collections": [row.model_dump(mode="json") for row in client.list_collections()],
+            }
+            typer.echo(json.dumps(report, ensure_ascii=True))
+        except (ValueError, OSError) as error:
+            typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+            raise typer.Exit(code=2) from error
+        return
+    if ca_file is not None:
+        typer.echo(json.dumps({"error": "a shared CA requires an explicit endpoint"}), err=True)
+        raise typer.Exit(code=2)
     available = False
     try:
         with closing(sqlite3.connect(":memory:")) as connection:
@@ -87,7 +112,7 @@ def doctor() -> None:
         json.dumps(
             {
                 "version": __version__,
-                "stage": "phase-2-local-mcp",
+                "stage": "phase-3-shared-http",
                 "python": platform.python_version(),
                 "sqlite": sqlite3.sqlite_version,
                 "fts5": available,
@@ -98,6 +123,11 @@ def doctor() -> None:
                 ),
                 "bundle_implemented": True,
                 "mcp_stdio_implemented": True,
+                "shared_http_implemented": True,
+                "shared_dependencies_available": all(
+                    find_spec(name) is not None
+                    for name in ("mcp", "uvicorn", "jwt", "cryptography")
+                ),
                 "mcp_dependency_available": find_spec("mcp") is not None,
             },
             sort_keys=True,
@@ -281,17 +311,33 @@ def search(
 
 @app.command()
 def context(
-    database: Annotated[Path, typer.Argument(help="Bundle directory or standalone SQLite index.")],
-    chunk_id: Annotated[str, typer.Argument(help="Exact chunk ID from search.")],
+    target: Annotated[str, typer.Argument(help="Local bundle/index, or chunk ID in shared mode.")],
+    chunk_id: Annotated[str | None, typer.Argument(help="Local exact chunk ID.")] = None,
     collection: str | None = typer.Option(None, "--collection"),
     neighbors: int = typer.Option(1, min=0, max=5),
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
+    mode: str = typer.Option("local", help="local or shared."),
+    endpoint: Annotated[str | None, typer.Option()] = None,
+    token_env: str = typer.Option("RAGFORGE_ACCESS_TOKEN"),
+    ca_file: Annotated[Path | None, typer.Option()] = None,
 ) -> None:
     """Fetch an exact chunk and bounded neighbors within the same document."""
     try:
-        engine: RetrievalEngine = (
-            BundleEngine(database) if database.is_dir() else SQLiteEngine(database)
-        )
+        engine: RetrievalEngine
+        if mode == "shared":
+            from ragforge.shared.client import SharedClient
+
+            if endpoint is None or chunk_id is not None:
+                raise ValueError("shared context requires one chunk-ID argument and --endpoint")
+            engine = SharedClient.from_environment(endpoint, token_env, ca_file=ca_file)
+            chunk_id = target
+        elif mode == "local":
+            if chunk_id is None or endpoint is not None or ca_file is not None:
+                raise ValueError("local context requires bundle/index and chunk ID")
+            database = Path(target)
+            engine = BundleEngine(database) if database.is_dir() else SQLiteEngine(database)
+        else:
+            raise ValueError("choose local or shared runtime mode")
         selected = collection or engine.list_collections()[0].collection_id
         result = engine.fetch_context(
             FetchContextRequest(
@@ -416,9 +462,11 @@ def build(
 
 @app.command()
 def use(
-    artifact: Annotated[Path, typer.Argument(help="Verified local bundle directory.")],
+    artifact: Annotated[
+        Path | None, typer.Argument(help="Local bundle; omit for shared mode.")
+    ] = None,
     query: str = typer.Option(..., "--query"),
-    mode: str = typer.Option("local", help="Only local runtime is implemented."),
+    mode: str = typer.Option("local", help="local or explicit authenticated shared endpoint."),
     search_method: str | None = typer.Option(
         None, help="bm25, dense or hybrid; bundle default if omitted."
     ),
@@ -426,11 +474,14 @@ def use(
     top_k: int = typer.Option(5, min=1, max=50),
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
     threads: int = typer.Option(4, min=1, max=32),
+    endpoint: Annotated[str | None, typer.Option()] = None,
+    token_env: str = typer.Option("RAGFORGE_ACCESS_TOKEN"),
+    ca_file: Annotated[Path | None, typer.Option()] = None,
 ) -> None:
     """Query the same local engine; balanced defaults to hybrid, minimal to BM25."""
     try:
-        if mode != "local":
-            raise ValueError("only local runtime mode is implemented")
+        if mode not in {"local", "shared"}:
+            raise ValueError("choose local or shared runtime mode")
         request = RetrieveRequest.model_validate(
             {
                 "query": query,
@@ -440,7 +491,18 @@ def use(
                 "search_method": search_method,
             }
         )
-        result = BundleEngine(artifact, threads=threads).retrieve(request)
+        if mode == "shared":
+            from ragforge.shared.client import SharedClient
+
+            if artifact is not None or endpoint is None:
+                raise ValueError("shared mode requires --endpoint and no local artifact argument")
+            result = SharedClient.from_environment(endpoint, token_env, ca_file=ca_file).retrieve(
+                request
+            )
+        else:
+            if artifact is None or endpoint is not None or ca_file is not None:
+                raise ValueError("local mode requires a bundle and no shared endpoint/CA options")
+            result = BundleEngine(artifact, threads=threads).retrieve(request)
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
@@ -475,8 +537,41 @@ def verify(artifact: Path) -> None:
 def serve(
     artifact: Annotated[Path, typer.Argument(help="One verified local bundle directory.")],
     threads: int = typer.Option(4, min=1, max=32),
+    transport: str = typer.Option("stdio", help="stdio or authenticated shared http."),
+    auth_file: Annotated[
+        Path | None, typer.Option(help="Explicit shared JWT/access policy.")
+    ] = None,
+    host: str = typer.Option("127.0.0.1"),
+    port: int = typer.Option(8765, min=1, max=65535),
+    tls_cert: Annotated[Path | None, typer.Option()] = None,
+    tls_key: Annotated[Path | None, typer.Option()] = None,
 ) -> None:
-    """Run read-only MCP over stdio; stdout is reserved for protocol messages."""
+    """Run read-only stdio MCP or explicit authenticated REST/MCP HTTP."""
+    if transport == "http":
+        try:
+            from ragforge.shared.http import run_shared
+        except ImportError as error:
+            typer.echo(json.dumps({"error": "HTTP support requires ragforge[shared]."}), err=True)
+            raise typer.Exit(code=2) from error
+        try:
+            if auth_file is None:
+                raise ValueError("HTTP requires an explicit --auth-file")
+            run_shared(
+                artifact,
+                auth_file,
+                host=host,
+                port=port,
+                threads=threads,
+                tls_cert=tls_cert,
+                tls_key=tls_key,
+            )
+        except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+            typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+            raise typer.Exit(code=2) from error
+        return
+    if transport != "stdio" or auth_file is not None or tls_cert is not None or tls_key is not None:
+        typer.echo(json.dumps({"error": "choose stdio or explicit authenticated http"}), err=True)
+        raise typer.Exit(code=2)
     try:
         from ragforge.adapters.mcp import create_server
     except ImportError as error:

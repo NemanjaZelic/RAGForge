@@ -1,0 +1,124 @@
+{
+  "$defs": {
+    "Principal": {
+      "additionalProperties": false,
+      "properties": {
+        "collection_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "title": "Collection Id",
+          "type": "string"
+        },
+        "document_ids": {
+          "anyOf": [
+            {
+              "items": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "maxItems": 100,
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Ids"
+        },
+        "subject": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subject",
+        "collection_id"
+      ],
+      "title": "Principal",
+      "type": "object"
+    },
+    "VerificationKey": {
+      "additionalProperties": false,
+      "properties": {
+        "key_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Key Id",
+          "type": "string"
+        },
+        "public_key_pem": {
+          "maxLength": 16384,
+          "minLength": 1,
+          "title": "Public Key Pem",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key_id",
+        "public_key_pem"
+      ],
+      "title": "VerificationKey",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "issuer_url": {
+      "format": "uri",
+      "minLength": 1,
+      "title": "Issuer Url",
+      "type": "string"
+    },
+    "max_token_lifetime_seconds": {
+      "default": 3600,
+      "maximum": 86400,
+      "minimum": 60,
+      "title": "Max Token Lifetime Seconds",
+      "type": "integer"
+    },
+    "principals": {
+      "items": {
+        "$ref": "#/$defs/Principal"
+      },
+      "maxItems": 1000,
+      "minItems": 1,
+      "title": "Principals",
+      "type": "array"
+    },
+    "resource_url": {
+      "format": "uri",
+      "minLength": 1,
+      "title": "Resource Url",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "verification_keys": {
+      "items": {
+        "$ref": "#/$defs/VerificationKey"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Verification Keys",
+      "type": "array"
+    }
+  },
+  "required": [
+    "issuer_url",
+    "resource_url",
+    "verification_keys",
+    "principals"
+  ],
+  "title": "SharedPolicy",
+  "type": "object"
+}
