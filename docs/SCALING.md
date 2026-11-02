@@ -148,3 +148,19 @@ outside that root. An additional **15 GB free disk reserve** is enforced. Final
 budget reports must also account for those external assets. The reserve does not
 expand corpus support or remove any files automatically. CPU-heavy embedding may
 take many hours; prepared tests and passing CI do not mean that workload completed.
+
+
+## Private progress backup
+
+`scripts/save_benchmark_report.py RUN --watch` is an explicitly online maintenance
+tool, separate from the offline controller. It saves only whitelisted numerical
+measurements, known corpus/track names and hashes to `results/scale-v1`. Original
+questions, document text, answers and per-case records are excluded. Before every
+push it verifies the expected remote and private repository visibility; pushes
+are never forced. An isolated Git index leaves the working branch and user index
+untouched. Upload failure is logged and retried at most three times.
+
+The results branch contains `docs/benchmarks/scale-runtime-v1.json`. CI ignores
+results-only branch pushes; software checks continue on development branches and
+pull requests. These automated report commits neither promote drafts to release
+ground truth nor change the active application version.

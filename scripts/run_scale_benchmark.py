@@ -58,7 +58,11 @@ def child(task):
             max_index_text_chars=4_000_000_000,
             allow_incomplete=True,
             allow_failed_documents=task["corpus"] == "3gpp-etsi",
-            storage=StorageBudget(Path(task["budget_root"]), limit_bytes=60_000_000_000),
+            storage=StorageBudget(
+                Path(task["budget_root"]),
+                limit_bytes=60_000_000_000,
+                reserve_free_bytes=task["reserve_free_bytes"],
+            ),
             progress=lambda event: print(json.dumps(event), flush=True),
         )
         report = {
@@ -208,7 +212,17 @@ def aggregate(output, tasks, state):
     )
 
 
-def execute(root, output, model, cases, pdf_cache, budget_root, *, resume=False):
+def execute(
+    root,
+    output,
+    model,
+    cases,
+    pdf_cache,
+    budget_root,
+    *,
+    resume=False,
+    reserve_free_bytes=15_000_000_000,
+):
     from ragforge.jobs.build import atomic_json
     from ragforge.jobs.ingest import job_lock
 
@@ -230,8 +244,12 @@ def execute(root, output, model, cases, pdf_cache, budget_root, *, resume=False)
                 "cases": str(cases),
                 "pdf_cache": str(pdf_cache),
                 "budget_root": str(budget_root),
+                "reserve_free_bytes": reserve_free_bytes,
             }
-            if any(recipe[k] != v for k, v in actual.items()):
+            if any(
+                recipe.get(k, 15_000_000_000 if k == "reserve_free_bytes" else None) != v
+                for k, v in actual.items()
+            ):
                 raise ValueError("resume paths differ from the frozen recipe")
             if any(
                 importlib.metadata.version(name) != version
@@ -269,6 +287,7 @@ def execute(root, output, model, cases, pdf_cache, budget_root, *, resume=False)
                 "cases": str(cases),
                 "pdf_cache": str(pdf_cache),
                 "budget_root": str(budget_root),
+                "reserve_free_bytes": reserve_free_bytes,
                 "source_commit": subprocess.check_output(
                     ["git", "rev-parse", "HEAD"], cwd=project, text=True
                 ).strip(),
@@ -325,6 +344,8 @@ def execute(root, output, model, cases, pdf_cache, budget_root, *, resume=False)
         state["state"] = "running"
         tasks = steps(root, output, model, cases, pdf_cache, budget_root)
         for task in tasks:
+            task["reserve_free_bytes"] = reserve_free_bytes
+        for task in tasks:
             name = task["name"]
             previous = state["steps"].get(name, {})
             if previous.get("state") == "complete":
@@ -377,6 +398,7 @@ def main():
     parser.add_argument("--pdf-cache", type=Path)
     parser.add_argument("--budget-root", type=Path)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--reserve-free-bytes", type=int, default=15_000_000_000)
     parser.add_argument("--child", type=Path, help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.child:
@@ -393,6 +415,7 @@ def main():
                 for name in ("root", "output", "model", "cases", "pdf_cache", "budget_root")
             ),
             resume=args.resume,
+            reserve_free_bytes=args.reserve_free_bytes,
         )
 
 

@@ -203,3 +203,24 @@ explicit sharded ANN. Kernel remains held out from parameter tuning. Full-scale
 builds/evaluations are long-running and not completed by software CI. Status is
 under `data/benchmarks/scale-v1/runs/execution-v1`; see [SCALING.md](SCALING.md)
 for reproducible invocation/resume commands. No paid compute was provisioned.
+
+
+### Background execution and private result backup
+
+The actual full kernel index contains 573,041 chunks for all 3,857 documents.
+Dense construction has started and checkpoints committed row prefixes. A separate
+online maintenance watcher saves only numerical progress/results to the private
+`results/scale-v1` branch; the offline build/query workers remain network blocked.
+The source model, GPU feasibility environment and earlier local model copies total
+641,875,338 logical bytes outside the data root, below the conservative 5 GB
+allowance. Data has a 60 GB cap and 15 GB free-space reserve.
+
+Linux CI exposed a test-only capacity assumption: a tiny test also requested the
+15 GB production reserve on a smaller runner disk. Tests now explicitly request
+a zero reserve; the real benchmark retains 15 GB. Resume binds the chosen reserve
+and remains compatible with the already-running frozen recipe.
+
+Full local suite after maintenance changes: 225 passed, 3 Windows filesystem skips;
+the additional numerical-progress sanitizer regression also passes. All required
+lint, format, type and schema checks pass. CI is rerun on the final commit.
+Large retrieval measurements remain in progress; no final quality claim is made.

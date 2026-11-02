@@ -30,7 +30,7 @@ def reference_path(root, ref):
     return path
 
 
-def one(root, output, ref, budget_root):
+def one(root, output, ref, budget_root, reserve_free_bytes):
     from pypdf import PdfReader
 
     from ragforge.jobs.worker import limit_memory
@@ -48,7 +48,9 @@ def one(root, output, ref, budget_root):
             raise ValueError("reference text exceeds 64 million characters")
         pages.append(text)
     data = (json.dumps(pages, ensure_ascii=True) + "\n").encode()
-    StorageBudget(budget_root, limit_bytes=60_000_000_000).check(len(data))
+    StorageBudget(
+        budget_root, limit_bytes=60_000_000_000, reserve_free_bytes=reserve_free_bytes
+    ).check(len(data))
     target = output / (ref["sha256"] + ".json")
     # The parent owns this new output; never replace a previous extraction.
     descriptor, temporary = tempfile.mkstemp(prefix=".reference-", dir=output)
@@ -63,7 +65,7 @@ def one(root, output, ref, budget_root):
     print(json.dumps({"pages": len(pages), "text_chars": chars}), flush=True)
 
 
-def prepare(root, output, budget_root, *, resume=False):
+def prepare(root, output, budget_root, *, resume=False, reserve_free_bytes=15_000_000_000):
     if importlib.metadata.version("pypdf") != "6.21.4":
         raise ValueError("frozen evidence representation requires pypdf 6.21.4")
     refs_file = root / "metadata/telequad-exact-3gpp-sources.json"
@@ -109,6 +111,8 @@ def prepare(root, output, budget_root, *, resume=False):
                 str(budget_root),
                 "--one",
                 ref["sha256"],
+                "--reserve-free-bytes",
+                str(reserve_free_bytes),
             ]
             process = subprocess.Popen(
                 command,
@@ -150,6 +154,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--budget-root", type=Path, required=True)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--reserve-free-bytes", type=int, default=15_000_000_000)
     parser.add_argument("--one", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.one:
@@ -157,9 +162,19 @@ def main():
             (args.root / "metadata/telequad-exact-3gpp-sources.json").read_text(encoding="utf-8")
         )["records"]
         ref = next(r for r in refs if r["sha256"] == args.one)
-        one(args.root, args.output, ref, args.budget_root)
+        one(args.root, args.output, ref, args.budget_root, args.reserve_free_bytes)
     else:
-        print(json.dumps(prepare(args.root, args.output, args.budget_root, resume=args.resume)))
+        print(
+            json.dumps(
+                prepare(
+                    args.root,
+                    args.output,
+                    args.budget_root,
+                    resume=args.resume,
+                    reserve_free_bytes=args.reserve_free_bytes,
+                )
+            )
+        )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,263 @@
+"""Save numerical benchmark progress on a private results branch, without touching checkout.
+
+Network access is confined to this explicit maintenance tool. The frozen build
+and retrieval workers never import it. No native questions or case records upload.
+"""
+
+import argparse
+import hashlib
+import json
+import math
+import os
+import re
+import subprocess
+import tempfile
+import time
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+REPORT_PATH = "docs/benchmarks/scale-runtime-v1.json"
+CORPORA = {"kernel-6.18", "ietf-rfcs", "3gpp-etsi"}
+TRACKS = {
+    "supplementary_evidence_draft",
+    "native_source_alignment_diagnostic",
+    "explicit_version_draft",
+}
+METRICS = {
+    "attempted",
+    "errors",
+    "positive_cases",
+    "document_recall_at_5",
+    "mrr_at_10",
+    "evidence_group_coverage",
+    "all_required_groups_covered",
+    "collection_negative_cases",
+    "collection_negatives_with_results",
+    "context_negatives_not_global_scored",
+    "seconds_p50",
+    "seconds_p95",
+    "first_query_seconds",
+    "unmapped_reference_chunks",
+    "ambiguous_reference_chunks",
+}
+
+
+def numbers(values, allowed=None):
+    return {
+        key: value
+        for key, value in values.items()
+        if (allowed is None or key in allowed)
+        and (value is None or type(value) in {bool, int, float} and math.isfinite(value))
+    }
+
+
+def digest(value):
+    if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+        raise ValueError("invalid measurement digest")
+    return value
+
+
+def sanitize(run):
+    recipe = json.loads((run / "recipe.json").read_text(encoding="utf-8"))
+    status = json.loads((run / "status.json").read_text(encoding="utf-8"))
+    if status["state"] not in {"running", "failed_resumable", "complete_diagnostic_draft_labels"}:
+        raise ValueError("unknown benchmark state")
+    if hashlib.sha256((run / "recipe.json").read_bytes()).hexdigest() != status["recipe_sha256"]:
+        raise ValueError("benchmark recipe checksum mismatch")
+    source = recipe["source_commit"]
+    if not re.fullmatch(r"[0-9a-f]{40}", source):
+        raise ValueError("invalid source commit")
+    result = {
+        "state": status["state"],
+        "quality_gate": "not_approved_draft_labels",
+        "source_commit": source,
+        "recipe_sha256": digest(status["recipe_sha256"]),
+        "completed_steps": sum(s["state"] == "complete" for s in status["steps"].values()),
+        "total_steps": 15,
+        "measurements": [],
+        "timing_scope": "successful invocation; interrupted attempts excluded",
+        "latency_scope": "wall time, first call includes lazy setup; OS caches not cleared",
+    }
+    result["embedding_progress"] = {}
+    result["progress_granularity_rows"] = 65536
+    for corpus in sorted(CORPORA):
+        checkpoint = run / corpus / "build-job/dense-progress.json"
+        if not checkpoint.exists():
+            continue
+        progress = json.loads(checkpoint.read_text(encoding="utf-8"))
+        done, total = progress["next_row"], progress["count"]
+        if type(done) is not int or type(total) is not int or not 0 <= done <= total <= 8_000_000:
+            raise ValueError("invalid checkpointed embedding row count")
+        result["embedding_progress"][corpus] = {
+            "completed_rows_lower_bound": done if done == total else done // 65536 * 65536,
+            "total_rows": total,
+        }
+    path = run / "aggregate-summary.json"
+    if not path.exists():
+        return result
+    aggregate = json.loads(path.read_text(encoding="utf-8"))
+    if digest(aggregate["recipe_sha256"]) != result["recipe_sha256"]:
+        raise ValueError("aggregate does not belong to this benchmark recipe")
+    if (
+        aggregate["completed_steps"] != result["completed_steps"]
+        or aggregate["state"] != status["state"]
+    ):
+        raise RuntimeError("benchmark status and aggregate update are not yet synchronized")
+    for original in aggregate["measurements"]:
+        corpus, track, split = original["corpus"], original["track"], original["split"]
+        kind = original["kind"]
+        if corpus not in CORPORA or kind not in {"build", "evaluate"}:
+            raise ValueError("unknown measurement scope")
+        if kind == "evaluate" and (track not in TRACKS or split not in {"dev", "tuning", "test"}):
+            raise ValueError("unknown evaluation track/split")
+        report = original["measurement"]
+        row = {
+            "corpus": corpus,
+            "kind": kind,
+            "source_coverage": numbers(
+                report["source_coverage"],
+                {
+                    "source_documents",
+                    "indexed_documents",
+                    "failed_documents_retained",
+                    "other_zero_chunk_documents",
+                    "reported_pdf_pages",
+                    "pdf_no_text_pages",
+                    "pdf_error_pages",
+                    "documents_with_warnings",
+                    "all_sources_have_searchable_text",
+                },
+            ),
+            "process_memory": numbers(
+                report["process_memory"],
+                {
+                    "rss_bytes",
+                    "peak_rss_bytes",
+                    "private_committed_bytes",
+                    "peak_private_committed_bytes",
+                },
+            ),
+        }
+        row.update(numbers(report, {"wall_seconds", "bundle_constructor_seconds"}))
+        if kind == "build":
+            row["build_id"] = digest(report["build_id"])
+        else:
+            row.update(
+                track=track,
+                split=split,
+                selected_cases=numbers(report, {"selected_cases"}).get("selected_cases"),
+                build_id=digest(report["recipe"]["artifact_build_id"]),
+                methods={
+                    method: numbers(report["methods"][method], METRICS)
+                    for method in ("bm25", "dense", "hybrid")
+                },
+            )
+        result["measurements"].append(row)
+    return result
+
+
+def git(project, *args, data=None, env=None):
+    result = subprocess.run(
+        ["git", *args],
+        cwd=project,
+        input=data,
+        capture_output=True,
+        env={**os.environ, "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "Never", **(env or {})},
+        timeout=90,
+    )
+    if result.returncode:
+        raise RuntimeError("benchmark git operation failed: " + args[0])
+    return result.stdout.decode().strip()
+
+
+def save_commit(project, branch, report):
+    if not re.fullmatch(r"results/[a-z0-9][a-z0-9-]{0,63}", branch):
+        raise ValueError("benchmark results branch must use results/lowercase-name")
+    ref = "refs/heads/" + branch
+    existing = subprocess.run(
+        ["git", "show-ref", "--verify", "--hash", ref],
+        cwd=project,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    parent = (
+        existing.stdout.strip() if existing.returncode == 0 else git(project, "rev-parse", "HEAD")
+    )
+    payload = (json.dumps(report, indent=2, sort_keys=True) + "\n").encode()
+    blob = git(project, "hash-object", "-w", "--stdin", data=payload)
+    old = subprocess.run(
+        ["git", "rev-parse", parent + ":" + REPORT_PATH],
+        cwd=project,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    if old.returncode == 0 and old.stdout.strip() == blob:
+        return parent
+    cache = project / ".cache"
+    cache.mkdir(exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="benchmark-git-", dir=cache) as temporary:
+        env = {"GIT_INDEX_FILE": str(Path(temporary) / "index")}
+        git(project, "read-tree", parent, env=env)
+        git(project, "update-index", "--add", "--cacheinfo", "100644", blob, REPORT_PATH, env=env)
+        tree = git(project, "write-tree", env=env)
+        message = f"Record scale diagnostic progress ({report['completed_steps']}/15 stages)\n"
+        commit = git(project, "commit-tree", tree, "-p", parent, data=message.encode())
+        expected = parent if existing.returncode == 0 else "0" * 40
+        git(project, "update-ref", ref, commit, expected)
+        return commit
+
+
+def publish(project, branch):
+    # This tool is explicitly online, unlike the product/evaluator.
+    import github_sync
+
+    if git(project, "remote", "get-url", "origin") != (
+        "https://github.com/NemanjaZelic/RAGForge.git"
+    ):
+        raise ValueError("unexpected benchmark repository remote")
+    repository = github_sync.api(github_sync.credential(), "/repos/NemanjaZelic/RAGForge")
+    if repository.get("private") is not True or repository.get("visibility") != "private":
+        raise RuntimeError("refusing benchmark upload because repository is not private")
+    git(project, "push", "origin", branch)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("run", type=Path)
+    parser.add_argument("--branch", default="results/scale-v1")
+    parser.add_argument("--watch", action="store_true")
+    args = parser.parse_args()
+    failures = 0
+    previous = None
+    while True:
+        try:
+            report = sanitize(args.run)
+            commit = save_commit(ROOT, args.branch, report)
+            if commit != previous:
+                publish(ROOT, args.branch)
+                previous = commit
+                print(
+                    json.dumps(
+                        {
+                            "saved_commit": commit,
+                            "state": report["state"],
+                            "completed_steps": report["completed_steps"],
+                        }
+                    ),
+                    flush=True,
+                )
+            failures = 0
+            if not args.watch or report["state"] != "running":
+                return
+        except (ValueError, OSError, RuntimeError, subprocess.SubprocessError):
+            failures += 1
+            print(json.dumps({"save_failed": True, "attempt": failures}), flush=True)
+            if failures >= 3 or not args.watch:
+                raise
+        time.sleep(60)
+
+
+if __name__ == "__main__":
+    main()

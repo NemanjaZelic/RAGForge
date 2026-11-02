@@ -53,16 +53,16 @@ def test_reference_cache_is_source_bound_resumable_and_matches_label_oracle(tmp_
     metadata = root / "metadata/telequad-exact-3gpp-sources.json"
     metadata.parent.mkdir()
     metadata.write_text(json.dumps({"records": [ref]}), encoding="utf-8")
-    assert module.prepare(root, output, tmp_path)["references"] == 1
+    assert module.prepare(root, output, tmp_path, reserve_free_bytes=0)["references"] == 1
     cache_file = output / (ref["sha256"] + ".json")
     pages = json.loads(cache_file.read_text(encoding="utf-8"))
     assert len(pages) == 1 and "alpha evidence" in pages[0]
     before = cache_file.stat().st_mtime_ns
-    module.prepare(root, output, tmp_path, resume=True)
+    module.prepare(root, output, tmp_path, resume=True, reserve_free_bytes=0)
     assert cache_file.stat().st_mtime_ns == before
     cache_file.write_text('["tampered"]', encoding="utf-8")
     with pytest.raises(ValueError, match="checksum mismatch"):
-        module.prepare(root, output, tmp_path, resume=True)
+        module.prepare(root, output, tmp_path, resume=True, reserve_free_bytes=0)
 
 
 def test_full_coordinator_uses_frozen_offline_children_and_resumes_all_steps(tmp_path, tiny_model):
@@ -121,7 +121,7 @@ def test_full_coordinator_uses_frozen_offline_children_and_resumes_all_steps(tmp
         (cases / (corpus + ".jsonl")).write_text("\n".join(bank) + "\n", encoding="utf-8")
         assert read_cases(cases / (corpus + ".jsonl"))
     output = root / "runs/execution"
-    module.execute(root, output, tiny_model, cases, cache, tmp_path)
+    module.execute(root, output, tiny_model, cases, cache, tmp_path, reserve_free_bytes=0)
     state = json.loads((output / "status.json").read_text(encoding="utf-8"))
     assert state["state"] == "complete_diagnostic_draft_labels"
     assert len(state["steps"]) == 15
@@ -134,8 +134,16 @@ def test_full_coordinator_uses_frozen_offline_children_and_resumes_all_steps(tmp
             assert report["methods"][method]["document_recall_at_5"] == 1
             assert report["methods"][method]["errors"] == 0
     before = {p: p.stat().st_mtime_ns for p in summaries}
-    module.execute(root, output, tiny_model, cases, cache, tmp_path, resume=True)
+    module.execute(
+        root, output, tiny_model, cases, cache, tmp_path, resume=True, reserve_free_bytes=0
+    )
     assert all(p.stat().st_mtime_ns == stamp for p, stamp in before.items())
+    with pytest.raises(ValueError, match="resume paths differ"):
+        module.execute(
+            root, output, tiny_model, cases, cache, tmp_path, resume=True, reserve_free_bytes=1
+        )
     (output / "runtime/ragforge/__init__.py").write_text("changed", encoding="utf-8")
     with pytest.raises(ValueError, match="frozen runtime was modified"):
-        module.execute(root, output, tiny_model, cases, cache, tmp_path, resume=True)
+        module.execute(
+            root, output, tiny_model, cases, cache, tmp_path, resume=True, reserve_free_bytes=0
+        )
