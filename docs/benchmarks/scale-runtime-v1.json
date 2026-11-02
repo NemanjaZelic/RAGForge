@@ -2,7 +2,7 @@
   "completed_steps": 0,
   "embedding_progress": {
     "kernel-6.18": {
-      "completed_rows_lower_bound": 327680,
+      "completed_rows_lower_bound": 393216,
       "total_rows": 573041
     }
   },
