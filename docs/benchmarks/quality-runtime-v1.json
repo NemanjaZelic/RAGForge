@@ -1,0 +1,55 @@
+{
+  "answer_evidence_sha256": "cbbd894c09b307f2b47b255d2ddc937e8953d320709b108869da205ec4add122",
+  "artifact_build_id": "b1a3d539089c7dc284af99594d41da37d025406692e855a2e9b825dba6f97dc7",
+  "cases_sha256": "9965095d25b5088999b94b8ddce6a6ba197181e2fd2fa0611c98c1af9c510b0b",
+  "completed_steps": 1,
+  "max_output_chars": 16000,
+  "quality_gate": "not_approved_draft_labels",
+  "recipe_sha256": "b7975c3f786fd5c34c83ac19cac8e95954a30309618bd3a87edf29c1cb4f9e34",
+  "runtime_inventory_sha256": "7e216c2f063eb6e8c379d92c5190e0b53899dffb574255de3a3f87cf697e479c",
+  "scope": "retrieval support diagnostic; not generated-answer accuracy",
+  "split": "dev",
+  "stages": {
+    "raw": {
+      "methods": {
+        "bm25": {
+          "all_required_groups_covered": 0.2,
+          "ambiguous_reference_chunks": 0,
+          "answer_evidence_annotated_cases": 80,
+          "answer_evidence_support_at_k": 0.3625,
+          "answer_fact_coverage": 0.4120177575233755,
+          "attempted": 80,
+          "collection_negative_cases": 0,
+          "collection_negatives_with_results": 0,
+          "context_negatives_not_global_scored": 0,
+          "document_recall_at_5": 0.4625,
+          "errors": 0,
+          "evidence_group_coverage": 0.3150301940682803,
+          "first_query_seconds": 3.790709299966693,
+          "mrr_at_10": 0.38038194444444445,
+          "positive_cases": 80,
+          "seconds_p50": 3.9159867499838583,
+          "seconds_p95": 6.047659400035627,
+          "unmapped_reference_chunks": 0
+        }
+      },
+      "selected_cases": 80,
+      "source_coverage": {
+        "all_sources_have_searchable_text": false,
+        "documents_with_warnings": 58,
+        "failed_documents_retained": 0,
+        "indexed_documents": 9853,
+        "other_zero_chunk_documents": 1,
+        "pdf_error_pages": 0,
+        "pdf_no_text_pages": 9,
+        "reported_pdf_pages": 82,
+        "source_documents": 9854
+      }
+    }
+  },
+  "state": "running",
+  "target_excellent": 0.99,
+  "target_good": 0.95,
+  "top_k": 10,
+  "total_steps": 2
+}
