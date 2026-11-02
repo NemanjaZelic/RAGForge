@@ -271,3 +271,18 @@ def test_queued_followup_uses_frozen_offline_engine(
     summary = json.loads((output / "comparison/safe-summary.json").read_text())
     assert set(summary["stages"]["reranked"]["methods"]) == {"bm25", "dense", "hybrid"}
     assert json.loads((output / "configuration.json").read_text())["publish_private"] is False
+
+
+def test_source_cache_revalidates_each_fact_span(tmp_path: Path):
+    from ragforge.evaluation.sources import EvidenceSources
+
+    body = "Alpha is required. Beta is forbidden."
+    (tmp_path / "a.txt").write_text(body)
+    provider = EvidenceSources(tmp_path)
+    first = target("a.txt", body, 0, 18)
+    second = target("a.txt", body, 19, len(body))
+    assert provider.text(first) == body
+    assert provider.text(second) == body
+    assert len(provider.text_cache) == 1
+    with pytest.raises(ValueError, match="span hash"):
+        provider.text(second.model_copy(update={"span_sha256": "0" * 64}))
