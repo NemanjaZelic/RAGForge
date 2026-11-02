@@ -316,3 +316,36 @@ embedding/reranker exact/ANN offline integration tests passing. Ruff, formatting
 mypy (46 source files) and schema checks passed. Additional focused tests cover
 queued offline execution and private-report redaction. Software checks do not
 approve retrieval quality or promote any draft labels.
+
+
+### Matched result and automatic next experiments
+
+The matched RFC development comparison is complete: with the **same** 80 questions,
+accepted fact annotations, top-k=10 and 16,000-character output cap, full accepted
+fact support was **16/80 (20%)** for the original 350-character lexical index,
+**29/80 (36.25%)** for 1,000-character chunks, and **36/80 (45%)** after reranking.
+[Safe report](benchmarks/rfc-quality-dev-v1.json). This is an improvement in
+verified support, not generated-answer accuracy, and remains far below the user
+target with independent annotation review pending. Larger chunks consume more of
+the same permitted text budget. No quality promotion was made.
+
+Added `build --token-aware`: actual tokenizer limits split oversized sections
+without dropping source characters. Tokenizer/prefix/budget hashes identify that
+pipeline; old chunk IDs stay unchanged when disabled. The complete local checks
+now pass **265 tests, 4 platform skips**, including actual pretrained exact/ANN
+builds with the new option. The queued rebuild path also passes its focused
+end-to-end test. Previous quality commit 2d38234 passed all six private CI jobs:
+https://github.com/NemanjaZelic/RAGForge/actions/runs/41494567317.
+
+Two offline follow-ups support autonomous continuation: first compare the fully
+published original balanced RFC bundle with/without reranking; then rebuild all
+RFC sources with 1,000-character section chunks, 150 overlap, actual token fitting,
+ANN and reranking. The rebuild waits for the prior quality comparison to finish,
+uses two CPU threads, and keeps the 60 GB aggregate / 15 GB free-space policies.
+Frozen runtime, model/cache hashes and persistent checkpoints protect both jobs.
+Only whitelisted numerical reports publish, after checking repository privacy.
+The original full-scale build/evaluation is unchanged and continues independently.
+
+A separate metadata-only routing probe is not promoted: document candidate
+availability is not answer support, and no end-to-end gain was demonstrated.
+No cloud host, model API, document upload, paid compute or public release was used.

@@ -55,6 +55,12 @@ original labels. Local questions/quotes are excluded from Git.
   line gaps stay separate. This avoids tiny HTML paragraph-only chunks. New
   builds record `section-chars-v2`; the default `blocks` strategy and its original
   chunk identity remain supported.
+- `build --token-aware` additionally fits every chunk to the verified embedding
+  tokenizer's actual token budget, including prefix/special tokens. This permits
+  larger semantic sections without failed embeddings or dropped tails. Source
+  intervals/lines and character overlap remain intact. The tokenizer hash,
+  library version, prefix and limit bind the pipeline identity; old chunk IDs
+  are unchanged when this option is disabled. It requires a balanced model.
 - `build --reranker DIR --rerank-candidates 100` packages a prepared local ONNX
   cross-encoder. The explicit provisioning script downloads the pinned
   `cross-encoder/ms-marco-MiniLM-L6-v2` revision
@@ -92,7 +98,7 @@ the embedding model. RAGForge's own license remains undecided.
 on the **same** bundle, labels, top-k=10 and 16,000-character budget. It freezes
 runtime/driver/network guard hashes, records dependencies, checks question/fact
 hashes, checkpoints each query and rejects changed recipes/runtime on resume.
-It supports development/tuning splits; it does not silently open a final test set.
+It supports development/tuning splits; it does not run or tune on final-test cases.
 Detailed outputs stay local; `safe-summary.json` contains numerical aggregates
 and hashes. No questions, quotes or retrieved text are exported in that report.
 
@@ -113,3 +119,33 @@ quality decision. A green software CI or a repaired label file does not meet 95%
 Model documentation:
 [upstream model card](https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2),
 [Sentence Transformers cross-encoder usage](https://sbert.net/docs/cross_encoder/usage/usage.html).
+
+
+## Completed matched development measurement
+
+[Safe numerical report](benchmarks/rfc-quality-dev-v1.json), all 80 RFC dev questions,
+all 9,854 documents, identical fact annotations, top-k=10 and 16,000-char output cap:
+
+| Pipeline | Complete accepted fact support | Doc Recall@5 | Mean fact coverage |
+|---|---:|---:|---:|
+| Original 350-char chunks, BM25 | 20.00% (16/80) | 48.125% | 29.99% |
+| 1,000-char chunks, BM25 | 36.25% (29/80) | 46.25% | 41.20% |
+| 1,000-char chunks, BM25 + reranker | 45.00% (36/80) | 60.00% | 53.42% |
+
+All calls completed without errors. Larger chunks use more of the same allowed
+context budget; this is part of the pipeline change, not an isolated ranking gain.
+The paired same-chunk reranker comparison is 29/80 to 36/80. These are measured
+improvements, **well below the user's target**, with draft labels and unjudged
+paraphrases. They are not a comparison against kernel's separate dense 75% result.
+No test-set tuning, promotion, quality approval or generated-answer accuracy is
+claimed. Full balanced RFC comparisons remain queued behind its original build.
+
+
+A second queued follow-up can rebuild the complete balanced collection with
+`--rebuild --model MODEL --ingest-job SNAPSHOT`: 1,000-char section chunks,
+150-char overlap, actual model token fitting, sharded ANN and the same local
+reranker. It waits for original baseline publication, freezes its own source,
+checks model/cache hashes, preserves all source records, resumes embeddings and
+compares all three methods on the same dev fact bank. CPU threads=2, aggregate
+benchmark storage cap=60 GB, free-space reserve=15 GB. This is an overnight local
+experiment, not an adopted default or a claimed >=95% result.

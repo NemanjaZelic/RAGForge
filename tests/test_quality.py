@@ -193,3 +193,51 @@ def test_enhance_preserves_index_bytes_and_original_bundle(
         enhance_bundle(original, output, tiny_reranker)
     with pytest.raises(ValueError, match="separate"):
         enhance_bundle(original, original / "nested", tiny_reranker)
+
+
+def test_token_aware_chunks_preserve_source_and_fit_the_actual_model(
+    tmp_path: Path, tiny_model: Path
+) -> None:
+    from ragforge.core.embedding import ChunkTokenizer, ONNXEmbedder
+    from ragforge.evaluation.scoring import covered_length
+
+    descriptor = tiny_model / "model.json"
+    data = json.loads(descriptor.read_text())
+    data["max_tokens"] = 16
+    descriptor.write_text(json.dumps(data), encoding="utf-8")
+    source = tmp_path / "source"
+    source.mkdir()
+    text = "rollback token transaction authentication\n" * 20
+    (source / "guide.txt").write_bytes(text.encode())
+    record = scan_corpus(source, "mini").documents[0]
+    doc = parse_document("mini", record, text.encode())
+    counter = ChunkTokenizer(tiny_model)
+    config = ChunkConfig(chunk_size_chars=1000, overlap_chars=10, token_budget=counter.budget)
+    chunks = chunk_document(doc, config, token_counter=counter)
+    assert len(chunks) > 1 and all(counter(c.text) <= 16 for c in chunks)
+    assert covered_length([(c.char_start, c.char_end) for c in chunks]) == len(text)
+    for c in chunks:
+        assert c.text == text[c.char_start : c.char_end]
+        assert c.source.line_start == 1 + text[: c.char_start].count("\n")
+    assert ONNXEmbedder(tiny_model).encode([c.text for c in chunks[:8]]).shape[0] == min(
+        8, len(chunks)
+    )
+    with pytest.raises(ValueError, match="token limit"):
+        build_bundle(
+            source, tmp_path / "oversized", collection_id="mini", model_directory=tiny_model
+        )
+    output = tmp_path / "fitted"
+    manifest = build_bundle(
+        source,
+        output,
+        collection_id="mini",
+        model_directory=tiny_model,
+        token_aware=True,
+        chunk_config=ChunkConfig(strategy="sections"),
+    )
+    assert manifest.build_configuration.chunker_version.startswith("section-token-chars-v3:")
+    assert BundleEngine(output).retrieve(RetrieveRequest(query="rollback")).results
+    with pytest.raises(ValueError, match="both a pinned budget"):
+        chunk_document(doc, config)
+    with pytest.raises(ValueError, match="balanced"):
+        build_bundle(source, tmp_path / "wrong-profile", profile="minimal", token_aware=True)

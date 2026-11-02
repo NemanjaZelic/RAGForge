@@ -214,8 +214,9 @@ def test_frozen_quality_comparison_runs_offline_and_rejects_runtime_tampering(
     assert resumed.returncode != 0 and "frozen quality runtime changed" in resumed.stderr
 
 
+@pytest.mark.parametrize("rebuild", [False, True])
 def test_queued_followup_uses_frozen_offline_engine(
-    tmp_path: Path, tiny_model: Path, tiny_reranker: Path
+    tmp_path: Path, tiny_model: Path, tiny_reranker: Path, rebuild: bool
 ):
     import subprocess
     import sys
@@ -259,6 +260,10 @@ def test_queued_followup_uses_frozen_offline_engine(
         "--reserve-free-bytes",
         "0",
     ]
+    if rebuild:
+        prior = tmp_path / "prior-comparison.json"
+        prior.write_text(json.dumps({"state": "complete_diagnostic_draft_labels"}))
+        command.extend(["--rebuild", "--model", str(tiny_model), "--after-status", str(prior)])
     run = subprocess.run(command, capture_output=True, text=True, timeout=90)
     preparation_log = output / "prepare.log"
     assert run.returncode == 0, run.stderr + (

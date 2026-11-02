@@ -72,6 +72,7 @@ def create_index(
     config: ChunkConfig | None = None,
     *,
     allow_incomplete: bool = False,
+    token_counter: Callable[[str], int] | None = None,
     max_chunks: int = 100000,
     max_output_chars: int = 100000000,
     progress: Callable[[dict[str, Any]], None] | None = None,
@@ -123,6 +124,7 @@ def create_index(
                         iter_chunks(
                             document,
                             config,
+                            token_counter=token_counter,
                             max_chunks=max_chunks - chunk_count,
                             max_output_chars=max_output_chars - text_chars,
                         )

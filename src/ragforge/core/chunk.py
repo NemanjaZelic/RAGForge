@@ -3,7 +3,7 @@
 import hashlib
 import json
 import re
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from dataclasses import replace
 from typing import Annotated, Literal, Self
 
@@ -16,8 +16,16 @@ from ragforge.types import ContractModel, Identifier, Sha256
 CHUNKER_VERSION = "chars-v1"
 
 
+class TokenBudget(ContractModel):
+    tokenizer_sha256: Sha256
+    tokenizer_version: Annotated[str, Field(min_length=1)]
+    max_tokens: Annotated[int, Field(ge=4, le=512)]
+    document_prefix: str = ""
+
+
 class ChunkConfig(ContractModel):
     strategy: Literal["blocks", "sections"] = "blocks"
+    token_budget: TokenBudget | None = None
     chunk_size_chars: Annotated[int, Field(ge=1, le=100000)] = 1000
     overlap_chars: Annotated[int, Field(ge=0)] = 100
 
@@ -42,11 +50,18 @@ class Chunk(ContractModel):
 
 
 def chunker_version(config: ChunkConfig) -> str:
+    if config.token_budget is not None:
+        signature = hashlib.sha256(config.token_budget.model_dump_json().encode()).hexdigest()
+        return (
+            ("section-token-chars-v3" if config.strategy == "sections" else "token-chars-v2")
+            + ":"
+            + signature
+        )
     return CHUNKER_VERSION if config.strategy == "blocks" else "section-chars-v2"
 
 
 def pipeline_hash(document: ParsedDocument, config: ChunkConfig) -> str:
-    options = config.model_dump(exclude={"strategy"})
+    options = config.model_dump(exclude={"strategy", "token_budget"})
     payload = {
         "parser_version": document.parser_version,
         "chunker_version": chunker_version(config),
@@ -108,10 +123,13 @@ def iter_chunks(
     document: ParsedDocument,
     config: ChunkConfig | None = None,
     *,
+    token_counter: Callable[[str], int] | None = None,
     max_chunks: int = 10000,
     max_output_chars: int = 10000000,
 ) -> Iterator[Chunk]:
     config = config or ChunkConfig()
+    if (config.token_budget is None) != (token_counter is None):
+        raise ValueError("token-aware chunking requires both a pinned budget and its tokenizer")
     if type(max_chunks) is not int or max_chunks < 1:
         raise ValueError("max_chunks must be a positive integer")
     if type(max_output_chars) is not int or max_output_chars < 1:
@@ -134,6 +152,24 @@ def iter_chunks(
                     candidates = list(re.finditer(r"\s+", block.text[lower:end]))
                     if candidates:
                         end = lower + candidates[-1].end()
+            if config.token_budget is not None:
+                assert token_counter is not None
+                if token_counter(block.text[start:end]) > config.token_budget.max_tokens:
+                    # Test every accepted prefix. BPE counts need not be perfectly
+                    # monotone; maximality is not promised, only a safe nonempty cut.
+                    low, high, best = start + 1, end, None
+                    while low <= high:
+                        middle = (low + high) // 2
+                        if (
+                            token_counter(block.text[start:middle])
+                            <= config.token_budget.max_tokens
+                        ):
+                            best, low = middle, middle + 1
+                        else:
+                            high = middle - 1
+                    if best is None:
+                        raise ValueError("no nonempty source chunk fits the model token budget")
+                    end = best
             text = block.text[start:end]
             if text.strip():
                 if ordinal >= max_chunks:
@@ -175,10 +211,17 @@ def chunk_document(
     document: ParsedDocument,
     config: ChunkConfig | None = None,
     *,
+    token_counter: Callable[[str], int] | None = None,
     max_chunks: int = 10000,
     max_output_chars: int = 10000000,
 ) -> list[Chunk]:
     """Compatibility list API; index builds consume iter_chunks without materialization."""
     return list(
-        iter_chunks(document, config, max_chunks=max_chunks, max_output_chars=max_output_chars)
+        iter_chunks(
+            document,
+            config,
+            token_counter=token_counter,
+            max_chunks=max_chunks,
+            max_output_chars=max_output_chars,
+        )
     )

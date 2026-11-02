@@ -16,7 +16,11 @@ from pathlib import Path
 
 
 def sha(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        while block := stream.read(1024**2):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def write(path, value):
@@ -41,7 +45,46 @@ def prepare(config_file):
     if sha(model / "reranker.json") != c["reranker_descriptor_sha256"]:
         raise ValueError("queued reranker changed")
     spec = reranker_spec(model)
-    output = config_file.parent / "enhanced-bundle"
+    output = config_file.parent / ("rebuilt-bundle" if c.get("rebuild") else "enhanced-bundle")
+    if c.get("rebuild"):
+        from ragforge.artifacts.builder import build_bundle
+        from ragforge.core.chunk import ChunkConfig
+
+        model = Path(c["model"])
+        if sha(model / "model.json") != c["model_descriptor_sha256"]:
+            raise ValueError("queued embedding model changed")
+        cache = Path(c["ingest_job"]) if c.get("ingest_job") else None
+        if cache and sha(cache / "parsed.sqlite") != c["ingest_cache_sha256"]:
+            raise ValueError("queued parsing snapshot changed")
+        job = config_file.parent / "build-job"
+        result = build_bundle(
+            Path(c["source"]),
+            output,
+            collection_id=base.collections[0].collection_id,
+            title=base.collections[0].title,
+            model_directory=model,
+            reranker_directory=Path(c["reranker"]),
+            rerank_candidates=100,
+            chunk_config=ChunkConfig(strategy="sections", chunk_size_chars=1000, overlap_chars=150),
+            token_aware=True,
+            ingest_job=cache,
+            work_directory=job,
+            resume=job.exists(),
+            allow_incomplete=True,
+            threads=2,
+            dense_backend="ann",
+            max_index_chunks=8_000_000,
+            max_index_text_chars=4_000_000_000,
+            storage=StorageBudget(
+                Path(c["budget_root"]),
+                limit_bytes=60_000_000_000,
+                reserve_free_bytes=c.get("reserve_free_bytes", 15_000_000_000),
+            ),
+            progress=lambda event: print(json.dumps(event), flush=True),
+        )
+        if result.collections[0].documents != base.collections[0].documents:
+            raise ValueError("quality rebuild source inventory differs from frozen baseline")
+        return
     result = (
         verify_bundle(output)
         if output.exists()
@@ -93,6 +136,16 @@ def execute(config_file):
         if time.time() > deadline:
             raise RuntimeError("follow-up wait budget expired")
         time.sleep(c["poll_seconds"])
+    if c.get("after_status"):
+        state["state"] = "waiting_for_prior_quality_comparison"
+        write(out / "status.json", state)
+        while True:
+            prerequisite = json.loads(Path(c["after_status"]).read_text(encoding="utf-8"))["state"]
+            if prerequisite == "complete_diagnostic_draft_labels":
+                break
+            if prerequisite.startswith("failed") or time.time() > deadline:
+                raise RuntimeError("prior quality comparison failed or wait budget expired")
+            time.sleep(c["poll_seconds"])
     # Retrieval/model access runs with a socket/DNS guard; publishing never shares this process.
     env = {
         **os.environ,
@@ -100,7 +153,7 @@ def execute(config_file):
         "HF_HUB_OFFLINE": "1",
         "TRANSFORMERS_OFFLINE": "1",
     }
-    enhanced = out / "enhanced-bundle"
+    enhanced = out / ("rebuilt-bundle" if c.get("rebuild") else "enhanced-bundle")
     state["state"] = "preparing_verified_quality_bundle"
     write(out / "status.json", state)
     with (out / "prepare.log").open("ab") as log:
@@ -152,7 +205,7 @@ def execute(config_file):
                         "--quality",
                         "--watch",
                         "--branch",
-                        "results/quality-full-rfc-v1",
+                        c.get("results_branch", "results/quality-full-rfc-v1"),
                     ],
                     env={**os.environ, "PYTHONPATH": ""},
                     stdout=watchlog,
@@ -172,7 +225,7 @@ def execute(config_file):
                     str(comparison),
                     "--quality",
                     "--branch",
-                    "results/quality-full-rfc-v1",
+                    c.get("results_branch", "results/quality-full-rfc-v1"),
                 ],
                 env={**os.environ, "PYTHONPATH": ""},
                 check=True,
@@ -186,6 +239,11 @@ def main():
     parser.add_argument("--baseline", type=Path)
     parser.add_argument("--baseline-status", type=Path)
     parser.add_argument("--reranker", type=Path)
+    parser.add_argument("--rebuild", action="store_true")
+    parser.add_argument("--model", type=Path)
+    parser.add_argument("--ingest-job", type=Path)
+    parser.add_argument("--results-branch", default="results/quality-full-rfc-v1")
+    parser.add_argument("--after-status", type=Path)
     parser.add_argument("--cases", type=Path)
     parser.add_argument("--answers", type=Path)
     parser.add_argument("--source", type=Path)
@@ -226,6 +284,8 @@ def main():
         or args.reserve_free_bytes < 0
     ):
         parser.error("invalid wait/poll budget")
+    if args.rebuild and args.model is None:
+        parser.error("a rebuilt quality bundle requires --model")
     out = args.output.absolute()
     if not out.resolve().is_relative_to(args.budget_root.resolve()) or any(
         out.resolve().is_relative_to(p.resolve()) or p.resolve().is_relative_to(out.resolve())
@@ -267,9 +327,19 @@ def main():
         deadline_unix=time.time() + args.wait_hours * 3600,
         publish_private=args.publish_private,
         poll_seconds=args.poll_seconds,
+        rebuild=args.rebuild,
+        after_status=str(args.after_status.absolute()) if args.after_status else None,
+        results_branch=args.results_branch,
         reserve_free_bytes=args.reserve_free_bytes,
         publisher=str(root / "scripts/save_benchmark_report.py"),
     )
+    if args.rebuild:
+        c["model"] = str(args.model.absolute())
+        c["model_descriptor_sha256"] = sha(args.model / "model.json")
+        c["ingest_job"] = str(args.ingest_job.absolute()) if args.ingest_job else None
+        c["ingest_cache_sha256"] = (
+            sha(args.ingest_job / "parsed.sqlite") if args.ingest_job else None
+        )
     c["reranker_descriptor_sha256"] = sha(args.reranker / "reranker.json")
     c["cases_sha256"] = sha(args.cases)
     c["answers_sha256"] = sha(args.answers)

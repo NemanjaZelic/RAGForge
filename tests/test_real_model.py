@@ -142,6 +142,7 @@ def test_pretrained_reranker_offline_build_query_and_relocation(
             os.environ["RAGFORGE_MODEL_DIR"],
             "--reranker",
             os.environ["RAGFORGE_RERANKER_DIR"],
+            "--token-aware",
             "--chunk-strategy",
             "sections",
             "--dense-backend",

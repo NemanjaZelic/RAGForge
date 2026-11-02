@@ -77,6 +77,7 @@ def build_bundle(
     rerank_candidates: int = 100,
     max_chunks_per_document: int | None = None,
     chunk_config: ChunkConfig | None = None,
+    token_aware: bool = False,
     scan_limits: ScanLimits | None = None,
     allow_incomplete: bool = False,
     allow_failed_documents: bool = False,
@@ -128,6 +129,7 @@ def build_bundle(
             rerank_candidates=rerank_candidates,
             max_chunks_per_document=max_chunks_per_document,
             chunk_config=chunk_config,
+            token_aware=token_aware,
             scan_limits=scan_limits,
             allow_incomplete=allow_incomplete,
             allow_failed_documents=allow_failed_documents,
@@ -156,6 +158,7 @@ def _build_bundle(
     rerank_candidates: int = 100,
     max_chunks_per_document: int | None = None,
     chunk_config: ChunkConfig | None = None,
+    token_aware: bool = False,
     scan_limits: ScanLimits | None = None,
     allow_incomplete: bool = False,
     allow_failed_documents: bool = False,
@@ -187,6 +190,19 @@ def _build_bundle(
     if not 1 <= max_index_chunks <= MAX_DENSE_ROWS or max_index_text_chars < 1:
         raise ValueError("invalid index chunk/text capacity")
     config = chunk_config or ChunkConfig()
+    token_counter = None
+    if config.token_budget is not None:
+        raise ValueError(
+            "builder derives the token budget from the verified model; use token_aware"
+        )
+    if token_aware:
+        if profile != "balanced" or model_directory is None:
+            raise ValueError("token-aware indexing requires a balanced bundle and local model")
+        from ragforge.core.embedding import ChunkTokenizer
+
+        token_counter = ChunkTokenizer(model_directory)
+        config = config.model_copy(update={"token_budget": token_counter.budget})
+
     if type(rerank_candidates) is not int or not 50 <= rerank_candidates <= 200:
         raise ValueError("rerank candidates must be between 50 and 200")
     if max_chunks_per_document is not None and (
@@ -313,6 +329,7 @@ def _build_bundle(
                 documents,
                 config,
                 allow_incomplete=allow_incomplete,
+                token_counter=token_counter,
                 max_chunks=max_index_chunks,
                 max_output_chars=max_index_text_chars,
                 progress=index_progress,

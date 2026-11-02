@@ -391,6 +391,7 @@ def build(
     ] = None,
     rerank_candidates: int = typer.Option(100, min=50, max=200),
     max_chunks_per_document: Annotated[int | None, typer.Option(min=1, max=50)] = None,
+    token_aware: bool = typer.Option(False, help="Split using the pinned embedding token budget."),
     chunk_strategy: str = typer.Option("blocks", help="blocks or section-aware sections."),
     collection: str = typer.Option("default", "--collection"),
     title: str = typer.Option("Documents"),
@@ -453,6 +454,7 @@ def build(
                 chunk_size_chars=chunk_size_chars,
                 overlap_chars=overlap_chars,
             ),
+            token_aware=token_aware,
             allow_incomplete=allow_incomplete,
             allow_failed_documents=allow_failed_documents,
             pdf_options=PdfOptions(max_pages=pdf_max_pages, allow_partial=allow_partial_pdf)

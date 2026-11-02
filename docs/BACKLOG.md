@@ -248,10 +248,11 @@ rather than exact filename agreement. [Implementation and measurement](QUALITY.m
 - [x] Preserve original benchmark and distinguish document recall from answer support.
 - [x] Support question-bound, source-verified fact alternatives and complete multi-fact scoring.
 - [x] Separate local draft repair for all 80 RFC dev questions; independent eligibility remains zero.
-- [x] Section-aware chunks, bounded local cross-encoder reranking, explicit raw baseline.
+- [x] Section-aware chunks, actual-token-budget splitting, bounded local reranking, explicit raw baseline.
 - [x] Verified new-version reranker upgrade without re-embedding the original index.
 - [x] Frozen offline comparison driver, same top-k/context budget, checkpoint/tamper tests.
-- [ ] Complete paired quality measurements and select candidates on development/tuning data.
+- [x] Matched RFC lexical comparison: complete accepted fact support 16/80 -> 29/80 -> 36/80.
+- [ ] Complete full balanced comparisons and select candidates on development/tuning data.
 - [ ] Independently review minimal facts, paraphrases, equivalent sources and version scope.
 - [ ] Confirm >=95% on a locked independent fact-support evaluation; generated-agent answers
   require the separate RF-008B benchmark. No threshold has been achieved or approved yet.

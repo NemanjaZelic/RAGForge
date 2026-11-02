@@ -93,6 +93,31 @@ def model_spec(directory: Path, *, verify: bool = True) -> ModelSpec:
     return spec
 
 
+class ChunkTokenizer:
+    """Tokenizer-only build helper: no inference session, downloads or truncation."""
+
+    def __init__(self, directory: Path) -> None:
+        import importlib.metadata
+
+        from tokenizers import Tokenizer
+
+        from ragforge.core.chunk import TokenBudget
+
+        spec = model_spec(directory)
+        self.tokenizer = Tokenizer.from_file(str(directory / "tokenizer.json"))
+        self.tokenizer.no_truncation()
+        self.tokenizer.no_padding()
+        self.budget = TokenBudget(
+            tokenizer_sha256=file_hash(directory / "tokenizer.json"),
+            tokenizer_version=importlib.metadata.version("tokenizers"),
+            max_tokens=spec.max_tokens,
+            document_prefix=spec.document_prefix,
+        )
+
+    def __call__(self, text: str) -> int:
+        return len(self.tokenizer.encode(self.budget.document_prefix + text).ids)
+
+
 class ONNXEmbedder:
     """CPU-only, mean pooling and L2 normalization; lazy optional dependencies."""
 
