@@ -256,9 +256,14 @@ def test_queued_followup_uses_frozen_offline_engine(
         str(output),
         "--poll-seconds",
         "0.1",
+        "--reserve-free-bytes",
+        "0",
     ]
     run = subprocess.run(command, capture_output=True, text=True, timeout=90)
-    assert run.returncode == 0, run.stderr
+    preparation_log = output / "prepare.log"
+    assert run.returncode == 0, run.stderr + (
+        preparation_log.read_text() if preparation_log.exists() else ""
+    )
     assert (
         json.loads((output / "status.json").read_text())["state"]
         == "complete_diagnostic_draft_labels"
