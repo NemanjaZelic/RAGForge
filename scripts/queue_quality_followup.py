@@ -50,7 +50,11 @@ def prepare(config_file):
             output,
             model,
             candidates=100,
-            storage=StorageBudget(Path(c["budget_root"]), limit_bytes=60_000_000_000),
+            storage=StorageBudget(
+                Path(c["budget_root"]),
+                limit_bytes=60_000_000_000,
+                reserve_free_bytes=c.get("reserve_free_bytes", 15_000_000_000),
+            ),
         )
     )
     inventory = {str(r.path): r for r in result.files}
@@ -192,6 +196,7 @@ def main():
     parser.add_argument("--child", type=Path)
     parser.add_argument("--prepare", type=Path)
     parser.add_argument("--poll-seconds", type=float, default=30)
+    parser.add_argument("--reserve-free-bytes", type=int, default=15_000_000_000)
     args = parser.parse_args()
     if args.prepare:
         prepare(args.prepare)
@@ -215,7 +220,11 @@ def main():
     ]
     if any(value is None for value in required):
         parser.error("all input/output paths are required")
-    if not 0 < args.wait_hours <= 168 or not 0.1 <= args.poll_seconds <= 60:
+    if (
+        not 0 < args.wait_hours <= 168
+        or not 0.1 <= args.poll_seconds <= 60
+        or args.reserve_free_bytes < 0
+    ):
         parser.error("invalid wait/poll budget")
     out = args.output.absolute()
     if not out.resolve().is_relative_to(args.budget_root.resolve()) or any(
@@ -258,6 +267,7 @@ def main():
         deadline_unix=time.time() + args.wait_hours * 3600,
         publish_private=args.publish_private,
         poll_seconds=args.poll_seconds,
+        reserve_free_bytes=args.reserve_free_bytes,
         publisher=str(root / "scripts/save_benchmark_report.py"),
     )
     c["reranker_descriptor_sha256"] = sha(args.reranker / "reranker.json")
