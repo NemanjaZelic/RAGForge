@@ -1,0 +1,103 @@
+{
+  "state": "complete_inventory_audit_not_retrieval_measurement",
+  "software_commit": "f99eaca",
+  "scope": "full frozen collection, no source sampling",
+  "corpora": [
+    {
+      "collection_id": "kernel-6-18",
+      "snapshot_sha256": "3c5e738ebb01527d9de0f6ce6528c29063b5e8809b8b20500953d5a7ba1b0bb5",
+      "attempted_documents": 3857,
+      "expected_documents": 3857,
+      "pending_documents": 0,
+      "status_counts": {
+        "complete": 3857
+      },
+      "text_chars": 39151823,
+      "pages": 0,
+      "lost_pages": 0,
+      "document_seconds": 155.988,
+      "failures": [],
+      "strict_ready": true,
+      "corpus_id": "kernel-6.18"
+    },
+    {
+      "collection_id": "ietf-rfcs",
+      "snapshot_sha256": "6384df39beaee92a67623a770e69a0d09e449eec28b5d29c10cb1b62b644d130",
+      "attempted_documents": 9854,
+      "expected_documents": 9854,
+      "pending_documents": 0,
+      "status_counts": {
+        "complete": 9853,
+        "partial": 1
+      },
+      "text_chars": 538524042,
+      "pages": 82,
+      "lost_pages": 9,
+      "document_seconds": 288.713,
+      "failures": [],
+      "strict_ready": false
+    },
+    {
+      "collection_id": "3gpp-etsi",
+      "snapshot_sha256": "84970e479b3bdc9ad65e89d1ef62cb888f08375b099b85c599716f9804778e56",
+      "attempted_documents": 4723,
+      "expected_documents": 4723,
+      "pending_documents": 0,
+      "status_counts": {
+        "complete": 4717,
+        "error": 6
+      },
+      "text_chars": 1152254088,
+      "pages": 455216,
+      "lost_pages": 0,
+      "document_seconds": 1304.004,
+      "failures": [
+        {
+          "source_path": "rel-8/ts/123008/ts_123008v081300p.pdf",
+          "error": "ParseError: PDF user permissions do not permit text extraction"
+        },
+        {
+          "source_path": "rel-8/ts/123060/ts_123060v081700p.pdf",
+          "error": "ParseError: PDF user permissions do not permit text extraction"
+        },
+        {
+          "source_path": "rel-8/ts/126077/ts_126077v080000p.pdf",
+          "error": "ParseError: PDF user permissions do not permit text extraction"
+        },
+        {
+          "source_path": "rel-8/ts/12919808/ts_12919808v080000p.pdf",
+          "error": "ParseError: PDF user permissions do not permit text extraction"
+        },
+        {
+          "source_path": "rel-8/ts/132175/ts_132175v080101p.pdf",
+          "error": "ParseError: PDF user permissions do not permit text extraction"
+        },
+        {
+          "source_path": "rel-8/ts/132625/ts_132625v080000p.pdf",
+          "error": "ParseError: PDF user permissions do not permit text extraction"
+        }
+      ],
+      "strict_ready": false
+    }
+  ],
+  "evidence_preflight": {
+    "kernel-6.18": {
+      "cases": 120,
+      "verified_source_spans": 140,
+      "strict_scoring_eligible": 0
+    },
+    "ietf-rfcs": {
+      "cases": 120,
+      "verified_source_spans": 140,
+      "strict_scoring_eligible": 0
+    },
+    "3gpp-etsi": {
+      "cases": 2765,
+      "verified_source_spans": 4067,
+      "strict_scoring_eligible": 0
+    }
+  },
+  "quality_gate": "not_approved_draft_labels",
+  "page_scope": "text extraction only; no OCR or semantic completeness claim",
+  "timing_scope": "sum of latest per-document attempts; excludes scan and failed previous attempts"
+}

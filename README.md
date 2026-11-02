@@ -18,7 +18,9 @@ convergence allowed. Optimization is not implemented.
 See the [explicit change list](docs/PLAN-CHANGES.md) for proposals and status.
 The [real-documentation testing plan](docs/TESTING-PLAN.md) starts with three
 corpora and 30 reviewed questions each, then expands toward five diverse corpora.
-External corpora and golden sets are planned, not downloaded or evaluated yet.
+Three complete frozen corpora (18,434 files) and draft evidence questions are local.
+Full-source ingestion has been audited; large retrieval measurements are in progress.
+The question labels still need independent review. See [scale execution](docs/SCALING.md).
 Read the [plan review](docs/PLAN-REVIEW.md), [architecture decisions](docs/ARCHITECTURE.md)
 and [implementation backlog](docs/BACKLOG.md) before starting feature work.
 
@@ -59,7 +61,8 @@ uv run python scripts/export_schemas.py --check
 
 - Read-only stdio MCP: search_docs/fetch_context/list_collections over the same engine;
   passive Agent Skills and separate MCP config generator (`integrate`).
-- Typer CLI: build/use/verify/context/serve/integrate, standalone index/search, corpus scan, chunk preview, help, version, SQLite/FTS5 doctor and JSON Schema export.
+- Typer CLI: build/use/verify/context/serve/integrate, resumable ingest/build jobs, evidence evaluation,
+  standalone index/search, corpus scan, chunk preview and SQLite/FTS5 diagnostics.
 - Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.
   Scan inventories bytes; it does not parse PDF text or build a searchable index.
 - Text-bearing PDF parsing, physical page citations, page status and explicit partial mode;
@@ -70,7 +73,8 @@ uv run python scripts/export_schemas.py --check
   HTML source line numbers remain unknown. See [parser limits](docs/PARSING.md).
 - Real SQLite FTS5/BM25 engine: literal queries, filters, read-only results and scoped context.
   See [retrieval behavior and measured baseline](docs/RETRIEVAL.md).
-- Local ONNX CPU embeddings, exact cosine vectors and RRF over the same SQLite sources.
+- Local ONNX CPU embeddings, exact cosine or explicit optional sharded ANN, and RRF
+  over the same SQLite sources; resumable vector/shard construction for large corpora.
 - Balanced defaults to hybrid; explicit BM25 never imports/loads embedding libraries.
 - Verified bundle inventories, copied query model/licenses and atomic publication to a new directory.
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
@@ -92,7 +96,8 @@ The local `build`, `use`, `verify` and `context` commands work on the same engin
 Model preparation is explicit and separate; build/query never download anything.
 The initial multilingual model candidate is a pinned quantized E5-small.
 Representative quality evaluation is a separate workstream and still gates v0.1.
-Agent/MCP and remote/cloud adapters remain later milestones.
+Read-only stdio MCP and passive skill/config generation are implemented.
+Independent agent evaluation and remote/cloud adapters remain later milestones.
 
 The bundle data format and the executable runtime are separate. A bundle is not
 a universal executable for every operating system.

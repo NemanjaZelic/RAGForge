@@ -182,3 +182,24 @@ CPU calibration on the local i7-1195G7 measured approximately 49 segments/s for
 bucketed 350-character inputs (1,024-segment development sample, not corpus
 throughput). An isolated Intel GPU feasibility probe was substantially slower
 and was not adopted. No remote compute or paid service was started.
+
+
+## 2026-11-02 — Frozen full-scale execution
+
+Complete source-evidence preflight passed for 3,005 local cases and 4,347 frozen
+source spans; all 14 original PDF reference representations were reconstructed
+with pinned pypdf in bounded offline workers. This is alignment validation, not
+independent annotation approval. Aggregate audit: [scale-ingestion-v1.json](benchmarks/scale-ingestion-v1.json).
+
+Added a frozen-runtime sequential build/evaluation runner with per-step status,
+private detailed query journals and aggregate numerical reports. A real tiny-corpus
+end-to-end test executes all 15 stages, checks all methods, resumes without
+requerying completed steps and rejects modified runtime files. Empty build-job
+locks left by scan interruption can recover safely. Local checks now pass:
+**223 passed, 3 filesystem skips**, plus lint/format/mypy/schema checks.
+
+The full run uses local E5, 350/50 character chunking, four CPU threads and
+explicit sharded ANN. Kernel remains held out from parameter tuning. Full-scale
+builds/evaluations are long-running and not completed by software CI. Status is
+under `data/benchmarks/scale-v1/runs/execution-v1`; see [SCALING.md](SCALING.md)
+for reproducible invocation/resume commands. No paid compute was provisioned.

@@ -42,7 +42,7 @@ A source-bound journal can feed the existing builder:
 .\scripts\dev.ps1 run ragforge build data/benchmarks/scale-v1/ietf-rfcs/input --collection ietf-rfcs --ingest-job data/benchmarks/scale-v1/runs/rfc-job --output data/benchmarks/scale-v1/runs/rfc-bundle --model models/e5-small --chunk-size-chars 350 --overlap-chars 50 --max-index-chunks 8000000 --max-index-text-chars 4000000000 --allow-incomplete
 ```
 
-Scan/PDF options come from the journal. The builder refuses pending/failed source
+Scan/PDF options come from the journal. By default the builder refuses pending/failed source
 records, verifies cached payload checksums and source identities, and retains the
 full document inventory. `--allow-incomplete` explicitly permits recorded PDF page
 losses; it does not omit failed documents. No sampled corpus is substituted.
@@ -114,3 +114,37 @@ first-query timing, p50/p95 wall latency, setup time, source coverage and actual
 process memory. OS caches are not cleared; process peaks are not whole-machine
 or aggregate-worker peaks. Detailed native QA adaptations remain local and ignored
 by Git. Only aggregate diagnostic reports may be saved to the private repository.
+
+
+## Complete scale run on this workstation
+
+The source/evidence preflight verified 3,005 cases and 4,347 source spans without
+changing labels. This validates source alignment, not retrieval or label quality.
+The prepared kernel corpus is a whole-corpus holdout: parameters below are fixed
+before observing its retrieval scores and will not be tuned on those scores.
+
+```powershell
+.\scripts\dev.ps1 run python scripts/prepare_pdf_evidence_cache.py --root data/benchmarks/scale-v1 --output data/benchmarks/scale-v1/runs/pdf-reference-v1 --budget-root data/benchmarks --resume
+.\scripts\dev.ps1 run python scripts/run_scale_benchmark.py --root data/benchmarks/scale-v1 --output data/benchmarks/scale-v1/runs/execution-v1 --model models/e5-small --cases data/benchmarks/scale-v1/runs/cases-v2 --pdf-cache data/benchmarks/scale-v1/runs/pdf-reference-v1 --budget-root data/benchmarks
+```
+
+Use `--resume` on the second command after interruption. For a fresh reference
+cache omit `--resume` on the first command. The controller freezes product source,
+its own driver, dependency versions, case hashes and retrieval parameters in the
+run directory. Offline child processes use the frozen code even during further
+development. Mutable job and runtime files stay on D, outside source inventories.
+The controller exits on failure with resumable checkpoints and logs.
+
+The order is kernel, RFC, then 3GPP. Each complete balanced artifact is measured
+with BM25/dense/hybrid over dev/tuning/test separately. Native alignment,
+version-scoped and supplementary tracks remain separate; the controller never
+changes configuration using scores. `aggregate-summary.json` is updated after
+each stage and uses equal corpus weight within each track/split, with explicit
+incomplete status until every stage finishes. Detailed query journals stay local.
+
+This runner caps the benchmark data root at **60 GB**, leaving **5 GB** of the
+65 GB total for the prepared source model and isolated GPU feasibility environment
+outside that root. An additional **15 GB free disk reserve** is enforced. Final
+budget reports must also account for those external assets. The reserve does not
+expand corpus support or remove any files automatically. CPU-heavy embedding may
+take many hours; prepared tests and passing CI do not mean that workload completed.

@@ -55,7 +55,7 @@ class BuildWorkspace:
                 raise ValueError("resumed build must keep its original output path")
             self.stage = Path(self.state["stage"])
         else:
-            if resume:
+            if resume and any(p.name != "writer.lock" for p in job.iterdir()):
                 raise ValueError("cannot resume a missing build state")
             self.stage = Path(tempfile.mkdtemp(prefix=".ragforge-stage-", dir=output.parent))
             self.state = {
