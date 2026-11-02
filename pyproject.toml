@@ -52,7 +52,7 @@ packages = ["src/ragforge"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "src/", "tests/", "scripts/", "schemas/", "examples/", "docs/",
+  "src/", "tests/", "scripts/", "schemas/", "examples/", "docs/", "deploy/",
   "README.md", "AGENTS.md", "pyproject.toml", "uv.lock",
   ".github/workflows/ci.yml", ".editorconfig", ".gitattributes", ".gitignore",
 ]

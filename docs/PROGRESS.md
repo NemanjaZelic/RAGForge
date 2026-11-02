@@ -245,3 +245,42 @@ the actual API and remaining RF-010B lifecycle/operational work.
 The independent frozen full-corpus benchmark keeps running on its earlier verified
 source snapshot. Its numerical-only private results watcher continues saving
 checkpoint progress. Shared code changes neither its parameters nor its runtime.
+
+
+## 2026-11-02 — Version control and first complete scale measurement
+
+Implemented local shared deployment preparation, passive connection profiles,
+atomic verified activation and reverified rollback with a ten-version history.
+Smoke queries execute every supported method before a pointer update; queries
+and evidence are not saved in deployment metadata. Server startup checks the
+expected build ID. Existing processes retain their startup snapshot until an
+explicit restart. Added a reviewable systemd example and manual restart/backup
+procedure; no service/account/remote host was installed. Shared exact/ANN parity
+now also passes with the actual pretrained E5 model locally and is included in
+the two-OS real-model CI job.
+
+Full local checks: **245 passed, 4 skipped** (three Windows filesystem cases and
+the unavailable systemd syntax tool), plus lint/format/mypy/schema drift. Linux
+CI performs native systemd syntax verification when the tool is installed.
+
+The complete kernel bundle finished: 3,857 searchable documents, 573,041 chunks,
+5,293.70 seconds build wall time and 1,109,544,960 bytes measured peak process RSS.
+The first evaluation stopped on my incorrect assumption that kernel had a dev
+split; its entire 120-question bank is intentionally held out in test. The
+explicit scheduler-v2 repair preserved original recipe/runtime/case bytes and
+the completed artifact, retained that failure in history and covered all 3,005
+cases in 13 real stages / 9,015 method calls. No questions moved between splits.
+
+Kernel measurement completed with 360 actual queries and zero retrieval errors.
+Document Recall@5: BM25 0.600, dense 0.750, hybrid 0.725. Mean source-span coverage
+is 0.055/0.171/0.123, and no case meets 80% coverage for every marked group. Full
+marked spans range from 915 to 1,324 canonical characters (median 1,308). These
+are draft-label component diagnostics, not answer accuracy or release approval;
+parameters will not be tuned on this held-out result.
+[Full report](benchmarks/scale-kernel-retrieval-v1.json).
+
+The controller continued into all 9,854 RFC documents (1,976,868 chunks) and local
+embedding; 3GPP follows automatically. Numerical-only results are saved on private
+`results/scale-v1`. A process-scoped Windows system-activity helper is attached to
+the current controller for the long run and releases its request on completion,
+failure or controller exit. No persistent power plan was changed.

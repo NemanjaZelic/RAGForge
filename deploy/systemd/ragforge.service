@@ -1,0 +1,29 @@
+# Example only: prepare these host paths and the service account before installation.
+[Unit]
+Description=RAGForge authenticated shared retrieval
+After=network.target
+
+[Service]
+Type=exec
+User=ragforge
+Group=ragforge
+WorkingDirectory=/opt/ragforge
+ExecStart=/opt/ragforge/.venv/bin/python -m ragforge serve --transport http --deployment /var/lib/ragforge/deployment
+Environment=OTEL_SDK_DISABLED=true
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=20
+KillSignal=SIGINT
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/opt/ragforge /var/lib/ragforge /etc/ragforge
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

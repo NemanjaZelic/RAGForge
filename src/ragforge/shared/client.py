@@ -7,10 +7,10 @@ import ssl
 import urllib.error
 import urllib.request
 from pathlib import Path
-from typing import Literal, Self
+from typing import Annotated, Literal, Self
 from urllib.parse import urlsplit
 
-from pydantic import AnyHttpUrl, ValidationError
+from pydantic import AnyHttpUrl, Field, ValidationError
 
 from ragforge.core.contracts import (
     CollectionDescription,
@@ -18,7 +18,27 @@ from ragforge.core.contracts import (
     RetrievalResponse,
     RetrieveRequest,
 )
+from ragforge.core.source import is_link
 from ragforge.types import ContractModel, Sha256
+
+
+class ConnectionProfile(ContractModel):
+    schema_version: Literal["1"] = "1"
+    mode: Literal["shared"] = "shared"
+    endpoint: AnyHttpUrl
+    token_env: Annotated[str, Field(pattern=r"^[A-Za-z_][A-Za-z0-9_]{0,127}$")] = (
+        "RAGFORGE_ACCESS_TOKEN"
+    )
+    ca_file: Annotated[str, Field(min_length=1, max_length=4096)] | None = None
+
+    @classmethod
+    def read(cls, path: Path) -> Self:
+        if is_link(path.lstat()) or path.stat().st_size > 65536:
+            raise ValueError("unsafe/oversized shared connection profile")
+        try:
+            return cls.model_validate_json(path.read_bytes())
+        except ValidationError:
+            raise ValueError("invalid shared connection profile") from None
 
 
 class CollectionsResponse(ContractModel):
@@ -96,6 +116,27 @@ class SharedClient:
         if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", token_env):
             raise ValueError("invalid token environment variable name")
         return cls(endpoint, os.environ.get(token_env, ""), ca_file=ca_file)
+
+    @classmethod
+    def configured(
+        cls,
+        endpoint: str | None,
+        connection: Path | None,
+        *,
+        token_env: str = "RAGFORGE_ACCESS_TOKEN",
+        ca_file: Path | None = None,
+    ) -> Self:
+        if (endpoint is None) == (connection is None):
+            raise ValueError("choose exactly one shared --endpoint or --connection")
+        if connection is not None:
+            profile = ConnectionProfile.read(connection)
+            endpoint = str(profile.endpoint)
+            token_env = profile.token_env if token_env == "RAGFORGE_ACCESS_TOKEN" else token_env
+            if ca_file is None and profile.ca_file:
+                candidate = Path(profile.ca_file)
+                ca_file = candidate if candidate.is_absolute() else connection.parent / candidate
+        assert endpoint is not None
+        return cls.from_environment(endpoint, token_env, ca_file=ca_file)
 
     def _request(self, path: str, data: bytes | None = None) -> bytes:
         request = urllib.request.Request(

@@ -36,7 +36,8 @@ def test_doctor_reports_implemented_bundle_and_search_methods() -> None:
 
 
 @pytest.mark.parametrize(
-    "name", ["manifest", "retrieve-request", "retrieval-response", "shared-policy"]
+    "name",
+    ["manifest", "retrieve-request", "retrieval-response", "shared-policy", "shared-connection"],
 )
 def test_schema_is_machine_readable(name: str) -> None:
     result = runner.invoke(app, ["schema", name])

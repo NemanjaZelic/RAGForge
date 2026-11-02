@@ -27,7 +27,7 @@ from mcp.client.streamable_http import streamable_http_client
 from ragforge.artifacts.builder import build_bundle
 from ragforge.core.contracts import RetrieveRequest
 from ragforge.core.engine import BundleEngine
-from ragforge.shared.client import SharedClient
+from ragforge.shared.client import ConnectionProfile, SharedClient
 from ragforge.shared.http import create_shared_app, run_shared
 from ragforge.shared.policy import JWTVerifier, SharedPolicy
 
@@ -71,12 +71,12 @@ def token_for(identity, policy, subject="all", **overrides):
 
 
 @contextmanager
-def listener(bundle, identity, principals=None, **tls):
+def listener(bundle, identity, principals=None, *, collection="docs", **tls):
     sock = socket.socket()
     sock.bind(("127.0.0.1", 0))
     port = sock.getsockname()[1]
     url = ("https" if tls else "http") + f"://127.0.0.1:{port}"
-    policy = policy_for(identity, url, principals=principals)
+    policy = policy_for(identity, url, collection=collection, principals=principals)
     app = create_shared_app(bundle, policy)
     server = uvicorn.Server(
         uvicorn.Config(
@@ -222,6 +222,14 @@ def test_rest_mcp_parity_and_parallel_principal_isolation(tmp_path, tiny_model, 
                     assert response.json() == engine.retrieve(
                         RetrieveRequest(**request)
                     ).model_dump(mode="json")
+                profile_file = tmp_path / "connection.json"
+                profile_file.write_text(
+                    ConnectionProfile.model_validate_json(
+                        json.dumps({"endpoint": url})
+                    ).model_dump_json(),
+                    encoding="utf-8",
+                )
+                assert full_token not in profile_file.read_text(encoding="utf-8")
                 shared = SharedClient(url, full_token)
                 assert (
                     shared.retrieve(
@@ -239,8 +247,8 @@ def test_rest_mcp_parity_and_parallel_principal_isolation(tmp_path, tiny_model, 
                         "use",
                         "--mode",
                         "shared",
-                        "--endpoint",
-                        url,
+                        "--connection",
+                        str(profile_file),
                         "--query",
                         "alpha",
                         "--search-method",
@@ -267,7 +275,7 @@ def test_rest_mcp_parity_and_parallel_principal_isolation(tmp_path, tiny_model, 
                         ["context", selected.chunk_id, "--mode", "shared", "--endpoint", url],
                         engine.fetch_context(context_args).model_dump(mode="json"),
                     ),
-                    (["doctor", "--endpoint", url], None),
+                    (["doctor", "--connection", str(profile_file)], None),
                 ):
                     completed = subprocess.run(
                         [sys.executable, "-m", "ragforge", *arguments],
@@ -470,3 +478,45 @@ def test_policy_conversion_uses_only_supplied_public_jwks_and_never_overwrites(t
             subjects=["all"],
         )
     assert not forbidden_output.exists()
+
+
+@pytest.mark.parametrize("backend", ["exact", "ann"])
+def test_real_model_shared_parity_and_prepared_connection(tmp_path, identity, backend):
+    from pathlib import Path
+
+    from ragforge.shared.registry import create_deployment
+
+    configured = os.environ.get("RAGFORGE_MODEL_DIR")
+    if not configured:
+        pytest.skip("explicit prepared local pretrained model required; no downloads")
+    model = Path(configured).resolve()
+    if not (model / "model.json").is_file():
+        pytest.fail("configured pretrained model is missing")
+    source = Path(__file__).resolve().parents[1] / "examples/mini-docs"
+    bundle = tmp_path / "real-bundle"
+    build_bundle(source, bundle, collection_id="mini", model_directory=model, dense_backend=backend)
+    local = BundleEngine(bundle)
+    with listener(bundle, identity, collection="mini") as (url, policy):
+        policy_file = tmp_path / "public-policy.json"
+        policy_file.write_text(policy.model_dump_json(), encoding="utf-8")
+        deployment = tmp_path / "deployment"
+        state = create_deployment(bundle, deployment, policy_file, "rollback")
+        assert state.active.build_id == local.manifest.build_id
+        token = token_for(identity, policy)
+        client = SharedClient(url, token)
+        for method in ("bm25", "dense", "hybrid"):
+            request = RetrieveRequest(query="rollback", top_k=3, search_method=method)
+            assert client.retrieve(request) == local.retrieve(request)
+
+        async def exercise():
+            async with httpx2.AsyncClient(
+                trust_env=False, headers={"Authorization": "Bearer " + token}
+            ) as http:
+                async with Client(streamable_http_client(url + "/mcp", http_client=http)) as mcp:
+                    actual = await mcp.call_tool("search_docs", {"query": "rollback", "top_k": 3})
+                    assert not actual.is_error
+                    assert actual.structured_content == local.retrieve(
+                        RetrieveRequest(query="rollback", top_k=3)
+                    ).model_dump(mode="json")
+
+        asyncio.run(asyncio.wait_for(exercise(), timeout=90))

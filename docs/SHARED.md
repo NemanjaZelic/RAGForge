@@ -1,8 +1,8 @@
 # Shared REST and MCP HTTP
 
-Status: RF-010A transport and access control implemented; operator rollout,
-version switching, service/container templates and multi-device deployment remain
-RF-010B. No remote host, provider or identity account is created by these commands.
+Status: RF-010A transport/access control and local RF-010B version controls are
+implemented. A systemd example is provided; actual host rollout, backup automation
+and multi-device deployment remain operator/infrastructure work. No remote host, provider or identity account is created by these commands.
 The default remains local CLI/stdio. One process binds one immutable collection.
 
 ## Use the same bundle
@@ -113,6 +113,47 @@ filters/context; modern/legacy protocols; CLI search/context/doctor; real TLS wi
 certificate validation; redirect/proxy credential isolation and response budgets.
 Tests generate temporary identities/certificates; none is an operational issuer.
 
-Automated version activation/rollback, restart/backup templates and actual
-multi-device hosting are separate remaining tasks. This transport milestone does
-not claim a production deployment or completion of the later SSH/cloud roadmap.
+Operator version pointers and connection profiles are implemented below. The
+[systemd example and restart/backup procedure](../deploy/README.md) are reviewable
+host templates, not an installed/verified remote service. Actual multi-device
+hosting and later SSH/cloud work remain separate; no production host is claimed.
+
+
+## Prepare, activate and roll back local deployment state
+
+`deploy` prepares files around an existing immutable bundle. It never starts a
+server, copies data to another host, provisions resources or installs host/agent
+settings. A required smoke query must return evidence in **every** supported
+retrieval method (up to three hits, 4,000 characters). Optional
+`--expected-document-id` requires that source among each method's results. The
+query and returned text are never persisted in deployment files.
+
+```powershell
+.\scripts\dev.ps1 run ragforge deploy kb/mini-balanced-v1 --mode shared --output deployments/team --auth-file secrets/shared-policy.json --smoke-query rollback
+.\scripts\dev.ps1 run ragforge serve --deployment deployments/team --transport http
+.\scripts\dev.ps1 run ragforge use --mode shared --connection deployments/team/connection.json --query rollback
+.\scripts\dev.ps1 run ragforge doctor --connection deployments/team/connection.json
+.\scripts\dev.ps1 run ragforge activate kb/mini-balanced-v2 --deployment deployments/team --smoke-query rollback
+# Explicitly restart the server, then confirm the new build ID with doctor.
+.\scripts\dev.ps1 run ragforge rollback --deployment deployments/team --smoke-query rollback
+# Explicitly restart again to serve the restored version.
+```
+
+Both version directories must already exist. Bundle contents are not rebuilt or
+modified. Candidate hashes, collection identity, policy grants and actual smoke
+queries are checked before an atomic `deployment.json` replacement. Concurrent
+metadata writers are locked. Up to ten previous verified version references are
+retained; source bundles are never deleted automatically. Rollback re-verifies
+and re-tests its target, keeping the current pointer unchanged if that fails.
+
+The running server keeps its startup snapshot until an explicit restart. On
+startup, a deployment's expected build ID must match the verified artifact before
+a listener opens. Registry paths describe one host and should be regenerated
+when moving to another host. `serve.json` is a passive command array;
+`connection.json` is a passive client profile with origin, token-environment name
+and optional CA path. It contains no token. Relative CA paths resolve beside the
+profile. The connection schema is [shared-connection-v1.schema.json](../schemas/shared-connection-v1.schema.json).
+
+REST/MCP parity is also tested with the actual pretrained local E5 model for exact
+and ANN bundles on both CI operating systems. Linux OS network isolation remains
+a separate core CLI/stdio check; the HTTP tests deliberately use loopback sockets.

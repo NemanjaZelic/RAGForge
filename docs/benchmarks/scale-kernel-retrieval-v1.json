@@ -1,0 +1,106 @@
+{
+  "bundle_constructor_seconds": 2.000353500014171,
+  "collection_id": "kernel-6-18",
+  "latency_scope": "query wall time; first query includes lazy setup; OS caches not cleared",
+  "methods": {
+    "bm25": {
+      "all_required_groups_covered": 0.0,
+      "ambiguous_reference_chunks": 30,
+      "attempted": 120,
+      "collection_negative_cases": 0,
+      "collection_negatives_with_results": 0,
+      "context_negatives_not_global_scored": 0,
+      "document_recall_at_5": 0.6,
+      "errors": 0,
+      "evidence_group_coverage": 0.05514518003552838,
+      "first_query_seconds": 0.0727560999803245,
+      "mrr_at_10": 0.4497784391534392,
+      "positive_cases": 120,
+      "seconds_p50": 0.28943175001768395,
+      "seconds_p95": 0.46978419995866716,
+      "unmapped_reference_chunks": 0
+    },
+    "dense": {
+      "all_required_groups_covered": 0.0,
+      "ambiguous_reference_chunks": 10,
+      "attempted": 120,
+      "collection_negative_cases": 0,
+      "collection_negatives_with_results": 0,
+      "context_negatives_not_global_scored": 0,
+      "document_recall_at_5": 0.75,
+      "errors": 0,
+      "evidence_group_coverage": 0.17056407915595045,
+      "first_query_seconds": 3.125425499980338,
+      "mrr_at_10": 0.6197420634920635,
+      "positive_cases": 120,
+      "seconds_p50": 0.06557765003526583,
+      "seconds_p95": 0.11482319992501289,
+      "unmapped_reference_chunks": 0
+    },
+    "hybrid": {
+      "all_required_groups_covered": 0.0,
+      "ambiguous_reference_chunks": 19,
+      "attempted": 120,
+      "collection_negative_cases": 0,
+      "collection_negatives_with_results": 0,
+      "context_negatives_not_global_scored": 0,
+      "document_recall_at_5": 0.725,
+      "errors": 0,
+      "evidence_group_coverage": 0.12298379508922445,
+      "first_query_seconds": 0.12953379994723946,
+      "mrr_at_10": 0.5851818783068783,
+      "positive_cases": 120,
+      "seconds_p50": 0.3366227999795228,
+      "seconds_p95": 0.5620846999809146,
+      "unmapped_reference_chunks": 0
+    }
+  },
+  "process_memory": {
+    "peak_rss_bytes": 1187053568,
+    "pid": 20980,
+    "private_committed_bytes": 872017920,
+    "rss_bytes": 1185603584
+  },
+  "quality_gate": "not_approved_draft_labels",
+  "recipe": {
+    "allow_draft": true,
+    "artifact_build_id": "f8c9c6431c62ef46cafa79faa12adb34f840612e8ef4a572aa5a97a35a5f302e",
+    "cases_sha256": "9c8d91241a346a79d28192b4d054ae3d6080fe385463c47e51cd69312ce9a71a",
+    "max_output_chars": 16000,
+    "methods": [
+      "bm25",
+      "dense",
+      "hybrid"
+    ],
+    "minimum_evidence_coverage": 0.8,
+    "scorer_version": "source-span-coverage-v1",
+    "split": "test",
+    "top_k": 10,
+    "track": "supplementary_evidence_draft"
+  },
+  "scorer_version": "source-span-coverage-v1",
+  "selected_cases": 120,
+  "source_coverage": {
+    "all_sources_have_searchable_text": true,
+    "documents_with_warnings": 0,
+    "failed_documents_retained": 0,
+    "indexed_documents": 3857,
+    "other_zero_chunk_documents": 0,
+    "pdf_error_pages": 0,
+    "pdf_no_text_pages": 0,
+    "reported_pdf_pages": 0,
+    "scope": "text-layer diagnostics; figures/tables and semantic completeness need evaluation",
+    "source_documents": 3857
+  },
+  "strict_scoring": false,
+  "corpus_id": "kernel-6.18",
+  "source_label_review": "pending; independently reviewed eligibility remains zero",
+  "evidence_span_statistics": {
+    "evidence_groups": 140,
+    "canonical_span_chars_min": 915,
+    "canonical_span_chars_median": 1308.0,
+    "canonical_span_chars_max": 1324
+  },
+  "conditions": "interactive workstation; OS caches not cleared; no parameter changes based on this held-out result",
+  "interpretation": "retrieval component diagnostics only; all-required span coverage is not answer accuracy"
+}

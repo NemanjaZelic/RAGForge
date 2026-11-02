@@ -62,7 +62,9 @@ uv run python scripts/export_schemas.py --check
 - Read-only stdio MCP: search_docs/fetch_context/list_collections over the same engine;
   passive Agent Skills and separate MCP config generator (`integrate`).
 - Authenticated REST/stateless MCP HTTP over the same engine, offline RS256 JWT verification,
-  source permissions, TLS and explicit shared CLI client. See [shared setup](docs/SHARED.md).
+  source permissions, TLS and explicit shared CLI client. Passive deploy/connection
+  profiles support verified version activation/rollback with an explicit restart.
+  See [shared setup](docs/SHARED.md).
 - Typer CLI: build/use/verify/context/serve/integrate, resumable ingest/build jobs, evidence evaluation,
   standalone index/search, corpus scan, chunk preview and SQLite/FTS5 diagnostics.
 - Deterministic MD/TXT/HTML/PDF discovery and bounded SHA-256 hashing, link and collision rejection.

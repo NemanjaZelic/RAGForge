@@ -56,7 +56,7 @@ jobs:
       - if: steps.model-cache.outputs.cache-hit != 'true'
         run: uv run --no-sync python scripts/prepare_models.py e5-small .cache/real-model
       - name: Pretrained model offline build and query
-        run: uv run --no-sync pytest tests/test_real_model.py -q
+        run: uv run --no-sync pytest tests/test_real_model.py tests/test_shared_http.py::test_real_model_shared_parity_and_prepared_connection -q
       - name: Linux OS network isolation
         if: runner.os == 'Linux'
         run: sudo --preserve-env=RAGFORGE_MODEL_DIR unshare --net .venv/bin/python -m pytest tests/test_real_model.py -q

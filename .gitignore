@@ -37,3 +37,6 @@ Thumbs.db
 
 # Local shared auth policies, certificates and operator credentials
 /secrets/
+
+# Host-specific shared deployment state
+/deployments/

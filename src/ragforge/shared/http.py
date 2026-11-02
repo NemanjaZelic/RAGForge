@@ -88,8 +88,12 @@ class HTTPBoundary:
             )
 
 
-def create_shared_app(artifact: Path, policy: SharedPolicy, *, threads: int = 4) -> ASGIApp:
+def create_shared_app(
+    artifact: Path, policy: SharedPolicy, *, threads: int = 4, expected_build_id: str | None = None
+) -> ASGIApp:
     engine = BundleEngine(artifact, threads=threads)
+    if expected_build_id is not None and engine.manifest.build_id != expected_build_id:
+        raise ValueError("active deployment build ID does not match verified bundle")
     scoped = ScopedEngine(engine, policy)
     verifier = JWTVerifier(policy)
     server = create_server(
@@ -205,6 +209,7 @@ def run_shared(
     threads: int = 4,
     tls_cert: Path | None = None,
     tls_key: Path | None = None,
+    expected_build_id: str | None = None,
 ) -> None:
     import ipaddress
     import ssl
@@ -219,7 +224,9 @@ def run_shared(
     policy = SharedPolicy.read(policy_file)
     if tls_cert is not None and policy.resource_url.scheme != "https":
         raise ValueError("TLS listener requires an HTTPS resource URL")
-    application = create_shared_app(artifact, policy, threads=threads)
+    application = create_shared_app(
+        artifact, policy, threads=threads, expected_build_id=expected_build_id
+    )
     uvicorn.run(
         application,
         host=host,

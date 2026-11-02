@@ -28,6 +28,7 @@ from ragforge.core.parse import load_document
 from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
 from ragforge.core.sqlite import SQLiteEngine, create_index
+from ragforge.shared.client import ConnectionProfile
 from ragforge.shared.policy import SharedPolicy
 from ragforge.types import ContractModel
 
@@ -46,6 +47,7 @@ class SchemaName(StrEnum):
     retrieve_request = "retrieve-request"
     retrieval_response = "retrieval-response"
     shared_policy = "shared-policy"
+    shared_connection = "shared-connection"
 
 
 def schema_document(name: SchemaName) -> dict[str, Any]:
@@ -54,6 +56,7 @@ def schema_document(name: SchemaName) -> dict[str, Any]:
         SchemaName.retrieve_request: RetrieveRequest,
         SchemaName.retrieval_response: RetrievalResponse,
         SchemaName.shared_policy: SharedPolicy,
+        SchemaName.shared_connection: ConnectionProfile,
     }
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -73,15 +76,20 @@ def main(
 @app.command()
 def doctor(
     endpoint: Annotated[str | None, typer.Option(help="Explicit shared origin to probe.")] = None,
+    connection: Annotated[
+        Path | None, typer.Option(help="Explicit shared connection profile.")
+    ] = None,
     token_env: str = typer.Option("RAGFORGE_ACCESS_TOKEN"),
     ca_file: Annotated[Path | None, typer.Option()] = None,
 ) -> None:
-    """Check Python and SQLite FTS5 locally; output JSON without using the network."""
-    if endpoint is not None:
+    """Check the local engine, or explicitly probe an authenticated shared endpoint."""
+    if endpoint is not None or connection is not None:
         from ragforge.shared.client import SharedClient
 
         try:
-            client = SharedClient.from_environment(endpoint, token_env, ca_file=ca_file)
+            client = SharedClient.configured(
+                endpoint, connection, token_env=token_env, ca_file=ca_file
+            )
             report = {
                 "mode": "shared",
                 "health": client.health(),
@@ -97,11 +105,11 @@ def doctor(
         raise typer.Exit(code=2)
     available = False
     try:
-        with closing(sqlite3.connect(":memory:")) as connection:
-            connection.execute("CREATE VIRTUAL TABLE probe USING fts5(text)")
-            connection.execute("INSERT INTO probe(text) VALUES (?)", ("local retrieval",))
+        with closing(sqlite3.connect(":memory:")) as probe_db:
+            probe_db.execute("CREATE VIRTUAL TABLE probe USING fts5(text)")
+            probe_db.execute("INSERT INTO probe(text) VALUES (?)", ("local retrieval",))
             available = (
-                connection.execute(
+                probe_db.execute(
                     "SELECT count(*) FROM probe WHERE probe MATCH ?", ("retrieval",)
                 ).fetchone()[0]
                 == 1
@@ -318,6 +326,9 @@ def context(
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
     mode: str = typer.Option("local", help="local or shared."),
     endpoint: Annotated[str | None, typer.Option()] = None,
+    connection: Annotated[
+        Path | None, typer.Option(help="Explicit shared connection profile.")
+    ] = None,
     token_env: str = typer.Option("RAGFORGE_ACCESS_TOKEN"),
     ca_file: Annotated[Path | None, typer.Option()] = None,
 ) -> None:
@@ -327,12 +338,21 @@ def context(
         if mode == "shared":
             from ragforge.shared.client import SharedClient
 
-            if endpoint is None or chunk_id is not None:
-                raise ValueError("shared context requires one chunk-ID argument and --endpoint")
-            engine = SharedClient.from_environment(endpoint, token_env, ca_file=ca_file)
+            if (endpoint is None and connection is None) or chunk_id is not None:
+                raise ValueError(
+                    "shared context requires one chunk ID and an endpoint or connection profile"
+                )
+            engine = SharedClient.configured(
+                endpoint, connection, token_env=token_env, ca_file=ca_file
+            )
             chunk_id = target
         elif mode == "local":
-            if chunk_id is None or endpoint is not None or ca_file is not None:
+            if (
+                chunk_id is None
+                or endpoint is not None
+                or connection is not None
+                or ca_file is not None
+            ):
                 raise ValueError("local context requires bundle/index and chunk ID")
             database = Path(target)
             engine = BundleEngine(database) if database.is_dir() else SQLiteEngine(database)
@@ -475,6 +495,9 @@ def use(
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
     threads: int = typer.Option(4, min=1, max=32),
     endpoint: Annotated[str | None, typer.Option()] = None,
+    connection: Annotated[
+        Path | None, typer.Option(help="Explicit shared connection profile.")
+    ] = None,
     token_env: str = typer.Option("RAGFORGE_ACCESS_TOKEN"),
     ca_file: Annotated[Path | None, typer.Option()] = None,
 ) -> None:
@@ -494,13 +517,20 @@ def use(
         if mode == "shared":
             from ragforge.shared.client import SharedClient
 
-            if artifact is not None or endpoint is None:
-                raise ValueError("shared mode requires --endpoint and no local artifact argument")
-            result = SharedClient.from_environment(endpoint, token_env, ca_file=ca_file).retrieve(
-                request
-            )
+            if artifact is not None or (endpoint is None and connection is None):
+                raise ValueError(
+                    "shared mode requires an endpoint/connection and no local artifact argument"
+                )
+            result = SharedClient.configured(
+                endpoint, connection, token_env=token_env, ca_file=ca_file
+            ).retrieve(request)
         else:
-            if artifact is None or endpoint is not None or ca_file is not None:
+            if (
+                artifact is None
+                or endpoint is not None
+                or connection is not None
+                or ca_file is not None
+            ):
                 raise ValueError("local mode requires a bundle and no shared endpoint/CA options")
             result = BundleEngine(artifact, threads=threads).retrieve(request)
     except (ValueError, OSError, RuntimeError) as error:
@@ -535,7 +565,10 @@ def verify(artifact: Path) -> None:
 
 @app.command()
 def serve(
-    artifact: Annotated[Path, typer.Argument(help="One verified local bundle directory.")],
+    artifact: Annotated[Path | None, typer.Argument(help="Bundle; omit with --deployment.")] = None,
+    deployment: Annotated[
+        Path | None, typer.Option(help="Prepared shared deployment directory.")
+    ] = None,
     threads: int = typer.Option(4, min=1, max=32),
     transport: str = typer.Option("stdio", help="stdio or authenticated shared http."),
     auth_file: Annotated[
@@ -554,8 +587,17 @@ def serve(
             typer.echo(json.dumps({"error": "HTTP support requires ragforge[shared]."}), err=True)
             raise typer.Exit(code=2) from error
         try:
-            if auth_file is None:
-                raise ValueError("HTTP requires an explicit --auth-file")
+            expected_build_id = None
+            if deployment is not None:
+                from ragforge.shared.registry import read_deployment
+
+                if artifact is not None:
+                    raise ValueError("choose a bundle argument or --deployment, not both")
+                state = read_deployment(deployment)
+                artifact, expected_build_id = Path(state.active.path), state.active.build_id
+                auth_file = auth_file or Path(state.auth_policy)
+            if artifact is None or auth_file is None:
+                raise ValueError("HTTP requires a bundle/deployment and explicit auth policy")
             run_shared(
                 artifact,
                 auth_file,
@@ -564,13 +606,25 @@ def serve(
                 threads=threads,
                 tls_cert=tls_cert,
                 tls_key=tls_key,
+                expected_build_id=expected_build_id,
             )
         except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
             typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
             raise typer.Exit(code=2) from error
         return
-    if transport != "stdio" or auth_file is not None or tls_cert is not None or tls_key is not None:
+    if (
+        transport != "stdio"
+        or deployment is not None
+        or auth_file is not None
+        or tls_cert is not None
+        or tls_key is not None
+        or host != "127.0.0.1"
+        or port != 8765
+    ):
         typer.echo(json.dumps({"error": "choose stdio or explicit authenticated http"}), err=True)
+        raise typer.Exit(code=2)
+    if artifact is None:
+        typer.echo(json.dumps({"error": "stdio requires a verified bundle argument"}), err=True)
         raise typer.Exit(code=2)
     try:
         from ragforge.adapters.mcp import create_server
@@ -748,3 +802,65 @@ def evaluate(
     typer.echo(json.dumps(report, ensure_ascii=True))
     if any(row["errors"] for row in report["methods"].values()):
         raise typer.Exit(code=2)
+
+
+@app.command()
+def deploy(
+    artifact: Annotated[Path, typer.Argument(help="Existing immutable bundle.")],
+    output: Annotated[Path, typer.Option(help="New local deployment control directory.")],
+    auth_file: Annotated[Path, typer.Option(help="Operator-supplied shared policy.")],
+    smoke_query: Annotated[str, typer.Option(help="Required source query; never persisted.")],
+    mode: str = typer.Option("shared"),
+    expected_document_id: Annotated[str | None, typer.Option()] = None,
+) -> None:
+    """Prepare shared version/connection files; never starts a server or provisions a host."""
+    from ragforge.shared.registry import create_deployment, state_summary
+
+    try:
+        if mode != "shared":
+            raise ValueError("only explicit shared deployment preparation is implemented")
+        state = create_deployment(
+            artifact, output, auth_file, smoke_query, expected_document_id=expected_document_id
+        )
+    except (ValueError, OSError, RuntimeError, sqlite3.Error, ImportError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(state_summary(state), ensure_ascii=True))
+
+
+@app.command("activate")
+def activate_version(
+    artifact: Annotated[Path, typer.Argument(help="New immutable bundle version.")],
+    deployment: Annotated[Path, typer.Option(help="Existing shared deployment directory.")],
+    smoke_query: Annotated[str, typer.Option(help="Required source query; never persisted.")],
+    expected_document_id: Annotated[str | None, typer.Option()] = None,
+) -> None:
+    """Verify and smoke-test a new version before atomic pointer activation; then restart."""
+    from ragforge.shared.registry import activate, state_summary
+
+    try:
+        state = activate(
+            deployment, artifact, smoke_query, expected_document_id=expected_document_id
+        )
+    except (ValueError, OSError, RuntimeError, sqlite3.Error, ImportError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(state_summary(state), ensure_ascii=True))
+
+
+@app.command()
+def rollback(
+    deployment: Annotated[Path, typer.Option(help="Existing shared deployment directory.")],
+    smoke_query: Annotated[str, typer.Option(help="Required source query; never persisted.")],
+    expected_document_id: Annotated[str | None, typer.Option()] = None,
+) -> None:
+    """Reverify/smoke-test and restore the previous version pointer; then restart."""
+    from ragforge.shared.registry import rollback as restore
+    from ragforge.shared.registry import state_summary
+
+    try:
+        state = restore(deployment, smoke_query, expected_document_id=expected_document_id)
+    except (ValueError, OSError, RuntimeError, sqlite3.Error, ImportError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(state_summary(state), ensure_ascii=True))

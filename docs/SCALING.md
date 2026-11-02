@@ -187,3 +187,22 @@ The complete kernel bundle was published before this scheduling error:
 wall time was 5,293.70 seconds during concurrent development/tests; measured
 process peak RSS was 1,109,544,960 bytes. These are resource observations, not a
 dedicated-machine timing baseline or a retrieval-quality result.
+
+
+## First complete collection measurement
+
+Kernel: all 3,857 sources / 573,041 chunks, 120 held-out draft questions,
+360 real method calls and zero retrieval errors. Document Recall@5 was 0.600
+(BM25), 0.750 (dense) and 0.725 (hybrid). MRR@10 was 0.450, 0.620 and 0.585.
+Mean source-span coverage was only 0.055, 0.171 and 0.123; no case reached the
+80% coverage rule for every required group. This rule measures full marked spans,
+not answer correctness. Label review is pending, and the result does not approve
+a release. The kernel result will not be used to tune default parameters.
+See [the full numerical report](benchmarks/scale-kernel-retrieval-v1.json).
+
+The repaired controller has continued to the entire RFC collection and will then
+process 3GPP. On Windows, an explicit `scripts/keep_benchmark_awake.py RUN
+--controller-pid PID` helper can hold a scoped system-activity request while the
+known controller is alive and status is running. It releases the request on
+completion/failure/process exit, without a persistent power-plan change. Manual
+sleep remains under user control. See [the Windows API behavior](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate).

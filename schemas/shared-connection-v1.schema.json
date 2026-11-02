@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "ca_file": {
+      "anyOf": [
+        {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ca File"
+    },
+    "endpoint": {
+      "format": "uri",
+      "minLength": 1,
+      "title": "Endpoint",
+      "type": "string"
+    },
+    "mode": {
+      "const": "shared",
+      "default": "shared",
+      "title": "Mode",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "token_env": {
+      "default": "RAGFORGE_ACCESS_TOKEN",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]{0,127}$",
+      "title": "Token Env",
+      "type": "string"
+    }
+  },
+  "required": [
+    "endpoint"
+  ],
+  "title": "ConnectionProfile",
+  "type": "object"
+}

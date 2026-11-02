@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Annotated, Any, Literal, Self
 from urllib.parse import urlsplit
 
-from pydantic import AnyHttpUrl, ConfigDict, Field, model_validator
+from pydantic import AnyHttpUrl, ConfigDict, Field, ValidationError, model_validator
 
 from ragforge.core.contracts import (
     CollectionDescription,
@@ -68,7 +68,10 @@ class SharedPolicy(ContractModel):
     def read(cls, path: Path) -> "SharedPolicy":
         if is_link(path.lstat()) or path.stat().st_size > 8 * 1024**2:
             raise ValueError("unsafe/oversized shared policy")
-        return cls.model_validate_json(path.read_bytes())
+        try:
+            return cls.model_validate_json(path.read_bytes())
+        except ValidationError:
+            raise ValueError("invalid shared policy; check its schema") from None
 
 
 class JWTVerifier:

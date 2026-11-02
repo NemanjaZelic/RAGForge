@@ -186,9 +186,12 @@ uspeha zadatka. Stvarni deterministički MCP klijent nije zamena za taj benchmar
 RF-010A: implementirani shared REST/stateless MCP HTTP, isti engine/CLI klijent,
 JWT issuer/resource/subject/scope provera, document grants, TLS, Host/Origin/body
 limiti i stvarni minimal/exact/ANN parity testovi. [SHARED.md](SHARED.md).
-RF-010B ostaje: operativni deploy/connection profili, kontrolisana aktivacija i
-rollback verzija, restart/backup šabloni i stvarna provera sa dva udaljena uređaja.
-Ovo još nije production hosting isporuka.
+RF-010B: implementirani pasivni deploy/connection profili, kontrolisana atomska
+aktivacija sa smoke upitima i ponovna provera pri rollback-u. Dodat je systemd
+primer i dokumentovan restart/backup postupak. Pokrenuti server koristi startup
+snapshot do eksplicitnog restarta; nema automatskog hot-reload-a ili brisanja.
+RF-010C ostaje: stvarna instalacija i provera sa dva udaljena uređaja, izbor hosta/
+issuer-a/sertifikata i backup automatizacija. Nije kreiran production host.
 RF-011: SSH runner; isti builder, preuzimanje i kontrolisani cleanup.
 RF-012: jedan compute provider sa ownership evidencijom i troškovnim recovery-jem.
 
