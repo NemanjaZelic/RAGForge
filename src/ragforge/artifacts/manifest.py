@@ -39,6 +39,21 @@ class QueryModel(ContractModel):
     license: Annotated[str, Field(min_length=1)]
 
 
+class RerankerModel(ContractModel):
+    model_id: Annotated[str, Field(min_length=1)]
+    revision: Annotated[str, Field(min_length=1)]
+    runtime: Literal["onnxruntime-cpu"] = "onnxruntime-cpu"
+    files: Annotated[list[RelativePath], Field(min_length=4)]
+    license: Annotated[str, Field(min_length=1)]
+
+
+class RetrievalConfiguration(ContractModel):
+    version: Literal["candidate-rerank-v1"] = "candidate-rerank-v1"
+    candidates_per_method: Annotated[int, Field(ge=50, le=200)] = 100
+    max_chunks_per_document: Annotated[int, Field(ge=1, le=50)] | None = None
+    reranker: RerankerModel
+
+
 class CollectionManifest(ContractModel):
     collection_id: Identifier
     title: Annotated[str, Field(min_length=1, max_length=256)]
@@ -85,6 +100,7 @@ class BundleManifest(ContractModel):
     capabilities: Annotated[list[SearchMethod], Field(min_length=1, max_length=3)] = ["bm25"]
     default_search_method: SearchMethod = "bm25"
     query_model: QueryModel | None = None
+    retrieval_configuration: RetrievalConfiguration | None = None
     index_backend: Literal["sqlite-fts5"]
     index_schema_version: Literal[1]
     sqlite_build_version: Annotated[str, Field(min_length=1)]
@@ -143,4 +159,11 @@ class BundleManifest(ContractModel):
                 raise ValueError("query model files must be under models/query/")
             if any(path not in paths for path in model.files):
                 raise ValueError("query model files must be inventoried")
+        if self.retrieval_configuration is not None:
+            reranker = self.retrieval_configuration.reranker
+            if len(set(reranker.files)) != len(reranker.files) or any(
+                not path.startswith("models/reranker/") or path not in paths
+                for path in reranker.files
+            ):
+                raise ValueError("reranker files must have canonical inventoried paths")
         return self

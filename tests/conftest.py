@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 from model_fixtures import tiny_model as tiny_model
+from model_fixtures import tiny_reranker as tiny_reranker
 
 
 @pytest.fixture

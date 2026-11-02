@@ -81,3 +81,57 @@ def tiny_model(tmp_path: Path) -> Path:
     )
     (directory / "model.json").write_text(spec.model_dump_json(indent=2), encoding="utf-8")
     return directory
+
+
+@pytest.fixture
+def tiny_reranker(tmp_path: Path, tiny_model: Path) -> Path:
+    import onnx
+    from onnx import TensorProto, helper
+    from tokenizers import Tokenizer, processors
+
+    from ragforge.artifacts.manifest import FileRecord
+    from ragforge.core.rerank import RerankerSpec
+
+    directory = tmp_path / "reranker-model"
+    directory.mkdir()
+    tokenizer = Tokenizer.from_file(str(tiny_model / "tokenizer.json"))
+    tokenizer.post_processor = processors.TemplateProcessing(
+        single="[CLS] $A [SEP]",
+        pair="[CLS] $A [SEP] $B:1 [SEP]:1",
+        special_tokens=[("[CLS]", 2), ("[SEP]", 3)],
+    )
+    tokenizer.save(str(directory / "tokenizer.json"))
+    graph = helper.make_graph(
+        [
+            helper.make_node("Cast", ["input_ids"], ["ids"], to=TensorProto.FLOAT),
+            helper.make_node("ReduceSum", ["ids"], ["logits"], axes=[1], keepdims=1),
+        ],
+        "fixture-not-quality-evidence",
+        [
+            helper.make_tensor_value_info("input_ids", TensorProto.INT64, ["batch", "sequence"]),
+            helper.make_tensor_value_info(
+                "attention_mask", TensorProto.INT64, ["batch", "sequence"]
+            ),
+        ],
+        [helper.make_tensor_value_info("logits", TensorProto.FLOAT, ["batch", 1])],
+    )
+    model = helper.make_model(graph, opset_imports=[helper.make_opsetid("", 11)])
+    model.ir_version = 10
+    onnx.save_model(model, directory / "model.onnx")
+    (directory / "LICENSE").write_text("Original synthetic fixture, not pretrained.")
+    spec = RerankerSpec(
+        model_id="fixture/not-pretrained",
+        revision="b" * 40,
+        license="test-fixture-only",
+        source_url="local:fixture",
+        files=[
+            FileRecord(
+                path=p.name,
+                sha256=hashlib.sha256(p.read_bytes()).hexdigest(),
+                size_bytes=p.stat().st_size,
+            )
+            for p in sorted(directory.iterdir())
+        ],
+    )
+    (directory / "reranker.json").write_text(spec.model_dump_json(), encoding="utf-8")
+    return directory

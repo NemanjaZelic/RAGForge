@@ -21,10 +21,12 @@ from ragforge.artifacts.manifest import (
     DocumentRecord,
     FileRecord,
     QueryModel,
+    RerankerModel,
+    RetrievalConfiguration,
     RuntimeRequirements,
 )
 from ragforge.artifacts.verification import build_identity, bundle_files, verify_bundle
-from ragforge.core.chunk import CHUNKER_VERSION, ChunkConfig
+from ragforge.core.chunk import ChunkConfig, chunker_version
 from ragforge.core.embedding import ONNXEmbedder, file_hash, model_spec
 from ragforge.core.limits import MAX_DENSE_ROWS
 from ragforge.core.parse import load_document
@@ -71,6 +73,9 @@ def build_bundle(
     title: str = "Documents",
     profile: Literal["minimal", "balanced"] = "balanced",
     model_directory: Path | None = None,
+    reranker_directory: Path | None = None,
+    rerank_candidates: int = 100,
+    max_chunks_per_document: int | None = None,
     chunk_config: ChunkConfig | None = None,
     scan_limits: ScanLimits | None = None,
     allow_incomplete: bool = False,
@@ -119,6 +124,9 @@ def build_bundle(
             title=title,
             profile=profile,
             model_directory=model_directory,
+            reranker_directory=reranker_directory,
+            rerank_candidates=rerank_candidates,
+            max_chunks_per_document=max_chunks_per_document,
             chunk_config=chunk_config,
             scan_limits=scan_limits,
             allow_incomplete=allow_incomplete,
@@ -144,6 +152,9 @@ def _build_bundle(
     title: str = "Documents",
     profile: Literal["minimal", "balanced"] = "balanced",
     model_directory: Path | None = None,
+    reranker_directory: Path | None = None,
+    rerank_candidates: int = 100,
+    max_chunks_per_document: int | None = None,
     chunk_config: ChunkConfig | None = None,
     scan_limits: ScanLimits | None = None,
     allow_incomplete: bool = False,
@@ -176,6 +187,20 @@ def _build_bundle(
     if not 1 <= max_index_chunks <= MAX_DENSE_ROWS or max_index_text_chars < 1:
         raise ValueError("invalid index chunk/text capacity")
     config = chunk_config or ChunkConfig()
+    if type(rerank_candidates) is not int or not 50 <= rerank_candidates <= 200:
+        raise ValueError("rerank candidates must be between 50 and 200")
+    if max_chunks_per_document is not None and (
+        type(max_chunks_per_document) is not int or not 1 <= max_chunks_per_document <= 50
+    ):
+        raise ValueError("max chunks per document must be between 1 and 50")
+    if max_chunks_per_document is not None and reranker_directory is None:
+        raise ValueError("document diversity requires an explicit reranker")
+    reranker_descriptor = None
+    if reranker_directory is not None:
+        from ragforge.core.rerank import reranker_spec
+
+        reranker_descriptor = reranker_spec(reranker_directory)
+
     limits = scan_limits or ScanLimits()
     if dense_backend not in {"exact", "ann"} or (profile == "minimal" and dense_backend != "exact"):
         raise ValueError("invalid dense backend for bundle profile")
@@ -227,6 +252,12 @@ def _build_bundle(
             "max_index_chunks": max_index_chunks,
             "max_index_text_chars": max_index_text_chars,
         }
+        if reranker_descriptor is not None:
+            recipe["retrieval_configuration"] = {
+                "reranker": reranker_descriptor.model_dump(mode="json"),
+                "candidates": rerank_candidates,
+                "max_chunks_per_document": max_chunks_per_document,
+            }
         workspace = BuildWorkspace(work_directory, output, recipe, resume=resume)
         stage = workspace.stage
         if workspace.published:
@@ -381,6 +412,32 @@ def _build_bundle(
             )
             capabilities = ["bm25", "dense", "hybrid"]
             licenses.append(spec.license + ": local query model; see models/query/LICENSE")
+        retrieval_configuration = None
+        if reranker_descriptor is not None:
+            assert reranker_directory is not None
+            reranker_root = stage / "models/reranker"
+            reranker_root.mkdir(parents=True, exist_ok=True)
+            reranker_paths = [str(r.path) for r in reranker_descriptor.files] + ["reranker.json"]
+            if storage:
+                storage.check(sum((reranker_directory / p).stat().st_size for p in reranker_paths))
+            for relative in reranker_paths:
+                destination_r = reranker_root / relative
+                destination_r.parent.mkdir(parents=True, exist_ok=True)
+                old_size = destination_r.stat().st_size if destination_r.exists() else 0
+                shutil.copyfile(reranker_directory / relative, destination_r)
+                if storage:
+                    storage.account(destination_r.stat().st_size - old_size)
+            retrieval_configuration = RetrievalConfiguration(
+                candidates_per_method=rerank_candidates,
+                max_chunks_per_document=max_chunks_per_document,
+                reranker=RerankerModel(
+                    model_id=reranker_descriptor.model_id,
+                    revision=reranker_descriptor.revision,
+                    license=reranker_descriptor.license,
+                    files=["models/reranker/" + p for p in sorted(reranker_paths)],
+                ),
+            )
+            licenses.append(reranker_descriptor.license + ": reranker; see models/reranker/LICENSE")
         descriptor = stage / "manifest.json"
         if descriptor.exists():
             if workspace is None or is_link(descriptor.lstat()):
@@ -406,6 +463,7 @@ def _build_bundle(
             capabilities=capabilities,
             default_search_method="hybrid" if profile == "balanced" else "bm25",
             query_model=query_model,
+            retrieval_configuration=retrieval_configuration,
             index_backend="sqlite-fts5",
             index_schema_version=1,
             sqlite_build_version=sqlite3.sqlite_version,
@@ -432,7 +490,7 @@ def _build_bundle(
                 if any(r.format == "pdf" for r in report.documents)
                 else None,
                 parser_version=";".join(versions),
-                chunker_version=CHUNKER_VERSION,
+                chunker_version=chunker_version(config),
                 chunk_size_chars=config.chunk_size_chars,
                 overlap_chars=config.overlap_chars,
             ),

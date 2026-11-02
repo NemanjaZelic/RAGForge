@@ -63,6 +63,18 @@
       "title": "Query",
       "type": "string"
     },
+    "rerank": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rerank"
+    },
     "search_method": {
       "anyOf": [
         {

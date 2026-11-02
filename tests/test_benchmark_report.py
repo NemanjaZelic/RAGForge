@@ -114,3 +114,60 @@ def test_progress_backup_uses_only_bounded_checkpoint_counts(tmp_path):
     sanitized = report.sanitize(tmp_path)
     assert sanitized["embedding_progress"]["kernel-6.18"]["completed_rows_lower_bound"] == 65536
     assert "MUST NOT EXPORT" not in json.dumps(sanitized)
+
+
+def test_quality_report_only_exports_whitelisted_numbers_and_bound_recipes(tmp_path):
+    import pytest
+
+    report = module()
+    recipe = {
+        "artifact_build_id": "a" * 64,
+        "cases_sha256": "b" * 64,
+        "answer_evidence_sha256": "c" * 64,
+        "split": "dev",
+        "methods": ["bm25"],
+        "top_k": 10,
+        "max_output_chars": 16000,
+        "runtime_sha256": {"core.py": "d" * 64},
+        "private_question": "DO NOT EXPORT",
+    }
+    (tmp_path / "recipe.json").write_text(json.dumps(recipe))
+    (tmp_path / "status.json").write_text(
+        json.dumps({"state": "running", "steps": {"raw": "complete"}})
+    )
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    measured = {
+        k: recipe[k]
+        for k in [
+            "artifact_build_id",
+            "cases_sha256",
+            "answer_evidence_sha256",
+            "split",
+            "methods",
+            "top_k",
+            "max_output_chars",
+        ]
+    }
+    measured["rerank"] = False
+    summary = {
+        "recipe": measured,
+        "selected_cases": 80,
+        "source_coverage": {"source_documents": 9854, "private_quote": "DO NOT EXPORT"},
+        "methods": {
+            "bm25": {
+                "attempted": 80,
+                "answer_evidence_support_at_k": 0.5,
+                "query": "DO NOT EXPORT",
+                "answer_fact_coverage": "DO NOT EXPORT",
+            }
+        },
+    }
+    (raw / "summary.json").write_text(json.dumps(summary))
+    safe = report.sanitize_quality(tmp_path)
+    assert "DO NOT EXPORT" not in json.dumps(safe)
+    assert safe["stages"]["raw"]["methods"]["bm25"]["answer_evidence_support_at_k"] == 0.5
+    summary["recipe"]["answer_evidence_sha256"] = "f" * 64
+    (raw / "summary.json").write_text(json.dumps(summary))
+    with pytest.raises(ValueError, match="frozen comparison"):
+        report.sanitize_quality(tmp_path)

@@ -26,6 +26,8 @@ def build_identity(manifest: BundleManifest) -> str:
     import hashlib
 
     data = manifest.model_dump(mode="json", exclude={"build_id"})
+    if data.get("retrieval_configuration") is None:
+        data.pop("retrieval_configuration", None)  # Preserve identities of earlier v1 bundles.
     return hashlib.sha256(
         json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
@@ -84,6 +86,8 @@ def verify_bundle(root: Path) -> BundleManifest:
         assert collection.dense_index is not None and manifest.query_model is not None
         required.add(collection.dense_index.path)
         required.update(manifest.query_model.files)
+    if manifest.retrieval_configuration is not None:
+        required.update(manifest.retrieval_configuration.reranker.files)
     if set(inventory) != required:
         raise ValueError("inventory contains files outside declared runtime components")
     total = 0
@@ -167,4 +171,18 @@ def verify_bundle(root: Path) -> BundleManifest:
             spec.license,
         ):
             raise ValueError("query model identity/dimensions/license do not match")
+    if manifest.retrieval_configuration is not None:
+        from ragforge.core.rerank import reranker_spec
+
+        reranker = manifest.retrieval_configuration.reranker
+        spec_r = reranker_spec(root / "models/reranker")
+        expected_r = {"models/reranker/" + str(r.path) for r in spec_r.files} | {
+            "models/reranker/reranker.json"
+        }
+        if expected_r != set(reranker.files) or (
+            reranker.model_id,
+            reranker.revision,
+            reranker.license,
+        ) != (spec_r.model_id, spec_r.revision, spec_r.license):
+            raise ValueError("reranker identity/inventory does not match descriptor")
     return manifest

@@ -79,7 +79,9 @@ uv run python scripts/export_schemas.py --check
   See [retrieval behavior and measured baseline](docs/RETRIEVAL.md).
 - Local ONNX CPU embeddings, exact cosine or explicit optional sharded ANN, and RRF
   over the same SQLite sources; resumable vector/shard construction for large corpora.
-- Balanced defaults to hybrid; explicit BM25 never imports/loads embedding libraries.
+- Balanced defaults to hybrid; raw BM25 never imports/loads embedding libraries.
+- Optional verified local cross-encoder reranking, section-aware chunks, and answer-fact
+  evaluation with accepted alternative citations. See [quality work and limits](docs/QUALITY.md).
 - Verified bundle inventories, copied query model/licenses and atomic publication to a new directory.
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
 - Synthetic manifest examples in `examples/manifests/`; these are not built bundles.

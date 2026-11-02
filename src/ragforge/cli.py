@@ -386,6 +386,12 @@ def build(
     model: Annotated[
         Path | None, typer.Option(help="Prepared local query model directory.")
     ] = None,
+    reranker: Annotated[
+        Path | None, typer.Option(help="Prepared local ONNX reranker; no download.")
+    ] = None,
+    rerank_candidates: int = typer.Option(100, min=50, max=200),
+    max_chunks_per_document: Annotated[int | None, typer.Option(min=1, max=50)] = None,
+    chunk_strategy: str = typer.Option("blocks", help="blocks or section-aware sections."),
     collection: str = typer.Option("default", "--collection"),
     title: str = typer.Option("Documents"),
     chunk_size_chars: int = typer.Option(1000, min=1, max=100000),
@@ -426,6 +432,8 @@ def build(
             typer.echo(json.dumps(event, ensure_ascii=True), err=True)
 
     try:
+        if chunk_strategy not in {"blocks", "sections"}:
+            raise ValueError("unknown chunk strategy")
         if dense_backend not in {"exact", "ann"}:
             raise ValueError("unknown dense backend")
         if compute != "local":
@@ -437,7 +445,11 @@ def build(
             title=title,
             profile="balanced" if profile == BuildProfile.balanced else "minimal",
             model_directory=model,
+            reranker_directory=reranker,
+            rerank_candidates=rerank_candidates,
+            max_chunks_per_document=max_chunks_per_document,
             chunk_config=ChunkConfig(
+                strategy="sections" if chunk_strategy == "sections" else "blocks",
                 chunk_size_chars=chunk_size_chars,
                 overlap_chars=overlap_chars,
             ),
@@ -481,6 +493,34 @@ def build(
 
 
 @app.command()
+def enhance(
+    artifact: Path,
+    output: Annotated[Path, typer.Option(help="New verified bundle version.")],
+    reranker: Annotated[Path, typer.Option(help="Prepared local reranker model.")],
+    candidates: int = typer.Option(100, min=50, max=200),
+    max_chunks_per_document: Annotated[int | None, typer.Option(min=1, max=50)] = None,
+    storage_root: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Add a local reranker in a new version, reusing index bytes without re-embedding."""
+    from ragforge.artifacts.enhance import enhance_bundle
+    from ragforge.jobs.budget import StorageBudget
+
+    try:
+        result = enhance_bundle(
+            artifact,
+            output,
+            reranker,
+            candidates=candidates,
+            max_chunks_per_document=max_chunks_per_document,
+            storage=StorageBudget(storage_root) if storage_root else None,
+        )
+    except (ValueError, OSError, RuntimeError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps({"build_id": result.build_id, "reused_index_bytes": True}))
+
+
+@app.command()
 def use(
     artifact: Annotated[
         Path | None, typer.Argument(help="Local bundle; omit for shared mode.")
@@ -494,6 +534,7 @@ def use(
     top_k: int = typer.Option(5, min=1, max=50),
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
     threads: int = typer.Option(4, min=1, max=32),
+    rerank: Annotated[bool | None, typer.Option("--rerank/--no-rerank")] = None,
     endpoint: Annotated[str | None, typer.Option()] = None,
     connection: Annotated[
         Path | None, typer.Option(help="Explicit shared connection profile.")
@@ -512,6 +553,7 @@ def use(
                 "top_k": top_k,
                 "max_output_chars": max_output_chars,
                 "search_method": search_method,
+                "rerank": rerank,
             }
         )
         if mode == "shared":
@@ -765,7 +807,13 @@ def evaluate(
     methods: Annotated[list[str] | None, typer.Option("--method")] = None,
     top_k: int = typer.Option(10, min=10, max=50),
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
+    answer_evidence: Annotated[
+        Path | None,
+        typer.Option(help="Question-bound accepted answer facts and alternative citations."),
+    ] = None,
+    threads: int = typer.Option(4, min=1, max=32),
     allow_draft: bool = typer.Option(False),
+    rerank: Annotated[bool | None, typer.Option("--rerank/--no-rerank")] = None,
     resume: bool = typer.Option(False),
     pdf_reference_cache: Annotated[
         Path | None, typer.Option(help="Frozen PDF reference page JSONs.")
@@ -792,6 +840,9 @@ def evaluate(
             top_k=top_k,
             max_output_chars=max_output_chars,
             allow_draft=allow_draft,
+            answer_evidence_file=answer_evidence,
+            rerank=rerank,
+            threads=threads,
             resume=resume,
             pdf_reference_cache=pdf_reference_cache,
             progress=lambda event: typer.echo(json.dumps(event, ensure_ascii=True), err=True),

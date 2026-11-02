@@ -160,6 +160,89 @@ def sanitize(run):
     return result
 
 
+def sanitize_quality(run):
+    recipe = json.loads((run / "recipe.json").read_text(encoding="utf-8"))
+    status = json.loads((run / "status.json").read_text(encoding="utf-8"))
+    if status["state"] not in {"running", "failed", "complete"}:
+        raise ValueError("unknown quality comparison state")
+    if recipe["split"] not in {"dev", "tuning"} or not set(recipe["methods"]) <= {
+        "bm25",
+        "dense",
+        "hybrid",
+    }:
+        raise ValueError("unknown quality comparison scope")
+    if recipe["top_k"] != 10 or recipe["max_output_chars"] != 16000:
+        raise ValueError("unexpected quality comparison output budget")
+    result = {
+        "state": status["state"],
+        "quality_gate": "not_approved_draft_labels",
+        "scope": "retrieval support diagnostic; not generated-answer accuracy",
+        "completed_steps": sum(v == "complete" for v in status["steps"].values()),
+        "total_steps": 2,
+        "split": recipe["split"],
+        "artifact_build_id": digest(recipe["artifact_build_id"]),
+        "cases_sha256": digest(recipe["cases_sha256"]),
+        "answer_evidence_sha256": digest(recipe["answer_evidence_sha256"]),
+        "recipe_sha256": hashlib.sha256((run / "recipe.json").read_bytes()).hexdigest(),
+        "runtime_inventory_sha256": hashlib.sha256(
+            json.dumps(recipe["runtime_sha256"], sort_keys=True).encode()
+        ).hexdigest(),
+        "top_k": 10,
+        "max_output_chars": 16000,
+        "stages": {},
+        "target_good": 0.95,
+        "target_excellent": 0.99,
+    }
+    for mode in ("raw", "reranked"):
+        if status["steps"].get(mode) != "complete":
+            continue
+        summary = json.loads((run / mode / "summary.json").read_text(encoding="utf-8"))
+        measured = summary["recipe"]
+        if any(
+            measured[key] != recipe[key]
+            for key in [
+                "artifact_build_id",
+                "cases_sha256",
+                "answer_evidence_sha256",
+                "split",
+                "top_k",
+                "max_output_chars",
+                "methods",
+            ]
+        ) or measured["rerank"] != (mode == "reranked"):
+            raise ValueError("quality summary does not match the frozen comparison")
+        result["stages"][mode] = {
+            "selected_cases": numbers(summary, {"selected_cases"})["selected_cases"],
+            "methods": {
+                method: numbers(
+                    summary["methods"][method],
+                    METRICS
+                    | {
+                        "answer_evidence_annotated_cases",
+                        "answer_evidence_support_at_k",
+                        "answer_fact_coverage",
+                    },
+                )
+                for method in recipe["methods"]
+            },
+            "source_coverage": numbers(
+                summary["source_coverage"],
+                {
+                    "source_documents",
+                    "indexed_documents",
+                    "failed_documents_retained",
+                    "other_zero_chunk_documents",
+                    "reported_pdf_pages",
+                    "pdf_no_text_pages",
+                    "pdf_error_pages",
+                    "documents_with_warnings",
+                    "all_sources_have_searchable_text",
+                },
+            ),
+        }
+    return result
+
+
 def git(project, *args, data=None, env=None):
     result = subprocess.run(
         ["git", *args],
@@ -174,7 +257,8 @@ def git(project, *args, data=None, env=None):
     return result.stdout.decode().strip()
 
 
-def save_commit(project, branch, report):
+def save_commit(project, branch, report, *, report_path=None):
+    report_path = report_path or REPORT_PATH
     if not re.fullmatch(r"results/[a-z0-9][a-z0-9-]{0,63}", branch):
         raise ValueError("benchmark results branch must use results/lowercase-name")
     ref = "refs/heads/" + branch
@@ -191,7 +275,7 @@ def save_commit(project, branch, report):
     payload = (json.dumps(report, indent=2, sort_keys=True) + "\n").encode()
     blob = git(project, "hash-object", "-w", "--stdin", data=payload)
     old = subprocess.run(
-        ["git", "rev-parse", parent + ":" + REPORT_PATH],
+        ["git", "rev-parse", parent + ":" + report_path],
         cwd=project,
         capture_output=True,
         text=True,
@@ -204,7 +288,7 @@ def save_commit(project, branch, report):
     with tempfile.TemporaryDirectory(prefix="benchmark-git-", dir=cache) as temporary:
         env = {"GIT_INDEX_FILE": str(Path(temporary) / "index")}
         git(project, "read-tree", parent, env=env)
-        git(project, "update-index", "--add", "--cacheinfo", "100644", blob, REPORT_PATH, env=env)
+        git(project, "update-index", "--add", "--cacheinfo", "100644", blob, report_path, env=env)
         tree = git(project, "write-tree", env=env)
         message = (
             f"Record scale diagnostic progress ({report['completed_steps']}/"
@@ -235,13 +319,21 @@ def main():
     parser.add_argument("run", type=Path)
     parser.add_argument("--branch", default="results/scale-v1")
     parser.add_argument("--watch", action="store_true")
+    parser.add_argument(
+        "--quality", action="store_true", help="Whitelisted answer-fact comparison reports."
+    )
     args = parser.parse_args()
     failures = 0
     previous = None
     while True:
         try:
-            report = sanitize(args.run)
-            commit = save_commit(ROOT, args.branch, report)
+            report = sanitize_quality(args.run) if args.quality else sanitize(args.run)
+            commit = save_commit(
+                ROOT,
+                args.branch,
+                report,
+                report_path="docs/benchmarks/quality-runtime-v1.json" if args.quality else None,
+            )
             if commit != previous:
                 publish(ROOT, args.branch)
                 previous = commit

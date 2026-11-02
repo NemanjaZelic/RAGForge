@@ -93,6 +93,7 @@ def create_server(
         max_output_chars: OutputChars = 16000,
         filters: RetrievalFilters | None = None,
         search_method: SearchMethod | None = None,
+        rerank: bool | None = None,
     ) -> RetrievalResponse:
         """Find cited evidence. Default: bundle method; balanced=hybrid, minimal=bm25."""
         # Construct inside invoke so core validation failures are recoverable tool errors.
@@ -105,6 +106,7 @@ def create_server(
                     max_output_chars=max_output_chars,
                     filters=filters,
                     search_method=search_method,
+                    rerank=rerank,
                 )
             )
         )

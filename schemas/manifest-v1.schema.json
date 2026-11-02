@@ -308,6 +308,91 @@
       "title": "QueryModel",
       "type": "object"
     },
+    "RerankerModel": {
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "items": {
+            "maxLength": 1024,
+            "minLength": 1,
+            "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+            "type": "string"
+          },
+          "minItems": 4,
+          "title": "Files",
+          "type": "array"
+        },
+        "license": {
+          "minLength": 1,
+          "title": "License",
+          "type": "string"
+        },
+        "model_id": {
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "revision": {
+          "minLength": 1,
+          "title": "Revision",
+          "type": "string"
+        },
+        "runtime": {
+          "const": "onnxruntime-cpu",
+          "default": "onnxruntime-cpu",
+          "title": "Runtime",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model_id",
+        "revision",
+        "files",
+        "license"
+      ],
+      "title": "RerankerModel",
+      "type": "object"
+    },
+    "RetrievalConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "candidates_per_method": {
+          "default": 100,
+          "maximum": 200,
+          "minimum": 50,
+          "title": "Candidates Per Method",
+          "type": "integer"
+        },
+        "max_chunks_per_document": {
+          "anyOf": [
+            {
+              "maximum": 50,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Chunks Per Document"
+        },
+        "reranker": {
+          "$ref": "#/$defs/RerankerModel"
+        },
+        "version": {
+          "const": "candidate-rerank-v1",
+          "default": "candidate-rerank-v1",
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reranker"
+      ],
+      "title": "RetrievalConfiguration",
+      "type": "object"
+    },
     "RuntimeRequirements": {
       "additionalProperties": false,
       "properties": {
@@ -437,6 +522,17 @@
       "anyOf": [
         {
           "$ref": "#/$defs/QueryModel"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "retrieval_configuration": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RetrievalConfiguration"
         },
         {
           "type": "null"

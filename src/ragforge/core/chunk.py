@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 from collections.abc import Iterator
+from dataclasses import replace
 from typing import Annotated, Literal, Self
 
 from pydantic import Field, model_validator
@@ -16,6 +17,7 @@ CHUNKER_VERSION = "chars-v1"
 
 
 class ChunkConfig(ContractModel):
+    strategy: Literal["blocks", "sections"] = "blocks"
     chunk_size_chars: Annotated[int, Field(ge=1, le=100000)] = 1000
     overlap_chars: Annotated[int, Field(ge=0)] = 100
 
@@ -39,11 +41,16 @@ class Chunk(ContractModel):
     char_end: Annotated[int, Field(ge=1)]
 
 
+def chunker_version(config: ChunkConfig) -> str:
+    return CHUNKER_VERSION if config.strategy == "blocks" else "section-chars-v2"
+
+
 def pipeline_hash(document: ParsedDocument, config: ChunkConfig) -> str:
+    options = config.model_dump(exclude={"strategy"})
     payload = {
         "parser_version": document.parser_version,
-        "chunker_version": CHUNKER_VERSION,
-        **config.model_dump(),
+        "chunker_version": chunker_version(config),
+        **options,
     }
     return hashlib.sha256(
         json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode(
@@ -62,6 +69,41 @@ def _location(path: str, block: TextBlock, text: str, line_offset: int) -> Sourc
     )
 
 
+def _blocks(document: ParsedDocument, config: ChunkConfig) -> Iterator[tuple[int, TextBlock]]:
+    """Coalesce neighboring prose within a section, physical page and line range.
+
+    HTML paragraph boundaries no longer force tiny retrieval units. Code remains
+    separate. The bounded buffer never crosses pages or invents source line numbers.
+    block_index identifies the first original block; offsets are in the coalesced block.
+    """
+    pending: TextBlock | None = None
+    first = 0
+    for index, block in enumerate(document.blocks):
+        contiguous_lines = pending is not None and (
+            (pending.line_start is None and block.line_start is None)
+            or (pending.line_end is not None and block.line_start == pending.line_end + 1)
+        )
+        if (
+            config.strategy == "sections"
+            and pending is not None
+            and pending.kind == block.kind == "text"
+            and pending.section == block.section
+            and pending.page == block.page
+            and contiguous_lines
+            and len(pending.text) + len(block.text) + 1 <= 100000
+        ):
+            separator = "" if pending.line_start is not None else "\n"
+            pending = replace(
+                pending, text=pending.text + separator + block.text, line_end=block.line_end
+            )
+        else:
+            if pending is not None:
+                yield first, pending
+            first, pending = index, block
+    if pending is not None:
+        yield first, pending
+
+
 def iter_chunks(
     document: ParsedDocument,
     config: ChunkConfig | None = None,
@@ -77,7 +119,7 @@ def iter_chunks(
     output_chars = 0
     config_hash = pipeline_hash(document, config)
     ordinal = 0
-    for block_index, block in enumerate(document.blocks):
+    for block_index, block in _blocks(document, config):
         start = 0
         line_offset = 0
         while start < len(block.text):

@@ -6,7 +6,7 @@ from typing import Any
 
 from ragforge.core.contracts import RetrievalResponse
 from ragforge.core.identity import document_id
-from ragforge.evaluation.models import EvaluationCase, Evidence
+from ragforge.evaluation.models import AnswerEvidence, EvaluationCase, Evidence
 from ragforge.evaluation.sources import canonicalize
 
 
@@ -95,3 +95,37 @@ def score_response(
         unmapped_reference_chunks=unmapped,
     )
     return record
+
+
+def score_answer_evidence(
+    annotation: AnswerEvidence,
+    case: EvaluationCase,
+    response: RetrievalResponse,
+    source: Callable[[Evidence], str],
+    *,
+    evidence_cutoff: int = 10,
+) -> dict[str, Any]:
+    """Credit complete, source-verified facts from any explicitly accepted citation.
+
+    This measures retrieved support, not the truthfulness of a generated answer.
+    Partial quotations do not count as complete facts (e.g. dropping a negation).
+    """
+    if (
+        annotation.case_id != case.case_id
+        or annotation.collection_id != case.collection_id
+        or annotation.query_sha256 != hashlib.sha256(case.query.encode()).hexdigest()
+        or case.answerability != "answerable"
+    ):
+        raise ValueError("answer evidence does not match the evaluated question")
+    fact_case = case.model_copy(update={"evidence_groups": annotation.facts})
+    scored = score_response(
+        fact_case, response, source, evidence_cutoff=evidence_cutoff, minimum_coverage=1.0
+    )
+    return {
+        "answer_evidence_support_at_k": scored["all_required_groups_covered"],
+        "answer_fact_coverage": scored["evidence_group_coverage"],
+        "answer_fact_coverages": scored["group_coverages"],
+        "answer_facts": len(annotation.facts),
+        "answer_ambiguous_chunks": scored["ambiguous_reference_chunks"],
+        "answer_evidence_independently_reviewed": annotation.strict_scoring_eligible,
+    }

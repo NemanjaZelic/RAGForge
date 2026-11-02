@@ -284,3 +284,35 @@ embedding; 3GPP follows automatically. Numerical-only results are saved on priva
 `results/scale-v1`. A process-scoped Windows system-activity helper is attached to
 the current controller for the long run and releases its request on completion,
 failure or controller exit. No persistent power plan was changed.
+
+
+## 2026-11-02 — Retrieval quality work requested by the user
+
+The user considers >=95% good and 99% excellent, and explicitly accepts correct
+information from alternative sources. No such threshold is demonstrated yet.
+Document Recall@5 and broad-context span coverage are not answer accuracy.
+
+Implemented explicit section-aware chunks, a pinned local ONNX cross-encoder,
+bounded candidate pools and an immutable `enhance` upgrade without re-embedding.
+Raw BM25 remains available without loading ML, including on reranker bundles.
+CLI, MCP and REST use the same request/engine; filters apply before inference.
+
+Added separate question-bound minimal-fact annotations and complete-support
+scoring with accepted alternative citations. Inspection found some original RFC
+context windows miss the requested fact. Original cases/artifacts/runtime remain
+unchanged. Separate local dev-only labels cover 80 questions, 42 facts, 60 source
+spans; independent review eligibility is still zero. Details: [QUALITY.md](QUALITY.md).
+
+A complete 9,854-source RFC lexical/reranker candidate with 1,000-character chunks
+and 150-character overlap built in 827.70 s on the busy workstation. A frozen
+paired raw/reranked comparison is running, using identical top-k=10, 16,000-char
+budgets and fact labels. Numerical-only progress is saved to the private
+[quality results branch](https://github.com/NemanjaZelic/RAGForge/blob/results/quality-v1/docs/benchmarks/quality-runtime-v1.json).
+A separately frozen follow-up supports comparing the full balanced RFC bundle
+once the original offline build publishes; it does not modify or restart that build.
+
+Local full checks: **261 passed, 4 platform skips**, with all six actual pretrained
+embedding/reranker exact/ANN offline integration tests passing. Ruff, formatting,
+mypy (46 source files) and schema checks passed. Additional focused tests cover
+queued offline execution and private-report redaction. Software checks do not
+approve retrieval quality or promote any draft labels.

@@ -41,6 +41,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       RAGFORGE_MODEL_DIR: .cache/real-model
+      RAGFORGE_RERANKER_DIR: .cache/real-reranker
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v7
@@ -55,8 +56,15 @@ jobs:
           key: e5-small-${{ runner.os }}-614241f-${{ hashFiles('scripts/prepare_models.py', 'src/ragforge/core/embedding.py') }}
       - if: steps.model-cache.outputs.cache-hit != 'true'
         run: uv run --no-sync python scripts/prepare_models.py e5-small .cache/real-model
+      - uses: actions/cache@v4
+        id: reranker-cache
+        with:
+          path: .cache/real-reranker
+          key: ms-marco-reranker-${{ runner.os }}-233902d-${{ hashFiles('scripts/prepare_reranker.py', 'src/ragforge/core/rerank.py') }}
+      - if: steps.reranker-cache.outputs.cache-hit != 'true'
+        run: uv run --no-sync python scripts/prepare_reranker.py .cache/real-reranker
       - name: Pretrained model offline build and query
         run: uv run --no-sync pytest tests/test_real_model.py tests/test_shared_http.py::test_real_model_shared_parity_and_prepared_connection -q
       - name: Linux OS network isolation
         if: runner.os == 'Linux'
-        run: sudo --preserve-env=RAGFORGE_MODEL_DIR unshare --net .venv/bin/python -m pytest tests/test_real_model.py -q
+        run: sudo --preserve-env=RAGFORGE_MODEL_DIR,RAGFORGE_RERANKER_DIR unshare --net .venv/bin/python -m pytest tests/test_real_model.py -q

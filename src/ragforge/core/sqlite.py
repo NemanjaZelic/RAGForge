@@ -256,8 +256,8 @@ class SQLiteEngine:
             return [CollectionDescription.model_validate(dict(row))]
 
     def rank_bm25(self, request: RetrieveRequest, limit: int) -> list[tuple[str, float]]:
-        if not 1 <= limit <= 50:
-            raise RetrievalError("candidate limit must be between 1 and 50")
+        if not 1 <= limit <= 200:
+            raise RetrievalError("candidate limit must be between 1 and 200")
         with self._connect() as connection:
             collection = self._collection(connection, request.collection_id)
             query = plain_query(request.query)

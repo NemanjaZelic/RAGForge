@@ -74,6 +74,7 @@ class EvidenceSources:
         self.verified: set[tuple[str, str]] = set()
         self.page_cache: OrderedDict[str, list[str]] = OrderedDict()
         self.text_cache: OrderedDict[str, str] = OrderedDict()
+        self.text_cache_chars = 0
 
     def path(self, target: Evidence) -> Path:
         path = self.root
@@ -109,14 +110,30 @@ class EvidenceSources:
         return pages
 
     def text(self, target: Evidence) -> str:
-        key = target.model_dump_json()
+        # Multiple facts can refer to the same large source. Cache its canonical
+        # representation once, while validating every individual span on each call.
+        key = target.model_dump_json(
+            include={"source_path", "source_sha256", "canonicalizer", "page"}
+        )
         if key in self.text_cache:
             self.text_cache.move_to_end(key)
-            return self.text_cache[key]
-        value = self._text(key)
-        self.text_cache[key] = value
-        if len(self.text_cache) > 32:
-            self.text_cache.popitem(last=False)
+            value = self.text_cache[key]
+        else:
+            value = self._text(target.model_dump_json())
+            if len(value) <= 8_000_000:
+                while self.text_cache and (
+                    len(self.text_cache) >= 32 or self.text_cache_chars + len(value) > 8_000_000
+                ):
+                    _, removed = self.text_cache.popitem(last=False)
+                    self.text_cache_chars -= len(removed)
+                self.text_cache[key] = value
+                self.text_cache_chars += len(value)
+        if (
+            target.char_end > len(value)
+            or hashlib.sha256(value[target.char_start : target.char_end].encode()).hexdigest()
+            != target.span_sha256
+        ):
+            raise ValueError("evidence span hash does not match its frozen source representation")
         return value
 
     def _text(self, serialized: str) -> str:
@@ -133,11 +150,4 @@ class EvidenceSources:
                 parser = SphinxMain()
                 parser.feed(text)
                 text = "".join(parser.parts)
-        canonical = canonicalize(text, target.canonicalizer)
-        selected = canonical[target.char_start : target.char_end]
-        if (
-            target.char_end > len(canonical)
-            or hashlib.sha256(selected.encode()).hexdigest() != target.span_sha256
-        ):
-            raise ValueError("evidence span hash does not match its frozen source representation")
-        return canonical
+        return canonicalize(text, target.canonicalizer)

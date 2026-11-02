@@ -118,3 +118,56 @@ def test_pretrained_mcp_stdio_offline(tmp_path: Path, offline_cli, dense_backend
                 )
 
     asyncio.run(asyncio.wait_for(exercise(), timeout=60))
+
+
+@pytest.mark.skipif(
+    not os.environ.get("RAGFORGE_MODEL_DIR") or not os.environ.get("RAGFORGE_RERANKER_DIR"),
+    reason="explicit local pretrained embedding model and reranker required",
+)
+@pytest.mark.parametrize("dense_backend", ["exact", "ann"])
+def test_pretrained_reranker_offline_build_query_and_relocation(
+    tmp_path: Path, offline_cli, dense_backend: str
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    bundle = tmp_path / "quality-bundle"
+    built = offline_cli(
+        [
+            "build",
+            str(root / "examples/mini-docs"),
+            "--output",
+            str(bundle),
+            "--collection",
+            "mini",
+            "--model",
+            os.environ["RAGFORGE_MODEL_DIR"],
+            "--reranker",
+            os.environ["RAGFORGE_RERANKER_DIR"],
+            "--chunk-strategy",
+            "sections",
+            "--dense-backend",
+            dense_backend,
+            "--offline",
+        ]
+    )
+    assert built.returncode == 0, built.stderr
+    moved = tmp_path / "relocated quality"
+    shutil.copytree(bundle, moved)
+    for method in ("bm25", "dense", "hybrid"):
+        result = offline_cli(
+            [
+                "use",
+                str(moved),
+                "--query",
+                "How are access tokens sent to the service?",
+                "--search-method",
+                method,
+                "--rerank",
+                "--top-k",
+                "3",
+            ]
+        )
+        assert result.returncode == 0, result.stderr
+        first = json.loads(result.stdout)["results"][0]
+        assert first["source"]["path"] == "authentication.md"
+        assert first["retrieval_method"] == method
+        assert first["text"]

@@ -42,6 +42,7 @@ class RetrieveRequest(ContractModel):
     filters: RetrievalFilters | None = None
     # None resolves to the bundle default; unsupported methods must raise.
     search_method: SearchMethod | None = None
+    rerank: Annotated[bool | None, Field(strict=True)] = None
 
     @field_validator("query")
     @classmethod

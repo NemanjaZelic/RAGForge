@@ -16,8 +16,8 @@ from ragforge.core.engine import BundleEngine
 from ragforge.core.identity import document_id
 from ragforge.core.resources import process_memory
 from ragforge.core.source import is_link
-from ragforge.evaluation.models import EvaluationCase
-from ragforge.evaluation.scoring import score_response
+from ragforge.evaluation.models import AnswerEvidence, EvaluationCase
+from ragforge.evaluation.scoring import score_answer_evidence, score_response
 from ragforge.evaluation.sources import EvidenceSources
 from ragforge.jobs.build import atomic_json
 from ragforge.jobs.ingest import job_lock
@@ -64,6 +64,9 @@ def summarize(records: list[dict[str, Any]], *, strict: bool) -> dict[str, Any]:
             "positive_cases": sum("mrr_at_10" in row for row in valid),
             "document_recall_at_5": mean(valid, "document_recall_at_5"),
             "mrr_at_10": mean(valid, "mrr_at_10"),
+            "answer_evidence_annotated_cases": sum("answer_facts" in row for row in valid),
+            "answer_evidence_support_at_k": mean(valid, "answer_evidence_support_at_k"),
+            "answer_fact_coverage": mean(valid, "answer_fact_coverage"),
             "evidence_group_coverage": mean(valid, "evidence_group_coverage"),
             "all_required_groups_covered": mean(valid, "all_required_groups_covered"),
             "collection_negative_cases": len(negatives),
@@ -111,6 +114,9 @@ def evaluate_bundle(
     top_k: int = 10,
     max_output_chars: int = 16000,
     allow_draft: bool = False,
+    answer_evidence_file: Path | None = None,
+    rerank: bool | None = None,
+    threads: int = 4,
     pdf_reference_cache: Path | None = None,
     resume: bool = False,
     progress: Callable[[dict[str, Any]], None] | None = None,
@@ -122,7 +128,27 @@ def evaluate_bundle(
     ]
     if not cases:
         raise ValueError("selected evaluation split is empty")
-    strict = all(case.strict_scoring_eligible for case in cases)
+    annotations: dict[str, AnswerEvidence] = {}
+    if answer_evidence_file is not None:
+        if (
+            is_link(answer_evidence_file.lstat())
+            or answer_evidence_file.stat().st_size > 128 * 1024**2
+        ):
+            raise ValueError("unsafe or oversized answer evidence file")
+        for line in answer_evidence_file.read_text(encoding="utf-8").splitlines():
+            if not line:
+                continue
+            item = AnswerEvidence.model_validate_json(line)
+            if item.case_id in annotations:
+                raise ValueError("duplicate answer evidence case ID")
+            annotations[item.case_id] = item
+        if any(
+            case.case_id not in annotations for case in cases if case.answerability == "answerable"
+        ):
+            raise ValueError("answer evidence must cover every selected positive case")
+    strict = all(case.strict_scoring_eligible for case in cases) and all(
+        row.strict_scoring_eligible for row in annotations.values()
+    )
     if not strict and not allow_draft:
         raise ValueError(
             "unreviewed labels require explicit --allow-draft; no strict score is approved"
@@ -143,7 +169,7 @@ def evaluate_bundle(
     output.mkdir(parents=True, exist_ok=True)
     with job_lock(output):
         opened = time.monotonic()
-        engine = BundleEngine(artifact)
+        engine = BundleEngine(artifact, threads=threads)
         constructor_seconds = time.monotonic() - opened
         selected = methods or list(engine.manifest.capabilities)
         if len(set(selected)) != len(selected) or not set(selected) <= set(
@@ -155,7 +181,18 @@ def evaluate_bundle(
         for case in cases:
             if case.collection_id != engine.collection.collection_id:
                 raise ValueError("evaluation cases belong to another collection")
-            for group in case.evidence_groups:
+            annotation = annotations.get(case.case_id)
+            if annotation is not None:
+                # Bind question/collection before any retrieval or reuse of results.
+                from ragforge.core.contracts import RetrievalResponse
+
+                score_answer_evidence(
+                    annotation,
+                    case,
+                    RetrievalResponse(contract_version="1", results=[]),
+                    provider.text,
+                )
+            for group in case.evidence_groups + (annotation.facts if annotation else []):
                 for target in group.any_of:
                     doc = inventory.get(target.source_path)
                     if (
@@ -179,6 +216,15 @@ def evaluate_bundle(
             "scorer_version": SCORER_VERSION,
             "minimum_evidence_coverage": 0.8,
         }
+        if threads != 4:
+            recipe["threads"] = threads
+        if rerank is not None:
+            recipe["rerank"] = rerank
+        if answer_evidence_file is not None:
+            recipe["answer_evidence_sha256"] = hashlib.sha256(
+                answer_evidence_file.read_bytes()
+            ).hexdigest()
+            recipe["answer_evidence_scorer"] = "complete-accepted-facts-v1"
         metadata = output / "run.json"
         if metadata.exists():
             if is_link(metadata.lstat()) or metadata.stat().st_size > 1024**2:
@@ -209,12 +255,23 @@ def evaluate_bundle(
                             top_k=top_k,
                             max_output_chars=max_output_chars,
                             search_method=method,
+                            rerank=rerank,
                         )
                         response = engine.retrieve(request)
                         elapsed = time.monotonic() - started
                         record = score_response(
                             case, response, provider.text, evidence_cutoff=top_k
                         )
+                        if case.case_id in annotations:
+                            record.update(
+                                score_answer_evidence(
+                                    annotations[case.case_id],
+                                    case,
+                                    response,
+                                    provider.text,
+                                    evidence_cutoff=top_k,
+                                )
+                            )
                         record.update(seconds=elapsed, method=method)
                         record["ranked_sources"] = [
                             {

@@ -72,3 +72,29 @@ class EvaluationCase(ContractModel):
             for group in self.evidence_groups
             for target in group.any_of
         }
+
+
+class AnswerEvidence(ContractModel):
+    """Versioned answer-bearing quotes; any source listed for a fact is acceptable.
+
+    Annotations bind to a question hash. Version/time constraints belong in the
+    explicit source choices and scope note; a matching keyword is never sufficient.
+    """
+
+    annotation_version: Literal["answer-evidence-v1"] = "answer-evidence-v1"
+    case_id: Annotated[str, Field(min_length=1, max_length=256)]
+    query_sha256: Sha256
+    collection_id: Identifier
+    facts: Annotated[list[EvidenceGroup], Field(min_length=1, max_length=100)]
+    scope_note: Annotated[str, Field(min_length=1, max_length=4000)]
+    review_status: Literal["ai_draft", "reviewed"] = "ai_draft"
+    independent_reviewer: str | None = None
+    strict_scoring_eligible: bool = False
+
+    @model_validator(mode="after")
+    def reviewed(self) -> Self:
+        if self.strict_scoring_eligible and (
+            self.review_status != "reviewed" or not (self.independent_reviewer or "").strip()
+        ):
+            raise ValueError("answer evidence requires independent review for strict scoring")
+        return self

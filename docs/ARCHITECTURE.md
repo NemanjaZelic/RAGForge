@@ -210,3 +210,20 @@ subject and read scope; token issuance remains with the operator's issuer.
 TLS, strict Host/Origin checks, request bounds and safe errors apply to REST and
 MCP. Operational rollout/version lifecycle remains the following milestone.
 See [SHARED.md](SHARED.md) for the implemented contract and limits.
+
+
+## Optional retrieval quality components
+
+The common engine now accepts an inventoried local reranker configured in the
+manifest. Dense/hybrid use it when present; raw BM25 stays a baseline, and a
+request can explicitly enable/disable reranking. All candidate retrieval and
+reranking honor the same source grants and budgets. The optional new manifest
+field is excluded from build identity when absent/null to retain older v1
+bundle identities. Models and index bytes stay immutable across an `enhance`
+new-version publication. Section-aware character chunking is an explicit new
+pipeline; no existing build or frozen benchmark is rewritten.
+
+Answer-evidence annotations are evaluator inputs, never engine/reranker inputs.
+They bind exact questions and verified minimal facts, allow equivalent citations,
+and retain an independent-review gate. Original broad-window span metrics remain
+separate. Details, limitations and the unachieved >=95% goal: [QUALITY.md](QUALITY.md).
