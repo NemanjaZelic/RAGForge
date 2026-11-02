@@ -1,0 +1,18 @@
+{
+  "answer_evidence_sha256": "cbbd894c09b307f2b47b255d2ddc937e8953d320709b108869da205ec4add122",
+  "artifact_build_id": "a1c071e4f915a64dc949eaabe32e164b2c1ebe1e9fda5e96d157b30f5ee3b240",
+  "cases_sha256": "9965095d25b5088999b94b8ddce6a6ba197181e2fd2fa0611c98c1af9c510b0b",
+  "completed_steps": 0,
+  "max_output_chars": 16000,
+  "quality_gate": "not_approved_draft_labels",
+  "recipe_sha256": "d996c9083813e4204e36a750314a73d5e12b225f171052a4ed95d23913bf633c",
+  "runtime_inventory_sha256": "0d9227b282d4f53cca6e6003bc016326d49ef68391c4fc7d039f565b060da842",
+  "scope": "retrieval support diagnostic; not generated-answer accuracy",
+  "split": "dev",
+  "stages": {},
+  "state": "running",
+  "target_excellent": 0.99,
+  "target_good": 0.95,
+  "top_k": 10,
+  "total_steps": 2
+}
