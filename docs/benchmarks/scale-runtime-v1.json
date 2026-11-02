@@ -1,0 +1,18 @@
+{
+  "completed_steps": 0,
+  "embedding_progress": {
+    "kernel-6.18": {
+      "completed_rows_lower_bound": 65536,
+      "total_rows": 573041
+    }
+  },
+  "latency_scope": "wall time, first call includes lazy setup; OS caches not cleared",
+  "measurements": [],
+  "progress_granularity_rows": 65536,
+  "quality_gate": "not_approved_draft_labels",
+  "recipe_sha256": "b5af3297c7d598e6b745fabf0dae7b4212bb80196dc0505500907d948ba0a9d3",
+  "source_commit": "9fe8fc9ff9af519f0c3bd48ac411b3c9eb02fae4",
+  "state": "running",
+  "timing_scope": "successful invocation; interrupted attempts excluded",
+  "total_steps": 15
+}
