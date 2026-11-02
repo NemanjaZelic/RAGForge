@@ -1,5 +1,5 @@
 {
-  "completed_steps": 2,
+  "completed_steps": 3,
   "embedding_progress": {
     "ietf-rfcs": {
       "completed_rows_lower_bound": 1976868,
@@ -112,6 +112,28 @@
       "split": "test",
       "track": "supplementary_evidence_draft",
       "wall_seconds": 96.62081619992387
+    },
+    {
+      "build_id": "6bd07bd2e44dd3e1f4394d68803fb2669e302ec3d9de79dd1b0dde863182e5e8",
+      "corpus": "ietf-rfcs",
+      "kind": "build",
+      "process_memory": {
+        "peak_rss_bytes": 1801216000,
+        "private_committed_bytes": 344129536,
+        "rss_bytes": 67727360
+      },
+      "source_coverage": {
+        "all_sources_have_searchable_text": false,
+        "documents_with_warnings": 58,
+        "failed_documents_retained": 0,
+        "indexed_documents": 9853,
+        "other_zero_chunk_documents": 1,
+        "pdf_error_pages": 0,
+        "pdf_no_text_pages": 9,
+        "reported_pdf_pages": 82,
+        "source_documents": 9854
+      },
+      "wall_seconds": 44650.291109099984
     }
   ],
   "progress_granularity_rows": 65536,
