@@ -30,14 +30,21 @@ def test_result_commit_keeps_checkout_and_user_index_unchanged(tmp_path):
     (tmp_path / "user.txt").write_text("user staged work", encoding="utf-8")
     command(tmp_path, "add", "user.txt")
     before = command(tmp_path, "status", "--porcelain")
-    first = report.save_commit(tmp_path, "results/synthetic", {"completed_steps": 0})
+    first = report.save_commit(
+        tmp_path, "results/synthetic", {"completed_steps": 0, "total_steps": 15}
+    )
     assert command(tmp_path, "rev-parse", "HEAD") == head
     assert command(tmp_path, "status", "--porcelain") == before
     assert command(tmp_path, "diff-tree", "--no-commit-id", "--name-only", "-r", first) == (
         report.REPORT_PATH
     )
-    assert report.save_commit(tmp_path, "results/synthetic", {"completed_steps": 0}) == first
-    second = report.save_commit(tmp_path, "results/synthetic", {"completed_steps": 1})
+    assert (
+        report.save_commit(tmp_path, "results/synthetic", {"completed_steps": 0, "total_steps": 15})
+        == first
+    )
+    second = report.save_commit(
+        tmp_path, "results/synthetic", {"completed_steps": 1, "total_steps": 15}
+    )
     assert command(tmp_path, "rev-parse", second + "^") == first
     assert command(tmp_path, "status", "--porcelain") == before
     assert not (tmp_path / report.REPORT_PATH).exists()

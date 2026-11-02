@@ -164,3 +164,26 @@ The results branch contains `docs/benchmarks/scale-runtime-v1.json`. CI ignores
 results-only branch pushes; software checks continue on development branches and
 pull requests. These automated report commits neither promote drafts to release
 ground truth nor change the active application version.
+
+
+## Frozen holdout schedule repair
+
+The real kernel bank contains 120 questions **only in test**; no dev/tuning cases
+exist for that held-out corpus. The controller now schedules only nonempty frozen
+track/split groups, verifying every prepared case is covered. For this bank the
+plan has 13 stages and 3,005 cases / 9,015 method calls. The previous synthetic
+all-splits fixture had failed to exercise this layout and requested an empty
+kernel dev group; execution stopped before retrieval.
+
+A legacy run can use `--resume --repair-empty-splits`. This explicit repair records
+`schedule-v2.json` with controller provenance and case counts, and retains the old
+failed empty-stage record in schedule history. It cannot retire a completed,
+nonempty or unknown stage. Original recipe bytes, frozen child runtime, question
+files, artifacts and successful measurement checksums remain unchanged. Completed
+components are reused; questions are not moved between splits.
+
+The complete kernel bundle was published before this scheduling error:
+3,857 searchable documents, 573,041 chunks, no reported text-layer gaps. Build
+wall time was 5,293.70 seconds during concurrent development/tests; measured
+process peak RSS was 1,109,544,960 bytes. These are resource observations, not a
+dedicated-machine timing baseline or a retrieval-quality result.

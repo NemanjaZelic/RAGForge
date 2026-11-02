@@ -99,6 +99,8 @@ def child(task):
 
 
 def steps(root, output, model, cases, pdf_cache, budget_root):
+    from ragforge.evaluation.runner import read_cases
+
     tasks = []
     for corpus, collection in (
         ("kernel-6.18", "kernel-6-18"),
@@ -131,13 +133,25 @@ def steps(root, output, model, cases, pdf_cache, budget_root):
             if (corpus == "3gpp-etsi")
             else ["supplementary_evidence_draft"]
         )
+        bank = read_cases(cases / (corpus + ".jsonl"))
+        if not bank or any(
+            row.corpus_id != corpus or row.collection_id != collection or row.track not in tracks
+            for row in bank
+        ):
+            raise ValueError("case bank contains an unsupported collection/track")
+        scheduled = 0
         for track in tracks:
             for split in ("dev", "tuning", "test"):
+                count = sum(row.track == track and row.split == split for row in bank)
+                if count == 0:
+                    continue
+                scheduled += count
                 destination = work / "evaluations" / track / split
                 tasks.append(
                     {
                         **common,
                         "kind": "evaluate",
+                        "selected_cases": count,
                         "track": track,
                         "split": split,
                         "name": corpus + "-" + track + "-" + split,
@@ -145,7 +159,80 @@ def steps(root, output, model, cases, pdf_cache, budget_root):
                         "report": str(destination / "measurement.json"),
                     }
                 )
+        if scheduled != len(bank):
+            raise ValueError("schedule does not cover every frozen case")
     return tasks
+
+
+def prepare_schedule(output, cases, tasks, state, *, resume, repair_empty_splits):
+    from ragforge.evaluation.runner import read_cases
+    from ragforge.jobs.build import atomic_json
+
+    plan_file = output / "schedule-v2.json"
+    schedule = [
+        {
+            key: task.get(key)
+            for key in ("name", "corpus", "kind", "track", "split", "selected_cases")
+        }
+        for task in tasks
+    ]
+    semantic = {
+        "scheduler_version": "available-frozen-splits-v2",
+        "retrieval_recipe_sha256": checksum(output / "recipe.json"),
+        "tasks": schedule,
+    }
+    plan = None
+    if plan_file.exists():
+        existing = json.loads(plan_file.read_text(encoding="utf-8"))
+        if any(existing.get(key) != value for key, value in semantic.items()):
+            raise ValueError("frozen schedule changed; choose a new run")
+    else:
+        if resume and not repair_empty_splits:
+            raise ValueError("legacy schedule requires explicit --repair-empty-splits")
+        plan = {
+            **semantic,
+            "controller_source_sha256": checksum(Path(__file__)),
+            "controller_commit": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=Path(__file__).resolve().parents[1], text=True
+            ).strip(),
+            "total_steps": len(tasks),
+            "total_cases": sum(task.get("selected_cases", 0) for task in tasks),
+            "total_queries": 3 * sum(task.get("selected_cases", 0) for task in tasks),
+        }
+    planned = {task["name"] for task in tasks}
+    for obsolete in set(state["steps"]) - planned:
+        # Never retire a completed measurement or a nonempty/unknown case group.
+        matched = False
+        for corpus in ("kernel-6.18", "ietf-rfcs", "3gpp-etsi"):
+            tracks = (
+                ("native_source_alignment_diagnostic", "explicit_version_draft")
+                if corpus == "3gpp-etsi"
+                else ("supplementary_evidence_draft",)
+            )
+            for track in tracks:
+                for split in ("dev", "tuning", "test"):
+                    if obsolete == corpus + "-" + track + "-" + split:
+                        bank = read_cases(cases / (corpus + ".jsonl"))
+                        matched = not any(c.track == track and c.split == split for c in bank)
+        if (
+            not repair_empty_splits
+            or not matched
+            or state["steps"][obsolete]["state"] == "complete"
+        ):
+            raise ValueError("cannot retire an unknown, nonempty or completed benchmark step")
+        state.setdefault("schedule_history", []).append(
+            {
+                "name": obsolete,
+                "reason": "empty_frozen_split",
+                "previous_status": state["steps"].pop(obsolete),
+            }
+        )
+    if plan is not None:
+        atomic_json(plan_file, plan)
+    state["total_steps"] = len(tasks)
+    state["schedule_sha256"] = checksum(plan_file)
+    state["current_step"] = None
+    state["child_pid"] = None
 
 
 def aggregate(output, tasks, state):
@@ -222,6 +309,7 @@ def execute(
     *,
     resume=False,
     reserve_free_bytes=15_000_000_000,
+    repair_empty_splits=False,
 ):
     from ragforge.jobs.build import atomic_json
     from ragforge.jobs.ingest import job_lock
@@ -345,6 +433,13 @@ def execute(
         tasks = steps(root, output, model, cases, pdf_cache, budget_root)
         for task in tasks:
             task["reserve_free_bytes"] = reserve_free_bytes
+        if state["recipe_sha256"] != checksum(control):
+            raise ValueError("benchmark state recipe checksum mismatch")
+        prepare_schedule(
+            output, cases, tasks, state, resume=resume, repair_empty_splits=repair_empty_splits
+        )
+        atomic_json(output / "status.json", state)
+        aggregate(output, tasks, state)
         for task in tasks:
             name = task["name"]
             previous = state["steps"].get(name, {})
@@ -352,6 +447,13 @@ def execute(
                 if checksum(Path(task["report"])) != previous["report_sha256"]:
                     raise ValueError("completed measurement checksum mismatch")
                 continue
+            if any(
+                importlib.metadata.version(name) != version
+                for name, version in recipe["dependencies"].items()
+            ):
+                raise ValueError("installed benchmark dependencies changed between stages")
+            if checksum(Path(task["cases"])) != recipe["cases_sha256"][Path(task["cases"]).name]:
+                raise ValueError("frozen case bank changed between stages")
             Path(task["report"]).parent.mkdir(parents=True, exist_ok=True)
             task_file = output / (name + "-task.json")
             atomic_json(task_file, task)
@@ -398,6 +500,7 @@ def main():
     parser.add_argument("--pdf-cache", type=Path)
     parser.add_argument("--budget-root", type=Path)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--repair-empty-splits", action="store_true")
     parser.add_argument("--reserve-free-bytes", type=int, default=15_000_000_000)
     parser.add_argument("--child", type=Path, help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -416,6 +519,7 @@ def main():
             ),
             resume=args.resume,
             reserve_free_bytes=args.reserve_free_bytes,
+            repair_empty_splits=args.repair_empty_splits,
         )
 
 

@@ -87,7 +87,7 @@ def test_full_coordinator_uses_frozen_offline_children_and_resumes_all_steps(tmp
         )
         bank = []
         for track in tracks:
-            for split in ("dev", "tuning", "test"):
+            for split in ("test",) if corpus == "kernel-6.18" else ("dev", "tuning", "test"):
                 evidence = Evidence(
                     source_path="a.txt",
                     source_sha256=hashlib.sha256(body.encode()).hexdigest(),
@@ -124,9 +124,9 @@ def test_full_coordinator_uses_frozen_offline_children_and_resumes_all_steps(tmp
     module.execute(root, output, tiny_model, cases, cache, tmp_path, reserve_free_bytes=0)
     state = json.loads((output / "status.json").read_text(encoding="utf-8"))
     assert state["state"] == "complete_diagnostic_draft_labels"
-    assert len(state["steps"]) == 15
+    assert len(state["steps"]) == 13
     summaries = list(output.rglob("measurement.json"))
-    assert len(summaries) == 12
+    assert len(summaries) == 10
     for path in summaries:
         report = json.loads(path.read_text(encoding="utf-8"))
         assert report["strict_scoring"] is False
@@ -142,6 +142,36 @@ def test_full_coordinator_uses_frozen_offline_children_and_resumes_all_steps(tmp
         module.execute(
             root, output, tiny_model, cases, cache, tmp_path, resume=True, reserve_free_bytes=1
         )
+    # Reproduce the legacy failure: a whole-corpus holdout has no dev questions.
+    (output / "schedule-v2.json").unlink()
+    legacy = json.loads((output / "status.json").read_text(encoding="utf-8"))
+    legacy["state"] = "failed_resumable"
+    legacy["steps"]["kernel-6.18-supplementary_evidence_draft-dev"] = {
+        "state": "failed",
+        "exit_code": 1,
+    }
+    (output / "status.json").write_text(json.dumps(legacy), encoding="utf-8")
+    original_recipe = (output / "recipe.json").read_bytes()
+    with pytest.raises(ValueError, match="repair-empty-splits"):
+        module.execute(
+            root, output, tiny_model, cases, cache, tmp_path, resume=True, reserve_free_bytes=0
+        )
+    module.execute(
+        root,
+        output,
+        tiny_model,
+        cases,
+        cache,
+        tmp_path,
+        resume=True,
+        reserve_free_bytes=0,
+        repair_empty_splits=True,
+    )
+    assert (output / "recipe.json").read_bytes() == original_recipe
+    assert all(p.stat().st_mtime_ns == stamp for p, stamp in before.items())
+    repaired = json.loads((output / "status.json").read_text(encoding="utf-8"))
+    assert repaired["total_steps"] == 13
+    assert repaired["schedule_history"][0]["reason"] == "empty_frozen_split"
     (output / "runtime/ragforge/__init__.py").write_text("changed", encoding="utf-8")
     with pytest.raises(ValueError, match="frozen runtime was modified"):
         module.execute(

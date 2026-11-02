@@ -1,0 +1,27 @@
+{
+  "build_id": "f8c9c6431c62ef46cafa79faa12adb34f840612e8ef4a572aa5a97a35a5f302e",
+  "process_memory": {
+    "peak_rss_bytes": 1109544960,
+    "pid": 35152,
+    "private_committed_bytes": 329019392,
+    "rss_bytes": 52101120
+  },
+  "source_coverage": {
+    "all_sources_have_searchable_text": true,
+    "documents_with_warnings": 0,
+    "failed_documents_retained": 0,
+    "indexed_documents": 3857,
+    "other_zero_chunk_documents": 0,
+    "pdf_error_pages": 0,
+    "pdf_no_text_pages": 0,
+    "reported_pdf_pages": 0,
+    "scope": "text-layer diagnostics; figures/tables and semantic completeness need evaluation",
+    "source_documents": 3857
+  },
+  "wall_seconds": 5293.701912700082,
+  "chunks": 573041,
+  "corpus_id": "kernel-6.18",
+  "quality_gate": "retrieval_not_yet_measured",
+  "conditions": "interactive workstation, concurrent development/tests, OS caches not cleared",
+  "runtime_recipe_sha256": "b5af3297c7d598e6b745fabf0dae7b4212bb80196dc0505500907d948ba0a9d3"
+}

@@ -73,11 +73,15 @@ def sanitize(run):
         "source_commit": source,
         "recipe_sha256": digest(status["recipe_sha256"]),
         "completed_steps": sum(s["state"] == "complete" for s in status["steps"].values()),
-        "total_steps": 15,
+        "total_steps": status.get("total_steps", 15),
         "measurements": [],
         "timing_scope": "successful invocation; interrupted attempts excluded",
         "latency_scope": "wall time, first call includes lazy setup; OS caches not cleared",
     }
+    if type(result["total_steps"]) is not int or not 1 <= result["total_steps"] <= 100:
+        raise ValueError("invalid scheduled stage count")
+    if "schedule_sha256" in status:
+        result["schedule_sha256"] = digest(status["schedule_sha256"])
     result["embedding_progress"] = {}
     result["progress_granularity_rows"] = 65536
     for corpus in sorted(CORPORA):
@@ -202,7 +206,10 @@ def save_commit(project, branch, report):
         git(project, "read-tree", parent, env=env)
         git(project, "update-index", "--add", "--cacheinfo", "100644", blob, REPORT_PATH, env=env)
         tree = git(project, "write-tree", env=env)
-        message = f"Record scale diagnostic progress ({report['completed_steps']}/15 stages)\n"
+        message = (
+            f"Record scale diagnostic progress ({report['completed_steps']}/"
+            f"{report['total_steps']} stages)\n"
+        )
         commit = git(project, "commit-tree", tree, "-p", parent, data=message.encode())
         expected = parent if existing.returncode == 0 else "0" * 40
         git(project, "update-ref", ref, commit, expected)
