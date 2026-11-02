@@ -2,7 +2,7 @@
   "completed_steps": 2,
   "embedding_progress": {
     "ietf-rfcs": {
-      "completed_rows_lower_bound": 1245184,
+      "completed_rows_lower_bound": 1310720,
       "total_rows": 1976868
     },
     "kernel-6.18": {
