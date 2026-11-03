@@ -59,12 +59,16 @@ def test_legacy_pipeline_and_bundle_identity_are_preserved(tmp_path: Path) -> No
     bundle = tmp_path / "old-style"
     m = build_bundle(ROOT / "examples/mini-docs", bundle, profile="minimal")
     data = m.model_dump(mode="json", exclude={"build_id", "retrieval_configuration"})
+    for d in data["collections"][0]["documents"]:
+        d.pop("title", None)
     expected = hashlib.sha256(
         json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
     ).hexdigest()
     assert m.build_id == expected == build_identity(m)
     legacy = json.loads((bundle / "manifest.json").read_text())
     del legacy["retrieval_configuration"]
+    for d in legacy["collections"][0]["documents"]:
+        d.pop("title", None)
     (bundle / "manifest.json").write_text(json.dumps(legacy), encoding="utf-8")
     assert verify_bundle(bundle).build_id == expected
 
@@ -241,3 +245,23 @@ def test_token_aware_chunks_preserve_source_and_fit_the_actual_model(
         chunk_document(doc, config)
     with pytest.raises(ValueError, match="balanced"):
         build_bundle(source, tmp_path / "wrong-profile", profile="minimal", token_aware=True)
+
+
+def test_reranker_spec_controls_bounded_memory_batching(tiny_reranker):
+    from types import SimpleNamespace
+
+    path = tiny_reranker / "reranker.json"
+    data = json.loads(path.read_text())
+    data["batch_size"] = 1
+    path.write_text(json.dumps(data))
+    scorer = ONNXReranker(tiny_reranker, threads=1)
+    original = scorer.session.run
+    sizes = []
+
+    def run(names, inputs):
+        sizes.append(len(inputs["input_ids"]))
+        return original(names, inputs)
+
+    scorer.session = SimpleNamespace(run=run)
+    assert len(scorer.score("rollback", ["transaction evidence"] * 9)) == 9
+    assert sizes == [1] * 9

@@ -240,3 +240,10 @@ inside BundleEngine for CLI/MCP/HTTP; adapters have no alternate ranking path.
 Absent mapping metadata is omitted from build identity calculation to preserve
 existing v1 bundles. The new `recontextualize` command copies verified assets to
 a separate staged/published version without re-embedding or activating it.
+
+
+Optional document titles live beside source path/hash in the manifest. Verifier
+checks them against indexed source lead text/heading metadata. They are used only
+as reranker topic prefixes; original indexed text and source locations remain the
+retrieval payload. Null titles are omitted from build identity for v1 compatibility.
+Title preparation uses local source/catalogue data, independently of questions.

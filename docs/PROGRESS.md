@@ -380,3 +380,31 @@ original-text citations, immutable bases, source mismatch and legacy build IDs.
 Actual pretrained integration and external drift checks are running separately.
 The original plan SHA-256 remains unchanged. Original scale and token-aware
 rebuild jobs retain their own frozen runtimes/checkpoints.
+
+
+### Topic-context checkpoint and completed control
+
+The full parent-context experiment and semantic review are complete: 67/80,
+with two improvements and two regressions relative to the prior 67/80 lexical
+control. Literal accepted-fact support is 35/80. There is no net semantic gain,
+so no quality/default promotion occurred. See the [paired safe aggregate](benchmarks/rfc-parent-review-dev-v1.json).
+
+Added optional source-verified document titles in the manifest and common
+reranker input. Verification binds each title to actual source lead text or
+indexed heading metadata; old null-title identities remain unchanged. Offline
+RFC title preparation matched 9,583/9,854 documents without reading questions.
+The complete title-only 80-question experiment has a frozen runtime, verified
+metadata/cache provenance and per-candidate score checkpoints; review is ongoing.
+
+Current full local checks: **291 passed, 4 platform skips**, including all actual
+pretrained offline CLI/MCP/shared checks, the source-title CLI path, external
+label/split drift validation, Ruff, formatting, mypy (50 files) and schemas.
+Checkpoint 2ff0ca4 passed all six Windows/Linux private CI jobs:
+https://github.com/NemanjaZelic/RAGForge/actions/runs/41588028928.
+
+A separately prepared pinned BGE reranker is experimental, not an adopted model;
+initial matched probes did not improve without topic context. Single-passage
+batching and bounded failed-download cleanup are covered by tests. Question-
+independent acronym expansion is being diagnosed locally; its two-question
+success is not a full-set quality claim and is not part of default retrieval.
+The >=95% target and independent confirmation remain open.

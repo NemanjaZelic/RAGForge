@@ -202,6 +202,20 @@
           "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
           "title": "Source Path",
           "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title"
         }
       },
       "required": [

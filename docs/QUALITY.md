@@ -202,3 +202,48 @@ This is an optional development candidate. A full RFC paired-budget experiment
 is running with top-k=10, a 16,000-character cap, two CPU threads, the same dev
 questions/facts and no network access. The evidence ceiling, early successes and
 software tests do not establish >=95% or justify changing default quality claims.
+
+
+### Completed parent control and source topic metadata
+
+The [complete parent-context review](benchmarks/rfc-parent-review-dev-v1.json)
+found 67/80 fully supported development responses, exactly the same as the prior
+lexical reranked control: two cases improved and two regressed. Complete literal
+reference support was 35/80. Parent mapping therefore remains optional; it has
+not demonstrated a net semantic quality gain and has not replaced defaults.
+Prototype timings exclude replayed query embedding/ANN work and are not reported
+as end-to-end latency. All 80 contexts were assessed, with no independent review.
+
+The next isolated candidate adds source topic metadata to reranking. Optional
+`DocumentRecord.title` values change the manifest identity and are checked
+against the first 8,192 characters / 16 chunks of indexed source lead text or an
+actual indexed heading. They do not replace returned source text or citations.
+Absent titles preserve old v1 build identities. `recontextualize --document-titles
+TITLES.json` accepts source-path/hash/title records; duplicate paths, stale source
+hashes and invented titles are rejected, including at bundle verification.
+Titles are embedded in the new manifest, so no external catalogue is needed at
+runtime. The same BundleEngine supplies the prefix for CLI, MCP and HTTP.
+
+`scripts/prepare_rfc_titles.py ARTIFACT CATALOGUE.xml TITLES.json` is an explicit
+offline preparation step, independent of questions/retrieval results. The frozen
+RFC catalogue yielded 9,583 source-verified titles over 9,854 documents; missing
+or unmatched titles remain absent. A two-question development probe recovered a
+previously missing DoH-method fact when the topic title was present; this small
+probe does not establish an overall improvement. The full 80-question comparison
+uses the same source bundles, candidate widths and top-10 / 16,000-character cap,
+with source/runtime hashes and per-candidate score checkpoints.
+
+Additional rejected/experimental probes remain local. A literal focus branch
+uses only explicit uncommon technical names from the query; the shared default
+engine does not call it. It is not an answer lookup or a claimed quality gain.
+The optional pinned BGE-base ONNX candidate is prepared only through explicit
+`prepare_reranker.py OUTPUT --model bge-base`; default provisioning stays MiniLM.
+Its 279,252,659-byte graph is SHA-256 verified, source/model-card/license metadata
+are retained, and inference uses batches of one. The explicit graph download
+allowance is bounded at 384 MiB; ordinary embedding downloads retain 256 MiB.
+A failed owned download is removed without overwriting or deleting existing files.
+Neither the larger model nor broader candidates improved the initial matched
+probe without topic metadata. No model switch or >=95% claim has been made.
+
+Model sources: [BGE upstream model card](https://huggingface.co/BAAI/bge-reranker-base),
+[pinned ONNX conversion](https://huggingface.co/onnx-community/bge-reranker-base-ONNX/tree/f131ae72114cb18333648a2ee6b0942849e8ab95).

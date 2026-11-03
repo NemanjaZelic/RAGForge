@@ -29,6 +29,9 @@ class BundleEngine:
         self.manifest = verify_bundle(root)
         self.collection = self.manifest.collections[0]
         self.sqlite = SQLiteEngine(root / self.collection.database_path)
+        self._document_titles = {
+            d.document_id: d.title for d in self.collection.documents if d.title
+        }
         self.threads = threads
         self._reranker: ONNXReranker | None = None
         self._embedder: ONNXEmbedder | None = None
@@ -142,9 +145,11 @@ class BundleEngine:
                 if request.filters and row["document_id"] not in request.filters.document_ids:
                     raise ValueError("reranker candidate outside document scope")
                 source = json.loads(row["source_json"])
-                passages.append(
-                    source["path"] + "\n" + (source.get("section") or "") + "\n" + row["text"]
-                )
+                prefix = source["path"] + "\n"
+                title = self._document_titles.get(row["document_id"])
+                if title is not None:
+                    prefix += title + "\n"
+                passages.append(prefix + (source.get("section") or "") + "\n" + row["text"])
                 documents[key] = row["document_id"]
         scores = self._reranker.score(request.query, passages)
         ordered = sorted(

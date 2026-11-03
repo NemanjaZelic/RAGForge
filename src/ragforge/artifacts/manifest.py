@@ -19,6 +19,7 @@ class DocumentRecord(ContractModel):
     document_id: Sha256
     source_path: RelativePath
     content_sha256: Sha256
+    title: Annotated[str, Field(min_length=1, max_length=512)] | None = None
 
 
 class DenseSource(ContractModel):

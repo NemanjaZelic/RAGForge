@@ -29,6 +29,9 @@ def build_identity(manifest: BundleManifest) -> str:
     if data.get("retrieval_configuration") is None:
         data.pop("retrieval_configuration", None)  # Preserve identities of earlier v1 bundles.
     for collection_data in data["collections"]:
+        for document_data in collection_data["documents"]:
+            if document_data.get("title") is None:
+                document_data.pop("title", None)
         dense_data = collection_data.get("dense_index")
         if dense_data is not None and dense_data.get("source_chunks") is None:
             dense_data.pop("source_chunks", None)
@@ -116,10 +119,18 @@ def verify_bundle(root: Path) -> BundleManifest:
             )
         ]
         expected = [
-            doc.model_dump() for doc in sorted(collection.documents, key=lambda d: d.source_path)
+            doc.model_dump(exclude={"title"})
+            for doc in sorted(collection.documents, key=lambda d: d.source_path)
         ]
         if actual != expected:
             raise ValueError("SQLite document inventory does not match manifest")
+        from ragforge.artifacts.titles import indexed_title
+
+        for document in collection.documents:
+            if document.title is not None and not indexed_title(
+                connection, document.document_id, document.title
+            ):
+                raise ValueError("document title differs from indexed source lead text")
         if engine.list_collections()[0].collection_id != collection.collection_id:
             raise ValueError("SQLite collection does not match manifest")
     if manifest.profile == "balanced":

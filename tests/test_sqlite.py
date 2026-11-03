@@ -297,3 +297,31 @@ def test_filtered_bm25_plans_preserve_global_scores_and_ties(
             assert engine.rank_bm25(request, 5) == expected
     unknown = RetrieveRequest(query="token", filters=RetrievalFilters(document_ids=["f" * 64]))
     assert engine.rank_bm25(unknown, 5) == []
+
+
+def test_focused_branch_requires_literal_rare_names_and_respects_scope(tmp_path):
+    root = tmp_path / "focus-sources"
+    root.mkdir()
+    # Common MUST/RFC boilerplate cannot become a focus anchor.
+    for i in range(60):
+        body = "RFC requirements MUST be observed. The server uses transport services."
+        if i == 0:
+            body += " DNS servers listen on port 53 for datagram and stream transport."
+        (root / f"{i}.txt").write_text(body)
+    database = tmp_path / "focus.sqlite"
+    report = scan_corpus(root, "docs")
+    create_index(
+        database, "docs", "Docs", (load_document(root, "docs", r) for r in report.documents)
+    )
+    engine = SQLiteEngine(database)
+    found = engine.rank_focused_bm25(RetrieveRequest(query="What port do DNS servers use?"), 10)
+    assert len(found) == 1
+    response = engine.ranked_response(found, RetrieveRequest(query="DNS port"), "bm25")
+    assert "port 53" in response.results[0].text
+    assert not engine.rank_focused_bm25(RetrieveRequest(query="RFC MUST requirements"), 10)
+    assert not engine.rank_focused_bm25(RetrieveRequest(query="***"), 10)
+    assert not engine.rank_focused_bm25(
+        RetrieveRequest(query="DNS port", filters=RetrievalFilters(document_ids=["f" * 64])), 10
+    )
+    with pytest.raises(RetrievalError, match="64 literal"):
+        engine.rank_focused_bm25(RetrieveRequest(query=" ".join(f"word{i}" for i in range(65))), 10)

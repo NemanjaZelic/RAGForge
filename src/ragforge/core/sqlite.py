@@ -260,11 +260,53 @@ class SQLiteEngine:
             return [CollectionDescription.model_validate(dict(row))]
 
     def rank_bm25(self, request: RetrieveRequest, limit: int) -> list[tuple[str, float]]:
+        return self._rank_expression(request, limit, plain_query(request.query))
+
+    def rank_focused_bm25(self, request: RetrieveRequest, limit: int) -> list[tuple[str, float]]:
+        """Experimental literal branch requiring explicit, uncommon technical names.
+
+        No reference labels, acronym dictionary or generated query terms are used.
+        The ordinary BM25 baseline remains unchanged.
+        """
+        if not 1 <= limit <= 200:
+            raise RetrievalError("candidate limit must be between 1 and 200")
+        plain_query(request.query)  # Apply the same literal-term limit.
+        terms = list(
+            dict.fromkeys(re.findall(r"[^\W_]+", unicodedata.normalize("NFC", request.query)))
+        )
+        anchors = []
+        with self._connect() as connection:
+            self._collection(connection, request.collection_id)
+            total = connection.execute("SELECT count(*) FROM chunks").fetchone()[0]
+            for term in terms:
+                if sum(char.isupper() for char in term) < 2:
+                    continue
+                count = connection.execute(
+                    "SELECT count(*) FROM chunk_fts WHERE chunk_fts MATCH ?", ('"' + term + '"',)
+                ).fetchone()[0]
+                if 0 < count <= total * 0.05:
+                    anchors.append(term)
+            if not anchors or len(anchors) > 3:
+                return []
+        stop = set(
+            (
+                "a an the what which how does do is are can must should may be to of for "
+                "in on at by with and or both from under use using"
+            ).split()
+        )
+        body = [term for term in terms if term not in anchors and term.lower() not in stop]
+        expression = " AND ".join('"' + term + '"' for term in anchors)
+        if body:
+            expression += " AND (" + " OR ".join('"' + term + '"' for term in body) + ")"
+        return self._rank_expression(request, limit, expression)
+
+    def _rank_expression(
+        self, request: RetrieveRequest, limit: int, query: str | None
+    ) -> list[tuple[str, float]]:
         if not 1 <= limit <= 200:
             raise RetrievalError("candidate limit must be between 1 and 200")
         with self._connect() as connection:
             collection = self._collection(connection, request.collection_id)
-            query = plain_query(request.query)
             if query is None:
                 return []
             if request.filters is None:

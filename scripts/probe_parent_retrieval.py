@@ -19,6 +19,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ["children", "parents", "audit", "cases", "answers", "sources", "output"]:
         parser.add_argument("--" + name, type=Path, required=True)
+    parser.add_argument("--document-titles", type=Path)
     args = parser.parse_args()
 
     def denied(*a, **k):
@@ -49,6 +50,18 @@ def main():
         child = BundleEngine(args.children, threads=2)
         parent = BundleEngine(args.parents, threads=2)
         mapper = ParentMapper(child.sqlite, parent.sqlite)
+        if args.document_titles is not None:
+            from ragforge.artifacts.titles import apply_document_titles
+
+            titled = apply_document_titles(parent.manifest, parent.sqlite, args.document_titles)
+            parent._document_titles = {
+                d.document_id: d.title for d in titled.collections[0].documents if d.title
+            }
+        audit_recipe = json.loads((args.audit.parent / "recipe.json").read_text())
+        if audit_recipe["artifact_build_id"] != child.manifest.build_id or audit_recipe[
+            "cases_sha256"
+        ] != digest(args.cases):
+            raise ValueError("cached dense candidates belong to another artifact or question bank")
         recipe = {
             "child_build_id": child.manifest.build_id,
             "artifact_build_id": parent.manifest.build_id,
@@ -59,6 +72,15 @@ def main():
             "mapper_sha256": digest(
                 Path(__file__).resolve().parents[1] / "src/ragforge/core/parents.py"
             ),
+            "document_titles_sha256": digest(args.document_titles)
+            if args.document_titles
+            else None,
+            "runtime_sha256": {
+                p.relative_to(Path(__file__).resolve().parents[1]).as_posix(): digest(p)
+                for p in sorted(
+                    (Path(__file__).resolve().parents[1] / "src/ragforge").rglob("*.py")
+                )
+            },
             "split": "dev",
             "top_k": 10,
             "max_output_chars": 16000,
@@ -109,12 +131,14 @@ def main():
                 texts = []
                 for key, _ in candidates:
                     row = connection.execute(
-                        "SELECT text,source_json FROM chunks WHERE chunk_id=?", (key,)
+                        "SELECT text,source_json,document_id FROM chunks WHERE chunk_id=?", (key,)
                     ).fetchone()
                     source = json.loads(row["source_json"])
-                    texts.append(
-                        source["path"] + "\n" + (source.get("section") or "") + "\n" + row["text"]
-                    )
+                    prefix = source["path"] + "\n"
+                    title = parent._document_titles.get(row["document_id"])
+                    if title is not None:
+                        prefix += title + "\n"
+                    texts.append(prefix + (source.get("section") or "") + "\n" + row["text"])
             scores = reranker.score(case.query, texts)
             ranks = sorted(
                 zip([k for k, _ in candidates], scores, strict=True),
@@ -131,6 +155,19 @@ def main():
                 ],
                 mapped_dense_candidates=len(dense),
                 candidates=len(candidates),
+                candidate_scores=[
+                    {
+                        "chunk_id": key,
+                        "score": score,
+                        "lexical_rank": next(
+                            (i for i, (k, _) in enumerate(lexical, 1) if k == key), None
+                        ),
+                        "dense_rank": next(
+                            (i for i, (k, _) in enumerate(dense, 1) if k == key), None
+                        ),
+                    }
+                    for (key, _), score in zip(candidates, scores, strict=True)
+                ],
             )
             with db:
                 db.execute(

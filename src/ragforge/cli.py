@@ -500,6 +500,9 @@ def recontextualize(
     context_base: Path,
     output: Annotated[Path, typer.Option(help="New verified context-mapped bundle.")],
     storage_root: Annotated[Path | None, typer.Option()] = None,
+    document_titles: Annotated[
+        Path | None, typer.Option(help="Source-verified title metadata JSON.")
+    ] = None,
 ) -> None:
     """Reuse small-chunk dense vectors with larger source-identical context chunks."""
     from ragforge.artifacts.recontextualize import recontextualize_bundle
@@ -511,6 +514,7 @@ def recontextualize(
             context_base,
             output,
             storage=StorageBudget(storage_root) if storage_root else None,
+            document_titles=document_titles,
         )
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)

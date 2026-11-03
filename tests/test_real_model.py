@@ -220,7 +220,35 @@ def test_pretrained_context_mapping_offline(
         ]
     )
     assert built.returncode == 0, built.stderr
-    combined = offline_cli(["recontextualize", str(child), str(parent), "--output", str(mapped)])
+    manifest = json.loads((child / "manifest.json").read_text())
+    document = next(
+        d
+        for d in manifest["collections"][0]["documents"]
+        if d["source_path"] == "authentication.md"
+    )
+    titles = tmp_path / "titles.json"
+    titles.write_text(
+        json.dumps(
+            [
+                {
+                    "source_path": document["source_path"],
+                    "source_sha256": document["content_sha256"],
+                    "title": "Authentication",
+                }
+            ]
+        )
+    )
+    combined = offline_cli(
+        [
+            "recontextualize",
+            str(child),
+            str(parent),
+            "--output",
+            str(mapped),
+            "--document-titles",
+            str(titles),
+        ]
+    )
     assert combined.returncode == 0, combined.stderr
     result = offline_cli(
         [

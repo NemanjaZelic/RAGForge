@@ -20,6 +20,7 @@ class RerankerSpec(ContractModel):
     revision: Annotated[str, Field(pattern=r"^[0-9a-f]{40}$")]
     max_tokens: Annotated[int, Field(ge=16, le=512)] = 512
     pad_token: str = "[PAD]"
+    batch_size: Annotated[int, Field(ge=1, le=8)] = 8
     license: Annotated[str, Field(min_length=1)]
     source_url: str
     files: Annotated[list[FileRecord], Field(min_length=3)]
@@ -37,7 +38,7 @@ def reranker_spec(directory: Path) -> RerankerSpec:
         raise ValueError("duplicate reranker asset path")
     if not {"model.onnx", "tokenizer.json", "LICENSE"} <= set(paths):
         raise ValueError("reranker lacks graph/tokenizer/license")
-    if "reranker.json" in paths or any(r.size_bytes > 256 * 1024**2 for r in spec.files):
+    if "reranker.json" in paths or any(r.size_bytes > 384 * 1024**2 for r in spec.files):
         raise ValueError("invalid reranker inventory/asset limit")
     if sum(r.size_bytes for r in spec.files) > 512 * 1024**2:
         raise ValueError("reranker package exceeds asset byte limit")
@@ -118,9 +119,10 @@ class ONNXReranker:
         self.tokenizer.enable_truncation(max_length=self.spec.max_tokens, strategy="only_second")
         try:
             result: list[float] = []
-            for start in range(0, len(passages), 8):
+            batch_size = self.spec.batch_size
+            for start in range(0, len(passages), batch_size):
                 encodings = self.tokenizer.encode_batch(
-                    [(query, passage) for passage in passages[start : start + 8]]
+                    [(query, passage) for passage in passages[start : start + batch_size]]
                 )
                 values = {
                     "input_ids": np.asarray([e.ids for e in encodings], dtype=np.int64),

@@ -114,12 +114,16 @@ def test_old_balanced_identity_omits_absent_mapping_metadata(tmp_path, tiny_mode
     )
     data = manifest.model_dump(mode="json", exclude={"build_id", "retrieval_configuration"})
     del data["collections"][0]["dense_index"]["source_chunks"]
+    for d in data["collections"][0]["documents"]:
+        d.pop("title", None)
     expected = hashlib.sha256(
         json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
     ).hexdigest()
     assert manifest.build_id == expected == build_identity(manifest)
     saved = json.loads((output / "manifest.json").read_text())
     del saved["collections"][0]["dense_index"]["source_chunks"]
+    for d in saved["collections"][0]["documents"]:
+        d.pop("title", None)
     (output / "manifest.json").write_text(json.dumps(saved))
     assert verify_bundle(output).build_id == expected
 

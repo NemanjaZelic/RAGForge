@@ -13,10 +13,24 @@ from ragforge.jobs.budget import StorageBudget
 
 
 def recontextualize_bundle(
-    dense_base: Path, context_base: Path, output: Path, *, storage: StorageBudget | None = None
+    dense_base: Path,
+    context_base: Path,
+    output: Path,
+    *,
+    storage: StorageBudget | None = None,
+    document_titles: Path | None = None,
 ) -> BundleManifest:
     child = verify_bundle(dense_base)
     parent = verify_bundle(context_base)
+    if document_titles is not None:
+        from ragforge.artifacts.titles import apply_document_titles
+        from ragforge.core.sqlite import SQLiteEngine
+
+        parent = apply_document_titles(
+            parent,
+            SQLiteEngine(context_base / parent.collections[0].database_path),
+            document_titles,
+        )
     cc, pc = child.collections[0], parent.collections[0]
     dense = cc.dense_index
     if child.profile != "balanced" or dense is None or dense.source_chunks is not None:

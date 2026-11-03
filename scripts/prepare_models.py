@@ -2,6 +2,8 @@
 
 import argparse
 import json
+import os
+import stat
 import urllib.request
 from pathlib import Path
 
@@ -34,15 +36,32 @@ CANDIDATES = {
 }
 
 
-def download(url: str, destination: Path) -> None:
+def download(url: str, destination: Path, *, max_bytes: int = 256 * 1024**2) -> None:
+    if type(max_bytes) is not int or not 1 <= max_bytes <= 384 * 1024**2:
+        raise ValueError("invalid explicit model asset byte limit")
     request = urllib.request.Request(url, headers={"User-Agent": "RAGForge-model-provisioning"})
-    with urllib.request.urlopen(request, timeout=30) as response, destination.open("xb") as stream:
-        size = 0
-        while block := response.read(1024 * 1024):
-            size += len(block)
-            if size > 256 * 1024 * 1024:
-                raise ValueError("model asset exceeds provisioning size limit")
-            stream.write(block)
+    owned = None
+    size = 0
+    try:
+        with (
+            urllib.request.urlopen(request, timeout=30) as response,
+            destination.open("xb") as stream,
+        ):
+            owned = os.fstat(stream.fileno())
+            while block := response.read(1024 * 1024):
+                size += len(block)
+                if size > max_bytes:
+                    raise ValueError("model asset exceeds provisioning size limit")
+                stream.write(block)
+    except BaseException:
+        if owned is not None and destination.exists():
+            current = destination.lstat()
+            if stat.S_ISREG(current.st_mode) and (current.st_dev, current.st_ino) == (
+                owned.st_dev,
+                owned.st_ino,
+            ):
+                destination.unlink()
+        raise
     print(f"Prepared {destination.name}: {size} bytes", flush=True)
 
 
