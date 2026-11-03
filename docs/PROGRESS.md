@@ -349,3 +349,34 @@ The original full-scale build/evaluation is unchanged and continues independentl
 A separate metadata-only routing probe is not promoted: document candidate
 availability is not answer support, and no end-to-end gain was demonstrated.
 No cloud host, model API, document upload, paid compute or public release was used.
+
+
+### Source-equivalent support audit and parent-context candidate (2026-11-03)
+
+All 80 existing lexical reranked development responses were reviewed against
+actual returned text: 67 supply complete relevant information, 13 lack at least
+one requested fact. The aggregate separates 36 complete literal matches from
+44 AI judgments and zero independent/human reviews. This is a corrected semantic
+assessment of unchanged responses, not a pipeline gain or achieved 95% target.
+[Numeric-only review report](benchmarks/rfc-semantic-review-dev-v1.json).
+
+Added a source-quoted review workflow with request/artifact/recipe fingerprints,
+full-case denominators, proof/scope validation and no automatic quality approval.
+A separate real-candidate/neighbor audit labels its oversized oracle pools as
+ceilings, never answer accuracy. Original annotations and test splits are intact.
+
+Implemented `recontextualize` and shared-engine parent mapping, reusing real
+350-character dense vectors with 1,000-character source-identical context rows.
+The full portable RFC candidate is verified locally as
+`d0aed8d98597f97cace3685c6f5c8d2d8aae8e9dddd0d59ea9ff322dc503c141`
+with 15 inventoried assets. Its creation used a 60 GB aggregate cap and a 15 GB
+free-space reserve. The full development comparison is still running. Early
+successes and regressions are both retained; no quality/default promotion occurred.
+
+Current complete ordinary checks: 275 passed, 15 opt-in/platform skips, Ruff lint
+and formatting, strict mypy over 49 files and generated-schema consistency.
+Focused context tests cover exact/ANN, offline relocated CLI, permissions,
+original-text citations, immutable bases, source mismatch and legacy build IDs.
+Actual pretrained integration and external drift checks are running separately.
+The original plan SHA-256 remains unchanged. Original scale and token-aware
+rebuild jobs retain their own frozen runtimes/checkpoints.

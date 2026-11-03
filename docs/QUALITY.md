@@ -149,3 +149,56 @@ checks model/cache hashes, preserves all source records, resumes embeddings and
 compares all three methods on the same dev fact bank. CPU threads=2, aggregate
 benchmark storage cap=60 GB, free-space reserve=15 GB. This is an overnight local
 experiment, not an adopted default or a claimed >=95% result.
+
+
+## Semantic audit of actual returned development context
+
+The [complete review aggregate](benchmarks/rfc-semantic-review-dev-v1.json)
+assesses all 80 RFC development responses from the existing 1,000-character
+BM25-plus-reranker run: 67 have complete relevant information and 13 lack at
+least one required fact. Of these cases, 36 have mechanically verified complete
+reference quotations; 44 were additionally assessed by the development AI using
+quotes from the actual returned passages. No human or independent review is
+claimed. This 83.75% judgment is an evaluation audit, **not a retrieval gain** over
+the same run's 36/80 literal-quotation score, and does not meet the user's target.
+
+`scripts/review_retrieval.py export` requires a complete selected split, verifies
+the artifact and frozen question/fact hashes, reconstructs original returned
+chunks and validates citation metadata and output limits. Reviewer packets omit
+method, scores and rank. `summarize` requires unchanged packet receipts and exact
+returned-text proof, assesses every required fact and keeps all cases in the
+denominator even when reviews are pending. Wrong protocol/version scope cannot
+be marked supported; source quotes alone do not automate the semantic judgment.
+All question text, reference facts and proof ledgers remain local. Automatic
+quality approval is always false.
+
+`scripts/audit_candidate_recall.py` separately measures a diagnostic ceiling over
+up to 400 real candidates and their neighbors. Those pools can contain thousands
+of chunks and exceed the output budget; their coverage is **not** retrieval or
+answer accuracy. It never supplies reference labels to the ranking algorithm.
+
+## Optional parent-context bundle experiment
+
+`ragforge recontextualize DENSE_BASE CONTEXT_BASE --output NEW` creates a new
+balanced bundle using the small-chunk base's existing vectors/query model and the
+larger context base's SQLite text. Both verified bases must have identical source
+paths, document IDs and source hashes. The original artifacts remain intact.
+The new bundle inventories its own copied child SQLite, dense index, query model,
+parent SQLite and optional reranker. No source files or original bundle paths are
+needed after relocation. `--storage-root` enables aggregate storage checks.
+
+The shared engine ranks at most 200 actual child candidates, maps them to parent
+chunks using matching document/page/available line provenance **and actual text
+overlap**, and fuses parent BM25 and mapped dense ranks before local reranking.
+Each child maps to at most three real windows; duplicate parents retain the best
+child score. Returned text and citations are always original parent index rows,
+not concatenated or invented context. Document grants apply before dense ranking
+and are checked again during mapping/reranking. Raw BM25 remains model-free.
+Mapping caches at most eight documents and eight million source characters;
+individual context documents above 20,000 chunks or two million characters are
+explicitly refused. Existing unmapped bundle identities are preserved.
+
+This is an optional development candidate. A full RFC paired-budget experiment
+is running with top-k=10, a 16,000-character cap, two CPU threads, the same dev
+questions/facts and no network access. The evidence ceiling, early successes and
+software tests do not establish >=95% or justify changing default quality claims.

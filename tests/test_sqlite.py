@@ -265,3 +265,35 @@ def test_rank_cursor_matches_exhaustive_bm25_including_boundary_ties(tmp_path: P
                 )
             ]
         assert engine.rank_bm25(request, 5) == expected
+
+
+@pytest.mark.parametrize("probe_limit", [0, 4096])
+def test_filtered_bm25_plans_preserve_global_scores_and_ties(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, probe_limit: int
+) -> None:
+    import ragforge.core.sqlite as module
+
+    engine = SQLiteEngine(mini_index(tmp_path))
+    monkeypatch.setattr(module, "FILTER_ROW_PROBE_LIMIT", probe_limit)
+    with engine._connect() as connection:
+        ids = [
+            row[0]
+            for row in connection.execute(
+                "SELECT document_id FROM documents ORDER BY source_path LIMIT 3"
+            )
+        ]
+        for query in ["token rollback", "the", "missing", 'OR "token"']:
+            expected = [
+                (row[0], row[1])
+                for row in connection.execute(
+                    "SELECT c.chunk_id,-bm25(chunk_fts) AS score FROM chunk_fts "
+                    "JOIN chunks c ON c.rowid=chunk_fts.rowid WHERE chunk_fts MATCH ? "
+                    "AND c.collection_id=? AND c.document_id IN (?,?,?) "
+                    "ORDER BY score DESC,c.chunk_id ASC LIMIT 5",
+                    [module.plain_query(query), "mini", *ids],
+                )
+            ]
+            request = RetrieveRequest(query=query, filters=RetrievalFilters(document_ids=ids))
+            assert engine.rank_bm25(request, 5) == expected
+    unknown = RetrieveRequest(query="token", filters=RetrievalFilters(document_ids=["f" * 64]))
+    assert engine.rank_bm25(unknown, 5) == []

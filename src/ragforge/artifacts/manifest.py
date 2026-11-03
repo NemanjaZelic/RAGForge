@@ -21,12 +21,19 @@ class DocumentRecord(ContractModel):
     content_sha256: Sha256
 
 
+class DenseSource(ContractModel):
+    database_path: RelativePath
+    build_id: Sha256
+    mapping_version: Literal["text-overlap-v1"] = "text-overlap-v1"
+
+
 class DenseIndex(ContractModel):
     path: RelativePath
     backend: Annotated[str, Field(min_length=1)]
     backend_version: Annotated[str, Field(min_length=1)]
     dimensions: Annotated[int, Field(ge=1, le=65536)]
     metric: Literal["cosine", "dot", "l2"]
+    source_chunks: DenseSource | None = None
 
 
 class QueryModel(ContractModel):
@@ -151,6 +158,12 @@ class BundleManifest(ContractModel):
                 raise ValueError("model and dense index dimensions must match")
             if dense.path != f"collections/{collection.collection_id}/dense.index":
                 raise ValueError("dense index must have its canonical path")
+            if dense.source_chunks is not None:
+                source_path = dense.source_chunks.database_path
+                if source_path != f"collections/{collection.collection_id}/dense-chunks.sqlite":
+                    raise ValueError("dense source chunks must have their canonical path")
+                if source_path not in paths:
+                    raise ValueError("dense source chunks must be inventoried")
             if dense.path not in paths:
                 raise ValueError("dense index must be inventoried")
             if len(set(model.files)) != len(model.files):

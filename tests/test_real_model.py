@@ -172,3 +172,67 @@ def test_pretrained_reranker_offline_build_query_and_relocation(
         assert first["source"]["path"] == "authentication.md"
         assert first["retrieval_method"] == method
         assert first["text"]
+
+
+@pytest.mark.skipif(
+    not os.environ.get("RAGFORGE_MODEL_DIR") or not os.environ.get("RAGFORGE_RERANKER_DIR"),
+    reason="explicit local pretrained embedding model and reranker required",
+)
+@pytest.mark.parametrize("dense_backend", ["exact", "ann"])
+def test_pretrained_context_mapping_offline(
+    tmp_path: Path, offline_cli, dense_backend: str
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    child, parent, mapped = tmp_path / "child", tmp_path / "parent", tmp_path / "mapped"
+    built = offline_cli(
+        [
+            "build",
+            str(root / "examples/mini-docs"),
+            "--output",
+            str(child),
+            "--collection",
+            "mini",
+            "--model",
+            os.environ["RAGFORGE_MODEL_DIR"],
+            "--chunk-size-chars",
+            "350",
+            "--overlap-chars",
+            "50",
+            "--dense-backend",
+            dense_backend,
+        ]
+    )
+    assert built.returncode == 0, built.stderr
+    built = offline_cli(
+        [
+            "build",
+            str(root / "examples/mini-docs"),
+            "--output",
+            str(parent),
+            "--collection",
+            "mini",
+            "--profile",
+            "minimal",
+            "--chunk-strategy",
+            "sections",
+            "--reranker",
+            os.environ["RAGFORGE_RERANKER_DIR"],
+        ]
+    )
+    assert built.returncode == 0, built.stderr
+    combined = offline_cli(["recontextualize", str(child), str(parent), "--output", str(mapped)])
+    assert combined.returncode == 0, combined.stderr
+    result = offline_cli(
+        [
+            "use",
+            str(mapped),
+            "--query",
+            "How are access tokens sent to the service?",
+            "--search-method",
+            "hybrid",
+            "--top-k",
+            "3",
+        ]
+    )
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["results"][0]["source"]["path"] == "authentication.md"

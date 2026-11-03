@@ -131,6 +131,17 @@
           "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
           "title": "Path",
           "type": "string"
+        },
+        "source_chunks": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DenseSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -141,6 +152,35 @@
         "metric"
       ],
       "title": "DenseIndex",
+      "type": "object"
+    },
+    "DenseSource": {
+      "additionalProperties": false,
+      "properties": {
+        "build_id": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Build Id",
+          "type": "string"
+        },
+        "database_path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+          "title": "Database Path",
+          "type": "string"
+        },
+        "mapping_version": {
+          "const": "text-overlap-v1",
+          "default": "text-overlap-v1",
+          "title": "Mapping Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "database_path",
+        "build_id"
+      ],
+      "title": "DenseSource",
       "type": "object"
     },
     "DocumentRecord": {

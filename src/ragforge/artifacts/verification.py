@@ -28,6 +28,10 @@ def build_identity(manifest: BundleManifest) -> str:
     data = manifest.model_dump(mode="json", exclude={"build_id"})
     if data.get("retrieval_configuration") is None:
         data.pop("retrieval_configuration", None)  # Preserve identities of earlier v1 bundles.
+    for collection_data in data["collections"]:
+        dense_data = collection_data.get("dense_index")
+        if dense_data is not None and dense_data.get("source_chunks") is None:
+            dense_data.pop("source_chunks", None)
     return hashlib.sha256(
         json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
@@ -85,6 +89,8 @@ def verify_bundle(root: Path) -> BundleManifest:
     if manifest.profile == "balanced":
         assert collection.dense_index is not None and manifest.query_model is not None
         required.add(collection.dense_index.path)
+        if collection.dense_index.source_chunks is not None:
+            required.add(collection.dense_index.source_chunks.database_path)
         required.update(manifest.query_model.files)
     if manifest.retrieval_configuration is not None:
         required.update(manifest.retrieval_configuration.reranker.files)
@@ -125,7 +131,16 @@ def verify_bundle(root: Path) -> BundleManifest:
         from ragforge.core.ann import BACKEND_VERSION as ANN_VERSION
         from ragforge.core.ann import read_header
 
-        with engine._connect() as connection:
+        dense_engine = engine
+        if dense.source_chunks is not None:
+            from ragforge.core.parents import ParentMapper
+
+            dense_engine = SQLiteEngine(root / dense.source_chunks.database_path)
+            with dense_engine._connect() as connection:
+                if connection.execute("PRAGMA quick_check").fetchone()[0] != "ok":
+                    raise ValueError("dense source SQLite quick_check failed")
+            ParentMapper(dense_engine, engine)  # Includes exact source inventory equality.
+        with dense_engine._connect() as connection:
             rows = int(connection.execute("SELECT count(*) FROM chunks").fetchone()[0])
         if dense.metric != "cosine":
             raise ValueError("unsupported dense metric")

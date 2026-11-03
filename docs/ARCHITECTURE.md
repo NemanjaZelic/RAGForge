@@ -227,3 +227,16 @@ Answer-evidence annotations are evaluator inputs, never engine/reranker inputs.
 They bind exact questions and verified minimal facts, allow equivalent citations,
 and retain an independent-review gate. Original broad-window span metrics remain
 separate. Details, limitations and the unachieved >=95% goal: [QUALITY.md](QUALITY.md).
+
+
+### Optional mapped dense source rows
+
+A dense index may declare `source_chunks` with an inventoried canonical child
+SQLite path, originating build ID and `text-overlap-v1` mapping version. Vector
+row counts and row IDs then refer to that child SQLite, while lexical ranking,
+returned text and citations use the primary context SQLite. Verification checks
+both inventories, SQLite integrity and identical source identities. Mapping runs
+inside BundleEngine for CLI/MCP/HTTP; adapters have no alternate ranking path.
+Absent mapping metadata is omitted from build identity calculation to preserve
+existing v1 bundles. The new `recontextualize` command copies verified assets to
+a separate staged/published version without re-embedding or activating it.

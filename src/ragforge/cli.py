@@ -495,6 +495,30 @@ def build(
 
 
 @app.command()
+def recontextualize(
+    dense_base: Path,
+    context_base: Path,
+    output: Annotated[Path, typer.Option(help="New verified context-mapped bundle.")],
+    storage_root: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Reuse small-chunk dense vectors with larger source-identical context chunks."""
+    from ragforge.artifacts.recontextualize import recontextualize_bundle
+    from ragforge.jobs.budget import StorageBudget
+
+    try:
+        result = recontextualize_bundle(
+            dense_base,
+            context_base,
+            output,
+            storage=StorageBudget(storage_root) if storage_root else None,
+        )
+    except (ValueError, OSError, RuntimeError) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps({"build_id": result.build_id, "reused_dense_vectors": True}))
+
+
+@app.command()
 def enhance(
     artifact: Path,
     output: Annotated[Path, typer.Option(help="New verified bundle version.")],

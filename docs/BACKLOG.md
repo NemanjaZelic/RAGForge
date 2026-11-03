@@ -256,3 +256,13 @@ rather than exact filename agreement. [Implementation and measurement](QUALITY.m
 - [ ] Independently review minimal facts, paraphrases, equivalent sources and version scope.
 - [ ] Confirm >=95% on a locked independent fact-support evaluation; generated-agent answers
   require the separate RF-008B benchmark. No threshold has been achieved or approved yet.
+
+
+RF-006Q follow-up (2026-11-03): all 80 lexical reranked development contexts
+received a source-quoted semantic audit (67 supported, 13 incomplete; 44 AI
+judgments, 36 mechanical matches, zero independent reviews). This corrects the
+assessment of equivalent information without claiming a retrieval improvement.
+Implemented optional source-matched child/parent bundles, scope/provenance and
+legacy-identity tests; full RFC candidate evaluation is in progress. >=95%
+confirmation, independent annotation review and generated-agent evaluation remain
+open. Baseline artifacts and held-out questions remain unchanged.

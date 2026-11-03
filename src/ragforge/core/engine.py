@@ -19,6 +19,7 @@ from ragforge.types import SearchMethod
 if TYPE_CHECKING:
     from ragforge.core.ann import AnnStore
     from ragforge.core.dense import DenseStore
+    from ragforge.core.parents import ParentMapper
     from ragforge.core.rerank import ONNXReranker
 
 
@@ -32,6 +33,7 @@ class BundleEngine:
         self._reranker: ONNXReranker | None = None
         self._embedder: ONNXEmbedder | None = None
         self._dense: DenseStore | AnnStore | None = None
+        self._parents: ParentMapper | None = None
 
     def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
         method = request.search_method or self.manifest.default_search_method
@@ -81,21 +83,30 @@ class BundleEngine:
         if self._embedder is None:
             self._embedder = ONNXEmbedder(self.root / "models/query", threads=self.threads)
         if self._dense is None:
+            dense_sqlite = self.sqlite
+            if dense.source_chunks is not None:
+                from ragforge.core.parents import ParentMapper
+
+                dense_sqlite = SQLiteEngine(self.root / dense.source_chunks.database_path)
+                self._parents = ParentMapper(dense_sqlite, self.sqlite)
             if backend == (ANN_BACKEND, ANN_VERSION):
                 from ragforge.core.ann import AnnStore
 
-                self._dense = AnnStore(self.root / dense.path, self.sqlite, model.dimensions)
+                self._dense = AnnStore(self.root / dense.path, dense_sqlite, model.dimensions)
             else:
-                self._dense = DenseStore(self.root / dense.path, self.sqlite, model.dimensions)
+                self._dense = DenseStore(self.root / dense.path, dense_sqlite, model.dimensions)
         vector = self._embedder.encode([request.query], query=True)[0]
         filters = request.filters.document_ids if request.filters is not None else None
-        ranks = self._dense.rank(
-            vector,
+        parent_limit = (
             config.candidates_per_method
             if config is not None
-            else (CANDIDATES if method == "hybrid" else request.top_k),
-            filters,
+            else (CANDIDATES if method == "hybrid" else request.top_k)
         )
+        ranks = self._dense.rank(
+            vector, 200 if self._parents is not None else parent_limit, filters
+        )
+        if self._parents is not None:
+            ranks = self._parents.map_ranks(ranks, parent_limit, filters)
         if method == "hybrid":
             ranks = reciprocal_rank_fusion(
                 self.sqlite.rank_bm25(

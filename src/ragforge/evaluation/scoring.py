@@ -4,9 +4,9 @@ import hashlib
 from collections.abc import Callable
 from typing import Any
 
-from ragforge.core.contracts import RetrievalResponse
+from ragforge.core.contracts import RetrievalResponse, RetrievedChunk
 from ragforge.core.identity import document_id
-from ragforge.evaluation.models import AnswerEvidence, EvaluationCase, Evidence
+from ragforge.evaluation.models import AnswerEvidence, EvaluationCase, Evidence, EvidenceGroup
 from ragforge.evaluation.sources import canonicalize
 
 
@@ -17,6 +17,62 @@ def covered_length(intervals: list[tuple[int, int]]) -> int:
         length += max(0, stop - max(start, right))
         right = max(right, stop)
     return length
+
+
+def score_evidence_pool(
+    collection_id: str,
+    evidence_groups: list[EvidenceGroup],
+    results: list[RetrievedChunk],
+    source: Callable[[Evidence], str],
+) -> dict[str, Any]:
+    """Evidence coverage over a diagnostic pool; never label it returned-answer accuracy."""
+    if not evidence_groups or len(results) > 5000:
+        raise ValueError("invalid diagnostic evidence pool size")
+    if any(result.collection_id != collection_id for result in results):
+        raise ValueError("retrieval escaped the evaluated collection")
+    groups: list[float] = []
+    mapped = ambiguous = unmapped = 0
+    for group in evidence_groups:
+        alternatives = []
+        for target in group.any_of:
+            original = source(target)
+            if (
+                target.char_end > len(original)
+                or hashlib.sha256(
+                    original[target.char_start : target.char_end].encode()
+                ).hexdigest()
+                != target.span_sha256
+            ):
+                raise ValueError("scoring evidence source/span hash mismatch")
+            intervals: list[tuple[int, int]] = []
+            for result in results:
+                if (
+                    result.document_id != document_id(collection_id, target.source_path)
+                    or result.source.path != target.source_path
+                    or result.source.page != target.page
+                ):
+                    continue
+                snippet = canonicalize(result.text, target.canonicalizer).strip()
+                start = original.find(snippet) if snippet else -1
+                if start < 0:
+                    unmapped += 1
+                    continue
+                if original.find(snippet, start + 1) >= 0:
+                    ambiguous += 1  # Do not choose a favorable repeated occurrence.
+                    continue
+                mapped += 1
+                stop = start + len(snippet)
+                left, right = max(start, target.char_start), min(stop, target.char_end)
+                if left < right:
+                    intervals.append((left, right))
+            alternatives.append(covered_length(intervals) / (target.char_end - target.char_start))
+        groups.append(max(alternatives))
+    return {
+        "group_coverages": groups,
+        "mapped_reference_chunks": mapped,
+        "ambiguous_reference_chunks": ambiguous,
+        "unmapped_reference_chunks": unmapped,
+    }
 
 
 def score_response(
@@ -47,52 +103,19 @@ def score_response(
     relevant = case.relevant_document_ids()
     ranked = [r.document_id for r in response.results]
     first = next((i for i, key in enumerate(ranked[:10], 1) if key in relevant), None)
-    groups: list[float] = []
-    mapped = ambiguous = unmapped = 0
-    for group in case.evidence_groups:
-        alternatives = []
-        for target in group.any_of:
-            original = source(target)
-            if (
-                target.char_end > len(original)
-                or hashlib.sha256(
-                    original[target.char_start : target.char_end].encode()
-                ).hexdigest()
-                != target.span_sha256
-            ):
-                raise ValueError("scoring evidence source/span hash mismatch")
-            intervals: list[tuple[int, int]] = []
-            for result in response.results[:evidence_cutoff]:
-                if (
-                    result.document_id != document_id(case.collection_id, target.source_path)
-                    or result.source.path != target.source_path
-                    or result.source.page != target.page
-                ):
-                    continue
-                snippet = canonicalize(result.text, target.canonicalizer).strip()
-                start = original.find(snippet) if snippet else -1
-                if start < 0:
-                    unmapped += 1
-                    continue
-                if original.find(snippet, start + 1) >= 0:
-                    ambiguous += 1  # Do not choose a favorable repeated occurrence.
-                    continue
-                mapped += 1
-                stop = start + len(snippet)
-                left, right = max(start, target.char_start), min(stop, target.char_end)
-                if left < right:
-                    intervals.append((left, right))
-            alternatives.append(covered_length(intervals) / (target.char_end - target.char_start))
-        groups.append(max(alternatives))
+    coverage = score_evidence_pool(
+        case.collection_id, case.evidence_groups, response.results[:evidence_cutoff], source
+    )
+    groups = coverage["group_coverages"]
     record.update(
         document_recall_at_5=len(set(ranked[:5]) & relevant) / len(relevant),
         mrr_at_10=1 / first if first is not None else 0,
         evidence_group_coverage=sum(groups) / len(groups),
         all_required_groups_covered=all(value >= minimum_coverage for value in groups),
         group_coverages=groups,
-        mapped_reference_chunks=mapped,
-        ambiguous_reference_chunks=ambiguous,
-        unmapped_reference_chunks=unmapped,
+        mapped_reference_chunks=coverage["mapped_reference_chunks"],
+        ambiguous_reference_chunks=coverage["ambiguous_reference_chunks"],
+        unmapped_reference_chunks=coverage["unmapped_reference_chunks"],
     )
     return record
 

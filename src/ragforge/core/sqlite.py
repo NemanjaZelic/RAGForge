@@ -29,6 +29,8 @@ from ragforge.types import ContractModel, SearchMethod
 
 APPLICATION_ID = 0x52464731
 SCHEMA_VERSION = 1
+# Bound rowid probes; broad grants keep the FTS-first plan.
+FILTER_ROW_PROBE_LIMIT = 4096
 SCHEMA = """
 PRAGMA foreign_keys=ON;
 PRAGMA journal_mode=DELETE;
@@ -287,17 +289,32 @@ class SQLiteEngine:
                         best + [(str(row["chunk_id"]), score)], key=lambda item: (-item[1], item[0])
                     )[:limit]
                 return best
-            sql = (
-                "SELECT c.chunk_id, -bm25(chunk_fts) AS score FROM chunk_fts "
-                "JOIN chunks c ON c.rowid=chunk_fts.rowid "
-                "WHERE chunk_fts MATCH ? AND c.collection_id=?"
-            )
-            params: list[str | int] = [query, collection]
-            if request.filters is not None:
-                ids = request.filters.document_ids
-                sql += " AND c.document_id IN (" + ",".join("?" for _ in ids) + ")"
-                params.extend(ids)
-            sql += " ORDER BY score DESC, c.chunk_id ASC LIMIT ?"
+            ids = request.filters.document_ids
+            placeholders = ",".join("?" for _ in ids)
+            scope = "c.collection_id=? AND c.document_id IN (" + placeholders + ")"
+            # Counting is bounded and uses the (document_id, ordinal) index.
+            # A narrow grant can otherwise scan millions of global FTS hits.
+            scoped_rows = connection.execute(
+                "SELECT count(*) FROM (SELECT 1 FROM chunks c WHERE " + scope + " LIMIT ?)",
+                [collection, *ids, FILTER_ROW_PROBE_LIMIT + 1],
+            ).fetchone()[0]
+            if scoped_rows <= FILTER_ROW_PROBE_LIMIT:
+                # CROSS JOIN fixes the loop order: probe MATCH at each allowed
+                # rowid. bm25 still uses the complete corpus statistics.
+                sql = (
+                    "SELECT c.chunk_id,-bm25(chunk_fts) AS score "
+                    "FROM chunks c CROSS JOIN chunk_fts WHERE "
+                    + scope
+                    + " AND chunk_fts.rowid=c.rowid AND chunk_fts MATCH ?"
+                )
+                params: list[str | int] = [collection, *ids, query]
+            else:
+                sql = (
+                    "SELECT c.chunk_id,-bm25(chunk_fts) AS score FROM chunk_fts "
+                    "JOIN chunks c ON c.rowid=chunk_fts.rowid WHERE chunk_fts MATCH ? AND " + scope
+                )
+                params = [query, collection, *ids]
+            sql += " ORDER BY score DESC,c.chunk_id ASC LIMIT ?"
             params.append(limit)
             return [
                 (str(row["chunk_id"]), float(row["score"]))
