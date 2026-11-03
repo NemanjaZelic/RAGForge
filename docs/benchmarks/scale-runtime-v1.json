@@ -2,7 +2,7 @@
   "completed_steps": 6,
   "embedding_progress": {
     "3gpp-etsi": {
-      "completed_rows_lower_bound": 917504,
+      "completed_rows_lower_bound": 983040,
       "total_rows": 4686456
     },
     "ietf-rfcs": {
