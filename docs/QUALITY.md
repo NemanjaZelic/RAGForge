@@ -247,3 +247,63 @@ probe without topic metadata. No model switch or >=95% claim has been made.
 
 Model sources: [BGE upstream model card](https://huggingface.co/BAAI/bge-reranker-base),
 [pinned ONNX conversion](https://huggingface.co/onnx-community/bge-reranker-base-ONNX/tree/f131ae72114cb18333648a2ee6b0942849e8ab95).
+
+
+## Completed topic and context-budget development comparison
+
+The [numeric-only checkpoint](benchmarks/rfc-context-budget-dev-v1.json) records
+all 80 reviewed RFC development responses. Source titles with the same top-10 /
+16,000-character cap provide complete relevant facts for **70/80 (87.5%)**. This
+is five improvements and two regressions versus the previous 67/80 parent
+control. Complete literal reference support is 41/80; 38 cases were mechanically
+seeded and 42 were assessed by the development AI with actual source quotes.
+No independent or human review is claimed.
+
+A separate **top-50 / 48,000-character** output profile provides complete relevant
+facts for **79/80 (98.75%)** in the development replay: 53 mechanical reference
+matches and 27 AI reviews, nine improvements and no regressions versus the
+top-10 title control. Actual responses contain 49-50 passages and average
+47,423 characters versus 9,666 characters in the top-10 control. This is about
+five times the returned text. It is a larger context budget, **not** a top-10
+ranking gain, independent >=95% confirmation, or generated-answer accuracy.
+All original questions/facts remain frozen; actual quoted equivalent sources
+count, and wrong protocol/version scopes do not. Prototype query-embedding/ANN
+and score replay exclude end-to-end latency.
+
+At the original 16,000-character ceiling, allowing up to 20 passages produces
+46/80 complete literal matches and a conservative 72/80 reused-proof coverage
+lower bound. New semantic judgments are still needed for this diagnostic; it is
+not reported as a new accuracy result. Diversity and first-stage score mixtures
+did not establish a benefit and remain outside the shared engine.
+
+A source-title portable balanced bundle and a frozen full actual-engine run
+are now being prepared locally. The actual run performs query embeddings, ANN,
+parent mapping, BM25 and reranking through BundleEngine for all 80 questions;
+its wider profile is explicit. Artifact verification, adapter parity and actual
+returned-source reviews are required before adopting that candidate. No default
+profile or global quality claim has changed.
+
+### Optional source-proven acronym experiment
+
+`prepare_rfc_aliases.py ARTIFACT CATALOGUE.xml OUTPUT.json` mines explicit
+parenthesized initialisms from local catalogue abstracts, requires at least
+three distinct source documents, and verifies each exact definition in indexed
+source lead text with source hashes. This question-independent step yielded
+306 definitions. `recontextualize --query-aliases OUTPUT.json` embeds the
+verified optional bank in an inventoried, portable component. Missing/stale
+proofs, duplicate names and mismatching initials are refused.
+
+Only uppercase query terms are eligible for expansion: ordinary words such as
+'in' and 'as' must not be interpreted as IN and AS. At most three names are
+appended, preserving the original words and query/token budgets. Document
+grants must include a verified definition source before its expansion is fed
+to inference. Raw BM25 and --no-rerank preserve the original query; dense
+embedding also keeps the original query.
+
+Replacing lexical and reranker query text with these expansions did not improve
+the matched complete set: **69/80**, versus 70/80 with source titles alone, with
+two improvements and three regressions. It therefore remains optional, is not
+embedded in the selected title candidate and is not an adopted retrieval
+setting. Correct acronym definitions can still shift ranking toward general
+introductions and displace a precise fact. The case guard fixes a separate
+implementation bug; it does not establish a quality gain.

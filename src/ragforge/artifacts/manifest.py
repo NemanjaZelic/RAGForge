@@ -60,6 +60,7 @@ class RetrievalConfiguration(ContractModel):
     candidates_per_method: Annotated[int, Field(ge=50, le=200)] = 100
     max_chunks_per_document: Annotated[int, Field(ge=1, le=50)] | None = None
     reranker: RerankerModel
+    query_aliases: RelativePath | None = None
 
 
 class CollectionManifest(ContractModel):
@@ -174,6 +175,12 @@ class BundleManifest(ContractModel):
             if any(path not in paths for path in model.files):
                 raise ValueError("query model files must be inventoried")
         if self.retrieval_configuration is not None:
+            alias_path = self.retrieval_configuration.query_aliases
+            if alias_path is not None and (
+                alias_path != f"collections/{collection.collection_id}/query-aliases.json"
+                or alias_path not in paths
+            ):
+                raise ValueError("query aliases must have their canonical inventoried path")
             reranker = self.retrieval_configuration.reranker
             if len(set(reranker.files)) != len(reranker.files) or any(
                 not path.startswith("models/reranker/") or path not in paths

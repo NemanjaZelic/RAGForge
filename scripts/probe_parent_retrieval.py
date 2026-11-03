@@ -20,6 +20,7 @@ def main():
     for name in ["children", "parents", "audit", "cases", "answers", "sources", "output"]:
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--document-titles", type=Path)
+    parser.add_argument("--query-aliases", type=Path)
     args = parser.parse_args()
 
     def denied(*a, **k):
@@ -57,6 +58,11 @@ def main():
             parent._document_titles = {
                 d.document_id: d.title for d in titled.collections[0].documents if d.title
             }
+        aliases = {}
+        if args.query_aliases is not None:
+            from ragforge.core.aliases import verify_aliases
+
+            aliases = verify_aliases(args.query_aliases, parent.manifest, parent.sqlite).mapping()
         audit_recipe = json.loads((args.audit.parent / "recipe.json").read_text())
         if audit_recipe["artifact_build_id"] != child.manifest.build_id or audit_recipe[
             "cases_sha256"
@@ -72,6 +78,7 @@ def main():
             "mapper_sha256": digest(
                 Path(__file__).resolve().parents[1] / "src/ragforge/core/parents.py"
             ),
+            "query_aliases_sha256": digest(args.query_aliases) if args.query_aliases else None,
             "document_titles_sha256": digest(args.document_titles)
             if args.document_titles
             else None,
@@ -125,7 +132,14 @@ def main():
                 ).fetchone()[0]
             )
             dense = mapper.map_ranks(dense, 100)
-            lexical = parent.sqlite.rank_bm25(request, 100)
+            from ragforge.core.aliases import expand_query
+
+            ranking_query = expand_query(case.query, aliases)
+            if len(reranker.tokenizer.encode(ranking_query).ids) > reranker.spec.max_tokens - 16:
+                ranking_query = case.query
+            lexical = parent.sqlite.rank_bm25(
+                request.model_copy(update={"query": ranking_query}), 100
+            )
             candidates = reciprocal_rank_fusion(lexical, dense, 200)
             with parent.sqlite._connect() as connection:
                 texts = []
@@ -139,7 +153,7 @@ def main():
                     if title is not None:
                         prefix += title + "\n"
                     texts.append(prefix + (source.get("section") or "") + "\n" + row["text"])
-            scores = reranker.score(case.query, texts)
+            scores = reranker.score(ranking_query, texts)
             ranks = sorted(
                 zip([k for k, _ in candidates], scores, strict=True),
                 key=lambda pair: (-pair[1], pair[0]),

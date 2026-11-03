@@ -28,6 +28,9 @@ def build_identity(manifest: BundleManifest) -> str:
     data = manifest.model_dump(mode="json", exclude={"build_id"})
     if data.get("retrieval_configuration") is None:
         data.pop("retrieval_configuration", None)  # Preserve identities of earlier v1 bundles.
+    config_data = data.get("retrieval_configuration")
+    if config_data is not None and config_data.get("query_aliases") is None:
+        config_data.pop("query_aliases", None)
     for collection_data in data["collections"]:
         for document_data in collection_data["documents"]:
             if document_data.get("title") is None:
@@ -97,6 +100,8 @@ def verify_bundle(root: Path) -> BundleManifest:
         required.update(manifest.query_model.files)
     if manifest.retrieval_configuration is not None:
         required.update(manifest.retrieval_configuration.reranker.files)
+        if manifest.retrieval_configuration.query_aliases is not None:
+            required.add(manifest.retrieval_configuration.query_aliases)
     if set(inventory) != required:
         raise ValueError("inventory contains files outside declared runtime components")
     total = 0
@@ -200,6 +205,10 @@ def verify_bundle(root: Path) -> BundleManifest:
     if manifest.retrieval_configuration is not None:
         from ragforge.core.rerank import reranker_spec
 
+        if manifest.retrieval_configuration.query_aliases is not None:
+            from ragforge.core.aliases import verify_aliases
+
+            verify_aliases(root / manifest.retrieval_configuration.query_aliases, manifest, engine)
         reranker = manifest.retrieval_configuration.reranker
         spec_r = reranker_spec(root / "models/reranker")
         expected_r = {"models/reranker/" + str(r.path) for r in spec_r.files} | {

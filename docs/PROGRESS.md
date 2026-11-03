@@ -408,3 +408,57 @@ batching and bounded failed-download cleanup are covered by tests. Question-
 independent acronym expansion is being diagnosed locally; its two-question
 success is not a full-set quality claim and is not part of default retrieval.
 The >=95% target and independent confirmation remain open.
+
+
+### Full topic review, rejected acronym replacement and wider-context checkpoint
+
+All 80 title-only development responses have complete source-quoted reviews:
+70 supported, 10 incomplete (87.5%); five improvements and two regressions
+against the 67/80 parent control. Literal complete-fact support is 41/80.
+
+A separately declared top-50 / 48,000-character replay supplies complete
+relevant facts for 79/80 (98.75%); it returns about 47,423 characters on average,
+versus about 9,666 for top-10. The complete review separates 53 mechanical
+matches from 27 AI judgments, with zero human/independent reviews. This is
+larger-context retrieval support, not an approved 95% application accuracy
+claim or a gain at the smaller output budget.
+
+The full source-proven acronym query-replacement candidate achieved 69/80 and
+regressed three previously supported cases while fixing two. It is not adopted.
+Fixed a separate ambiguity bug where ordinary lower-case 'in'/'as' expanded as
+technical IN/AS; staged patch application and budget/natural-word regression
+checks passed before applying it to canonical source. Source grants scope
+expansion before inference, and raw BM25 keeps its original query.
+
+The immutable numeric checkpoint is saved on private branch
+results/context-budget-dev-20261103, commit
+dd776fe4b58e137eb65aff16517f3a27617b161a. It captures software state before the
+case guard was applied: 293 tests passed, 4 platform skips, Ruff/format/mypy/schema
+checks passed. Its historical pending-write fields describe that checkpoint.
+A temporary automatic approval-service capacity failure has since cleared;
+the patch, all completed reviews and local experiment archive are now on D.
+The original 71-review ledger was retained as a checkpoint. All 298 current
+tests and actual pretrained integration checks are running again.
+
+A frozen offline controller is building the actual portable title-only
+balanced candidate with a 60 GB aggregate storage cap and 15 GB free reserve,
+then evaluates all 80 development questions through the packaged common
+engine with top-k=50 and a 48,000-character ceiling. This includes actual
+query embeddings/ANN and does not substitute cached results for engine calls.
+Original full-scale/rebuild jobs and frozen annotations remain unchanged.
+
+
+Current packaged checkpoint: full **294 passed, 4 platform skips**, including
+actual pretrained offline integration and external frozen-bank drift validation;
+Ruff/format, mypy over 51 source files and schemas pass. The case guard now has
+its natural-word regression test in canonical source.
+
+The title-only mapped balanced bundle is built and verified as
+`5a69e9f37b77c1691a4855858906c3dd7c99682cf55710932d3dd5d9a378d9b0`: 15 inventoried
+assets, 4,977,425,431 logical bytes, 9,583 verified source titles, no acronym
+replacement bank. Both frozen actual-engine runs have started. The selected
+top-50 / 48,000-character profile was locked before the 24 held-out questions
+were annotated: 43 question-bound minimal facts, 44 source alternatives, source-
+only AI draft with zero independent eligibility. Original annotations remain
+unchanged and held-out outputs will not tune this profile. Their results are
+not yet available or claimed.

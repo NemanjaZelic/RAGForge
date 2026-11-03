@@ -266,3 +266,13 @@ Implemented optional source-matched child/parent bundles, scope/provenance and
 legacy-identity tests; full RFC candidate evaluation is in progress. >=95%
 confirmation, independent annotation review and generated-agent evaluation remain
 open. Baseline artifacts and held-out questions remain unchanged.
+
+
+RF-006Q context-budget follow-up: source titles completed the full development
+review at 70/80 with top-10, and a separate top-50 / 48,000-character replay
+reached 79/80 at about five times the returned text. This has zero independent
+reviews and does not fulfill the locked independent quality gate. Source-proven
+acronym query replacement regressed to 69/80 and is not adopted. Its independent
+case/permission correctness fixes are implemented. Frozen actual portable-bundle
+evaluation is now running; selection within the smaller budget, adapter parity,
+independent annotations and generated-agent answer checks remain open.

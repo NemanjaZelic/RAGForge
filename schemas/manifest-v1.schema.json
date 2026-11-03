@@ -431,6 +431,21 @@
           "default": null,
           "title": "Max Chunks Per Document"
         },
+        "query_aliases": {
+          "anyOf": [
+            {
+              "maxLength": 1024,
+              "minLength": 1,
+              "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Query Aliases"
+        },
         "reranker": {
           "$ref": "#/$defs/RerankerModel"
         },

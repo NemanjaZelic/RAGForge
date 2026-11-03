@@ -247,3 +247,21 @@ checks them against indexed source lead text/heading metadata. They are used onl
 as reranker topic prefixes; original indexed text and source locations remain the
 retrieval payload. Null titles are omitted from build identity for v1 compatibility.
 Title preparation uses local source/catalogue data, independently of questions.
+
+
+### Optional corpus-proven query hints
+
+RetrievalConfiguration.query_aliases optionally identifies the inventoried
+collections/<id>/query-aliases.json component. Absent values preserve prior
+build identities. A definition contains matching initials, an explicit long
+name and at least three distinct source-path/hash/quote proofs. Verification
+binds those proofs to actual indexed source lead text; runtime needs no
+external catalogue.
+
+The common engine limits expansions to uppercase query terms, three names and
+existing character/term/token budgets. It only uses definitions whose proof
+sources intersect the current document grant. Dense embeddings and raw BM25
+keep the original query. This optional lexical/reranker experiment regressed
+on the full paired development comparison and is not an adopted setting.
+Source titles and larger output profiles are evaluated separately; wider
+context support does not imply better top-10 ranking or answer generation.

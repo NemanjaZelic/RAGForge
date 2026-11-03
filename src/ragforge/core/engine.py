@@ -33,6 +33,21 @@ class BundleEngine:
             d.document_id: d.title for d in self.collection.documents if d.title
         }
         self.threads = threads
+        self._aliases: dict[str, str] = {}
+        self._alias_scopes: dict[str, set[str]] = {}
+        if (
+            self.manifest.retrieval_configuration
+            and self.manifest.retrieval_configuration.query_aliases
+        ):
+            from ragforge.core.aliases import read_aliases
+
+            bank = read_aliases(self.root / self.manifest.retrieval_configuration.query_aliases)
+            self._aliases = bank.mapping()
+            document_ids = {d.source_path: d.document_id for d in self.collection.documents}
+            self._alias_scopes = {
+                d.short.casefold(): {document_ids[p.source_path] for p in d.proofs}
+                for d in bank.definitions
+            }
         self._reranker: ONNXReranker | None = None
         self._embedder: ONNXEmbedder | None = None
         self._dense: DenseStore | AnnStore | None = None
@@ -54,11 +69,22 @@ class BundleEngine:
             raise ValueError("reranking requires a bundle with a local reranker")
         if not use_reranker:
             config = None
+        ranking_query = (
+            self._ranking_query(
+                request.query, request.filters.document_ids if request.filters else None
+            )
+            if config is not None
+            else request.query
+        )
+        lexical_request = request.model_copy(update={"query": ranking_query})
         if method == "bm25":
             if config is None:
                 return self.sqlite.retrieve(request.model_copy(update={"search_method": "bm25"}))
             return self._rerank_response(
-                self.sqlite.rank_bm25(request, config.candidates_per_method), request, method
+                self.sqlite.rank_bm25(lexical_request, config.candidates_per_method),
+                request,
+                method,
+                ranking_query,
             )
         from ragforge.core.dense import (
             BACKEND,
@@ -113,17 +139,40 @@ class BundleEngine:
         if method == "hybrid":
             ranks = reciprocal_rank_fusion(
                 self.sqlite.rank_bm25(
-                    request, config.candidates_per_method if config else CANDIDATES
+                    lexical_request, config.candidates_per_method if config else CANDIDATES
                 ),
                 ranks,
                 config.candidates_per_method * 2 if config else request.top_k,
             )
         if config is not None:
-            return self._rerank_response(ranks, request, method)
+            return self._rerank_response(ranks, request, method, ranking_query)
         return self.sqlite.ranked_response(ranks, request, method)
 
+    def _ranking_query(self, query: str, allowed_documents: list[str] | None = None) -> str:
+        from ragforge.core.aliases import expand_query
+        from ragforge.core.rerank import ONNXReranker
+
+        aliases = self._aliases
+        if allowed_documents is not None:
+            allowed = set(allowed_documents)
+            aliases = {
+                key: value for key, value in aliases.items() if self._alias_scopes[key] & allowed
+            }
+        expanded = expand_query(query, aliases)
+        if expanded == query:
+            return query
+        if self._reranker is None:
+            self._reranker = ONNXReranker(self.root / "models/reranker", threads=self.threads)
+        if len(self._reranker.tokenizer.encode(expanded).ids) > self._reranker.spec.max_tokens - 16:
+            return query
+        return expanded
+
     def _rerank_response(
-        self, ranks: list[tuple[str, float]], request: RetrieveRequest, method: SearchMethod
+        self,
+        ranks: list[tuple[str, float]],
+        request: RetrieveRequest,
+        method: SearchMethod,
+        ranking_query: str | None = None,
     ) -> RetrievalResponse:
         import json
 
@@ -151,7 +200,7 @@ class BundleEngine:
                     prefix += title + "\n"
                 passages.append(prefix + (source.get("section") or "") + "\n" + row["text"])
                 documents[key] = row["document_id"]
-        scores = self._reranker.score(request.query, passages)
+        scores = self._reranker.score(ranking_query or request.query, passages)
         ordered = sorted(
             zip((key for key, _ in ranks), scores, strict=True),
             key=lambda pair: (-pair[1], pair[0]),

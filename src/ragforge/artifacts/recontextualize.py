@@ -19,6 +19,7 @@ def recontextualize_bundle(
     *,
     storage: StorageBudget | None = None,
     document_titles: Path | None = None,
+    query_aliases: Path | None = None,
 ) -> BundleManifest:
     child = verify_bundle(dense_base)
     parent = verify_bundle(context_base)
@@ -63,6 +64,32 @@ def recontextualize_bundle(
         child_files[cc.database_path].model_copy(update={"path": source_path}),
     )
     configuration = parent.retrieval_configuration or child.retrieval_configuration
+    if query_aliases is not None:
+        from ragforge.artifacts.manifest import FileRecord
+        from ragforge.core.aliases import verify_aliases
+        from ragforge.core.embedding import file_hash
+        from ragforge.core.sqlite import SQLiteEngine
+
+        if configuration is None:
+            raise ValueError("query aliases require a configured reranker")
+        verify_aliases(query_aliases, parent, SQLiteEngine(context_base / pc.database_path))
+        alias_path = f"collections/{cc.collection_id}/query-aliases.json"
+        configuration = configuration.model_copy(update={"query_aliases": alias_path})
+        copies[alias_path] = (
+            query_aliases,
+            FileRecord(
+                path=alias_path,
+                sha256=file_hash(query_aliases),
+                size_bytes=query_aliases.stat().st_size,
+            ),
+        )
+    elif configuration is not None and configuration.query_aliases is not None:
+        origin = context_base if parent.retrieval_configuration is not None else dense_base
+        records = parent_files if parent.retrieval_configuration is not None else child_files
+        copies[configuration.query_aliases] = (
+            origin / configuration.query_aliases,
+            records[configuration.query_aliases],
+        )
     if configuration is not None:
         origin = context_base if parent.retrieval_configuration is not None else dense_base
         records = parent_files if parent.retrieval_configuration is not None else child_files
