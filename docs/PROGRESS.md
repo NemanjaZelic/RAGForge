@@ -546,3 +546,34 @@ The frozen planned portable artifacts are built: RFC
 `e4c7a98b7dfe1323f2cc7ba23a45767ae6e29d20fa3afb22b5b042de009b3eee`.
 Actual branch parity, source-only kernel annotation and complete actual-call
 measurements remain separate pending steps.
+
+
+The planning commit fc35320 passed all six Windows/Linux CI jobs, including
+the real pretrained/network-isolated tests:
+https://github.com/NemanjaZelic/RAGForge/actions/runs/41809368098.
+GitHub remains private; a transient push server error was retried successfully.
+
+All five actual large-RFC branch probes match the selected prototype's ordered
+chunk IDs and citations. All 120 kernel questions were locked after runtime
+selection and before individual inspection. Their source-only minimal fact bank
+contains 72 distinct facts and 165 fact assignments; every question hash and
+source span is validated. The fact bank and explicit requirements were frozen
+before any returned kernel contexts were reviewed. Original cases are unchanged;
+strict independent eligibility and human review counts remain zero.
+
+Kernel actual inference and source-quoted review are in progress. Safe lock,
+branch-parity and partial counts are in `benchmarks/kernel-planned-test-lock-v1.json`,
+`benchmarks/rfc-planned-branch-parity-v1.json` and
+`benchmarks/kernel-planned-test-partial-v1.json`. Pending cases remain in the
+120-case denominator; no final accuracy or >=95% confirmation is claimed.
+One tab-width question is conservatively incomplete: related eight-character
+indentation advice does not explicitly establish the frozen tab-width fact.
+Equivalent PM facts in other correctly scoped sources are accepted with quotes.
+
+On this 12 GB host actual heavy inference is now serialized. All 39 completed
+RFC dev records were checkpoint-backed and SQLite quick-checked before its
+worker stopped; the exact frozen 50/48k/2-thread recipe is queued to resume
+automatically after the kernel test. Full-corpus source builds remain running
+with temporary process-only lower scheduling priority. No global power or
+thread settings changed; concurrent, resumed wall times are not isolated speed
+benchmarks.

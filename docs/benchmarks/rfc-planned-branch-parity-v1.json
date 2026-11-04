@@ -1,0 +1,16 @@
+{
+  "actual_queries": 5,
+  "artifact_build_id": "218f3e7c70d33f02e3a6f26f2b9c2e214ce04db5ae8f768694a58622911fa8f7",
+  "identical_ids_and_citations": true,
+  "network": "denied",
+  "scope": "five actual dev-only branch parity checks; original query, alias-only candidates, explicit references, question facets and combined routing",
+  "seconds": [
+    69.66837799991481,
+    47.207087499904446,
+    56.19809369998984,
+    80.52149160008412,
+    62.25154550001025
+  ],
+  "selection_sha256": "cfdcf80535a93d6343ae47e48ca03e7b0cb383f0d9eb7d8d2a02f0f9db5b3c66",
+  "quality_approval": false
+}

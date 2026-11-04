@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "scope": "partial frozen kernel test checkpoint; pending cases remain in total; no final accuracy claim",
+  "measurement_state": "in_progress",
+  "total_cases": 120,
+  "completed_retrieval_cases": 70,
+  "retrieval_error_cases": 0,
+  "reviewed_cases": 68,
+  "pending_cases": 52,
+  "supported_reviewed_cases": 67,
+  "not_supported_reviewed_cases": 1,
+  "mechanically_supported_cases": 63,
+  "ai_reviewed_cases": 5,
+  "human_reviewed_cases": 0,
+  "artifact_build_id": "e4c7a98b7dfe1323f2cc7ba23a45767ae6e29d20fa3afb22b5b042de009b3eee",
+  "top_k": 50,
+  "max_output_chars": 48000,
+  "test_fact_bank_sha256": "d6051a715b625590ea7ab06ff3e7b0f26120a132fcb7db16f633a4107f95b29f",
+  "automatic_quality_approval": false,
+  "minimum_target_confirmed": false,
+  "scheduling": "actual RFC dev inference retained 39 committed queries and queued unchanged resume after kernel to reduce memory pressure"
+}
