@@ -699,3 +699,29 @@ status/logs and process-scoped sleep prevention. Native preview/parser and
 refusal of duplicate live controllers were checked. Current active workers
 remain under the equivalent local prototype supervisor to avoid restarting
 healthy runs. [Usage and limitations](BACKGROUND-BENCHMARKS.md).
+
+
+2026-11-04 portable version-two checkpoint completed: both kernel and RFC
+artifacts verify with 16 inventoried files each. Three fresh large-kernel
+engine probes, actual CLI and actual subprocess/stdio MCP match frozen expected
+ordered IDs, exact source text and citations; MCP context fetch succeeds.
+Socket/DNS calls are denied during the probes. Numeric artifact identities and
+results are in benchmarks/production-v2-artifacts.json and
+production-v2-artifact-adapter-parity.json. These are consumed-case adapter
+checks, not additional independent quality cases.
+
+Code d64287d passed all six Windows/Linux CI jobs, including real pinned models:
+https://github.com/NemanjaZelic/RAGForge/actions/runs/41906129078.
+The verified code is fast-forwarded to private main. Two duplicate derived
+planning packages were retired after complete asset/inventory/source identity
+comparison against retained section packages. Exact old manifests, a guarded
+restorer and numeric receipts remain local; 6,167,136,633 bytes were reclaimed
+before allocating the new versions inside the same storage cap. Original
+sources, fact requirements, first measurements and review proofs are retained.
+
+Two narrow title-only routing feasibility probes did not yield additional
+supported context and are not adopted. A new source-only experimental coarse
+index embeds verified document titles and leads using the same pinned E5 model.
+It does not read question/answer banks or change the selected production recipe.
+Its quality and resource effects still require measurement; current diagnostic
+support remains kernel 118/120 and RFC 119/120, with independent validation open.

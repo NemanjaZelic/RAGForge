@@ -1,0 +1,42 @@
+{
+  "scope": "Actual frozen version-two artifact engine/CLI/MCP parity probes; consumed questions, not a new independent quality benchmark",
+  "artifact_build_id": "706033aa6ea6943cc2ccf8190cc7d02435ef8ca7b43a18c28ce5894423f064e1",
+  "network": "socket and DNS denied in all clients/servers; local event-loop IPC permitted",
+  "top_k": 50,
+  "max_output_chars": 48000,
+  "threads": 2,
+  "engine_probes": [
+    {
+      "ordered_ids_text_citations_identical": true,
+      "returned": 50,
+      "returned_chars": 39934,
+      "seconds": 35.614567299955525
+    },
+    {
+      "ordered_ids_text_citations_identical": true,
+      "returned": 50,
+      "returned_chars": 35043,
+      "seconds": 69.43923030002043
+    },
+    {
+      "ordered_ids_text_citations_identical": true,
+      "returned": 50,
+      "returned_chars": 36653,
+      "seconds": 26.405314299976453
+    }
+  ],
+  "automatic_quality_approval": false,
+  "cli": {
+    "ordered_ids_text_citations_identical": true,
+    "seconds": 47.15611990005709
+  },
+  "mcp": {
+    "ordered_ids_text_citations_identical": true,
+    "context_fetch_succeeded": true,
+    "seconds": 52.008859999943525,
+    "returned": 50,
+    "returned_chars": 36653
+  },
+  "driver_sha256": "2709c4811546a70d0b03f85aba69ff13b402127baf73bd5e86f0c7c5d5236232",
+  "state": "complete"
+}

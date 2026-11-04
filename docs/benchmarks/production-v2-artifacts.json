@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "verified": true,
+  "code_commit": "d64287dc20a380760ca45c09f053ce48f6a77ca5",
+  "artifacts": {
+    "kernel": {
+      "build_id": "706033aa6ea6943cc2ccf8190cc7d02435ef8ca7b43a18c28ce5894423f064e1",
+      "files": 16
+    },
+    "rfc": {
+      "build_id": "60b6691468866d11676eab167975cc027abd655adcd50859979646ad9c6b63e9",
+      "files": 16
+    }
+  },
+  "duplicate_derived_storage_cleanup": {
+    "retired_derived_packages": 2,
+    "reclaimed_bytes": 6167136633,
+    "all_asset_inventories_identical_to_retained_versions": true,
+    "exact_manifests_and_restore_recipe_preserved_locally": true,
+    "original_sources_and_measurements_retained": true
+  },
+  "ci": {
+    "run_id": 41906129078,
+    "jobs": 6,
+    "all_success": true
+  },
+  "independent_quality_approval": false
+}

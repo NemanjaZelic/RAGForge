@@ -307,3 +307,12 @@ RF-006Q v2 checkpoint: 118/120 consumed kernel contexts supported, RFC119/120
 preserved; 240-case production/legacy parity and 321 software tests pass.
 Version-two large portable-bundle probes, new independent/agent/PDF validation
 remain open. Existing first results and source-fact requirements are unchanged.
+
+
+RF-006Q v2 artifact checkpoint: both real portable artifacts verify; actual
+large-kernel engine, CLI and stdio MCP parity probes pass offline. All six
+Windows/Linux CI jobs for d64287d succeeded and private main is fast-forwarded.
+The two consumed kernel misses and one RFC miss remain; source-only semantic
+document routing is an unadopted experiment. Independent/agent/PDF quality
+gates remain open. Numeric reports: production-v2-artifacts.json and
+production-v2-artifact-adapter-parity.json under benchmarks/.
