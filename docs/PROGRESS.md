@@ -577,3 +577,19 @@ automatically after the kernel test. Full-corpus source builds remain running
 with temporary process-only lower scheduling priority. No global power or
 thread settings changed; concurrent, resumed wall times are not isolated speed
 benchmarks.
+
+
+2026-11-04 frozen kernel result: all 120 actual packaged queries completed with
+zero retrieval errors. Source-quoted review supports 112/120 complete minimal
+fact sets (93.3333%): 93 mechanical matches and 27 AI-reviewed cases, zero
+human reviews. Eight cases remain incomplete; the 95% target is not met.
+The original first result is preserved in benchmarks/kernel-first-frozen-test-v1.json.
+Kernel questions are now consumed; future improvements on this set are diagnostic
+regressions, not a fresh independent test. All 80 actual RFC dev calls have
+also completed and their source-proof review is being finalized.
+
+Actual RFC development measurement is complete: 80/80 calls, zero errors,
+80/80 source-supported minimal fact sets (55 mechanical and 25 AI, no human
+review). Numeric report: benchmarks/rfc-planned-actual-dev-v1.json. This
+confirms selected prototype behavior in the portable engine, not independent
+quality approval. The consumed 24-case RFC diagnostic is queued next.

@@ -286,3 +286,13 @@ experiment (55 mechanical, 25 AI, no independent review). It is implemented as
 an optional shared-engine configuration, with actual packaged evaluation and
 a source-only prepared, previously uninspected kernel test still pending.
 No release quality checkbox is closed by the development score.
+
+
+2026-11-04 frozen kernel result: all 120 actual packaged queries completed with
+zero retrieval errors. Source-quoted review supports 112/120 complete minimal
+fact sets (93.3333%): 93 mechanical matches and 27 AI-reviewed cases, zero
+human reviews. Eight cases remain incomplete; the 95% target is not met.
+The original first result is preserved in benchmarks/kernel-first-frozen-test-v1.json.
+Kernel questions are now consumed; future improvements on this set are diagnostic
+regressions, not a fresh independent test. All 80 actual RFC dev calls have
+also completed and their source-proof review is being finalized.
