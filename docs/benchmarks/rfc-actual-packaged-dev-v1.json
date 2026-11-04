@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "scope": "all actual portable common-engine RFC development calls; wide context profile; not independent test or generated-answer accuracy",
+  "artifact_build_id": "5a69e9f37b77c1691a4855858906c3dd7c99682cf55710932d3dd5d9a378d9b0",
+  "recipe": {
+    "allow_draft": true,
+    "answer_evidence_scorer": "complete-accepted-facts-v1",
+    "answer_evidence_sha256": "cbbd894c09b307f2b47b255d2ddc937e8953d320709b108869da205ec4add122",
+    "artifact_build_id": "5a69e9f37b77c1691a4855858906c3dd7c99682cf55710932d3dd5d9a378d9b0",
+    "cases_sha256": "9965095d25b5088999b94b8ddce6a6ba197181e2fd2fa0611c98c1af9c510b0b",
+    "max_output_chars": 48000,
+    "methods": [
+      "hybrid"
+    ],
+    "minimum_evidence_coverage": 0.8,
+    "scorer_version": "source-span-coverage-v1",
+    "split": "dev",
+    "threads": 2,
+    "top_k": 50,
+    "track": null
+  },
+  "retrieval_cases": 80,
+  "retrieval_errors": 0,
+  "literal_complete_cases": 53,
+  "semantic_complete_cases": 79,
+  "semantic_incomplete_cases": 1,
+  "semantic_complete_fraction": 0.9875,
+  "mechanically_supported_cases": 53,
+  "ai_reviewed_cases": 27,
+  "human_reviewed_cases": 0,
+  "automatic_quality_approval": false,
+  "seconds_p50": 51.70302064996213,
+  "seconds_p95": 77.37066819996107,
+  "latency_scope": "checkpoint-resumed wall times; concurrent workloads and warm caches vary; not isolated performance",
+  "semantic_summary_sha256": "9213985299c4009185abae8c1eaee8b57354e84fec7ed5dafd5c3c112902d7b3"
+}

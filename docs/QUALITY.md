@@ -307,3 +307,30 @@ embedded in the selected title candidate and is not an adopted retrieval
 setting. Correct acronym definitions can still shift ranking toward general
 introductions and displace a precise fact. The case guard fixes a separate
 implementation bug; it does not establish a quality gain.
+
+
+### Actual portable engine and first frozen test (2026-11-04)
+
+The complete actual portable-engine development measurement is now finished:
+80 calls, zero errors, 53 literal complete cases and 79/80 source-quoted complete
+relevant fact judgments (53 mechanical, 27 AI, zero human). This confirms the
+wide-context development replay through actual query embedding, ANN, parent
+mapping, BM25 and reranking; it does not confirm quality on unseen questions.
+[Numeric actual development results](benchmarks/rfc-actual-packaged-dev-v1.json).
+
+The first frozen 24-question RFC test completed without errors but supports
+complete relevant facts in only 21/24 (87.5%): 15 mechanical matches and nine AI
+reviews, of which three are incomplete. This misses the >=95% target. The
+profile was locked before test annotation; its original labels and result are
+preserved. After failure inspection, this split is consumed diagnostic data
+for subsequent changes and cannot be reused as untouched confirmation.
+[Numeric frozen test results](benchmarks/rfc-first-frozen-test-v1.json).
+
+A local dev-only experiment now supplements the original query with bounded
+syntactic question facets, explicit inventory-matched file identifiers and
+optional candidate-only source-proven aliases. It preserves the original main
+query and original reranker text, limits the aggregate to 400 scored pairs, and
+compares both existing output budgets. All 80 development cases and controls
+are retained. No adoption or improvement is claimed while it is running. The
+kernel context preparation uses source documents alone; its individual test
+questions remain unopened until the next candidate is selected and frozen.

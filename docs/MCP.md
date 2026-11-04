@@ -79,6 +79,18 @@ injection-a u proizvoljnom agentu.
 .\scripts\dev.ps1 run python examples/mcp_client.py kb/mini-balanced-v1 "How are access tokens sent?"
 ```
 
+Za veliki lokalni bundle primer prihvata eksplicitne limite, broj CPU niti i
+rok za svaki MCP odgovor (podrazumevano 600 sekundi, najviše 3.600):
+
+```powershell
+.\scripts\dev.ps1 run python examples/mcp_client.py kb/full-balanced-v1 "Your question" --top-k 50 --max-output-chars 48000 --threads 2 --timeout-seconds 900
+```
+
+Prvo otvaranje velikog bundle-a uključuje proveru integriteta svih inventarisanih
+fajlova i može trajati nekoliko minuta. Širi izlazni kontekst je zaseban profil
+troška; ovo podešavanje samo po sebi ne dokazuje kvalitet odgovora. Prethodni
+rok od 30 sekundi bio je prekratak za izmereni veliki RFC bundle.
+
 Primer otvara stvarni subprocess/stdio MCP, otkriva alate, poziva
 list_collections/search_docs/fetch_context i ispisuje izvode sa citatima.
 To je deterministički evidence workflow, bez spoljnog LLM-a i bez izmišljenog

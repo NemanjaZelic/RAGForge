@@ -486,3 +486,29 @@ numeric checkpoints on its existing private result branch.
 Software checkpoint b777859 passed all six Windows/Linux CI jobs, including
 the real pretrained checks. These software checks do not establish retrieval
 quality: https://github.com/NemanjaZelic/RAGForge/actions/runs/41608520401.
+
+
+Actual development measurement is now complete: all 80 common-engine calls
+finished without errors and all 80 contexts have source-quoted reviews, with
+79 complete cases (53 mechanical, 27 AI). This agrees with the development
+replay but does not supersede the failed 21/24 frozen test.
+`benchmarks/rfc-actual-packaged-dev-v1.json` records safe aggregates.
+
+The actual large-bundle stdio MCP example now accepts top-k, character budget,
+CPU threads and a bounded per-response timeout (600 seconds by default instead
+of 30). With socket/DNS blocked in both processes, it completed discovery,
+search and context on the full bundle: 49 returned passages, 47,481 characters,
+identical ordered chunk IDs, text and citations to CLI. Total wall time was
+210.28 seconds including opening/verification; this is one adapter parity
+query, not an isolated latency benchmark or agent-answer quality result.
+See `benchmarks/rfc-full-mcp-parity-v1.json`.
+
+Kernel source-only metadata was corrected to select the first H1 inside the
+actual HTML main region rather than the navigation logo. Source hashes and
+indexed source text verify 3,839 main headings; 18 remain omitted. The initial
+310-heading metadata file remains unchanged for traceability. No kernel test
+question participated in either preparation.
+
+MCP example changes passed the full local check suite with actual pretrained
+models and external dataset drift checks: 294 passed, four platform skips,
+Ruff lint/format, mypy over 51 source files and schema drift checks all pass.

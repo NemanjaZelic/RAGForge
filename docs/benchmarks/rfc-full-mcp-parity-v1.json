@@ -1,0 +1,17 @@
+{
+  "scope": "one actual full bundle stdio MCP adapter parity query, not a quality benchmark",
+  "network": "socket and DNS denied in client/server; event-loop IPC permitted",
+  "limits": {
+    "top_k": 50,
+    "max_output_chars": 48000,
+    "threads": 2,
+    "timeout_seconds": 1800
+  },
+  "returned": 49,
+  "returned_chars": 47481,
+  "cli_ids_text_citations_identical": true,
+  "seconds": 210.28019860002678,
+  "example_sha256": "17432b3eec37ab70f70d3f07f0b51697bb670538dc0702bd473272ec4d3a0722",
+  "artifact_build_id": "5a69e9f37b77c1691a4855858906c3dd7c99682cf55710932d3dd5d9a378d9b0",
+  "quality_approval": false
+}
