@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "scope": "frozen first RFC test; relevant complete retrieval support, not generated answer accuracy",
+  "split": "test",
+  "selection_sha256": "78685bb17f2a8ef9ed5bd77ed98cdde3b752d49f20d43e9790edc0e6937ac51a",
+  "artifact_build_id": "5a69e9f37b77c1691a4855858906c3dd7c99682cf55710932d3dd5d9a378d9b0",
+  "recipe": {
+    "allow_draft": true,
+    "answer_evidence_scorer": "complete-accepted-facts-v1",
+    "answer_evidence_sha256": "b79745e616a4c7e93251a347b13d3699525a5d395212e3f4bcf24d6786faa280",
+    "artifact_build_id": "5a69e9f37b77c1691a4855858906c3dd7c99682cf55710932d3dd5d9a378d9b0",
+    "cases_sha256": "9965095d25b5088999b94b8ddce6a6ba197181e2fd2fa0611c98c1af9c510b0b",
+    "max_output_chars": 48000,
+    "methods": [
+      "hybrid"
+    ],
+    "minimum_evidence_coverage": 0.8,
+    "scorer_version": "source-span-coverage-v1",
+    "split": "test",
+    "threads": 2,
+    "top_k": 50,
+    "track": null
+  },
+  "retrieval_cases": 24,
+  "retrieval_errors": 0,
+  "literal_complete_cases": 15,
+  "semantic_complete_cases": 21,
+  "semantic_incomplete_cases": 3,
+  "semantic_complete_fraction": 0.875,
+  "mechanically_supported_cases": 15,
+  "ai_reviewed_cases": 9,
+  "human_reviewed_cases": 0,
+  "minimum_target": 0.95,
+  "target_met": false,
+  "automatic_quality_approval": false,
+  "seconds_p50": 66.25593555008527,
+  "seconds_p95": 93.3272557000164,
+  "constructor_seconds": 264.50577409996185,
+  "latency_scope": "wall time under concurrent local work; not an isolated speed benchmark",
+  "future_status": "consumed diagnostic split after first-result review; preserve this frozen result; improvements need new unseen validation"
+}

@@ -462,3 +462,27 @@ were annotated: 43 question-bound minimal facts, 44 source alternatives, source-
 only AI draft with zero independent eligibility. Original annotations remain
 unchanged and held-out outputs will not tune this profile. Their results are
 not yet available or claimed.
+
+
+### First frozen RFC test: target not met (2026-11-04)
+
+The selected title-only portable engine completed all 24 frozen test queries
+without retrieval errors at top-50 / 48,000 characters. Complete relevant fact
+support is 21/24 (87.5%): 15 mechanical matches and nine AI source-quoted reviews,
+including three incomplete cases. No human or independent approval is claimed.
+The >=95% target is not met. Numeric-only results are retained in
+`benchmarks/rfc-first-frozen-test-v1.json`; question text, sources and review
+quotes remain local. The first result and labels remain frozen. Since the
+failures have now been inspected, this split becomes diagnostic for future
+changes, which require new unseen validation.
+
+Actual packaged development evaluation is resuming at 67/80 checkpoints with
+the original frozen runtime. A question-independent kernel context index has
+finished: 3,857 source documents and 310 source-verified first headings; all
+other headings were conservatively omitted. Kernel test questions remain
+unopened for selection. Original scale evaluation is also resumed and saving
+numeric checkpoints on its existing private result branch.
+
+Software checkpoint b777859 passed all six Windows/Linux CI jobs, including
+the real pretrained checks. These software checks do not establish retrieval
+quality: https://github.com/NemanjaZelic/RAGForge/actions/runs/41608520401.
