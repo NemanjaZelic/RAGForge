@@ -768,3 +768,26 @@ files stay local with no agent host installation. Numeric result:
 benchmarks/production-v2-wide-agent-integration.json. The 16 new actual model
 queries ran against the frozen selected retrieval runtime; the new generator
 change is also queued for real-model Windows/Linux CI.
+
+
+2026-11-04 user priority: finish 3GPP/ETSI quality and prepare a genuinely
+previously unused fourth test set, T7. Retrieval ad94262 is frozen before the new
+source questions. Official PostgreSQL 18.0 HTML source archive is pinned: 1,143
+documents, 120 locked questions from 30 seeded chapter/source families, 90 English
+and 30 Serbian, 90 unique fact groups / 180 assignments, 60 multi-fact questions.
+All source documents remain searchable. No T7 query has yet run at the lock.
+[Protocol and limits](UNSEEN-T7.md); numeric provenance:
+benchmarks/t7-unseen-locked-protocol-v1.json. The evaluator adds a separate
+visible-HTML body canonicalizer; retrieval bytes and prior canonicalizers stay
+unchanged. Twenty focused checks and full local software checks pass: 316 tests,
+14 explicit optional-model/platform skips, Ruff (172 files), mypy (54 source
+files) and schema drift. One test import-order lint issue was fixed before all
+remaining checks passed. Code will undergo the real-model Windows/Linux CI gate.
+
+The old RFC rebuild is explicitly deferred with its checkpoint and frozen resume
+command retained locally, so 3GPP and T7 have priority. 3GPP still builds the full
+4,686,456-row dense index; its test bank remains unchanged (1,310 native and 12
+explicit-version test cases). A source-only duplicate-input audit found 10.61%
+exact reuse within remaining rows; no unproven build-pipeline replacement was
+adopted. The existing scale controller continues its original full schedule.
+No new 3GPP accuracy or fourth-corpus success is claimed before measurement.

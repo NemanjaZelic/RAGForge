@@ -1,0 +1,70 @@
+{
+  "answers_sha256": "eeca1e1ca972bf4d9abdd6a2449c41569a6e44a25165634a11c5bb02eb569185",
+  "automatic_quality_approval": false,
+  "cases": 120,
+  "cases_sha256": "9fb2cef1f7b5497ede2ba84e3a99f67272da5dd919a0c1ebaad7be2bf4b5a301",
+  "context_limits": {
+    "max_output_chars": 48000,
+    "max_reranker_pairs": 400,
+    "threads": 2,
+    "top_k": 50
+  },
+  "control_methods": [
+    "raw bm25",
+    "raw dense"
+  ],
+  "evaluator_runtime_sha256": "c2fd0d1a4a832e006cbe43f366f5e41a8be8f3bf2792483fa9138f2d1f1d0bc1",
+  "first_result_preserved": true,
+  "full_corpus_sources": 1143,
+  "independent_human_reviews": 0,
+  "languages": {
+    "en": 90,
+    "sr": 30
+  },
+  "metric_policy": "All requested facts must be supported; source-span matches are sufficient lower bounds. Equivalent scoped answers require source-quoted review. No accuracy is claimed from document recall alone. No metric or question may change during first run.",
+  "multi_fact_questions": 60,
+  "primary_method": "hybrid with frozen facets-v2 and section-start-v2",
+  "required_fact_assignments": 180,
+  "requirements_sha256": "9696041248e4ee2bf4245e47251de950b0aad9af3e2b1d7c173e8505c55ed407",
+  "retrieval_queries_executed": 0,
+  "script_sha256": "b548e77614e19e59051732b9d5b2568724719444ef5271e14cbfb80d79f5e92c",
+  "selected_retrieval_lock_sha256": "ba0a1c81b5cb10ace92c90757b3b91d8247851f3c5a93132191f98ed087309c2",
+  "selection_sha256": "0f89cfae8c5ac1bcff41b116706f490c318d2392da5b3ff7c26b2bcdb74a170b",
+  "source_authorship": "AI source-authored, prepared after selecting frozen retrieval code but before any query output",
+  "source_families": 30,
+  "state": "source_questions_and_requirements_locked_before_first_retrieval",
+  "strata": 30,
+  "test_id": "T7",
+  "unique_fact_groups": 90,
+  "unique_facts_sha256": "3a79b35f37a652ec8dd42b2befa12993de2844b65a1d45c239f1a01a56cb6861",
+  "utc": "2026-11-04T22:29:25.960589+00:00",
+  "schema_version": 1,
+  "source_url": "https://download.postgresql.org/pub/source/v18.0/postgresql-18.0-docs.tar.gz",
+  "archive_sha256": "f0dfc5b0882aa68ca471e9930a0dcfe4644a10a9b9613c60d6d14bfc9c224d44",
+  "uncompressed_html_bytes": 16891275,
+  "selected_code_commit": "ad942620e29b2e46a5e407ca1b4a3eaf81e57bf9",
+  "model_descriptor_sha256": {
+    "models/e5-small/model.json": "4f454da7b9b69637d6aa88dae7077ddd3d96331e28bb01c0e2d2f465796a55ff",
+    "models/ms-marco-minilm-reranker/reranker.json": "1adba874faedaa1ade16c844aeb38782b51a9dd225e3916704a5c1916d270ceb"
+  },
+  "runtime_lock_sha256": "ba0a1c81b5cb10ace92c90757b3b91d8247851f3c5a93132191f98ed087309c2",
+  "casebank_lock_sha256": "95e48a9e6e58fc7c00e073ce806b7902bda8e3aea4376f3f9ce34aacb5df0379",
+  "meaning_of_unseen": "not used for RAGForge retrieval tuning or evaluation; pretrained model training data are not claimed unknown",
+  "first_accuracy_not_yet_measured": true,
+  "software_checks": {
+    "state": "all_local_required_checks_passed",
+    "pytest_passed": 316,
+    "pytest_skipped": 14,
+    "focused_passed": 20,
+    "skip_scope": "ten explicit local pretrained-model adapter opt-ins and four platform checks; external frozen-bank drift checks enabled",
+    "ruff_lint": true,
+    "ruff_format_files": 172,
+    "mypy_source_files": 54,
+    "schema_drift": false,
+    "source_sha256": {
+      "src/ragforge/evaluation/models.py": "a4522fb5e7a962a12883edd84045f27df96bc04dd36ab6e98c8ded3b6c90ad39",
+      "src/ragforge/evaluation/sources.py": "bd39e38ac34e2f80f51bc5af1f52fb870602b18b43ff090bae2cec26aa9ec7f0"
+    },
+    "note": "A test import-order lint issue was corrected after successful full pytest; all remaining checks then passed."
+  }
+}

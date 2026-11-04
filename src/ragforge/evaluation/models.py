@@ -11,6 +11,7 @@ from ragforge.types import ContractModel, Identifier, RelativePath, Sha256
 Canonicalizer = Literal[
     "collapse-whitespace-v1",
     "sphinx-main-html-data-collapse-whitespace-v1",
+    "html-body-text-collapse-whitespace-v1",
     "NFKC-casefold-alnum-v1",
 ]
 

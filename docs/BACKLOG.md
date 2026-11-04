@@ -329,3 +329,13 @@ planned section bundles. All 15 focused integration checks and complete local so
 313 tests, 14 explicit optional-model/platform skips, Ruff, mypy and schema
 checks. Actual large-bundle passive generation also passes; CI with real models
 will verify the new code checkpoint. No independent quality gate is closed.
+
+
+RF-006Q current user priority: finish full 3GPP/ETSI quality measurement and first
+unseen fourth-corpus T7 validation. T7 protocol and 120 questions are locked before
+queries, with no prior RAGForge tuning and no independent human review. Whole
+PostgreSQL 18.0 manual stays searchable. Primary fixed hybrid plus raw BM25/dense
+controls are to be reported separately. Sources/requirements/first outputs stay
+immutable. [UNSEEN-T7.md](UNSEEN-T7.md). Generic HTML evidence oracle and its source
+integrity/offline tests pass; complete local checks pass. Actual T7 evaluation
+and 3GPP complete-fact measurement are still pending, not threshold achievements.

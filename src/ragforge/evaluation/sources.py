@@ -65,6 +65,75 @@ class SphinxMain(HTMLParser):
             self.parts.append(data)
 
 
+class HTMLBodyText(HTMLParser):
+    """Independent visible-body evidence oracle; never executes or fetches HTML."""
+
+    SEPARATORS = {
+        "address",
+        "article",
+        "aside",
+        "blockquote",
+        "br",
+        "dd",
+        "div",
+        "dl",
+        "dt",
+        "footer",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "header",
+        "hr",
+        "li",
+        "main",
+        "nav",
+        "ol",
+        "p",
+        "pre",
+        "section",
+        "table",
+        "td",
+        "th",
+        "tr",
+        "ul",
+    }
+    OMIT = {"head", "script", "style", "template"}
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+        self.in_body = False
+        self.omitted: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "body" and not self.omitted:
+            self.in_body = True
+        if not self.in_body:
+            return
+        if tag in self.OMIT:
+            self.omitted.append(tag)
+        elif not self.omitted and tag in self.SEPARATORS:
+            self.parts.append("\n")
+
+    def handle_endtag(self, tag: str) -> None:
+        if self.omitted:
+            if tag in self.omitted:
+                index = len(self.omitted) - 1 - self.omitted[::-1].index(tag)
+                del self.omitted[index:]
+            return
+        if tag == "body":
+            self.in_body = False
+        elif self.in_body and tag in self.SEPARATORS:
+            self.parts.append("\n")
+
+    def handle_data(self, data: str) -> None:
+        if self.in_body and not self.omitted:
+            self.parts.append(data)
+
+
 class EvidenceSources:
     def __init__(self, root: Path, *, pdf_reference_cache: Path | None = None) -> None:
         if is_link(root.lstat()):
@@ -150,4 +219,8 @@ class EvidenceSources:
                 parser = SphinxMain()
                 parser.feed(text)
                 text = "".join(parser.parts)
+            elif target.canonicalizer == "html-body-text-collapse-whitespace-v1":
+                body = HTMLBodyText()
+                body.feed(text)
+                text = "".join(body.parts)
         return canonicalize(text, target.canonicalizer)
