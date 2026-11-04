@@ -238,7 +238,17 @@ class BundleEngine:
             selected.append((key, score))
             if len(selected) == request.top_k:
                 break
-        return self.sqlite.ranked_response(selected, request, method)
+        response = self.sqlite.ranked_response(selected, request, method)
+        if config.section_context == "section-start-v1":
+            from ragforge.core.sections import complete_sections
+
+            return complete_sections(
+                self.sqlite,
+                request,
+                response,
+                max_chunks_per_document=config.max_chunks_per_document,
+            )
+        return response
 
     def fetch_context(self, request: FetchContextRequest) -> RetrievalResponse:
         return self.sqlite.fetch_context(request)

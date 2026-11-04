@@ -390,3 +390,37 @@ The original first result is preserved in benchmarks/kernel-first-frozen-test-v1
 Kernel questions are now consumed; future improvements on this set are diagnostic
 regressions, not a fresh independent test. All 80 actual RFC dev calls have
 also completed and their source-proof review is being finalized.
+
+
+Optional section-start-v1 context completion (2026-11-04): structured short
+sections of at most four chunks can supply their first chunk and physical
+successor. The first 20 hits and each section's sole returned representative
+are protected. At most eight lower-ranked same-document exchanges preserve
+the output count, document counts, exact source text/citations and character
+budget. Document grants apply before metadata/body access. Metadata reads are
+bounded to 20,000 rows / 2,000,000 characters per document; no extra neural calls.
+Raw and --no-rerank retrieval keep their behavior. Use recontextualize
+--complete-sections to opt in; absent configuration preserves old build IDs.
+
+The selected production algorithm exactly matches deterministic replay of all
+120 consumed kernel results and leaves all 80 actual RFC dev contexts unchanged.
+Source proofs establish at least 114/120 kernel cases (95%); all previous 112
+complete cases retain their proofs, and two additional full frozen fact spans
+are covered. Six cases remain unconfirmed. This is development diagnostic
+selection, not a fresh unseen test or independent human approval. See numeric
+benchmarks/section-context-diagnostic-v1.json. Actual new-bundle adapter probes
+and complete required checks are pending.
+
+
+To opt in when composing already-built source-identical child/context bundles:
+
+```powershell
+.\scripts\dev.ps1 run ragforge recontextualize kb/child kb/parent --output kb/planned-sections-v1 --plan-queries --complete-sections
+.\scripts\dev.ps1 run ragforge use kb/planned-sections-v1 --query "Your question" --search-method hybrid --top-k 50 --max-output-chars 48000 --threads 2
+```
+
+Both base bundles must already exist and the selected reranker must be included.
+Use a new output directory. Titles/aliases remain separate source-verified optional
+inputs. The measured 50/48,000 profile returns much more text than the default
+five results; its quality measurements cannot be assigned to the smaller default.
+No generated-agent answer accuracy or cross-domain 95% guarantee is implied.

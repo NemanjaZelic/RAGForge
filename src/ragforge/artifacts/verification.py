@@ -33,6 +33,8 @@ def build_identity(manifest: BundleManifest) -> str:
         config_data.pop("query_aliases", None)
     if config_data is not None and config_data.get("query_planning") is None:
         config_data.pop("query_planning", None)
+    if config_data is not None and config_data.get("section_context") is None:
+        config_data.pop("section_context", None)
     for collection_data in data["collections"]:
         for document_data in collection_data["documents"]:
             if document_data.get("title") is None:

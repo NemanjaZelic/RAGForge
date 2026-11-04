@@ -1,0 +1,25 @@
+{
+  "scope": "Previously unused 16-question tuning split; original split retained. Runtime selected and frozen before these question contents were inspected. This is first validation of that split, not an independent human-reviewed test.",
+  "runtime_selection_sha256": "b7ab196721ec609969a94c646ec2a25bfc48ad2f3e88ed8f19882a8df7d2e234",
+  "casebank_sha256": "9965095d25b5088999b94b8ddce6a6ba197181e2fd2fa0611c98c1af9c510b0b",
+  "cases": 16,
+  "top_k": 50,
+  "max_output_chars": 48000,
+  "threads": 2,
+  "retrieval_outputs_inspected": false,
+  "automatic_quality_approval": false,
+  "annotation": {
+    "cases": 16,
+    "source_only": true,
+    "retrieval_outputs_inspected": false,
+    "answer_evidence_sha256": "1388454523af9978fa0a3fdc9f588b3cde17bda4e809c1ffadbc3163484aa805",
+    "requirements_sha256": "e48164112aa7d174bec4c8e5668cfe17ef4067f357df362e05819b6ac56794b0",
+    "specification_sha256": "411ff477404188e118524df14e74e813a98bd06c8bb3fbfe95283105743b5d24",
+    "source_facts": 13,
+    "independent_human_reviews": 0
+  },
+  "measurement_state": "running_first_validation_of_selected_runtime_and_frozen_minimal_fact_bank",
+  "original_split_retained": true,
+  "earlier_raw_baseline_executed_original_tuning_split": true,
+  "split_not_used_for_current_runtime_selection": true
+}

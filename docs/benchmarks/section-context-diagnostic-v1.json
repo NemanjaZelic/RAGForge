@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "scope": "Exact deterministic replay of actual pre-section engine outputs; consumed kernel development diagnostic, not an independent test or generated-answer score",
+  "top_k": 50,
+  "max_output_chars": 48000,
+  "new_neural_calls": 0,
+  "automatic_quality_approval": false,
+  "minimum_target_confirmed": false,
+  "source_module_sha256": "942f94fb6609fe30b407635b52dd128d937bd0beabd321dd384d9d84dda6f500",
+  "kernel": {
+    "cases": 120,
+    "changed_contexts": 59,
+    "parity_failures": 0,
+    "artifact_base_id": "e4c7a98b7dfe1323f2cc7ba23a45767ae6e29d20fa3afb22b5b042de009b3eee",
+    "all_previous_successes_retained": true,
+    "source_supported_cases": 114,
+    "incomplete_cases": 6
+  },
+  "rfc": {
+    "cases": 80,
+    "changed_contexts": 0,
+    "parity_failures": 0,
+    "artifact_base_id": "218f3e7c70d33f02e3a6f26f2b9c2e214ce04db5ae8f768694a58622911fa8f7",
+    "all_previous_successes_retained": true,
+    "source_supported_cases": 80,
+    "incomplete_cases": 0
+  }
+}

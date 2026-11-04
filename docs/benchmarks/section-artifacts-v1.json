@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "verified": true,
+  "artifacts": {
+    "kernel": {
+      "build_id": "76fc5da8183ae8bb7509bf2d3599f5325c83e493e7fdb664a19e9aad7ed3c525",
+      "files": 16
+    },
+    "rfc": {
+      "build_id": "21bebf8552e33734033bcba57aa2d270bf2fcb3f64cdc931ad8b361575658f28",
+      "files": 16
+    }
+  }
+}

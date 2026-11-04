@@ -593,3 +593,47 @@ Actual RFC development measurement is complete: 80/80 calls, zero errors,
 review). Numeric report: benchmarks/rfc-planned-actual-dev-v1.json. This
 confirms selected prototype behavior in the portable engine, not independent
 quality approval. The consumed 24-case RFC diagnostic is queued next.
+
+
+Optional section-start-v1 context completion (2026-11-04): structured short
+sections of at most four chunks can supply their first chunk and physical
+successor. The first 20 hits and each section's sole returned representative
+are protected. At most eight lower-ranked same-document exchanges preserve
+the output count, document counts, exact source text/citations and character
+budget. Document grants apply before metadata/body access. Metadata reads are
+bounded to 20,000 rows / 2,000,000 characters per document; no extra neural calls.
+Raw and --no-rerank retrieval keep their behavior. Use recontextualize
+--complete-sections to opt in; absent configuration preserves old build IDs.
+
+The selected production algorithm exactly matches deterministic replay of all
+120 consumed kernel results and leaves all 80 actual RFC dev contexts unchanged.
+Source proofs establish at least 114/120 kernel cases (95%); all previous 112
+complete cases retain their proofs, and two additional full frozen fact spans
+are covered. Six cases remain unconfirmed. This is development diagnostic
+selection, not a fresh unseen test or independent human approval. See numeric
+benchmarks/section-context-diagnostic-v1.json. Actual new-bundle adapter probes
+and complete required checks are pending.
+
+The consumed RFC 24-case actual diagnostic is complete: 23/24 supported,
+17 mechanical + 7 AI reviews, zero errors, no independent human approval.
+The JWT allowlist/header-versus-operation requirement is still unsupported.
+Correctly scoped equivalent BGP/BFD source explanations are accepted with
+quotes; original first frozen 21/24 is unchanged. This is diagnostic, not a
+new test. A separate 16-case previously unused tuning split retains its
+original split and has a source-only minimal fact bank frozen after runtime
+selection, before output inspection. Its first actual calls are queued
+after the serialized actual section-artifact adapter checks.
+
+All three actual section-artifact engine probes match replay IDs, exact text
+and citations. Actual CLI and real subprocess/stdio MCP also match; the MCP
+context fetch succeeds with socket/DNS denied. The frozen runtime remains
+unchanged; a repository-only SQL literal line split has an identical AST.
+Verified new artifact identities and numeric adapter results are recorded in
+benchmarks/section-artifacts-v1.json and section-artifact-adapter-parity-v1.json.
+These are adapter checks, not independent answer-quality measurements.
+
+Section completion final local checks: 307 passed, 4 Windows/platform skips,
+zero warnings; actual pretrained E5/reranker and opt-in frozen external-bank
+drift checks enabled. Ruff lint/format (166 files), mypy (53 source files)
+and schema drift checks all pass. First unused-split source review remains
+in progress; no complete validation or release approval is claimed yet.

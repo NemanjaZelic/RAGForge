@@ -462,6 +462,19 @@
         "reranker": {
           "$ref": "#/$defs/RerankerModel"
         },
+        "section_context": {
+          "anyOf": [
+            {
+              "const": "section-start-v1",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Section Context"
+        },
         "version": {
           "const": "candidate-rerank-v1",
           "default": "candidate-rerank-v1",

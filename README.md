@@ -82,6 +82,8 @@ uv run python scripts/export_schemas.py --check
 - Balanced defaults to hybrid; raw BM25 never imports/loads embedding libraries.
 - Optional verified local cross-encoder reranking, section-aware chunks, and answer-fact
   evaluation with accepted alternative citations. See [quality work and limits](docs/QUALITY.md).
+- Optional bounded question planning and short-section context completion in the same engine,
+  enabled with `recontextualize --plan-queries --complete-sections`.
 - Verified bundle inventories, copied query model/licenses and atomic publication to a new directory.
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
 - Synthetic manifest examples in `examples/manifests/`; these are not built bundles.

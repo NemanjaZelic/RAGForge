@@ -509,6 +509,9 @@ def recontextualize(
     plan_queries: bool = typer.Option(
         False, "--plan-queries", help="Optional bounded facets-v1 hybrid candidate planning."
     ),
+    complete_sections: bool = typer.Option(
+        False, "--complete-sections", help="Optional bounded section-start-v1 context completion."
+    ),
 ) -> None:
     """Reuse small-chunk dense vectors with larger source-identical context chunks."""
     from ragforge.artifacts.recontextualize import recontextualize_bundle
@@ -523,6 +526,7 @@ def recontextualize(
             document_titles=document_titles,
             query_aliases=query_aliases,
             query_planning="facets-v1" if plan_queries else None,
+            section_context="section-start-v1" if complete_sections else None,
         )
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)

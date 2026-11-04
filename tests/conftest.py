@@ -48,10 +48,12 @@ def offline_cli(tmp_path: Path) -> Callable[[list[str]], subprocess.CompletedPro
             ],
             env={
                 **env,
+                "PYTHONIOENCODING": "utf-8",
                 **{k: v for k, v in os.environ.items() if k == "RAGFORGE_FORBID_ML_IMPORTS"},
             },
             capture_output=True,
             text=True,
+            encoding="utf-8",
             timeout=30,
             check=False,
         )

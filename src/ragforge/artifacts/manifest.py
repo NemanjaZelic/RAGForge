@@ -62,6 +62,7 @@ class RetrievalConfiguration(ContractModel):
     reranker: RerankerModel
     query_aliases: RelativePath | None = None
     query_planning: Literal["facets-v1"] | None = None
+    section_context: Literal["section-start-v1"] | None = None
 
     @model_validator(mode="after")
     def bounded_planning_candidates(self) -> Self:

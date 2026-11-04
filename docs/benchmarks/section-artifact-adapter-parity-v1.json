@@ -1,0 +1,46 @@
+{
+  "scope": "Actual frozen section artifact engine/CLI/MCP parity probes; consumed questions, not a new independent quality benchmark",
+  "artifact_build_id": "76fc5da8183ae8bb7509bf2d3599f5325c83e493e7fdb664a19e9aad7ed3c525",
+  "network": "socket and DNS denied in all clients/servers; local event-loop IPC permitted",
+  "top_k": 50,
+  "max_output_chars": 48000,
+  "threads": 2,
+  "engine_probes": [
+    {
+      "ordered_ids_text_citations_identical": true,
+      "returned": 50,
+      "returned_chars": 33956,
+      "seconds": 40.824947500019334
+    },
+    {
+      "ordered_ids_text_citations_identical": true,
+      "returned": 50,
+      "returned_chars": 36942,
+      "seconds": 54.901081199990585
+    },
+    {
+      "ordered_ids_text_citations_identical": true,
+      "returned": 50,
+      "returned_chars": 36809,
+      "seconds": 30.93390599999111
+    }
+  ],
+  "automatic_quality_approval": false,
+  "cli": {
+    "ordered_ids_text_citations_identical": true,
+    "seconds": 53.35345349996351
+  },
+  "mcp": {
+    "ordered_ids_text_citations_identical": true,
+    "context_fetch_succeeded": true,
+    "seconds": 57.39844230003655,
+    "returned": 50,
+    "returned_chars": 33956
+  },
+  "state": "complete",
+  "schema_version": 1,
+  "runtime_selection_sha256": "b7ab196721ec609969a94c646ec2a25bfc48ad2f3e88ed8f19882a8df7d2e234",
+  "frozen_section_module_sha256": "daaaca8b01fc8e722f7c93955ba6952d8c22f506d1037b5c119f62ac325da4a4",
+  "repository_section_module_sha256": "942f94fb6609fe30b407635b52dd128d937bd0beabd321dd384d9d84dda6f500",
+  "repository_section_algorithm_ast_identical": true
+}

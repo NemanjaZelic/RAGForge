@@ -113,9 +113,15 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
         ).model_dump_json()
     )
     manifest = recontextualize_bundle(
-        child, parent, output, query_aliases=aliases, query_planning="facets-v1"
+        child,
+        parent,
+        output,
+        query_aliases=aliases,
+        query_planning="facets-v1",
+        section_context="section-start-v1",
     )
     assert verify_bundle(output).retrieval_configuration.query_planning == "facets-v1"
+    assert manifest.retrieval_configuration.section_context == "section-start-v1"
     original = (parent / "manifest.json").read_bytes()
     engine = BundleEngine(output, threads=1)
     raw_request = RetrieveRequest(query="ABP server", search_method="bm25")
@@ -171,6 +177,7 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
     data = base.model_dump(mode="json", exclude={"build_id"})
     data["retrieval_configuration"].pop("query_aliases", None)
     data["retrieval_configuration"].pop("query_planning", None)
+    data["retrieval_configuration"].pop("section_context", None)
     for doc in data["collections"][0]["documents"]:
         doc.pop("title", None)
     expected = hashlib.sha256(

@@ -1,0 +1,148 @@
+"""Short-section completion preserves scope, strong hits and resource bounds."""
+
+import json
+import sqlite3
+from pathlib import Path
+
+import pytest
+
+from ragforge.core.contracts import RetrievalFilters, RetrievalResponse, RetrieveRequest
+from ragforge.core.sections import complete_sections
+from ragforge.core.sqlite import SCHEMA, RetrievalError, SQLiteEngine
+
+
+@pytest.fixture
+def section_index(tmp_path: Path):
+    path = tmp_path / "index.sqlite"
+    with sqlite3.connect(path) as db:
+        db.executescript(SCHEMA)
+        db.execute("INSERT INTO collections VALUES ('docs','Docs')")
+        for doc, name in [("a" * 64, "guide.html"), ("b" * 64, "private.html")]:
+            db.execute(
+                "INSERT INTO documents VALUES (?,?,?,?,?,?,?)",
+                (doc, "docs", name, "f" * 64, "test", "[]", "[]"),
+            )
+            for ordinal in range(53):
+                section = (
+                    "Guide"
+                    if ordinal == 0
+                    else "Guide > Definition"
+                    if ordinal == 1
+                    else "Guide > Detail"
+                )
+                text = (
+                    "Source definition: tabs occupy eight columns."
+                    if ordinal == 1
+                    else f"Existing source passage {ordinal}."
+                )
+                if doc == "b" * 64:
+                    text = "PRIVATE " + text
+                source = json.dumps({"path": name, "section": section})
+                key = f"{ordinal + (100 if doc[0] == 'b' else 0):064x}"
+                db.execute(
+                    "INSERT INTO chunks(collection_id,document_id,chunk_id,"
+                    "ordinal,text,source_json) "
+                    "VALUES (?,?,?,?,?,?)",
+                    ("docs", doc, key, ordinal, text, source),
+                )
+    engine = SQLiteEngine(path)
+    request = RetrieveRequest(
+        query="definition",
+        top_k=50,
+        max_output_chars=48000,
+        filters=RetrievalFilters(document_ids=["a" * 64]),
+    )
+    ranks = [(f"{i:064x}", 100 - i) for i in [0, *range(2, 51)]]
+    response = engine.ranked_response(ranks, request, "hybrid")
+    return engine, request, response
+
+
+def test_complete_short_definition_with_original_ids_text_citations_and_no_private_body(
+    section_index,
+):
+    engine, request, original = section_index
+    result = complete_sections(engine, request, original)
+    assert result.results[:20] == [
+        c.model_copy(update={"rank_score": 1 / (61 + i)})
+        for i, c in enumerate(original.results[:20])
+    ]
+    assert len(result.results) == len(original.results) == 50
+    assert any("eight columns" in c.text for c in result.results)
+    assert all(c.document_id == "a" * 64 and "PRIVATE" not in c.text for c in result.results)
+    assert len({c.chunk_id for c in result.results}) == 50
+    with engine._connect() as db:
+        for chunk in result.results:
+            row = db.execute("SELECT * FROM chunks WHERE chunk_id=?", (chunk.chunk_id,)).fetchone()
+            assert engine._chunk(row, chunk.rank_score, "hybrid") == chunk
+    assert complete_sections(engine, request, original) == result
+
+
+def test_full_character_budget_cannot_replace_with_larger_definition(section_index):
+    engine, request, original = section_index
+    request = request.model_copy(
+        update={"max_output_chars": sum(len(c.text) for c in original.results)}
+    )
+    assert complete_sections(engine, request, original) is original
+
+
+def test_small_context_and_one_per_document_cap_keep_baseline(section_index):
+    engine, request, original = section_index
+    assert complete_sections(engine, request, original, max_chunks_per_document=1) is original
+    small = RetrievalResponse(contract_version="1", results=original.results[:20])
+    assert complete_sections(engine, request.model_copy(update={"top_k": 20}), small) is small
+
+
+def test_scope_rejected_before_section_database_reads(section_index, monkeypatch):
+    engine, request, original = section_index
+
+    def forbidden():
+        raise AssertionError("unauthorized metadata access")
+
+    monkeypatch.setattr(engine, "_connect", forbidden)
+    for scoped in [
+        request.model_copy(update={"filters": RetrievalFilters(document_ids=["b" * 64])}),
+        request.model_copy(update={"collection_id": "private"}),
+    ]:
+        with pytest.raises(RetrievalError, match="outside request scope"):
+            complete_sections(engine, scoped, original)
+
+
+def test_plain_sources_and_oversized_metadata_keep_original(section_index, monkeypatch):
+    engine, request, original = section_index
+    plain = original.model_copy(
+        update={
+            "results": [
+                c.model_copy(update={"source": c.source.model_copy(update={"section": None})})
+                for c in original.results
+            ]
+        }
+    )
+    assert complete_sections(engine, request, plain) is plain
+    monkeypatch.setattr("ragforge.core.sections.MAX_DOCUMENT_CHUNKS", 20)
+    assert complete_sections(engine, request, original) is original
+
+
+def test_one_representative_per_section_is_preserved(section_index):
+    engine, request, original = section_index
+    # Every lower-ranked chunk is the only representative of its section.
+    protected = original.model_copy(
+        update={
+            "results": [
+                c
+                if i < 20
+                else c.model_copy(
+                    update={"source": c.source.model_copy(update={"section": f"Unique {i}"})}
+                )
+                for i, c in enumerate(original.results)
+            ]
+        }
+    )
+    assert complete_sections(engine, request, protected) is protected
+
+
+def test_metadata_character_budget_falls_back_without_section_body_reads(
+    section_index, monkeypatch
+):
+    engine, request, original = section_index
+    monkeypatch.setattr("ragforge.core.sections.MAX_METADATA_CHARS", 10)
+    assert complete_sections(engine, request, original) is original
