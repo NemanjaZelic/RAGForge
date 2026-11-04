@@ -512,3 +512,37 @@ question participated in either preparation.
 MCP example changes passed the full local check suite with actual pretrained
 models and external dataset drift checks: 294 passed, four platform skips,
 Ruff lint/format, mypy over 51 source files and schema drift checks all pass.
+
+
+### Bounded supplemental planning candidate (2026-11-04)
+
+All 80 development cases and all four controls have complete wide-context
+source-quoted audits: title control 79/80; candidate-only aliases 80/80;
+facets/references 79/80; combined 80/80 (55 mechanical, 25 AI, zero human).
+The original top-10 profile has no newly approved semantic score. Numeric-only
+results are in `benchmarks/rfc-supplemental-planning-dev-v1.json`.
+
+Implemented optional `--plan-queries` / manifest facets-v1 in the shared engine,
+with original-query scoring, scoped source hints, explicit document references,
+bounded question facets, a 400-pair total cap and deterministic branch-rank
+fusion. Legacy IDs/defaults are retained. Twenty-four focused tests pass,
+including exact/ANN portability, raw BM25, grants before passage inference,
+original scorer text and adversarial aggregate fan-out. Full checks are running.
+
+The candidate source/runtime, profile, 3,839 verified kernel main headings and
+68 explicit uppercase acronym definitions were frozen before individual kernel
+test inspection. Actual RFC branch-parity checks and all 80 real engine calls
+are being started alongside source-only portable kernel packaging. These are
+not yet claimed as finished measurements or independent target confirmation.
+
+The earlier MCP/actual-engine checkpoint 6d81f7b passed all six Windows/Linux
+CI jobs: https://github.com/NemanjaZelic/RAGForge/actions/runs/41805218395.
+
+The optional planning implementation passed full local checks with actual
+pretrained models and external bank drift checks: 300 passed, four platform
+skips, Ruff lint/format, mypy over 52 source files and schema drift all pass.
+The frozen planned portable artifacts are built: RFC
+`218f3e7c70d33f02e3a6f26f2b9c2e214ce04db5ae8f768694a58622911fa8f7` and kernel
+`e4c7a98b7dfe1323f2cc7ba23a45767ae6e29d20fa3afb22b5b042de009b3eee`.
+Actual branch parity, source-only kernel annotation and complete actual-call
+measurements remain separate pending steps.

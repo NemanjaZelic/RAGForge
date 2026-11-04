@@ -4,6 +4,7 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Literal
 
 from ragforge import __version__
 from ragforge.artifacts.builder import publish_new
@@ -20,6 +21,7 @@ def recontextualize_bundle(
     storage: StorageBudget | None = None,
     document_titles: Path | None = None,
     query_aliases: Path | None = None,
+    query_planning: Literal["facets-v1"] | None = None,
 ) -> BundleManifest:
     child = verify_bundle(dense_base)
     parent = verify_bundle(context_base)
@@ -64,6 +66,10 @@ def recontextualize_bundle(
         child_files[cc.database_path].model_copy(update={"path": source_path}),
     )
     configuration = parent.retrieval_configuration or child.retrieval_configuration
+    if query_planning is not None:
+        if configuration is None:
+            raise ValueError("query planning requires a configured reranker")
+        configuration = configuration.model_copy(update={"query_planning": query_planning})
     if query_aliases is not None:
         from ragforge.artifacts.manifest import FileRecord
         from ragforge.core.aliases import verify_aliases

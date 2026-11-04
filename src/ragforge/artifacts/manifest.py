@@ -61,6 +61,13 @@ class RetrievalConfiguration(ContractModel):
     max_chunks_per_document: Annotated[int, Field(ge=1, le=50)] | None = None
     reranker: RerankerModel
     query_aliases: RelativePath | None = None
+    query_planning: Literal["facets-v1"] | None = None
+
+    @model_validator(mode="after")
+    def bounded_planning_candidates(self) -> Self:
+        if self.query_planning is not None and self.candidates_per_method != 100:
+            raise ValueError("facets-v1 query planning requires 100 candidates per method")
+        return self
 
 
 class CollectionManifest(ContractModel):

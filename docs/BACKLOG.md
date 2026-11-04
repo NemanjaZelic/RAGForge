@@ -276,3 +276,13 @@ acronym query replacement regressed to 69/80 and is not adopted. Its independent
 case/permission correctness fixes are implemented. Frozen actual portable-bundle
 evaluation is now running; selection within the smaller budget, adapter parity,
 independent annotations and generated-agent answer checks remain open.
+
+
+RF-006Q supplemental follow-up (2026-11-04): the first frozen RFC test returned
+complete relevant facts in 21/24 and did not meet the target. Its labels/result
+are retained; subsequent use is diagnostic. A new 400-pair bounded hybrid
+planning candidate reaches 80/80 on the fully reviewed wide-context dev
+experiment (55 mechanical, 25 AI, no independent review). It is implemented as
+an optional shared-engine configuration, with actual packaged evaluation and
+a source-only prepared, previously uninspected kernel test still pending.
+No release quality checkbox is closed by the development score.

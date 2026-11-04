@@ -69,6 +69,10 @@ class BundleEngine:
             raise ValueError("reranking requires a bundle with a local reranker")
         if not use_reranker:
             config = None
+        if config is not None and config.query_planning is not None and method == "hybrid":
+            from ragforge.core.planning import planned_response
+
+            return planned_response(self, request)
         ranking_query = (
             self._ranking_query(
                 request.query, request.filters.document_ids if request.filters else None
@@ -86,13 +90,28 @@ class BundleEngine:
                 method,
                 ranking_query,
             )
-        from ragforge.core.dense import (
-            BACKEND,
-            BACKEND_VERSION,
-            CANDIDATES,
-            DenseStore,
-            reciprocal_rank_fusion,
+        from ragforge.core.dense import CANDIDATES, reciprocal_rank_fusion
+
+        parent_limit = (
+            config.candidates_per_method
+            if config is not None
+            else (CANDIDATES if method == "hybrid" else request.top_k)
         )
+        ranks = self._rank_dense(request, parent_limit)
+        if method == "hybrid":
+            ranks = reciprocal_rank_fusion(
+                self.sqlite.rank_bm25(
+                    lexical_request, config.candidates_per_method if config else CANDIDATES
+                ),
+                ranks,
+                config.candidates_per_method * 2 if config else request.top_k,
+            )
+        if config is not None:
+            return self._rerank_response(ranks, request, method, ranking_query)
+        return self.sqlite.ranked_response(ranks, request, method)
+
+    def _rank_dense(self, request: RetrieveRequest, limit: int) -> list[tuple[str, float]]:
+        from ragforge.core.dense import BACKEND, BACKEND_VERSION, DenseStore
 
         dense = self.collection.dense_index
         model = self.manifest.query_model
@@ -126,27 +145,10 @@ class BundleEngine:
                 self._dense = DenseStore(self.root / dense.path, dense_sqlite, model.dimensions)
         vector = self._embedder.encode([request.query], query=True)[0]
         filters = request.filters.document_ids if request.filters is not None else None
-        parent_limit = (
-            config.candidates_per_method
-            if config is not None
-            else (CANDIDATES if method == "hybrid" else request.top_k)
-        )
-        ranks = self._dense.rank(
-            vector, 200 if self._parents is not None else parent_limit, filters
-        )
+        ranks = self._dense.rank(vector, 200 if self._parents is not None else limit, filters)
         if self._parents is not None:
-            ranks = self._parents.map_ranks(ranks, parent_limit, filters)
-        if method == "hybrid":
-            ranks = reciprocal_rank_fusion(
-                self.sqlite.rank_bm25(
-                    lexical_request, config.candidates_per_method if config else CANDIDATES
-                ),
-                ranks,
-                config.candidates_per_method * 2 if config else request.top_k,
-            )
-        if config is not None:
-            return self._rerank_response(ranks, request, method, ranking_query)
-        return self.sqlite.ranked_response(ranks, request, method)
+            ranks = self._parents.map_ranks(ranks, limit, filters)
+        return ranks
 
     def _ranking_query(self, query: str, allowed_documents: list[str] | None = None) -> str:
         from ragforge.core.aliases import expand_query
@@ -167,21 +169,18 @@ class BundleEngine:
             return query
         return expanded
 
-    def _rerank_response(
+    def _score_candidates(
         self,
         ranks: list[tuple[str, float]],
         request: RetrieveRequest,
-        method: SearchMethod,
         ranking_query: str | None = None,
-    ) -> RetrievalResponse:
+    ) -> tuple[list[tuple[str, float]], dict[str, str]]:
         import json
 
         from ragforge.core.rerank import ONNXReranker
 
-        config = self.manifest.retrieval_configuration
-        assert config is not None
         if not ranks:
-            return RetrievalResponse(contract_version="1", results=[])
+            return [], {}
         if self._reranker is None:
             self._reranker = ONNXReranker(self.root / "models/reranker", threads=self.threads)
         passages = []
@@ -205,6 +204,27 @@ class BundleEngine:
             zip((key for key, _ in ranks), scores, strict=True),
             key=lambda pair: (-pair[1], pair[0]),
         )
+        return ordered, documents
+
+    def _rerank_response(
+        self,
+        ranks: list[tuple[str, float]],
+        request: RetrieveRequest,
+        method: SearchMethod,
+        ranking_query: str | None = None,
+    ) -> RetrievalResponse:
+        ordered, documents = self._score_candidates(ranks, request, ranking_query)
+        return self._selected_response(ordered, documents, request, method)
+
+    def _selected_response(
+        self,
+        ordered: list[tuple[str, float]],
+        documents: dict[str, str],
+        request: RetrieveRequest,
+        method: SearchMethod,
+    ) -> RetrievalResponse:
+        config = self.manifest.retrieval_configuration
+        assert config is not None
         selected = []
         counts: dict[str, int] = {}
         for key, score in ordered:

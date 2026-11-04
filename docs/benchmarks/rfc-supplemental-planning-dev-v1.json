@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "scope": "all 80 development contexts, cached main scores plus fresh supplemental inference; not full packaged calls or independent test accuracy",
+  "split": "dev",
+  "cases": 80,
+  "recipe_sha256": "c2f0005d2209b00e4e2f27a2c4f1046eac70929fc73a936be99f614f557c0cc3",
+  "artifact_build_id": "5a69e9f37b77c1691a4855858906c3dd7c99682cf55710932d3dd5d9a378d9b0",
+  "variants": {
+    "baseline-k50": {
+      "top_k": 50,
+      "max_output_chars": 48000,
+      "literal_complete_cases": 53,
+      "supported_reviewed_cases": 79,
+      "not_supported_reviewed_cases": 1,
+      "reviewed_cases": 80,
+      "pending_cases": 0,
+      "mechanically_supported_cases": 53,
+      "ai_reviewed_cases": 27,
+      "human_reviewed_cases": 0,
+      "automatic_quality_approval": false
+    },
+    "candidate_alias-k50": {
+      "top_k": 50,
+      "max_output_chars": 48000,
+      "literal_complete_cases": 54,
+      "supported_reviewed_cases": 80,
+      "not_supported_reviewed_cases": 0,
+      "reviewed_cases": 80,
+      "pending_cases": 0,
+      "mechanically_supported_cases": 54,
+      "ai_reviewed_cases": 26,
+      "human_reviewed_cases": 0,
+      "automatic_quality_approval": false
+    },
+    "facets-k50": {
+      "top_k": 50,
+      "max_output_chars": 48000,
+      "literal_complete_cases": 54,
+      "supported_reviewed_cases": 79,
+      "not_supported_reviewed_cases": 1,
+      "reviewed_cases": 80,
+      "pending_cases": 0,
+      "mechanically_supported_cases": 54,
+      "ai_reviewed_cases": 26,
+      "human_reviewed_cases": 0,
+      "automatic_quality_approval": false
+    },
+    "combined-k50": {
+      "top_k": 50,
+      "max_output_chars": 48000,
+      "literal_complete_cases": 55,
+      "supported_reviewed_cases": 80,
+      "not_supported_reviewed_cases": 0,
+      "reviewed_cases": 80,
+      "pending_cases": 0,
+      "mechanically_supported_cases": 55,
+      "ai_reviewed_cases": 25,
+      "human_reviewed_cases": 0,
+      "automatic_quality_approval": false
+    }
+  },
+  "smaller_budget_status": "top-10 complete literal counts are 41,41,43,43; new semantic cases remain pending; no top-10 gain claimed",
+  "selected_variant": "combined-k50",
+  "selection_basis": "complete source-quoted support on all 80 dev cases and greatest literal complete support at same wide budget; original query retained",
+  "independent_test_confirmation": false
+}

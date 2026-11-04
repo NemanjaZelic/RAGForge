@@ -334,3 +334,49 @@ compares both existing output budgets. All 80 development cases and controls
 are retained. No adoption or improvement is claimed while it is running. The
 kernel context preparation uses source documents alone; its individual test
 questions remain unopened until the next candidate is selected and frozen.
+
+
+### Supplemental candidate planning (optional facets-v1)
+
+`recontextualize ... --plan-queries` embeds a versioned hybrid-only planning
+configuration in a new verified bundle. It requires the local reranker and
+100 candidates per method. Existing bundle identities and defaults are
+preserved. Raw BM25 and explicit `--no-rerank` bypass this mode.
+
+The original query supplies 100 lexical and 100 mapped dense candidates and
+remains the main reranker query. Optional source-proven uppercase aliases add
+at most 50 new lexical candidates; their expansions do not replace the
+reranker text. Up to four explicit file stems/letter-number identifiers add
+eight scoped lexical candidates each. At most three English syntactic facets
+reuse words from the query, preserve distinct named subjects, and inherit a
+shared explicit name only when needed. Long or unmatched questions retain the
+original branch. No answer labels, query lookup bank, external LLM or network
+participates in planning.
+
+Each facet uses 32 lexical candidates and 64 dense children mapped to 32
+parents. Aggregate reranker inference is capped at 400 pairs across every
+branch, including repeated passages scored for different facets. The final
+merge uses the best reciprocal rank of each passage across the separately
+reranked branches (k=60, deterministic chunk-ID ties). These scores express
+relative rank, not answer confidence. Request character limits and per-document
+limits apply to the final returned context. Grants scope aliases, reference
+routing, lexical/dense candidates and text before inference; text loading
+checks the grant again.
+
+The complete 80-question development comparison retains the original wide
+output budget. Source-quoted support is 79/80 for the title control, 80/80 for
+candidate-only aliases, 79/80 for facets/references, and 80/80 for their
+combination. Literal complete cases are 53, 54, 54 and 55 respectively. The
+combined result has 55 mechanical cases and 25 AI-reviewed cases, zero human
+reviews. Two new equivalent DNS-source proofs were explicitly assessed;
+changed context was not automatically marked incomplete when an earlier
+quote disappeared. [Numeric planning comparison](benchmarks/rfc-supplemental-planning-dev-v1.json).
+
+This experiment reuses verified identical main candidate scores and performs
+actual inference for supplemental branches. Full packaged calls are being
+measured separately. At top-10, literal counts are 41, 41, 43 and 43; new
+semantic cases remain pending and no smaller-budget gain is claimed. The
+combined wide profile and source runtime are frozen before kernel test
+inspection. Kernel titles and 68 multi-source acronym definitions use source
+text alone, with no question or answer inputs. The original first RFC test
+result remains 21/24 and is not erased by these development results.

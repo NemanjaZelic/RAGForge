@@ -446,6 +446,19 @@
           "default": null,
           "title": "Query Aliases"
         },
+        "query_planning": {
+          "anyOf": [
+            {
+              "const": "facets-v1",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Query Planning"
+        },
         "reranker": {
           "$ref": "#/$defs/RerankerModel"
         },

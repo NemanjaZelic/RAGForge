@@ -506,6 +506,9 @@ def recontextualize(
     query_aliases: Annotated[
         Path | None, typer.Option(help="Source-verified acronym JSON.")
     ] = None,
+    plan_queries: bool = typer.Option(
+        False, "--plan-queries", help="Optional bounded facets-v1 hybrid candidate planning."
+    ),
 ) -> None:
     """Reuse small-chunk dense vectors with larger source-identical context chunks."""
     from ragforge.artifacts.recontextualize import recontextualize_bundle
@@ -519,6 +522,7 @@ def recontextualize(
             storage=StorageBudget(storage_root) if storage_root else None,
             document_titles=document_titles,
             query_aliases=query_aliases,
+            query_planning="facets-v1" if plan_queries else None,
         )
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
