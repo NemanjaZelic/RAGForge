@@ -637,3 +637,25 @@ zero warnings; actual pretrained E5/reranker and opt-in frozen external-bank
 drift checks enabled. Ruff lint/format (166 files), mypy (53 source files)
 and schema drift checks all pass. First unused-split source review remains
 in progress; no complete validation or release approval is claimed yet.
+
+
+2026-11-04 completed section-runtime validation: all 16 actual queries on the
+previously selection-unused RFC tuning split contain all frozen requested facts;
+zero retrieval errors. Nine are mechanical full-span matches and seven are
+source-quoted AI semantic reviews, including correct alternative DNS/HTTP
+sources. There are eight question families and no independent human reviews.
+The original split remains tuning; earlier raw-baseline split execution is
+explicitly disclosed. Runtime and minimal fact bank were frozen before outputs;
+no settings or expected facts changed during this run. The observed 16/16 is
+not a cross-domain 99% guarantee or independent release approval.
+Numeric report: benchmarks/rfc-section-first-unused-tuning-validation-v1.json.
+
+The code commit cfcdcc5 passed all six Windows/Linux CI jobs, including pinned
+pretrained models and Linux OS network isolation:
+https://github.com/NemanjaZelic/RAGForge/actions/runs/41825162622.
+Local full checks: 307 passed, four platform skips, no warnings, lint/format,
+53-file type check and schema drift all pass. Engine/CLI/actual stdio MCP parity
+also passes. The first frozen kernel 112/120 and RFC 21/24 results stay unchanged;
+subsequent consumed-set diagnostics are kernel >=114/120 and RFC 23/24.
+Independent quality annotation, agent-generated answers and PDF quality remain
+open; neither development diagnostics nor the 16-case validation close them.

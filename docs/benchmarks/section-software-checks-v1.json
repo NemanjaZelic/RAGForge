@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "scope": "Software correctness checks, not independent answer-quality approval",
+  "code_commit": "cfcdcc5e64eb70db99332d886848d18ee01005a3",
+  "run_id": 41825162622,
+  "run_url": "https://github.com/NemanjaZelic/RAGForge/actions/runs/41825162622",
+  "successful_jobs": 6,
+  "failed_jobs": 0,
+  "conclusion": "success",
+  "local_passed": 307,
+  "local_platform_skips": 4,
+  "local_warnings": 0,
+  "mypy_source_files": 53,
+  "format_checked_files": 166,
+  "schema_drift_check": "passed"
+}

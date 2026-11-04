@@ -296,3 +296,9 @@ The original first result is preserved in benchmarks/kernel-first-frozen-test-v1
 Kernel questions are now consumed; future improvements on this set are diagnostic
 regressions, not a fresh independent test. All 80 actual RFC dev calls have
 also completed and their source-proof review is being finalized.
+
+RF-006Q section-context checkpoint: software and real CLI/MCP parity pass;
+consumed kernel >=114/120 and RFC 23/24; first selected-runtime validation on
+16 previously selection-unused tuning questions supports all 16 (nine mechanical,
+seven AI, eight question families, no human review). Observed local threshold
+reached; independent quality/agent/PDF gates remain open. First results retained.
