@@ -449,7 +449,10 @@
         "query_planning": {
           "anyOf": [
             {
-              "const": "facets-v1",
+              "enum": [
+                "facets-v1",
+                "facets-v2"
+              ],
               "type": "string"
             },
             {
@@ -465,7 +468,10 @@
         "section_context": {
           "anyOf": [
             {
-              "const": "section-start-v1",
+              "enum": [
+                "section-start-v1",
+                "section-start-v2"
+              ],
               "type": "string"
             },
             {

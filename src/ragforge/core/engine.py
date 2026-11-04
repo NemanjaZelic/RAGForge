@@ -239,7 +239,7 @@ class BundleEngine:
             if len(selected) == request.top_k:
                 break
         response = self.sqlite.ranked_response(selected, request, method)
-        if config.section_context == "section-start-v1":
+        if config.section_context is not None:
             from ragforge.core.sections import complete_sections
 
             return complete_sections(
@@ -247,6 +247,7 @@ class BundleEngine:
                 request,
                 response,
                 max_chunks_per_document=config.max_chunks_per_document,
+                policy=config.section_context,
             )
         return response
 

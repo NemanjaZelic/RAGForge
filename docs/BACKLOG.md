@@ -302,3 +302,8 @@ consumed kernel >=114/120 and RFC 23/24; first selected-runtime validation on
 16 previously selection-unused tuning questions supports all 16 (nine mechanical,
 seven AI, eight question families, no human review). Observed local threshold
 reached; independent quality/agent/PDF gates remain open. First results retained.
+
+RF-006Q v2 checkpoint: 118/120 consumed kernel contexts supported, RFC119/120
+preserved; 240-case production/legacy parity and 321 software tests pass.
+Version-two large portable-bundle probes, new independent/agent/PDF validation
+remain open. Existing first results and source-fact requirements are unchanged.

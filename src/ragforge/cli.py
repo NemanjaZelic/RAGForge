@@ -512,12 +512,41 @@ def recontextualize(
     complete_sections: bool = typer.Option(
         False, "--complete-sections", help="Optional bounded section-start-v1 context completion."
     ),
+    query_planning: str | None = typer.Option(
+        None, help="Explicit facets-v1 or facets-v2 query planning."
+    ),
+    section_context: str | None = typer.Option(
+        None, help="Explicit section-start-v1 or section-start-v2 completion."
+    ),
 ) -> None:
     """Reuse small-chunk dense vectors with larger source-identical context chunks."""
+    from ragforge.artifacts.manifest import QueryPlanning, SectionContext
     from ragforge.artifacts.recontextualize import recontextualize_bundle
     from ragforge.jobs.budget import StorageBudget
 
     try:
+        if query_planning not in (None, "facets-v1", "facets-v2"):
+            raise ValueError("query planning must be facets-v1 or facets-v2")
+        if section_context not in (None, "section-start-v1", "section-start-v2"):
+            raise ValueError("section context must be section-start-v1 or section-start-v2")
+        if plan_queries and query_planning == "facets-v2":
+            raise ValueError("choose --plan-queries or explicit facets-v2")
+        if complete_sections and section_context == "section-start-v2":
+            raise ValueError("choose --complete-sections or explicit section-start-v2")
+        selected_planning: QueryPlanning | None = (
+            "facets-v2"
+            if query_planning == "facets-v2"
+            else "facets-v1"
+            if plan_queries or query_planning == "facets-v1"
+            else None
+        )
+        selected_sections: SectionContext | None = (
+            "section-start-v2"
+            if section_context == "section-start-v2"
+            else "section-start-v1"
+            if complete_sections or section_context == "section-start-v1"
+            else None
+        )
         result = recontextualize_bundle(
             dense_base,
             context_base,
@@ -525,8 +554,8 @@ def recontextualize(
             storage=StorageBudget(storage_root) if storage_root else None,
             document_titles=document_titles,
             query_aliases=query_aliases,
-            query_planning="facets-v1" if plan_queries else None,
-            section_context="section-start-v1" if complete_sections else None,
+            query_planning=selected_planning,
+            section_context=selected_sections,
         )
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)

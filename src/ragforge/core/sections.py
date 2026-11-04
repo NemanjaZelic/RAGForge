@@ -3,6 +3,7 @@
 import json
 import sqlite3
 from collections import Counter
+from typing import Literal
 
 from ragforge.core.contracts import RetrievalResponse, RetrieveRequest
 from ragforge.core.sqlite import RetrievalError, SQLiteEngine
@@ -12,6 +13,7 @@ MAX_METADATA_CHARS = 2000000
 PROTECTED_HITS = 20
 MAX_GROUPS = 8
 MAX_SECTION_CHUNKS = 4
+MAX_GROUP_PROBES = 32
 
 
 def complete_sections(
@@ -20,13 +22,18 @@ def complete_sections(
     response: RetrievalResponse,
     *,
     max_chunks_per_document: int | None = None,
+    policy: Literal["section-start-v1", "section-start-v2"] = "section-start-v1",
 ) -> RetrievalResponse:
     """Exchange weak same-document hits for short section starts and successors.
 
     Preserve the first twenty hits and each section's sole representative.
-    At most eight exchanges; output count, character budget and per-document
-    counts never increase. Scores describe final context order, not confidence.
+    At most eight exchanges preserve output and character limits. Version two
+    may use one cross-document exchange to complete a short section missing only
+    its first chunk; per-document caps still apply. Version one is unchanged.
+    Scores describe final context order, not confidence.
     """
+    if policy not in {"section-start-v1", "section-start-v2"}:
+        raise ValueError("unsupported section completion policy")
     original = response.results
     if len(original) <= PROTECTED_HITS or max_chunks_per_document == 1:
         return response
@@ -39,6 +46,7 @@ def complete_sections(
         raise RetrievalError("section context outside request scope")
     groups: dict[tuple[str, str], tuple[bool, int, int]] = {}
     additions = []
+    boundary_completions: set[str] = set()
     metadata: dict[str, list[sqlite3.Row]] = {}
     with sqlite._connect() as db:
         collection = sqlite._collection(db, request.collection_id)
@@ -58,11 +66,23 @@ def complete_sections(
             key = (chunk.document_id, section)
             _, count, first_rank = groups.get(key, (root, 0, rank))
             groups[key] = (root, count + 1, first_rank)
+        document_frequency = Counter(c.document_id for c in original)
         selected = sorted(
-            groups.items(), key=lambda item: (not item[1][0], -item[1][1], item[1][2])
+            groups.items(),
+            key=lambda item: (
+                -document_frequency[item[0][0]] if policy == "section-start-v2" else 0,
+                not item[1][0],
+                -item[1][1],
+                item[1][2],
+            ),
         )
-        for (document, section), _ in selected[:MAX_GROUPS]:
+        eligible_groups = 0
+        for (document, section), _ in selected[
+            : MAX_GROUP_PROBES if policy == "section-start-v2" else MAX_GROUPS
+        ]:
             if document not in metadata:
+                if len(metadata) == MAX_GROUPS:
+                    continue
                 rows: list[sqlite3.Row] = []
                 metadata_chars = 0
                 for row in db.execute(
@@ -83,18 +103,37 @@ def complete_sections(
             ]
             if not matching or len(matching) > MAX_SECTION_CHUNKS:
                 continue
+            section_hits = sum(
+                c.document_id == document and c.source.section == section for c in original
+            )
+            boundary_completion = (
+                policy == "section-start-v2"
+                and 2 <= len(matching) <= 4
+                and section_hits == len(matching) - 1
+            )
+            eligible_groups += 1
             for offset in range(2):
                 item = db.execute(
                     "SELECT * FROM chunks WHERE collection_id=? AND document_id=? AND ordinal=?",
                     (collection, document, matching[0]["ordinal"] + offset),
                 ).fetchone()
                 if item is not None:
-                    additions.append(sqlite._chunk(item, 0, original[0].retrieval_method))
+                    chunk = sqlite._chunk(item, 0, original[0].retrieval_method)
+                    additions.append(chunk)
+                    if (
+                        offset == 0
+                        and boundary_completion
+                        and chunk.chunk_id not in {c.chunk_id for c in original}
+                    ):
+                        boundary_completions.add(chunk.chunk_id)
+            if eligible_groups == MAX_GROUPS:
+                break
     result = list(original)
     seen = {c.chunk_id for c in result}
     total = sum(len(c.text) for c in result)
     added: set[str] = set()
     swaps = 0
+    cross_document_swaps = 0
     for chunk in additions:
         if chunk.chunk_id in seen:
             continue
@@ -112,8 +151,32 @@ def complete_sections(
             ),
             None,
         )
+        cross_document = False
+        if (
+            donor is None
+            and chunk.chunk_id in boundary_completions
+            and cross_document_swaps == 0
+            and (
+                max_chunks_per_document is None
+                or counts[chunk.document_id] < max_chunks_per_document
+            )
+        ):
+            donor = next(
+                (
+                    i
+                    for i in range(len(result) - 1, PROTECTED_HITS - 1, -1)
+                    if result[i].document_id != chunk.document_id
+                    and result[i].chunk_id not in added
+                    and counts[result[i].document_id] >= 3
+                    and sections[(result[i].document_id, result[i].source.section)] >= 2
+                    and total - len(result[i].text) + len(chunk.text) <= request.max_output_chars
+                ),
+                None,
+            )
+            cross_document = donor is not None
         if donor is None:
             continue
+        cross_document_swaps += int(cross_document)
         total += len(chunk.text) - len(result[donor].text)
         seen.remove(result[donor].chunk_id)
         result[donor] = chunk

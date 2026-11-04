@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "scope": "Unadopted local diagnostic candidates; no independent validation",
+  "early_section_eligibility_lower_bound": 114,
+  "density_section_lower_bound": 114,
+  "denominator": 120,
+  "unselected_section_candidates_keep_original_labels": true,
+  "literal_title_only_routing": "not selected; broad metadata shortlist changes, not a measured quality result",
+  "lead_router_feasibility_cases": 4,
+  "lead_router_context_changes": 0,
+  "lead_router_new_pairs_total": 51,
+  "lead_router_adopted": false,
+  "quality_approval": false
+}

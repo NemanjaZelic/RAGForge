@@ -147,7 +147,7 @@ def maximum_branch_rank(branches: list[list[tuple[str, float]]]) -> list[tuple[s
 
 
 def planned_response(engine: BundleEngine, request: RetrieveRequest) -> RetrievalResponse:
-    """Fixed facets-v1 recipe, at most 400 total reranker pairs.
+    """Versioned bounded recipe, at most 400 total reranker pairs.
 
     Original BM25/dense candidates and their original-query reranker scores are
     preserved. Verified aliases add candidates only. Every branch receives the
@@ -158,8 +158,16 @@ def planned_response(engine: BundleEngine, request: RetrieveRequest) -> Retrieva
     from ragforge.core.dense import reciprocal_rank_fusion
 
     config = engine.manifest.retrieval_configuration
-    if config is None or config.query_planning != "facets-v1":
-        raise ValueError("facets-v1 requires its configured local reranker")
+    if config is None or config.query_planning not in {"facets-v1", "facets-v2"}:
+        raise ValueError("query planning requires its configured local reranker")
+    make_facets = question_facets
+    find_references = referenced_documents
+    if config.query_planning == "facets-v2":
+        from ragforge.core.planning_v2 import question_facets as make_facets_v2
+        from ragforge.core.planning_v2 import referenced_documents as find_references_v2
+
+        make_facets = make_facets_v2
+        find_references = find_references_v2
     allowed = request.filters.document_ids if request.filters is not None else None
     documents: dict[str, str] = {}
     pairs = 0
@@ -189,12 +197,12 @@ def planned_response(engine: BundleEngine, request: RetrieveRequest) -> Retrieva
     main = _ordered(base + aliases)
     references = []
     inventory = [(d.document_id, d.source_path) for d in engine.collection.documents]
-    for document_id in referenced_documents(request.query, inventory, allowed):
+    for document_id in find_references(request.query, inventory, allowed):
         scoped = request.model_copy(
             update={"filters": RetrievalFilters(document_ids=[document_id])}
         )
         references.append(score(request.query, engine.sqlite.rank_bm25(scoped, 8)))
-    facets = question_facets(request.query)
+    facets = make_facets(request.query)
     branches = []
     if facets:
         limit = min(64, (400 - pairs) // len(facets))

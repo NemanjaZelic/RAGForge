@@ -146,3 +146,61 @@ def test_metadata_character_budget_falls_back_without_section_body_reads(
     engine, request, original = section_index
     monkeypatch.setattr("ragforge.core.sections.MAX_METADATA_CHARS", 10)
     assert complete_sections(engine, request, original) is original
+
+
+def boundary_context(section_index, *, long_definition=False):
+    engine, request, _ = section_index
+    import json
+    import sqlite3
+
+    with sqlite3.connect(engine.database) as db:
+        for ordinal in range(3):
+            source = json.dumps({"path": "guide.html", "section": "Guide > Boundary"})
+            text = "Original first definition " + (
+                "details " * 500 if long_definition else "with source context."
+            )
+            db.execute(
+                "UPDATE chunks SET source_json=? WHERE document_id=? AND ordinal=?",
+                (source, "a" * 64, ordinal),
+            )
+            if ordinal == 0:
+                db.execute(
+                    "UPDATE chunks SET text=? WHERE document_id=? AND ordinal=0", (text, "a" * 64)
+                )
+    scoped = request.model_copy(
+        update={"filters": RetrievalFilters(document_ids=["a" * 64, "b" * 64])}
+    )
+    ranks = [(f"{i:064x}", 1000 - i) for i in [1, 2, *range(100, 148)]]
+    return engine, scoped, engine.ranked_response(ranks, scoped, "hybrid")
+
+
+def test_v2_completes_the_sole_missing_first_chunk_without_displacing_strong_hits(section_index):
+    engine, request, original = boundary_context(section_index)
+    assert complete_sections(engine, request, original) is original
+    result = complete_sections(
+        engine, request, original, policy="section-start-v2", max_chunks_per_document=3
+    )
+    assert [c.chunk_id for c in result.results[:20]] == [c.chunk_id for c in original.results[:20]]
+    assert len(result.results) == 50
+    assert sum(c.document_id == "a" * 64 for c in result.results) == 3
+    assert any(c.chunk_id == "0" * 64 for c in result.results)
+    assert all(c.document_id in request.filters.document_ids for c in result.results)
+    assert sum(len(c.text) for c in result.results) <= request.max_output_chars
+
+
+def test_v2_cross_document_completion_respects_document_cap(section_index):
+    engine, request, original = boundary_context(section_index)
+    assert (
+        complete_sections(
+            engine, request, original, policy="section-start-v2", max_chunks_per_document=2
+        )
+        is original
+    )
+
+
+def test_v2_cannot_exceed_request_character_budget(section_index):
+    engine, request, original = boundary_context(section_index, long_definition=True)
+    request = request.model_copy(
+        update={"max_output_chars": sum(len(c.text) for c in original.results)}
+    )
+    assert complete_sections(engine, request, original, policy="section-start-v2") is original

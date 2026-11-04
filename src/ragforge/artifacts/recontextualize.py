@@ -4,11 +4,10 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Literal
 
 from ragforge import __version__
 from ragforge.artifacts.builder import publish_new
-from ragforge.artifacts.manifest import BundleManifest, DenseSource
+from ragforge.artifacts.manifest import BundleManifest, DenseSource, QueryPlanning, SectionContext
 from ragforge.artifacts.verification import build_identity, verify_bundle
 from ragforge.jobs.budget import StorageBudget
 
@@ -21,8 +20,8 @@ def recontextualize_bundle(
     storage: StorageBudget | None = None,
     document_titles: Path | None = None,
     query_aliases: Path | None = None,
-    query_planning: Literal["facets-v1"] | None = None,
-    section_context: Literal["section-start-v1"] | None = None,
+    query_planning: QueryPlanning | None = None,
+    section_context: SectionContext | None = None,
 ) -> BundleManifest:
     child = verify_bundle(dense_base)
     parent = verify_bundle(context_base)

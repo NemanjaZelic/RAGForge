@@ -61,8 +61,9 @@ def test_branch_fusion_counts_best_rank_once_with_stable_ties():
 
 
 @pytest.mark.parametrize("backend", ["exact", "ann"])
+@pytest.mark.parametrize("planning", ["facets-v1", "facets-v2"])
 def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_original(
-    tmp_path: Path, tiny_model, tiny_reranker, monkeypatch, offline_cli, backend: str
+    tmp_path: Path, tiny_model, tiny_reranker, monkeypatch, offline_cli, backend: str, planning: str
 ):
     sources = tmp_path / "sources"
     sources.mkdir()
@@ -117,11 +118,13 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
         parent,
         output,
         query_aliases=aliases,
-        query_planning="facets-v1",
-        section_context="section-start-v1",
+        query_planning=planning,
+        section_context="section-start-v2" if planning == "facets-v2" else "section-start-v1",
     )
-    assert verify_bundle(output).retrieval_configuration.query_planning == "facets-v1"
-    assert manifest.retrieval_configuration.section_context == "section-start-v1"
+    assert verify_bundle(output).retrieval_configuration.query_planning == planning
+    assert manifest.retrieval_configuration.section_context == (
+        "section-start-v2" if planning == "facets-v2" else "section-start-v1"
+    )
     original = (parent / "manifest.json").read_bytes()
     engine = BundleEngine(output, threads=1)
     raw_request = RetrieveRequest(query="ABP server", search_method="bm25")

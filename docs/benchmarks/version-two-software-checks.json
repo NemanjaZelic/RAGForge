@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "scope": "Local software checks; not independent quality approval",
+  "passed_tests": 321,
+  "platform_skips": 4,
+  "warnings": 0,
+  "ruff_check": "passed",
+  "ruff_formatted_files": 171,
+  "mypy_source_files": 54,
+  "schema_drift_check": "passed",
+  "focused_tests": 27,
+  "native_powershell_parser": "passed",
+  "native_preview_starts_processes": false,
+  "native_duplicate_controller_launch": "rejected_before_process_creation"
+}

@@ -115,6 +115,7 @@ Project license is still a proposal in the source plan; no license choice or
 public release has been made.
 
 Private GitHub setup and progress: [docs/PROGRESS.md](docs/PROGRESS.md).
+Long Windows benchmark runs: [background launcher](docs/BACKGROUND-BENCHMARKS.md).
 
 ## Local balanced quickstart
 

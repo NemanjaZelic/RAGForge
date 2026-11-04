@@ -446,3 +446,43 @@ also passes. The first frozen kernel 112/120 and RFC 21/24 results stay unchange
 subsequent consumed-set diagnostics are kernel >=114/120 and RFC 23/24.
 Independent quality annotation, agent-generated answers and PDF quality remain
 open; neither development diagnostics nor the 16-case validation close them.
+
+
+2026-11-04 version-two checkpoint: query-only technical source-stem routing
+and additional explicit combine/compare/distinguish facets change 16 kernel
+plans and one RFC plan. Fresh real model inference was performed for those
+17 cases; unchanged plans use source-verified exact-context replay. No runtime
+question/answer lookup or label-derived routing is introduced. The original
+400-pair budget and 50/48,000 output profile remain unchanged. The observed
+maximum is 314 pairs. The narrow planner supports 117/120 kernel cases; the
+composed short-section boundary policy supports 118/120 (93 mechanical,
+27 AI reviews including two incomplete cases). RFC remains 119/120 across all
+120 consumed cases, with no lost prior support. Original frozen first results
+and minimal fact banks are retained. This is diagnostic selection, not a new
+independent quality confirmation; human review count remains zero.
+
+Production helpers match the frozen selected prototypes for all 240 existing
+cases. Legacy context behavior and both existing base artifact identities are
+also exactly preserved. New policies are opt-in via recontextualize
+--query-planning facets-v2 --section-context section-start-v2. Existing boolean
+flags continue selecting version one. One bounded cross-document exchange may
+complete a short section missing only its first chunk; first 20 hits, character
+limit, document grants/caps and the sole section representative stay protected.
+At most eight documents / 32 metadata groups / eight exchanges are considered.
+
+All required local checks pass: 321 tests, four platform skips, no warnings,
+Ruff lint/format (171 files), mypy (54 source files), schema drift and 27 focused
+checks. Actual large version-two bundle/CLI/MCP probes are the next step.
+Safe numeric reports: planning-and-boundary-v2-kernel-diagnostic.json,
+planning-v2-rfc-diagnostic.json and production-v2-parity.json under benchmarks/.
+
+The previous terminal-owned large corpus workers were no longer active at the
+start of this continuation. A native WMI-brokered one-shot supervisor has now
+been observed advancing the full RFC build from 323,584 to at least 352,256
+of 662,398 chunks. It installs no service or recurring task. The maintained
+scripts/start_background_benchmarks.ps1 entry point has frozen-input preview,
+private aggregate publication choice, duplicate-controller protection, local
+status/logs and process-scoped sleep prevention. Native preview/parser and
+refusal of duplicate live controllers were checked. Current active workers
+remain under the equivalent local prototype supervisor to avoid restarting
+healthy runs. [Usage and limitations](BACKGROUND-BENCHMARKS.md).

@@ -1,0 +1,23 @@
+{
+  "scope": "exact production-to-frozen-prototype query-plan and source-context parity; no new independent quality measurement",
+  "legacy_context_matches": 240,
+  "version_two_context_matches": 240,
+  "version_two_plan_matches": 240,
+  "additional_neural_calls": 0,
+  "corpora": {
+    "kernel": {
+      "cases": 120,
+      "base_identity_preserved": "76fc5da8183ae8bb7509bf2d3599f5325c83e493e7fdb664a19e9aad7ed3c525"
+    },
+    "rfc": {
+      "cases": 120,
+      "base_identity_preserved": "21bebf8552e33734033bcba57aa2d270bf2fcb3f64cdc931ad8b361575658f28"
+    }
+  },
+  "production_source_sha256": {
+    "src/ragforge/core/planning.py": "701d7b57256e667c99de04c199571baec2da5061403a465e308ea92f51e14b58",
+    "src/ragforge/core/planning_v2.py": "86fa4edb9e1cdc8c8faf3a6bd4fee597086002c77fefa9f2fe11da02e5ff78c1",
+    "src/ragforge/core/sections.py": "1cabd8696a3bc92d6e813e4fcc2e4957a01ce840621393170f726954157d8c93",
+    "src/ragforge/core/engine.py": "43669f0a5234fa87a0e10929a16796a5ee17ba7794cf2e6552ca251eb879715f"
+  }
+}
