@@ -1,0 +1,167 @@
+{
+  "report_version": "t7-first-unseen-result-v1",
+  "utc": "2026-11-04T23:26:58.235100+00:00",
+  "state": "all_first_queries_and_primary_source_reviews_complete_target_not_met",
+  "scope": "all-requested-facts support in actual retrieved source text; generated-answer accuracy not measured",
+  "first_result_preserved": true,
+  "retrieval_changed_after_questions_or_outputs": false,
+  "questions_changed_after_outputs": false,
+  "corpus": {
+    "name": "PostgreSQL18.0 complete official HTML manual",
+    "source_documents": 1143,
+    "source_families": 30,
+    "unique_fact_groups": 90,
+    "question_fact_assignments": 180,
+    "questions": 120,
+    "archive_sha256": "f0dfc5b0882aa68ca471e9930a0dcfe4644a10a9b9613c60d6d14bfc9c224d44"
+  },
+  "primary": {
+    "actual_queries_completed": 120,
+    "actual_query_errors": 0,
+    "ai_reviewed_cases": 19,
+    "automatic_quality_approval": false,
+    "by_complexity": {
+      "multi": {
+        "ai_reviewed_cases": 17,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 43,
+        "not_supported_reviewed_cases": 14,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 60,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.7666666666666667,
+        "supported_reviewed_cases": 46,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 60
+      },
+      "single": {
+        "ai_reviewed_cases": 2,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 58,
+        "not_supported_reviewed_cases": 2,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 60,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.9666666666666667,
+        "supported_reviewed_cases": 58,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 60
+      }
+    },
+    "by_language": {
+      "en": {
+        "ai_reviewed_cases": 2,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 88,
+        "not_supported_reviewed_cases": 2,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 90,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.9777777777777777,
+        "supported_reviewed_cases": 88,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 90
+      },
+      "sr": {
+        "ai_reviewed_cases": 17,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 13,
+        "not_supported_reviewed_cases": 14,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 30,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.5333333333333333,
+        "supported_reviewed_cases": 16,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 30
+      }
+    },
+    "human_reviewed_cases": 0,
+    "locked_questions_unchanged": true,
+    "mechanically_supported_cases": 101,
+    "method": "hybrid",
+    "not_supported_reviewed_cases": 16,
+    "pending_cases": 0,
+    "quality_gate": "semantic_reviews_require_independent_validation",
+    "returned_chunks_verified_against_index": 6000,
+    "reviewed_cases": 120,
+    "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+    "supported_fraction_of_total": 0.8666666666666667,
+    "supported_reviewed_cases": 104,
+    "target_excellent": 0.99,
+    "target_good": 0.95,
+    "total_cases": 120
+  },
+  "supported_fact_assignments": 161,
+  "total_fact_assignments": 180,
+  "controls_and_primary_literal_diagnostic": {
+    "bm25": {
+      "queries": 120,
+      "errors": 0,
+      "complete_original_source_span_supported": 103,
+      "denominator": 120,
+      "metric": "strict original full-paragraph/span support lower bound, not final semantic accuracy; differently worded correct evidence may also qualify"
+    },
+    "dense": {
+      "queries": 120,
+      "errors": 0,
+      "complete_original_source_span_supported": 94,
+      "denominator": 120,
+      "metric": "strict original full-paragraph/span support lower bound, not final semantic accuracy; differently worded correct evidence may also qualify"
+    },
+    "hybrid": {
+      "queries": 120,
+      "errors": 0,
+      "complete_original_source_span_supported": 101,
+      "denominator": 120,
+      "metric": "strict original full-paragraph/span support lower bound, not final semantic accuracy; differently worded correct evidence may also qualify"
+    }
+  },
+  "selected_runtime_commit": "ad942620e29b2e46a5e407ca1b4a3eaf81e57bf9",
+  "selected_profile_sha256": "ba0a1c81b5cb10ace92c90757b3b91d8247851f3c5a93132191f98ed087309c2",
+  "test_runtime_sha256": "c2fd0d1a4a832e006cbe43f366f5e41a8be8f3bf2792483fa9138f2d1f1d0bc1",
+  "artifact_build_id": "d8cfd6e082fa2d1221488db129bda60deed8cba3bef5b7c58cdc02addc547d18",
+  "cases_sha256": "9fb2cef1f7b5497ede2ba84e3a99f67272da5dd919a0c1ebaad7be2bf4b5a301",
+  "answers_sha256": "eeca1e1ca972bf4d9abdd6a2449c41569a6e44a25165634a11c5bb02eb569185",
+  "requirements_sha256": "9696041248e4ee2bf4245e47251de950b0aad9af3e2b1d7c173e8505c55ed407",
+  "provenance": {
+    "t7-locked-test-v1/lock.json": "95e48a9e6e58fc7c00e073ce806b7902bda8e3aea4376f3f9ce34aacb5df0379",
+    "t7-first-frozen-evaluation-v1/run.json": "26fda58e597e2856de0b5f6906957d3e75aa1dff6d247c38884becff5619f5a5",
+    "t7-first-frozen-evaluation-v1/evaluation.sqlite": "4521c4c92df87ff0b0e07a8d2265e7be6bb4ce47ee157fc938a1fb56b91ab7d8",
+    "t7-first-source-review-v1-hybrid/run.json": "48af3ba7786a6b0a489d090aeb9b0ae952b57697b5cad8507080335a0f433b4d",
+    "t7-first-source-review-v1-hybrid/observations.jsonl": "b1bc7e68000f20ae6050d6d01248cea34a6c334572f423e41f0f04e8e8daf409",
+    "t7-first-source-review-v1-hybrid/reviews.jsonl": "9477583b2046b37398fe080b5b1fd3def3ddc04cbc2cfa660c2f2055b31b895d",
+    "t7-first-source-review-v1-hybrid/manual-reviews.jsonl": "22a2a718a640b90bddb9c8a139f402cac4e4565e73f3d74b9109ab56569e5da6",
+    "t7-first-source-review-v1-hybrid/semantic-summary.json": "8da96ff09c5b76d1f885a577b611b340f2e9cd0555f9feec5d0baf8394f7c0dc"
+  },
+  "limits": {
+    "top_k": 50,
+    "max_output_chars": 48000,
+    "threads": 2,
+    "max_reranker_pairs": 400
+  },
+  "limitations": [
+    "Questions and gold annotations are source-only AI authored, with zero independent human approval.",
+    "101 complete source-quote/span proofs and 19 AI case reviews; 3 AI case reviews accept additional complete equivalent support, 16 judge insufficient.",
+    "Thirty source families contain related questions, so 120 questions are not 120 independent source samples.",
+    "All Serbian questions are multi-fact; language/complexity/content are not randomized independent factors.",
+    "Previously unused for RAGForge tuning/evaluation; pretrained models may have seen PostgreSQL sources.",
+    "Raw BM25/dense semantic review is not finalized; their source-span lower bounds must not be compared directly with the primary semantic percentage.",
+    "No generation or independent human semantic quality gate is approved."
+  ],
+  "target_good_met": false,
+  "target_excellent_met": false,
+  "automatic_quality_approval": false
+}

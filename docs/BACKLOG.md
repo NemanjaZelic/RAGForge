@@ -339,3 +339,15 @@ controls are to be reported separately. Sources/requirements/first outputs stay
 immutable. [UNSEEN-T7.md](UNSEEN-T7.md). Generic HTML evidence oracle and its source
 integrity/offline tests pass; complete local checks pass. Actual T7 evaluation
 and 3GPP complete-fact measurement are still pending, not threshold achievements.
+
+
+RF-006Q T7 first-result checkpoint: 360 actual queries finish without errors.
+Primary all-requested-fact support is 104/120 (86.6667%), so the 95%/99% targets
+remain open. English 88/90 and Serbian 16/30; all primary cases reviewed with
+actual source proofs, 101 mechanical and 19 AI judgments, zero human approvals.
+Preserve this first result and require another holdout after any tuning on T7.
+Raw-control original-span diagnostics are separate from semantic accuracy.
+Full 3GPP context artifact and the original 1,322 native/version reference
+bindings are ready; original dense build and actual quality calls remain open.
+The one-shot fixed supervisor continues locally under the original disk budget.
+See UNSEEN-T7.md and benchmarks/t7-first-unseen-result-v1.json.

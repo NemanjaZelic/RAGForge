@@ -791,3 +791,32 @@ explicit-version test cases). A source-only duplicate-input audit found 10.61%
 exact reuse within remaining rows; no unproven build-pipeline replacement was
 adopted. The existing scale controller continues its original full schedule.
 No new 3GPP accuracy or fourth-corpus success is claimed before measurement.
+
+
+2026-11-05: first frozen unseen T7 measurement completed: 360/360 actual queries,
+zero query errors. Primary hybrid full requested-fact support is 104/120
+(86.6667%): English 88/90, Serbian 16/30; single-fact 58/60, multi-fact 46/60.
+All 6,000 primary returned chunks match the indexed source text. 101 complete
+source-quote/span proofs plus 19 explicit AI case reviews yield three additional
+complete equivalent answers and 16 incomplete cases; zero pending primary
+reviews and zero independent human approvals. The 95%/99% goals are not met.
+161/180 fact assignments are supported. No retrieval tuning, question edits or
+metric changes occurred during the first run. Raw BM25/dense original-span
+lower bounds are 103/120 and 94/120; these are not final semantic accuracy.
+[Full provenance and limitations](benchmarks/t7-first-unseen-result-v1.json),
+[methodology](UNSEEN-T7.md). T7 is now observed and cannot silently become a
+fresh holdout again after further development.
+
+The HTML evaluator/T7 protocol commit dc8b3c5 passed all six Windows/Linux
+CI jobs, including real pretrained-model offline checks and Linux network
+isolation: run 41926162686. Private main is verified at that commit.
+
+Full 3GPP parent/context build is complete and verified. All 1,322 unchanged
+test questions have exact native answer/source bindings; 721 additionally
+accept a byte-identical source PDF, verified before any quality outputs.
+The original 4,686,456-row dense build remains in progress, so no new full
+3GPP accuracy is claimed. A one-shot checkpointed supervisor is waiting for
+publication, then runs the fixed selected-profile answer-support check before
+remaining original controls. Local process/checkpoint files remain ignored;
+only aggregate counts, fingerprints and methodology are published privately.
+[Pre-output lock](benchmarks/gpp-first-native-reference-protocol-v1.json).

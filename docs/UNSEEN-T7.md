@@ -62,3 +62,62 @@ alignment diagnostics must remain distinct from complete answer-fact support.
 The older full RFC rebuild is deferred with an intact dense checkpoint and exact
 resume command to release RAM for 3GPP and T7. Corpus sources, original results,
 labels and frozen recipes have not been deleted or rewritten.
+
+
+## First result — 2026-11-05
+
+All 360 actual queries completed without errors. Primary fixed hybrid supports
+all requested facts for **104/120 questions (86.6667%)** after verifying all
+6,000 returned chunks against the selected index. English: 88/90 (97.7778%);
+Serbian: 16/30 (53.3333%). Single-fact: 58/60 (96.6667%); multi-fact: 46/60
+(76.6667%). Across question assignments, 161/180 required facts are supported.
+There are 16 incomplete questions; 95% and 99% targets are not met.
+
+101 cases have complete original-source quote/span proofs. Nineteen cases
+received explicit source-quoted AI review: three additional cases have complete
+equivalent support and sixteen remain insufficient. Zero cases await primary
+review; zero independent human approvals exist. This measures evidence available
+to an answering agent, not generated-answer correctness. A source document
+match alone earns no credit. Partial recommendations or wrong-scope rules do
+not establish a complete answer. Some failures contain the right document but
+stop before a key rule, while others return only related material.
+
+Raw controls' strict complete-original-span lower bounds are BM25 103/120 and
+dense 94/120, compared with hybrid 101/120 on the same mechanical diagnostic.
+These are not final semantic accuracy estimates; raw-control semantic review
+is not complete. Do not compare them directly with hybrid's reviewed 104/120.
+
+The Serbian questions are all multi-fact and related source families occur
+across languages, so these breakdowns do not isolate a randomized language
+effect. The 30 source families also limit independent sample size. The original
+first outputs, source requirements and retrieval settings remain unchanged.
+The set has now been observed; any future tuning on it must label it consumed
+and require a fresh holdout for a new unseen-test claim.
+
+[Numeric result and provenance](benchmarks/t7-first-unseen-result-v1.json).
+
+## Full 3GPP check in progress
+
+The complete parent/context artifact is built and verified: 4,723 original
+source records, of which 4,717 contain searchable text and six retain their
+original extraction failure/zero-chunk status. The original 4,686,456-row dense
+index is still building. No new full-corpus 3GPP accuracy is available yet.
+
+Before any selected-profile quality output, the 1,322 original test questions
+(1,310 native and 12 explicit-version cases) are bound to their unchanged native
+reference answers and exact physical source pages. For 721 questions another
+source PDF has identical raw bytes; these exact copies count as source
+alternatives, verified by SHA-256 before measurement. Runtime query aliases
+and gold-source filters remain off. Native provided-context reference support
+will be reported separately from exhaustive standalone answer completeness.
+
+A fixed one-shot local supervisor waits for the original full build, verifies
+the published artifact, gives the selected hybrid check priority, and records
+1,322 hybrid plus 2,644 raw control calls. It preserves all first outputs and
+uses the original aggregate 60 GB benchmark limit and 15 GB free-space reserve.
+Only verified duplicate derived assets or regenerable published-build float
+cache may be retired; original corpora, labels, published indexes and original
+measurements remain. Deferred original controls/RFC work resume afterwards.
+No scheduler/service is installed and no semantic quality approval is automatic.
+
+[Locked 3GPP reference protocol](benchmarks/gpp-first-native-reference-protocol-v1.json).
