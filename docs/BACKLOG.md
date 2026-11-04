@@ -316,3 +316,16 @@ The two consumed kernel misses and one RFC miss remain; source-only semantic
 document routing is an unadopted experiment. Independent/agent/PDF quality
 gates remain open. Numeric reports: production-v2-artifacts.json and
 production-v2-artifact-adapter-parity.json under benchmarks/.
+
+
+RF-006Q additional-family checkpoint: first selected-runtime validation supports
+all 16 newly drafted questions / 33 locked facts from eight previously unused
+source families. Source-quoted mechanical checks and explicit AI source audits
+complete; no independent human approval. Small clustered early-source English
+sample limitations remain explicit. Semantically routed document candidates
+are still unadopted and being prepared under a frozen serialized local runtime.
+RF-008 integration now communicates the measured wide request limits for
+planned section bundles. All 15 focused integration checks and complete local software checks pass:
+313 tests, 14 explicit optional-model/platform skips, Ruff, mypy and schema
+checks. Actual large-bundle passive generation also passes; CI with real models
+will verify the new code checkpoint. No independent quality gate is closed.

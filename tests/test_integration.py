@@ -44,6 +44,8 @@ def test_generated_files_separate_config_from_untrusted_metadata(tmp_path: Path)
     assert json.loads(text.split("description: ", 1)[1].splitlines()[0]) == description
     metadata = json.loads((skill.parent / "references/collection.json").read_text())
     assert metadata["collection"]["title"] == sentinel
+    assert "recommended_search_request" not in metadata
+    assert "`top_k=50`" not in text
     config = json.loads((output / "mcp.json").read_text())
     server = config["mcpServers"][result["server_name"]]
     assert server["command"] == str(Path(sys.executable).absolute())
@@ -109,3 +111,44 @@ def test_cli_generator_offline_and_corrupt_server_startup(tmp_path: Path, offlin
     failed = CliRunner().invoke(app, ["serve", str(bundle)])
     assert failed.exit_code == 2 and not failed.stdout
     assert "error" in failed.stderr
+
+
+@pytest.mark.parametrize("version", ["v1", "v2"])
+def test_planned_section_integration_supplies_measured_search_limits(
+    tmp_path: Path, tiny_model: Path, tiny_reranker: Path, version: str
+):
+    from ragforge.artifacts.verification import build_identity, verify_bundle
+
+    bundle = tmp_path / "bundle"
+    manifest = build_bundle(
+        CORPUS,
+        bundle,
+        collection_id="mini",
+        model_directory=tiny_model,
+        reranker_directory=tiny_reranker,
+    )
+    config = manifest.retrieval_configuration.model_copy(
+        update={
+            "query_planning": "facets-" + version,
+            "section_context": "section-start-" + version,
+        }
+    )
+    manifest = manifest.model_copy(update={"retrieval_configuration": config})
+    manifest = manifest.model_copy(update={"build_id": build_identity(manifest)})
+    (bundle / "manifest.json").write_text(manifest.model_dump_json(), encoding="utf-8")
+    verify_bundle(bundle)
+    before = (bundle / "manifest.json").read_bytes()
+    output = tmp_path / "agent"
+    generated = create_integration(bundle, output)
+    skill = output / generated["skill"]
+    text = skill.read_text(encoding="utf-8")
+    metadata = json.loads((skill.parent / "references/collection.json").read_text())
+    assert '`search_method="hybrid"`' in text
+    assert "`top_k=50`" in text and "`max_output_chars=48000`" in text
+    assert metadata["recommended_search_request"] == {
+        "search_method": "hybrid",
+        "top_k": 50,
+        "max_output_chars": 48000,
+    }
+    assert metadata["build_id"] == manifest.build_id
+    assert (bundle / "manifest.json").read_bytes() == before

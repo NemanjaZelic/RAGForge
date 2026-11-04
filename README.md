@@ -83,7 +83,9 @@ uv run python scripts/export_schemas.py --check
 - Optional verified local cross-encoder reranking, section-aware chunks, and answer-fact
   evaluation with accepted alternative citations. See [quality work and limits](docs/QUALITY.md).
 - Optional bounded question planning and short-section context completion in the same engine,
-  enabled with `recontextualize --plan-queries --complete-sections`.
+  enabled with `recontextualize --query-planning facets-v2 --section-context section-start-v2`.
+  Generated agent instructions for planned section bundles specify the wider measured
+  request limits (`top_k=50`, `max_output_chars=48000`).
 - Verified bundle inventories, copied query model/licenses and atomic publication to a new directory.
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
 - Synthetic manifest examples in `examples/manifests/`; these are not built bundles.

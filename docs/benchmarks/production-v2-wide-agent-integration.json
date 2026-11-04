@@ -1,0 +1,16 @@
+{
+  "scope": "actual large version-two portable bundle passive agent integration generation; no generated-answer evaluation",
+  "artifact_build_id": "706033aa6ea6943cc2ccf8190cc7d02435ef8ca7b43a18c28ce5894423f064e1",
+  "generated_files": 3,
+  "recommended_search_request": {
+    "search_method": "hybrid",
+    "top_k": 50,
+    "max_output_chars": 48000
+  },
+  "skill_and_metadata_limits_match": true,
+  "server_targets_exact_verified_bundle": true,
+  "host_configuration_installed": false,
+  "bundle_modified": false,
+  "source_code_sha256": "a5b6f16a905a68a38ce57be32195065863cdef0a425c6db02d1b8132402585c0",
+  "automatic_quality_approval": false
+}

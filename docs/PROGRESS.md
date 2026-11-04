@@ -725,3 +725,46 @@ index embeds verified document titles and leads using the same pinned E5 model.
 It does not read question/answer banks or change the selected production recipe.
 Its quality and resource effects still require measurement; current diagnostic
 support remains kernel 118/120 and RFC 119/120, with independent validation open.
+
+
+2026-11-04 additional source-family validation: 16 newly source-authored English
+questions from eight deterministically sampled, previously unused source families
+contain all 33 locked minimal facts in the actual returned contexts. Eight named
+kernel documentation areas contribute one source and two questions each; sources
+with 6-60 chunks are ordered by SHA-256 after excluding all existing question
+source evidence. Questions use the first five source chunks. Source requirements,
+questions and selected d64287d runtime were frozen before retrieval outputs.
+All 16 actual offline queries completed with zero errors, unchanged 50/48,000
+limits, two threads and at most 317 of 400 reranker pairs. Every original minimal
+quote is present in its source-identity matched returned passage, and all full
+proof paragraphs received an explicit AI meaning/scope audit. There are zero
+independent human reviews. This small clustered, early-source English draft does
+not establish representative PDF/multilingual/agent accuracy or a 99% guarantee.
+First-result hashes, exact counts and limitations:
+benchmarks/kernel-first-additional-source-validation-v1.json.
+
+The selected production recipe remains unchanged by the unadopted semantic
+routing experiment. A native one-shot local queue waits for the validation
+worker to exit, resumes the source-only descriptor checkpoint, then runs six
+consumed-case feasibility probes. Child imports and all hash guards now use the
+same frozen source snapshot, isolating the experiment from further development.
+It installs no service/recurrence, uploads no data and preserves original limits.
+Local status: .cache/semantic-routing-queue-v2-status.json. Descriptors use
+substantive source passages rather than navigation-only leads. Previous partial
+preparations remain separate and are not quality results. The kernel checkpoint
+resumes at 320/3857 documents. No semantic-routing quality gain is claimed yet.
+
+Generated passive agent instructions now specify hybrid search with top_k=50
+and max_output_chars=48000 for balanced bundles that enable both query planning
+and section completion. Matching structured request recommendations accompany
+the collection metadata. Other bundles retain their prior instructions; no
+agent host configuration or existing bundle is installed/modified. Fifteen
+focused integration checks pass. Complete local checks also pass: 313 tests,
+14 skips (ten opt-in pretrained-model adapter checks and four platform checks),
+Ruff lint/format (171 files), mypy (54 source files) and schema drift. External
+frozen-bank drift checks are enabled. Actual large-bundle passive integration
+generation verifies matching wide limits and the exact bundle target; its three
+files stay local with no agent host installation. Numeric result:
+benchmarks/production-v2-wide-agent-integration.json. The 16 new actual model
+queries ran against the frozen selected retrieval runtime; the new generator
+change is also queued for real-model Windows/Linux CI.

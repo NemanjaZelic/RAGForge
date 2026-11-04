@@ -486,3 +486,27 @@ status/logs and process-scoped sleep prevention. Native preview/parser and
 refusal of duplicate live controllers were checked. Current active workers
 remain under the equivalent local prototype supervisor to avoid restarting
 healthy runs. [Usage and limitations](BACKGROUND-BENCHMARKS.md).
+
+
+Actual version-two portable checks have completed: both artifacts verify, three
+large-kernel engine probes and real CLI/stdio MCP match exact ordered source
+contexts and citations offline, including MCP context fetch. See
+benchmarks/production-v2-artifacts.json and
+benchmarks/production-v2-artifact-adapter-parity.json. Six CI jobs for d64287d
+and the subsequent numeric-report checkpoint 40bdfb6 passed on Windows/Linux.
+
+An additional source-only sampled validation of the selected version returns
+complete support for 16/16 new questions (33 facts, eight new source families,
+zero errors). Runtime, questions and facts were frozen before retrieval, with
+no settings changed during this run. All exact source-span matches have also
+received explicit AI scope/meaning inspection; human independent review is zero.
+This is a small English, early-source, two-questions-per-family draft sample,
+not a representative cross-domain guarantee. Exact provenance/limitations:
+benchmarks/kernel-first-additional-source-validation-v1.json.
+
+`integrate` now gives planned section bundles explicit wide-evidence search
+instructions (hybrid, top_k=50, max_output_chars=48000) and a structured
+recommended_search_request in the generated collection metadata. The generated
+files are passive for user review; no host config is installed. Direct request
+defaults remain their existing values. The measured wide-profile scores do not
+apply to requests using smaller limits. See [agent integration](MCP.md).

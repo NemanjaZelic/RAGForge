@@ -59,6 +59,12 @@ Novi direktorijum sadrži:
 - `skills/<ime>/references/collection.json`: naziv, broj dokumenata/chunk-ova,
   build ID, dostupne metode i do 20 putanja izvora, označeni kao nepoverljivi podaci.
 
+Za balanced bundle koji uključuje i planiranje upita i dopunu sekcija, generisani
+skill izričito traži hybrid, `top_k=50` i `max_output_chars=48000`.
+`collection.json` sadrži iste vrednosti u `recommended_search_request`.
+Time agent koristi širi skup dokaza iz proverenog retrieval profila. Direktni
+API podrazumevani limiti ostaju isti; manji eksplicitni zahtev vraća manje teksta.
+
 Generisanje koristi novi direktorijum i atomsko objavljivanje bez prepisivanja.
 Ne piše unutar bundle-a niti menja globalni ili projektni config agenta.
 Korisnik pregleda i dodaje server prema formatu svog klijenta, a skill postavlja
