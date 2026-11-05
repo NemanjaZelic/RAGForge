@@ -15,20 +15,20 @@
     "source_review_complete": true
   },
   "automatic_quality_approval": false,
-  "completed_steps": 0,
+  "completed_steps": 1,
   "corpora": {
     "kernel": {
       "automatic_quality_approval": false,
-      "complete_original_source_span_supported": 91,
+      "complete_original_source_span_supported": 93,
       "corpus": "kernel",
       "errors": 0,
       "metric_scope": "strict original fact-source span lower bound; all-minimum-facts semantic review pending",
       "portable_candidate": false,
-      "queries_completed": 115,
+      "queries_completed": 120,
       "questions": 120,
       "run_recipe_sha256": "f136139a072410a62e182f44eb7a9dfdd8606eb0a9115258412271f8c0e5ae8d",
       "semantic_review_pending": true,
-      "state": "running"
+      "state": "queries_complete_pending_source_review"
     }
   },
   "runtime_selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
