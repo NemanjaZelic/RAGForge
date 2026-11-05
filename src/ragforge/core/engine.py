@@ -69,6 +69,14 @@ class BundleEngine:
             raise ValueError("reranking requires a bundle with a local reranker")
         if not use_reranker:
             config = None
+        if request.query_translation is not None:
+            if config is None or method != "hybrid":
+                raise ValueError(
+                    "query translation requires hybrid retrieval with a local reranker"
+                )
+            from ragforge.core.translated import translated_response
+
+            return translated_response(self, request)
         if config is not None and config.query_planning is not None and method == "hybrid":
             from ragforge.core.planning import planned_response
 

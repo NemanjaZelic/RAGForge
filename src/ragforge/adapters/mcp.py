@@ -88,6 +88,7 @@ def create_server(
     @server.tool(annotations=annotations, structured_output=True)
     async def search_docs(
         query: QueryText,
+        query_translation: QueryText | None = None,
         collection_id: Identifier | None = None,
         top_k: TopK = 5,
         max_output_chars: OutputChars = 16000,
@@ -101,6 +102,7 @@ def create_server(
             lambda: engine.retrieve(
                 RetrieveRequest(
                     query=query,
+                    query_translation=query_translation,
                     collection_id=collection_id,
                     top_k=top_k,
                     max_output_chars=max_output_chars,

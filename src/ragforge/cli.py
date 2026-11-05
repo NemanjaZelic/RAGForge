@@ -599,6 +599,9 @@ def use(
         Path | None, typer.Argument(help="Local bundle; omit for shared mode.")
     ] = None,
     query: str = typer.Option(..., "--query"),
+    query_translation: str | None = typer.Option(
+        None, help="Faithful query in the documentation language; hybrid with reranking."
+    ),
     mode: str = typer.Option("local", help="local or explicit authenticated shared endpoint."),
     search_method: str | None = typer.Option(
         None, help="bm25, dense or hybrid; bundle default if omitted."
@@ -622,6 +625,7 @@ def use(
         request = RetrieveRequest.model_validate(
             {
                 "query": query,
+                "query_translation": query_translation,
                 "collection_id": collection,
                 "top_k": top_k,
                 "max_output_chars": max_output_chars,

@@ -86,7 +86,9 @@ def create_integration(
             "1. Call `list_collections` to confirm scope.\n"
             + search_step
             + "When the question and documentation use different languages, also search "
-            "with a faithful query in the documentation's language. Preserve identifiers, "
+            "with a faithful query in the documentation's language. For hybrid reranking, "
+            "pass it as `query_translation` alongside the original `query` so one bounded "
+            "search can use both. Preserve identifiers, "
             "numbers and negation. Search each required fact when necessary, and answer "
             "in the user's language using actual source evidence.\n"
             "3. Use returned collection/chunk IDs with `fetch_context` when nearby "

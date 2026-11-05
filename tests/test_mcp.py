@@ -180,3 +180,38 @@ def test_legacy_stdio_client_compatibility(tmp_path: Path):
             assert result.structured_content["results"][0]["source"]["path"] == "transactions.md"
 
     asyncio.run(asyncio.wait_for(exercise(), timeout=40))
+
+
+def test_translated_query_stdio_matches_shared_engine_offline(
+    tmp_path: Path, tiny_model, tiny_reranker
+):
+    bundle = tmp_path / "translated"
+    manifest = build_bundle(
+        CORPUS,
+        bundle,
+        collection_id="mini",
+        model_directory=tiny_model,
+        reranker_directory=tiny_reranker,
+    )
+    public = next(
+        d.document_id
+        for d in manifest.collections[0].documents
+        if d.source_path == "authentication.md"
+    )
+    arguments = {
+        "query": "Kako se šalje pristupni token?",
+        "query_translation": "How are access tokens sent to the service?",
+        "search_method": "hybrid",
+        "top_k": 3,
+        "max_output_chars": 4000,
+        "filters": {"document_ids": [public]},
+    }
+    expected = BundleEngine(bundle).retrieve(RetrieveRequest.model_validate(arguments))
+
+    async def exercise():
+        async with offline_client(bundle, tmp_path / "translated-guard") as client:
+            result = await client.call_tool("search_docs", arguments)
+            assert not result.is_error
+            assert result.structured_content == expected.model_dump(mode="json")
+
+    asyncio.run(asyncio.wait_for(exercise(), timeout=60))

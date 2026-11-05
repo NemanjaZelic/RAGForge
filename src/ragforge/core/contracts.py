@@ -36,6 +36,8 @@ class RetrievalFilters(ContractModel):
 
 class RetrieveRequest(ContractModel):
     query: QueryText
+    # Caller-provided faithful translation; the runtime never calls a translation service.
+    query_translation: QueryText | None = None
     collection_id: Identifier | None = None
     top_k: TopK = 5
     max_output_chars: OutputChars = 16000
@@ -44,10 +46,10 @@ class RetrieveRequest(ContractModel):
     search_method: SearchMethod | None = None
     rerank: Annotated[bool | None, Field(strict=True)] = None
 
-    @field_validator("query")
+    @field_validator("query", "query_translation")
     @classmethod
-    def nonblank_query(cls, value: str) -> str:
-        if not value.strip():
+    def nonblank_query(cls, value: str | None) -> str | None:
+        if value is not None and not value.strip():
             raise ValueError("query must not be blank")
         return value
 

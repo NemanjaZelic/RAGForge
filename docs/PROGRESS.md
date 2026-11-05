@@ -849,3 +849,15 @@ Fresh same-candidate Kernel/RFC calls are queued; new GPP candidate calls wait
 for its unchanged first primary baseline. Old Kernel/RFC scores are not reused
 as multilingual-candidate scores. Detailed numeric report:
 benchmarks/t7-multilingual-development-reviewed-v1.json.
+
+
+2026-11-05 further Serbian improvement: implemented optional query_translation
+for one bounded original-plus-documentation-language hybrid search. Original
+question/grants stay present; final50/48000 andaggregate400paircaps retained.
+No online translation service or answer lookup. Added CLI/MCP/shared-contract
+path, strict request validation, explicit unsupported-mode errors and technical
+subject propagation from query text. 353 local tests pass,14skips; external
+frozen-bank drift,Ruff178,mypy56,schema pass. Actual tiny-model offline exact/ANN,
+CLI andstdioMCP parity/grants checks pass. Development translations60variants
+plus90unchangedEnglishcontrols frozen before new outputs; quality notyetmeasured.
+Fresh source-family holdout needed after selection. See SOURCE-LANGUAGE-QUERIES.md.

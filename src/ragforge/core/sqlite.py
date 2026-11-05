@@ -388,6 +388,8 @@ class SQLiteEngine:
             return RetrievalResponse(contract_version="1", results=results)
 
     def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
+        if request.query_translation is not None:
+            raise RetrievalError("query translation requires a balanced hybrid bundle")
         if request.search_method not in (None, "bm25"):
             raise RetrievalError(
                 "standalone SQLite index supports only bm25; no dense/hybrid fallback"
