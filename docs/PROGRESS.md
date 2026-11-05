@@ -820,3 +820,19 @@ publication, then runs the fixed selected-profile answer-support check before
 remaining original controls. Local process/checkpoint files remain ignored;
 only aggregate counts, fingerprints and methodology are published privately.
 [Pre-output lock](benchmarks/gpp-first-native-reference-protocol-v1.json).
+
+
+2026-11-05 multilingual follow-up: user requests >=95% across languages after
+T7 English88/90 and Serbian16/30. Installed embeddings are already multilingual;
+current final reranker and facet syntax are English-focused. Added opt-in
+facets-v3 with protected quoted/code/argument boundaries, inherited grants and
+400-pair cap; provisioned pinned multilingual mMARCO cross-encoder. Newly
+generated agent instructions also advise faithful source-language queries.
+342 software tests pass, 14 optional/platform skips; external bank drift,
+Ruff, mypy and schema checks pass. Two actual offline multilingual-reranker
+build/relocation tests pass with exact/ANN and all three query modes.
+T7 development comparison (180 calls, one thread, original first result kept)
+is being frozen; it is not a new holdout or an adopted production winner.
+No new 95% claim. Required languages/fresh per-language validation remain open.
+The ongoing 3GPP runtime and original measurement inputs are unchanged.
+See MULTILINGUAL.md and benchmarks/multilingual-preparation-v1.json.

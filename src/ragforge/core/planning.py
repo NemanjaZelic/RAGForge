@@ -158,7 +158,7 @@ def planned_response(engine: BundleEngine, request: RetrieveRequest) -> Retrieva
     from ragforge.core.dense import reciprocal_rank_fusion
 
     config = engine.manifest.retrieval_configuration
-    if config is None or config.query_planning not in {"facets-v1", "facets-v2"}:
+    if config is None or config.query_planning not in {"facets-v1", "facets-v2", "facets-v3"}:
         raise ValueError("query planning requires its configured local reranker")
     make_facets = question_facets
     find_references = referenced_documents
@@ -167,6 +167,13 @@ def planned_response(engine: BundleEngine, request: RetrieveRequest) -> Retrieva
         from ragforge.core.planning_v2 import referenced_documents as find_references_v2
 
         make_facets = make_facets_v2
+        find_references = find_references_v2
+    if config.query_planning == "facets-v3":
+        from ragforge.core.planning_v3 import question_facets as make_facets_v3
+
+        make_facets = make_facets_v3
+        from ragforge.core.planning_v2 import referenced_documents as find_references_v2
+
         find_references = find_references_v2
     allowed = request.filters.document_ids if request.filters is not None else None
     documents: dict[str, str] = {}

@@ -113,7 +113,7 @@ def test_cli_generator_offline_and_corrupt_server_startup(tmp_path: Path, offlin
     assert "error" in failed.stderr
 
 
-@pytest.mark.parametrize("version", ["v1", "v2"])
+@pytest.mark.parametrize("version", ["v1", "v2", "v3"])
 def test_planned_section_integration_supplies_measured_search_limits(
     tmp_path: Path, tiny_model: Path, tiny_reranker: Path, version: str
 ):
@@ -130,7 +130,9 @@ def test_planned_section_integration_supplies_measured_search_limits(
     config = manifest.retrieval_configuration.model_copy(
         update={
             "query_planning": "facets-" + version,
-            "section_context": "section-start-" + version,
+            "section_context": "section-start-v2"
+            if version == "v3"
+            else "section-start-" + version,
         }
     )
     manifest = manifest.model_copy(update={"retrieval_configuration": config})

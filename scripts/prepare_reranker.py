@@ -19,7 +19,9 @@ REVISION = "233902d25c440f23af6f7d6e94d2946bac0bee0a"
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--model", choices=["minilm-l6", "bge-base"], default="minilm-l6")
+    parser.add_argument(
+        "--model", choices=["minilm-l6", "bge-base", "mmarco-minilm"], default="minilm-l6"
+    )
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     model, revision, license_name, pad_token, batch_size = MODEL, REVISION, "Apache-2.0", "[PAD]", 8
@@ -29,6 +31,10 @@ def main():
         revision = "f131ae72114cb18333648a2ee6b0942849e8ab95"
         license_name, pad_token, batch_size = "MIT", "<pad>", 1
         graph = "onnx/model_quantized.onnx"
+    if args.model == "mmarco-minilm":
+        model = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+        revision = "1427fd652930e4ba29e8149678df786c240d8825"
+        pad_token, batch_size = "<pad>", 2
     base = f"https://huggingface.co/{model}/resolve/{revision}/"
     sources = {
         "model.onnx": base + graph,
@@ -56,6 +62,10 @@ def main():
         "46a1bb4cf46ff1e300d27589d620141fbf04fc0eaf8e7bb6dea5e044475ff387"
     ):
         raise ValueError("pinned BGE quantized graph checksum mismatch")
+    if args.model == "mmarco-minilm" and file_hash(args.output / "model.onnx") != (
+        "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
+    ):
+        raise ValueError("pinned multilingual mMARCO graph checksum mismatch")
     spec = RerankerSpec(
         model_id=model,
         revision=revision,

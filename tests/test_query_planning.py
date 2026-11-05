@@ -61,7 +61,7 @@ def test_branch_fusion_counts_best_rank_once_with_stable_ties():
 
 
 @pytest.mark.parametrize("backend", ["exact", "ann"])
-@pytest.mark.parametrize("planning", ["facets-v1", "facets-v2"])
+@pytest.mark.parametrize("planning", ["facets-v1", "facets-v2", "facets-v3"])
 def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_original(
     tmp_path: Path, tiny_model, tiny_reranker, monkeypatch, offline_cli, backend: str, planning: str
 ):
@@ -119,11 +119,13 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
         output,
         query_aliases=aliases,
         query_planning=planning,
-        section_context="section-start-v2" if planning == "facets-v2" else "section-start-v1",
+        section_context="section-start-v2"
+        if planning in {"facets-v2", "facets-v3"}
+        else "section-start-v1",
     )
     assert verify_bundle(output).retrieval_configuration.query_planning == planning
     assert manifest.retrieval_configuration.section_context == (
-        "section-start-v2" if planning == "facets-v2" else "section-start-v1"
+        "section-start-v2" if planning in {"facets-v2", "facets-v3"} else "section-start-v1"
     )
     original = (parent / "manifest.json").read_bytes()
     engine = BundleEngine(output, threads=1)
@@ -145,7 +147,11 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
         return actual_score(query, passages)
 
     monkeypatch.setattr(scorer, "score", score)
-    query = "What ABP server is in SPEC 42 and what does GAMMA require?"
+    query = (
+        "Šta ABP server radi u SPEC 42 i šta GAMMA zahteva?"
+        if planning == "facets-v3"
+        else "What ABP server is in SPEC 42 and what does GAMMA require?"
+    )
     request = RetrieveRequest(
         query=query,
         search_method="hybrid",
@@ -166,7 +172,10 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
     calls.clear()
     engine.retrieve(request.model_copy(update={"filters": None}))
     assert calls and calls[0][0] == query
-    assert all(q == query or q in question_facets(query) for q, _ in calls)
+    from ragforge.core.planning_v3 import question_facets as multilingual_facets
+
+    facets = multilingual_facets(query) if planning == "facets-v3" else question_facets(query)
+    assert all(q == query or q in facets for q, _ in calls)
     assert sum(len(passages) for _, passages in calls) <= 400
     assert (parent / "manifest.json").read_bytes() == original
     used = offline_cli(["use", str(output), "--query", "ABP server", "--search-method", "hybrid"])
@@ -189,7 +198,8 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
     assert base.build_id == build_identity(base) == expected
 
 
-def test_plan_bounds_all_branches_before_reranker_inference():
+@pytest.mark.parametrize("planning", ["facets-v1", "facets-v3"])
+def test_plan_bounds_all_branches_before_reranker_inference(planning):
     requests = []
 
     def rank(request, limit):
@@ -205,9 +215,7 @@ def test_plan_bounds_all_branches_before_reranker_inference():
             return [(f"dense{vector}-{i}", -float(i)) for i in range(limit)]
 
     engine = SimpleNamespace(
-        manifest=SimpleNamespace(
-            retrieval_configuration=SimpleNamespace(query_planning="facets-v1")
-        ),
+        manifest=SimpleNamespace(retrieval_configuration=SimpleNamespace(query_planning=planning)),
         collection=SimpleNamespace(
             documents=[
                 SimpleNamespace(document_id=f"{i:064x}", source_path=f"spec{i}.txt")

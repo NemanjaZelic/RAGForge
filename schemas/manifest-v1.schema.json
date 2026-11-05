@@ -451,7 +451,8 @@
             {
               "enum": [
                 "facets-v1",
-                "facets-v2"
+                "facets-v2",
+                "facets-v3"
               ],
               "type": "string"
             },

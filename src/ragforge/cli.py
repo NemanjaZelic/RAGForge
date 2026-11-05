@@ -513,7 +513,7 @@ def recontextualize(
         False, "--complete-sections", help="Optional bounded section-start-v1 context completion."
     ),
     query_planning: str | None = typer.Option(
-        None, help="Explicit facets-v1 or facets-v2 query planning."
+        None, help="Explicit facets-v1, facets-v2 or multilingual facets-v3 planning."
     ),
     section_context: str | None = typer.Option(
         None, help="Explicit section-start-v1 or section-start-v2 completion."
@@ -525,16 +525,18 @@ def recontextualize(
     from ragforge.jobs.budget import StorageBudget
 
     try:
-        if query_planning not in (None, "facets-v1", "facets-v2"):
-            raise ValueError("query planning must be facets-v1 or facets-v2")
+        if query_planning not in (None, "facets-v1", "facets-v2", "facets-v3"):
+            raise ValueError("query planning must be facets-v1, facets-v2 or facets-v3")
         if section_context not in (None, "section-start-v1", "section-start-v2"):
             raise ValueError("section context must be section-start-v1 or section-start-v2")
-        if plan_queries and query_planning == "facets-v2":
-            raise ValueError("choose --plan-queries or explicit facets-v2")
+        if plan_queries and query_planning in {"facets-v2", "facets-v3"}:
+            raise ValueError("choose --plan-queries or an explicit query-planning policy")
         if complete_sections and section_context == "section-start-v2":
             raise ValueError("choose --complete-sections or explicit section-start-v2")
         selected_planning: QueryPlanning | None = (
-            "facets-v2"
+            "facets-v3"
+            if query_planning == "facets-v3"
+            else "facets-v2"
             if query_planning == "facets-v2"
             else "facets-v1"
             if plan_queries or query_planning == "facets-v1"

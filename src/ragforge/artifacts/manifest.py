@@ -8,7 +8,7 @@ from ragforge.core.identity import document_id
 from ragforge.core.pdf import PdfOptions
 from ragforge.types import ContractModel, Identifier, RelativePath, SearchMethod, Sha256
 
-QueryPlanning = Literal["facets-v1", "facets-v2"]
+QueryPlanning = Literal["facets-v1", "facets-v2", "facets-v3"]
 SectionContext = Literal["section-start-v1", "section-start-v2"]
 
 

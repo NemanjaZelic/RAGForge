@@ -60,6 +60,7 @@ def test_cli_rejects_unknown_or_conflicting_policy_before_reading_bundles(tmp_pa
         ["--query-planning", "unknown"],
         ["--section-context", "unknown"],
         ["--plan-queries", "--query-planning", "facets-v2"],
+        ["--plan-queries", "--query-planning", "facets-v3"],
         ["--complete-sections", "--section-context", "section-start-v2"],
     ]:
         result = runner.invoke(app, [*base, *arguments])

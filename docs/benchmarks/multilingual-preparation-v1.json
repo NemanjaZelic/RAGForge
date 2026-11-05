@@ -1,0 +1,82 @@
+{
+  "state": "software_and_actual_model_compatibility_verified_quality_comparison_pending",
+  "scope": "opt-in multilingual facets and prepared multilingual reranker, not an adopted quality winner",
+  "first_unseen_t7_result": {
+    "supported": 104,
+    "questions": 120,
+    "english_supported": 88,
+    "english_questions": 90,
+    "serbian_supported": 16,
+    "serbian_questions": 30,
+    "unchanged": true
+  },
+  "existing_embedding_model": "intfloat/multilingual-e5-small",
+  "existing_reranker_model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+  "candidate_reranker": {
+    "model_id": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
+    "revision": "1427fd652930e4ba29e8149678df786c240d8825",
+    "license": "Apache-2.0",
+    "spec_sha256": "f3e8c37df30491e99c3be0ce4592eba83c02e9a626672f090c7706887885a805",
+    "graph_sha256": "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b",
+    "graph_bytes": 118620016,
+    "package_asset_bytes": 135717203,
+    "batch_size": 2,
+    "runtime": "existing offline ONNX cross-encoder; no remote code execution"
+  },
+  "query_policy": "facets-v3, explicit opt-in; original query, grants and aggregate 400 reranker pairs preserved",
+  "old_policies_and_selected_gpp_runtime_unchanged": true,
+  "software_checks": {
+    "passed": 342,
+    "skipped": 14,
+    "external_frozen_bank_drift_enabled": true,
+    "ruff_lint": true,
+    "ruff_format_files": 175,
+    "mypy_source_files": 55,
+    "schema_drift": true,
+    "actual_multilingual_reranker_offline_build_relocation_tests_passed": 2,
+    "actual_dense_backends": [
+      "exact",
+      "ann"
+    ]
+  },
+  "original_t7_literal_support_diagnostic": {
+    "en": {
+      "questions": 90,
+      "bm25": 85,
+      "dense": 83,
+      "hybrid": 88
+    },
+    "sr": {
+      "questions": 30,
+      "bm25": 18,
+      "dense": 11,
+      "hybrid": 13
+    },
+    "scope": "complete original-paragraph/span lower bounds; not final semantic accuracy or an isolated causal model comparison"
+  },
+  "upcoming_development_comparison": {
+    "original_question_bank": "T7, now observed; explicitly consumed diagnostic",
+    "original_questions": 120,
+    "variants": {
+      "en": 90,
+      "sr-Cyrl": 30,
+      "sr-Latn": 30
+    },
+    "planned_calls": 180,
+    "candidates": [
+      "facets-v3 with current L6 on sr-Cyrl",
+      "facets-v3 with multilingual mMARCO on en/sr-Cyrl/sr-Latn"
+    ],
+    "inference_threads": 1,
+    "top_k": 50,
+    "max_output_chars": 48000,
+    "max_reranker_pairs": 400,
+    "portable_candidate": false,
+    "quality_claim_allowed": false
+  },
+  "independent_human_reviews": 0,
+  "target_good": 0.95,
+  "target_met": null,
+  "all_languages_accuracy_guaranteed": false,
+  "automatic_quality_approval": false
+}
