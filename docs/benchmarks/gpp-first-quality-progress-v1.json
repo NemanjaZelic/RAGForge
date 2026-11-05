@@ -6,7 +6,7 @@
   "cases_sha256": "95d614519379f6a2bc2b5d8099861bfb1caf0605c7e34240bef7d7b7f14a2649",
   "completed_steps": 0,
   "corpus_documents": 4723,
-  "dense_rows_completed_lower_bound": 4521984,
+  "dense_rows_completed_lower_bound": 4587520,
   "dense_rows_total": 4686456,
   "free_disk_reserve_bytes": 15000000000,
   "independent_human_reviews": 0,
