@@ -16,9 +16,9 @@
         "queries": 30
       },
       "sr-Latn": {
-        "complete_original_source_span_supported": 16,
+        "complete_original_source_span_supported": 21,
         "errors": 0,
-        "queries": 20
+        "queries": 25
       }
     }
   },
@@ -29,7 +29,7 @@
   "max_output_chars": 48000,
   "max_reranker_pairs": 400,
   "portable_candidate": false,
-  "queries_completed": 80,
+  "queries_completed": 85,
   "queries_planned": 180,
   "scope": "consumed T7 development; strict source-span support lower bounds, not unseen or semantic accuracy",
   "selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
