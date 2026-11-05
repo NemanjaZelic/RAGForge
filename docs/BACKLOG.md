@@ -392,3 +392,30 @@ frozen-bank drift,Ruff178,mypy56,schema pass. Actual tiny-model offline exact/AN
 CLI andstdioMCP parity/grants checks pass. Development translations60variants
 plus90unchangedEnglishcontrols frozen before new outputs; quality notyetmeasured.
 Fresh source-family holdout needed after selection. See SOURCE-LANGUAGE-QUERIES.md.
+
+
+## 2026-11-05 — completed supplied-source-language validation
+
+All 150 consumed T7 development calls completed without errors: English 90/90,
+Cyrillic 30/30 and Latin 30/30. All 7,500 chunks were verified: 149 mechanical
+source proofs and one AI judgment, zero pending reviews and zero humans. The
+original first T7 result of 104/120 remains unchanged.
+
+A candidate frozen before question authoring completed its first new-family
+bank: English, Cyrillic and Latin each 31/32 (96.875%). All 96 calls completed
+without errors; 4,800 chunks verified, 93 source proofs and three AI judgments
+of incomplete evidence, zero pending reviews and zero humans. One shared question
+lacks a required explanation in each language. Source fact groups: 141/144;
+two-paragraph subgroup: 45/48 (93.75%). Paired variants within 16 PostgreSQL
+families are not 96 independent samples or a universal/new-domain guarantee.
+Faithful translations are supplied; automatic MT and generated answers are not
+evaluated. This exceeds overall 95% for the measured languages, not 99% or every
+complexity subgroup.
+
+The portable MM/facets-v3 package is verified, with an actual offline Cyrillic
+response exactly matching the frozen development output. Code e10bedd passed
+353 tests, 14 explicit optional/platform skips, external bank drift, Ruff,
+mypy, schema drift and all six CI jobs (41996006990). No production source changed
+during the frozen new-family run. Other corpus candidate regressions and GPP
+remain separate and pending; no global replacement or all-four-corpora completion
+claim. See SOURCE-LANGUAGE-QUERIES.md and both reviewed JSON reports.

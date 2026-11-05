@@ -1,80 +1,101 @@
 # Original and documentation-language queries
 
-Serbian T7 development support improved to 25/30 Cyrillic and 26/30 Latin with
-the multilingual reranker, while English reached 90/90 after source review.
-The remaining multi-fact failures motivated an additional query path.
+The source-language-query path closes the measured Serbian/English gap on the
+PostgreSQL evaluation. A caller or agent supplies a faithful English formulation
+beside the original Serbian question, matching the documentation language.
 
-`RetrieveRequest.query_translation` is an optional faithful formulation of the
-same question in the documentation language, supplied by the caller or agent.
-The original `query` remains present and searched. The runtime does not call
-a translation API, download a translator or certify semantic equivalence.
-Identifiers, numbers, requested facts and negation must survive translation.
-The generated passive agent instructions tell the agent how to supply this
-field; the user's final answer should remain in the user's language.
+| Query language/script | Consumed T7 development | First new-family questions |
+|---|---:|---:|
+| English | 90/90 (100%) | 31/32 (96.875%) |
+| Serbian Cyrillic | 30/30 (100%) | 31/32 (96.875%) |
+| Serbian Latin | 30/30 (100%) | 31/32 (96.875%) |
 
-This is one shared engine operation behind CLI `use --query-translation`, MCP
-`search_docs` and HTTP `/retrieve`. It requires hybrid retrieval with a local
-reranker and 100 candidates per method. Unsupported modes reject the field.
-The standalone BM25 index rejects it rather than silently ignoring it.
-English queries without this field retain their earlier retrieval path. An
-identical original/translation uses that earlier path as well.
+Scores require all requested facts in actually returned source evidence. They
+do not measure generated-answer accuracy. Previously, the multilingual model
+alone had 25/30 Cyrillic and 26/30 Latin. T7 is consumed development; its original
+first score of 104/120 remains intact. New-family support exceeds 95% for each
+measured language/script, while 96.875% falls short of the excellent 99% target.
 
-The fixed translated strategy scores at most 80 original and 120 translated
-root candidates. Remaining pairs cover four scoped explicit references and up
-to three translated question facets, with an aggregate cap of 400 pairs.
-Source-language branches determine the main rank order; the original fallback
-has rank weight 0.85. These rank values are not probabilities. Technical
-subjects inherited from a first clause come only from the query and are not
-added to clauses that explicitly name different subjects. No answer lookup or
-gold source filter participates. Both queries preserve the caller's collection
-and document grants, final result count and text budget.
+## Supplying a faithful question
 
-All standard local software checks pass: 353 tests, 14 explicit optional-model/
-platform skips, external frozen-bank drift enabled, Ruff (178 files), mypy
-(56 source files) and schema drift. Focused checks cover actual offline exact/
-ANN retrieval, CLI, stdio MCP parity, grant containment and the 400-pair cap.
-These are software checks, not an accuracy claim.
+`RetrieveRequest.query_translation` accepts the documentation-language question
+from the caller or agent; the original `query` is retained and searched. The
+runtime does not invoke a translation API, download a translator or certify
+semantic equivalence. Preserve identifiers, numbers, requested facts and
+negation. Generated passive agent instructions explain the field; final answers
+should remain in the user's language. Raw Serbian without this field retains
+its earlier path. These scores do not evaluate automatic translation generation.
 
-The next development comparison freezes faithful translations of all 60 T7
-Serbian script variants before any new query output, plus the unchanged 90
-English controls. Original questions, fact requirements and first results remain
-intact. This is consumed development data. A new source-family holdout will be
-authored and locked after candidate selection, before its first retrieval.
-Faithful AI-authored translations and zero independent human approvals must be
-reported; a caller-supplied translation benchmark alone does not establish
-translation generation accuracy for every possible agent or language.
+The shared engine supports CLI `use --query-translation`, MCP `search_docs` and
+HTTP `/retrieve`. It requires hybrid retrieval, a local reranker and 100
+candidates per method. Unsupported modes and standalone BM25 reject the field.
+English without it, or an identical original and translation, keeps the prior
+path. The measured profile uses multilingual E5, pinned mMARCO, facets-v3 and
+section-start-v2. This PostgreSQL result does not globally replace other corpus
+profiles. Kernel/RFC candidate reviews and GPP build/evaluation remain separate
+and pending; original default preparation and original artifacts are unchanged.
 
-No 95% Serbian claim is made before actual source-bound measurements complete.
-The existing frozen multilingual and 3GPP runs continue with their exact earlier
-runtimes; the new optional request field does not rewrite those jobs.
+## Bounds and software checks
 
+At most 80 original and 120 translated root candidates are scored. Remaining
+pairs cover four scoped explicit references and up to three translated facets
+within an aggregate cap of 400 pairs. Source-language branches define the main
+order; original fallback has rank weight 0.85. Rank values are not probabilities.
+Technical subjects propagated between clauses come only from query terms and
+do not override clauses naming different subjects. Both formulations preserve
+grants, result count and text limits. No answer lookup, gold-source filter,
+network or document execution participates. Output caps: 50 chunks and 48,000
+text characters per response.
 
-## Frozen measurement in progress
+Software checks: 353 tests pass, 14 explicit optional-model/platform skips,
+external frozen-bank drift, Ruff (178 files), mypy (56 source files), schema
+drift and all six CI jobs on production-code commit e10bedd. Focused checks cover
+offline exact/ANN retrieval, CLI, stdio MCP parity, grants and the pair cap.
+Software checks are not quality samples.
 
-The first completed language group has 30/30 original T7 Cyrillic questions with
-all original source facts supported. Every one of its 1,500 returned chunks was
-checked against the immutable source index. The questions and required facts are
-unchanged. Latin and English controls are still running; this is consumed data,
-not a new unseen score. The earlier Cyrillic result was 25/30.
+## New-family validation
 
-Before exposing new source paragraphs or writing new questions, the e10bedd
-candidate and request/translation protocol were frozen. The new bank has 32
-matched base questions in each of English, Serbian Cyrillic and Serbian Latin:
-96 actual calls, 16 source families outside all 30 original T7 chapters, with
-16 one-paragraph and 16 two-paragraph fact-group questions per language. Questions,
-requirements, source spans and supplied translations were locked before first
-retrieval. These are related variants and source clusters, not 96 independent
-samples. The corpus is still the indexed PostgreSQL 18 manual. New-bank results
-are pending. Its source content and per-case outputs remain local.
+The candidate and protocol were frozen before exposing reserved source paragraphs
+or writing new questions. Sixteen families exclude all 30 original T7 chapters.
+There are 32 matched base questions per language and 96 actual queries: 16
+one-paragraph and 16 two-paragraph fact-group questions per language. Questions,
+minimum requirements, source spans and translations were locked before first
+retrieval. All 1,143 PostgreSQL 18 documents remain searchable, with no gold
+document constraint passed to the engine.
 
-A real portable candidate containing the multilingual reranker is also verified:
+All 96 calls completed without errors; all 4,800 returned chunks were verified
+against the immutable index. There are 93 full source-quote/span proof cases and
+three source-quoted AI judgments of incomplete evidence. The same two-part
+question fails in each language: a function prototype appears without the
+required argument-direction explanation. Names alone are not credited as that
+explanation. This is a shared retrieval failure. Supported fact groups: 141/144.
+No case reviews are pending; there are zero independent human approvals. The
+two-paragraph subgroup is 45/48 (93.75%), while each language's overall score is
+31/32. The first result is preserved, without retuning or relabeling this bank.
+
+These are paired variants and 16 source clusters, not 96 independent samples.
+The corpus is still indexed PostgreSQL. References and translations are
+AI-authored, with zero independent human approval. This is not a universal 95%
+guarantee, a new-domain evaluation or a claim about unknown pretraining data.
+Additional languages need their own cases. Separately, all 150 consumed T7 calls
+are reviewed: 7,500 chunks verified, 149 mechanical source proofs and one AI
+judgment of equivalent information, zero pending reviews and zero humans.
+
+## Portable candidate and records
+
+The verified local package is
 `data/benchmarks/scale-v1/runs/quality-v4/t7-source-language-mmarco-v1-bundle`.
-All nine retained index/query-model assets are byte-identical to the frozen
-physical input. An actual offline Cyrillic query against this package returns
-exactly the same complete response as the evaluated in-memory candidate. This
-checks packaging parity; it is not another independent quality sample.
+Nine retained index/query-model assets are byte-identical to the frozen physical
+input. A real offline Cyrillic query returns exactly the same full response as
+the development candidate. This proves packaging parity, not an independent
+quality sample. The package and model stay local.
 
-The exact hashes and scope are in
-`benchmarks/source-language-quality-protocol-v1.json`. Only code, protocol and
-numerical aggregates are saved to the private repository. Original GPP and
-cross-corpus regression jobs retain their earlier frozen runtimes.
+Exact counts, hashes and limits:
+
+- [Consumed T7 result](benchmarks/source-language-t7-development-reviewed-v1.json).
+- [First new-family result](benchmarks/source-language-new-family-reviewed-v1.json).
+- [Historical frozen protocol](benchmarks/source-language-quality-protocol-v1.json).
+
+Only code, protocol and numerical aggregates go to the private repository.
+Source questions, evidence text and detailed outputs remain local. Original
+first T7 results, source banks and GPP jobs remain intact.

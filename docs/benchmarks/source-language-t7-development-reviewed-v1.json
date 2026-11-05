@@ -1,0 +1,62 @@
+{
+  "state": "all_consumed_development_queries_and_source_reviews_complete",
+  "scope": "All requested-fact support in actual evidence on consumed T7 development, with supplied faithful source-language questions. Not unseen, automatic MT generation or generated-answer accuracy.",
+  "utc": "2026-11-05T11:02:24.942259+00:00",
+  "source_commit": "e10beddc70b52630cd09cf93a6c1733850083489",
+  "selection_sha256": "8987c3a4a8f2424a4a48d6d3977b45a4b1b5e9e524ff97b723f2debc5f8a1b47",
+  "measurement_recipe_sha256": "9555fced2917d6a6c5acec1363c9166ddfa03fa755af5cd760f8393b02f38292",
+  "review_summary_sha256": "9a044d8c1082f8a4e426cdd83ff05210dc728039c5a0d35b19e2808cb12c8690",
+  "model_spec_sha256": "f3e8c37df30491e99c3be0ce4592eba83c02e9a626672f090c7706887885a805",
+  "actual_queries": 150,
+  "query_errors": 0,
+  "supported": 150,
+  "incomplete": 0,
+  "pending": 0,
+  "by_language": {
+    "en": {
+      "queries": 90,
+      "supported": 90,
+      "incomplete": 0,
+      "pending": 0,
+      "support_percent": 100.0
+    },
+    "sr-Cyrl": {
+      "queries": 30,
+      "supported": 30,
+      "incomplete": 0,
+      "pending": 0,
+      "support_percent": 100.0
+    },
+    "sr-Latn": {
+      "queries": 30,
+      "supported": 30,
+      "incomplete": 0,
+      "pending": 0,
+      "support_percent": 100.0
+    }
+  },
+  "original_120_composition_supported": 120,
+  "expanded_150_composition_supported": 150,
+  "returned_chunks_verified": 7500,
+  "mechanical_source_proof_cases": 149,
+  "source_quoted_AI_judgments": 1,
+  "independent_human_reviews": 0,
+  "original_first_unseen_result_preserved": true,
+  "original_source_fact_requirements_unchanged": true,
+  "supplied_translations_frozen_before_new_outputs": true,
+  "first_new_family_result_report": "source-language-new-family-reviewed-v1.json",
+  "portable_artifact_build_id": "c1748d8d97117df32832d66ec5b0889c46862392b7b247266d887cbed941962d",
+  "actual_packaged_offline_query_response_matches_development_response": true,
+  "software_checks": {
+    "pytest_passed": 353,
+    "optional_platform_skipped": 14,
+    "external_frozen_bank_drift_checked": true,
+    "ruff_files": 178,
+    "mypy_source_files": 56,
+    "schema_drift_passed": true,
+    "production_code_ci_run": 41996006990,
+    "production_ci_jobs_passed": 6
+  },
+  "other_corpus_candidate_regressions_pending_separate_review": true,
+  "automatic_quality_approval": false
+}

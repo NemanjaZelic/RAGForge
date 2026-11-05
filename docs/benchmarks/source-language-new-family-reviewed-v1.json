@@ -1,0 +1,92 @@
+{
+  "state": "all_first_frozen_new_family_queries_and_source_reviews_complete",
+  "utc": "2026-11-05T10:55:04.702662+00:00",
+  "scope": "Complete requested-fact support in actually returned evidence; supplied faithful source-language queries, not automatic-translation generation or generated-answer accuracy.",
+  "candidate_source_commit": "e10beddc70b52630cd09cf93a6c1733850083489",
+  "candidate_freeze_sha256": "08063433602aeb8cf353e9b378d9ed7e294b970fbda0dc0c59b73060bc82aa43",
+  "casebank_lock_sha256": "88699477512ec3c6cd31f5539ca850948355ec4d8237432d86d03d722fc46643",
+  "selection_sha256": "ab210ea53d5e339730dea64f65df7da6f0953be83caa0d9e0761caa1484ce5fe",
+  "casebank_sha256": "73a496137569afe39e62462cce1eaec9c5399501e184c590bbb5bdc1f7eb2e33",
+  "answer_evidence_sha256": "8235f866a0ecf5e0f5ddb94639717a3e5bdeb172d2065679bb56d8ae9d85f68b",
+  "minimum_requirements_sha256": "c55053c8dd21fdce7bb5461f3727cfd2b4e60cc1a892a11f04d5645b0bdbe4f2",
+  "query_variants_sha256": "e72e97c8a24d6e4d6561c0f5c6cf6e6f96b25e1856c876938df8fbf83031f576",
+  "measurement_recipe_sha256": "273a8114744732053b25dc56ba08b60b6738e3e7606f79b8a8bb1b8cf0cd1b40",
+  "review_summary_sha256": "dff3b38780307d63009c7816c666ae7248696f03dcc0ad729bd104cd61a050e6",
+  "model_spec_sha256": "f3e8c37df30491e99c3be0ce4592eba83c02e9a626672f090c7706887885a805",
+  "source_families": 16,
+  "excluded_original_T7_families": 30,
+  "paired_base_questions": 32,
+  "actual_queries": 96,
+  "query_errors": 0,
+  "reviewed_cases": 96,
+  "pending_cases": 0,
+  "supported_cases": 93,
+  "incomplete_cases": 3,
+  "complete_requested_fact_support_percent": 96.875,
+  "all_measured_languages_at_least_95_percent": true,
+  "all_measured_languages_at_least_99_percent": false,
+  "by_language": {
+    "en": {
+      "queries": 32,
+      "supported": 31,
+      "incomplete": 1,
+      "pending": 0,
+      "support_percent": 96.875
+    },
+    "sr-Cyrl": {
+      "queries": 32,
+      "supported": 31,
+      "incomplete": 1,
+      "pending": 0,
+      "support_percent": 96.875
+    },
+    "sr-Latn": {
+      "queries": 32,
+      "supported": 31,
+      "incomplete": 1,
+      "pending": 0,
+      "support_percent": 96.875
+    }
+  },
+  "by_question_group": {
+    "multi": {
+      "queries": 48,
+      "supported": 45,
+      "incomplete": 3,
+      "support_percent": 93.75
+    },
+    "single": {
+      "queries": 48,
+      "supported": 48,
+      "incomplete": 0,
+      "support_percent": 100.0
+    }
+  },
+  "required_source_fact_group_assignments": 144,
+  "supported_source_fact_group_assignments": 141,
+  "returned_chunks_verified_against_immutable_index": 4800,
+  "mechanical_full_source_quote_or_span_proof_cases": 93,
+  "source_quoted_AI_judgments": 3,
+  "independent_human_reviews": 0,
+  "one_underlying_incomplete_question_in_all_three_languages": true,
+  "request_limits": {
+    "top_k": 50,
+    "max_output_chars": 48000,
+    "max_reranker_pairs": 400,
+    "inference_threads": 2
+  },
+  "original_T7_first_results_unchanged": true,
+  "original_locked_new_family_questions_and_requirements_unchanged": true,
+  "portable_artifact_build_id": "c1748d8d97117df32832d66ec5b0889c46862392b7b247266d887cbed941962d",
+  "portable_artifact_offline_response_parity_verified": true,
+  "automatic_quality_approval": false,
+  "limits": [
+    "16 source clusters, paired languages and related single/multi questions; not96independent samples.",
+    "New questions/source families within indexed PostgreSQL18 documentation, not new-domain or unknown-pretraining-data proof.",
+    "AI-authored source references, no independent human approval.",
+    "Source-language query supplied by caller/agent; raw Serbian alone and arbitrary automatic translation quality are not established by this result.",
+    "Multi-paragraph subgroup is45/48=93.75%; per-language overall31/32 passes95, not every complexity subgroup.",
+    "Frozen selection inherits historical development translation_protocol_sha256; actual new-family translation protocol is the candidate-freeze hash and all96query variants locked before first inference.",
+    "Other corpus candidate regressions and GPP build/evaluation remain separate; this is not an all-four-corpora completion claim."
+  ]
+}
