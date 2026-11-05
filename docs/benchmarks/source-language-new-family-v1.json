@@ -4,19 +4,19 @@
   "counts": {
     "translated-v1": {
       "en": {
-        "complete_original_source_span_supported": 29,
+        "complete_original_source_span_supported": 31,
         "errors": 0,
-        "queries": 30
+        "queries": 32
       },
       "sr-Cyrl": {
-        "complete_original_source_span_supported": 29,
+        "complete_original_source_span_supported": 31,
         "errors": 0,
-        "queries": 30
+        "queries": 32
       },
       "sr-Latn": {
-        "complete_original_source_span_supported": 29,
+        "complete_original_source_span_supported": 30,
         "errors": 0,
-        "queries": 30
+        "queries": 31
       }
     }
   },
@@ -27,7 +27,7 @@
   "max_output_chars": 48000,
   "max_reranker_pairs": 400,
   "portable_candidate": false,
-  "queries_completed": 90,
+  "queries_completed": 95,
   "queries_planned": 96,
   "scope": "first frozen new-source-family paired-language retrieval with supplied translations; strict span lower bounds, not final semantic or answer accuracy",
   "selection_sha256": "ab210ea53d5e339730dea64f65df7da6f0953be83caa0d9e0761caa1484ce5fe",
