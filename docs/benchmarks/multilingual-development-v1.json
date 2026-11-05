@@ -1,0 +1,20 @@
+{
+  "automatic_quality_approval": false,
+  "completed_steps": 0,
+  "counts": {},
+  "first_unseen_result_unchanged": true,
+  "independent_human_reviews": 0,
+  "inference_threads": 1,
+  "input_artifact_build_id": "d8cfd6e082fa2d1221488db129bda60deed8cba3bef5b7c58cdc02addc547d18",
+  "max_output_chars": 48000,
+  "max_reranker_pairs": 400,
+  "portable_candidate": false,
+  "queries_completed": 0,
+  "queries_planned": 180,
+  "scope": "consumed T7 development; strict source-span support lower bounds, not unseen or semantic accuracy",
+  "selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
+  "source_commit": "c7e8dbcd4971f0acb7774481d242afb62b23814e",
+  "state": "running_development_diagnostic",
+  "top_k": 50,
+  "total_steps": 2
+}
