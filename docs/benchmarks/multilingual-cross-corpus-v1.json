@@ -1,0 +1,25 @@
+{
+  "T7_after_changes": {
+    "consumed_development_set": true,
+    "english_questions": 90,
+    "english_supported": 90,
+    "expanded_variants": 150,
+    "expanded_variants_supported": 141,
+    "independent_human_reviews": 0,
+    "original_composition_questions": 120,
+    "original_composition_supported": 115,
+    "serbian_cyrillic_questions": 30,
+    "serbian_cyrillic_supported": 25,
+    "serbian_latin_questions": 30,
+    "serbian_latin_supported": 26,
+    "source_review_complete": true
+  },
+  "automatic_quality_approval": false,
+  "completed_steps": 0,
+  "corpora": {},
+  "runtime_selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
+  "scope": "same multilingual candidate after changes; strict mechanical lower bounds until separate source-fact review; GPP native-reference scope remains distinct",
+  "selection_sha256": "4d72b513ee90fe85ae7712f84c9f72bf4939fd4453099c15881b02b94afafc0b",
+  "state": "running_candidate_regression",
+  "total_steps": 3
+}
