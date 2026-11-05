@@ -1,6 +1,6 @@
 {
   "automatic_quality_approval": false,
-  "completed_steps": 1,
+  "completed_steps": 2,
   "counts": {
     "v3-l6": {
       "sr-Cyrl": {
@@ -11,9 +11,9 @@
     },
     "v3-mmarco": {
       "en": {
-        "complete_original_source_span_supported": 84,
+        "complete_original_source_span_supported": 89,
         "errors": 0,
-        "queries": 85
+        "queries": 90
       },
       "sr-Cyrl": {
         "complete_original_source_span_supported": 21,
@@ -34,7 +34,7 @@
   "max_output_chars": 48000,
   "max_reranker_pairs": 400,
   "portable_candidate": false,
-  "queries_completed": 175,
+  "queries_completed": 180,
   "queries_planned": 180,
   "scope": "consumed T7 development; strict source-span support lower bounds, not unseen or semantic accuracy",
   "selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
