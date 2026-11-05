@@ -29,6 +29,19 @@
       "run_recipe_sha256": "f136139a072410a62e182f44eb7a9dfdd8606eb0a9115258412271f8c0e5ae8d",
       "semantic_review_pending": true,
       "state": "queries_complete_pending_source_review"
+    },
+    "rfc": {
+      "automatic_quality_approval": false,
+      "complete_original_source_span_supported": 0,
+      "corpus": "rfc",
+      "errors": 0,
+      "metric_scope": "strict original fact-source span lower bound; all-minimum-facts semantic review pending",
+      "portable_candidate": false,
+      "queries_completed": 1,
+      "questions": 120,
+      "run_recipe_sha256": "9e4b561d865abc936a8d4a174848ef6da8770e446577769cf75b1c3d85ca6328",
+      "semantic_review_pending": true,
+      "state": "running"
     }
   },
   "runtime_selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
