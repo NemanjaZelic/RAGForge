@@ -1,7 +1,15 @@
 {
   "automatic_quality_approval": false,
   "completed_steps": 0,
-  "counts": {},
+  "counts": {
+    "v3-l6": {
+      "sr-Cyrl": {
+        "complete_original_source_span_supported": 3,
+        "errors": 0,
+        "queries": 5
+      }
+    }
+  },
   "first_unseen_result_unchanged": true,
   "independent_human_reviews": 0,
   "inference_threads": 1,
@@ -9,7 +17,7 @@
   "max_output_chars": 48000,
   "max_reranker_pairs": 400,
   "portable_candidate": false,
-  "queries_completed": 0,
+  "queries_completed": 5,
   "queries_planned": 180,
   "scope": "consumed T7 development; strict source-span support lower bounds, not unseen or semantic accuracy",
   "selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
