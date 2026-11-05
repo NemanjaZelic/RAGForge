@@ -47,3 +47,34 @@ translation generation accuracy for every possible agent or language.
 No 95% Serbian claim is made before actual source-bound measurements complete.
 The existing frozen multilingual and 3GPP runs continue with their exact earlier
 runtimes; the new optional request field does not rewrite those jobs.
+
+
+## Frozen measurement in progress
+
+The first completed language group has 30/30 original T7 Cyrillic questions with
+all original source facts supported. Every one of its 1,500 returned chunks was
+checked against the immutable source index. The questions and required facts are
+unchanged. Latin and English controls are still running; this is consumed data,
+not a new unseen score. The earlier Cyrillic result was 25/30.
+
+Before exposing new source paragraphs or writing new questions, the e10bedd
+candidate and request/translation protocol were frozen. The new bank has 32
+matched base questions in each of English, Serbian Cyrillic and Serbian Latin:
+96 actual calls, 16 source families outside all 30 original T7 chapters, with
+16 one-paragraph and 16 two-paragraph fact-group questions per language. Questions,
+requirements, source spans and supplied translations were locked before first
+retrieval. These are related variants and source clusters, not 96 independent
+samples. The corpus is still the indexed PostgreSQL 18 manual. New-bank results
+are pending. Its source content and per-case outputs remain local.
+
+A real portable candidate containing the multilingual reranker is also verified:
+`data/benchmarks/scale-v1/runs/quality-v4/t7-source-language-mmarco-v1-bundle`.
+All nine retained index/query-model assets are byte-identical to the frozen
+physical input. An actual offline Cyrillic query against this package returns
+exactly the same complete response as the evaluated in-memory candidate. This
+checks packaging parity; it is not another independent quality sample.
+
+The exact hashes and scope are in
+`benchmarks/source-language-quality-protocol-v1.json`. Only code, protocol and
+numerical aggregates are saved to the private repository. Original GPP and
+cross-corpus regression jobs retain their earlier frozen runtimes.

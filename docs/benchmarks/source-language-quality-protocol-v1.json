@@ -1,0 +1,65 @@
+{
+  "state": "frozen_candidate_and_new_family_protocol_first_runs_in_progress",
+  "utc": "2026-11-05T09:16:25.941853+00:00",
+  "source_commit": "e10beddc70b52630cd09cf93a6c1733850083489",
+  "candidate_freeze_sha256": "08063433602aeb8cf353e9b378d9ed7e294b970fbda0dc0c59b73060bc82aa43",
+  "runtime_selection_sha256": "8987c3a4a8f2424a4a48d6d3977b45a4b1b5e9e524ff97b723f2debc5f8a1b47",
+  "modelspec_sha256": "f3e8c37df30491e99c3be0ce4592eba83c02e9a626672f090c7706887885a805",
+  "development_scope": "Consumed T7; original source facts and questions unchanged. Faithful AI-authored source-language query supplied beside original Serbian query.",
+  "completed_development_language": {
+    "language": "sr-Cyrl",
+    "supported": 30,
+    "total": 30,
+    "returned_chunks_source_verified": 1500,
+    "independent_human_reviews": 0
+  },
+  "other_development_languages_pending": true,
+  "new_family_protocol": {
+    "base_questions": 32,
+    "actual_variant_queries": 96,
+    "languages": {
+      "en": 32,
+      "sr-Cyrl": 32,
+      "sr-Latn": 32
+    },
+    "source_families": 16,
+    "original_T7_source_families_excluded": 30,
+    "single_fact_per_language": 16,
+    "multi_fact_per_language": 16,
+    "unique_fact_groups": 32,
+    "fact_assignments": 144,
+    "cases_sha256": "73a496137569afe39e62462cce1eaec9c5399501e184c590bbb5bdc1f7eb2e33",
+    "answers_sha256": "8235f866a0ecf5e0f5ddb94639717a3e5bdeb172d2065679bb56d8ae9d85f68b",
+    "requirements_sha256": "c55053c8dd21fdce7bb5461f3727cfd2b4e60cc1a892a11f04d5645b0bdbe4f2",
+    "variants_sha256": "e72e97c8a24d6e4d6561c0f5c6cf6e6f96b25e1856c876938df8fbf83031f576",
+    "source_authorship": "AI source-only; no independent human approvals",
+    "retrieval_queries_executed": 0,
+    "translation_scope": "Faithful supplied paired English formulations. Not a test of automatic translation generation."
+  },
+  "portable_candidate": {
+    "output_bundle_build_id": "c1748d8d97117df32832d66ec5b0889c46862392b7b247266d887cbed941962d",
+    "input_bundle_build_id": "d8cfd6e082fa2d1221488db129bda60deed8cba3bef5b7c58cdc02addc547d18",
+    "retained_assets_verified_byte_identical": 9,
+    "reranker_assets": 6,
+    "artifact_assets_bytes": 411984950,
+    "native_manifest_verified": true,
+    "actual_offline_smoke_queries": 1,
+    "portable_response_exactly_matches_frozen_development_response": true
+  },
+  "request_budget": {
+    "top_k": 50,
+    "max_output_chars": 48000,
+    "max_reranker_pairs": 400,
+    "search_method": "hybrid",
+    "query_planning": "facets-v3"
+  },
+  "automatic_quality_approval": false,
+  "limitations": [
+    "Supplied faithful translations; automatic translation generation is not evaluated.",
+    "First new-family outputs must not tune this candidate or alter labels.",
+    "New source families within the indexed PostgreSQL18 corpus; not new-domain or unknown-pretraining-data proof.",
+    "AI-authored references and zero independent human approvals.",
+    "Counts group complete source paragraphs; all requested requirements remain mandatory.",
+    "No generated-answer quality measurement."
+  ]
+}

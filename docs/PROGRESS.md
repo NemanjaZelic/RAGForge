@@ -861,3 +861,21 @@ frozen-bank drift,Ruff178,mypy56,schema pass. Actual tiny-model offline exact/AN
 CLI andstdioMCP parity/grants checks pass. Development translations60variants
 plus90unchangedEnglishcontrols frozen before new outputs; quality notyetmeasured.
 Fresh source-family holdout needed after selection. See SOURCE-LANGUAGE-QUERIES.md.
+
+
+## 2026-11-05 — Serbian source-language-query validation
+
+- e10bedd passed all six CI jobs (run 41996006990) and was fast-forwarded to
+  private main after clean-tree/ancestry checks. Local software checks remain
+  353 passed, 14 explicit optional/platform skips; no production source changes
+  were made after that check.
+- Completed consumed-T7 Cyrillic development: 30/30 full-source-fact support,
+  1,500 actual chunks checked; Latin and English controls remain in progress.
+  This requires a faithful caller/agent-supplied documentation-language question.
+- Froze the candidate before authoring a separate paired new-family bank:
+  16 new chapters, 32 questions per language, 96 first actual queries, all inputs
+  locked before outputs. No new-family score yet and no independent human review.
+- Built and natively verified the portable multilingual candidate; its real
+  offline Cyrillic response exactly matches the frozen development response.
+- Existing GPP ANN and old-runtime cross-corpus runs continue. Strict span progress
+  is not reported as final semantic or generated-answer accuracy.
