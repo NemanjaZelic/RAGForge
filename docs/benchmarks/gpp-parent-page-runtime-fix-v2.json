@@ -1,6 +1,6 @@
 {
-  "state": "software_fix_verified_actual_corrected_queries_pending",
-  "completed_steps": 1,
+  "state": "software_and_actual_full_corpus_smoke_verified_full_quality_run_pending",
+  "completed_steps": 2,
   "total_steps": 2,
   "scope": "Runtime page-scope correction; aborted initial attempt retained. No complete GPP accuracy result.",
   "aborted_first_attempt": {
@@ -30,5 +30,25 @@
   "patch": "Load and cache exact(document_id,page) before applying unchanged parent-context read bounds; preserve actual-text and line-overlap checks.",
   "index_rebuild_required": false,
   "all_original_questions_and_evidence_unchanged": true,
-  "automatic_quality_approval": false
+  "automatic_quality_approval": false,
+  "actual_smoke": {
+    "state": "actual_corrected_first_four_queries_successful",
+    "queries": 4,
+    "errors": 0,
+    "previously_failed_queries_now_successful": 3,
+    "previously_successful_full_response_exactly_preserved": true,
+    "actual_returned_chunks_verified": 200,
+    "smoke_prefix_sha256": "8f43219ff03bcd7fc1d36225897bd4b7f293187950e8b510ce4f1c56cda7f5d2",
+    "original_partial_sqlite_sha256": "9d5c05a539faa861aef78714975d6693cc69e0f96ee08c3660b568e85b4eaa04",
+    "original_partial_attempt_preserved": true,
+    "patch_source_commit": "c1607418c3f1e8bb9b70c667fb8503f0dd0f7518",
+    "baseline_runtime_selection_sha256": "f93d92406e1519ad5201b480c7a64793574f531275bae0e5ee3eb697417f21d8",
+    "multilingual_selection_sha256": "0dab94f7928f894be21b1c44a2003b19024490665b921276184fe4a46fde5dc0",
+    "same_selected_artifact_build_id": "9b20c4e2b01e22dfecec0ba65d0afd303552e68730b1ef44f94f857e2256f30d",
+    "smoke_rows_are_first_four_corrected_full_run_rows": true,
+    "complete_gpp_accuracy_pending": true,
+    "automatic_quality_approval": false
+  },
+  "ci_run": 42085776467,
+  "ci_jobs_passed": 6
 }

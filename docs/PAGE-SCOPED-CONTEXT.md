@@ -34,3 +34,10 @@ Local checks: 354 passed, 14 explicit optional/platform skips, external frozen-b
 drift enabled, Ruff and formatting (180 files), mypy (56 source files) and schema
 drift pass. Eight focused parent-mapping and offline exact/ANN portability tests
 pass. Actual corrected full-corpus query smoke checks are next.
+
+Actual full-corpus replay: the three initially failing questions now return
+source-verified results without errors. The fourth previously successful response
+is exactly preserved. All 200 returned chunks match the immutable context index,
+and output/reranker bounds pass. These four rows become the first four rows of
+the corrected full run; they are not an independent quality sample. All six CI
+jobs pass (42085776467). Complete native support and semantic review remain pending.
