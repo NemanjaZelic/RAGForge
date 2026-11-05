@@ -23,7 +23,7 @@
   "scope": "original native-reference retrieval support; not generated-answer accuracy or independent exhaustive semantic approval",
   "searchable_documents": 4717,
   "selected_retrieval_lock_sha256": "ba0a1c81b5cb10ace92c90757b3b91d8247851f3c5a93132191f98ed087309c2",
-  "state": "waiting_for_original_full_gpp_build",
+  "state": "defer-original-raw",
   "test_runtime_sha256": "c2fd0d1a4a832e006cbe43f366f5e41a8be8f3bf2792483fa9138f2d1f1d0bc1",
   "top_k": 50,
   "total_steps": 3,
