@@ -4,9 +4,9 @@
   "counts": {
     "translated-v1": {
       "en": {
-        "complete_original_source_span_supported": 34,
+        "complete_original_source_span_supported": 39,
         "errors": 0,
-        "queries": 35
+        "queries": 40
       },
       "sr-Cyrl": {
         "complete_original_source_span_supported": 30,
@@ -27,7 +27,7 @@
   "max_output_chars": 48000,
   "max_reranker_pairs": 400,
   "portable_candidate": false,
-  "queries_completed": 95,
+  "queries_completed": 100,
   "queries_planned": 150,
   "scope": "consumed T7 source-language-query development; strict source-span support lower bounds, not unseen or semantic accuracy",
   "selection_sha256": "8987c3a4a8f2424a4a48d6d3977b45a4b1b5e9e524ff97b723f2debc5f8a1b47",
