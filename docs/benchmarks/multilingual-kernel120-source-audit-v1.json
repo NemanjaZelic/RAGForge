@@ -1,0 +1,28 @@
+{
+  "actual_queries_completed": 120,
+  "actual_query_errors": 0,
+  "actual_returned_chunks_verified": 6000,
+  "ai_reviewed_cases": 14,
+  "automatic_quality_approval": false,
+  "by_language": {
+    "original-bank-unsegmented": {
+      "not_supported_reviewed_cases": 0,
+      "pending_cases": 13,
+      "reviewed_cases": 107,
+      "supported_reviewed_cases": 107,
+      "total_cases": 120
+    }
+  },
+  "completed_steps": 0,
+  "independent_human_reviews": 0,
+  "insufficient_cases": 0,
+  "mechanically_supported_cases": 93,
+  "pending_cases": 13,
+  "reviewed_cases": 107,
+  "scope": "Frozen original Kernel regression after multilingual changes; source evidence support, not unseen or generated-answer accuracy.",
+  "state": "source_audit_partial",
+  "summary_sha256": "4202ab05f185099bdb22add3b493e48974958bb04db0ad56eebff81e4dba10ac",
+  "supported_cases": 107,
+  "total_cases": 120,
+  "total_steps": 1
+}
