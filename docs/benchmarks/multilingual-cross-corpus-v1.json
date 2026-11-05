@@ -19,12 +19,12 @@
   "corpora": {
     "kernel": {
       "automatic_quality_approval": false,
-      "complete_original_source_span_supported": 35,
+      "complete_original_source_span_supported": 40,
       "corpus": "kernel",
       "errors": 0,
       "metric_scope": "strict original fact-source span lower bound; all-minimum-facts semantic review pending",
       "portable_candidate": false,
-      "queries_completed": 40,
+      "queries_completed": 45,
       "questions": 120,
       "run_recipe_sha256": "f136139a072410a62e182f44eb7a9dfdd8606eb0a9115258412271f8c0e5ae8d",
       "semantic_review_pending": true,
