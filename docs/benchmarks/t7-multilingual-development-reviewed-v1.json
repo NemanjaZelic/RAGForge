@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "utc": "2026-11-05T08:11:26.112697+00:00",
+  "state": "multilingual_development_primary_source_review_complete_per_language_target_not_met",
+  "scope": "all requested facts supported by actual retrieved source text; consumed T7 development, not a new unseen test or generated-answer accuracy",
+  "candidate": "facets-v3 plus pinned multilingual mMARCO reranker",
+  "source_commit": "c7e8dbcd4971f0acb7774481d242afb62b23814e",
+  "actual_comparison_queries": 180,
+  "actual_query_errors": 0,
+  "primary_candidate_queries": 150,
+  "source_verified_returned_chunks": 7500,
+  "summary": {
+    "actual_queries_completed": 150,
+    "actual_query_errors": 0,
+    "ai_reviewed_cases": 16,
+    "automatic_quality_approval": false,
+    "by_complexity": {
+      "multi": {
+        "ai_reviewed_cases": 16,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 74,
+        "not_supported_reviewed_cases": 9,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 90,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.9,
+        "supported_reviewed_cases": 81,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 90
+      },
+      "single": {
+        "ai_reviewed_cases": 0,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 60,
+        "not_supported_reviewed_cases": 0,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 60,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 1.0,
+        "supported_reviewed_cases": 60,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 60
+      }
+    },
+    "by_language": {
+      "en": {
+        "ai_reviewed_cases": 1,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 89,
+        "not_supported_reviewed_cases": 0,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 90,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 1.0,
+        "supported_reviewed_cases": 90,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 90
+      },
+      "sr-Cyrl": {
+        "ai_reviewed_cases": 9,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 21,
+        "not_supported_reviewed_cases": 5,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 30,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.8333333333333334,
+        "supported_reviewed_cases": 25,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 30
+      },
+      "sr-Latn": {
+        "ai_reviewed_cases": 6,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 24,
+        "not_supported_reviewed_cases": 4,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 30,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.8666666666666667,
+        "supported_reviewed_cases": 26,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 30
+      }
+    },
+    "candidate": "v3-mmarco",
+    "human_reviewed_cases": 0,
+    "locked_questions_unchanged": true,
+    "mechanically_supported_cases": 134,
+    "not_supported_reviewed_cases": 9,
+    "pending_cases": 0,
+    "quality_gate": "semantic_reviews_require_independent_validation",
+    "returned_chunks_verified_against_index": 7500,
+    "reviewed_cases": 150,
+    "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+    "supported_fraction_of_total": 0.94,
+    "supported_reviewed_cases": 141,
+    "target_excellent": 0.99,
+    "target_good": 0.95,
+    "total_cases": 150
+  },
+  "original_120_question_composition": {
+    "english_questions": 90,
+    "serbian_cyrillic_questions": 30,
+    "supported": 115,
+    "questions": 120,
+    "fraction": 0.9583333333333334,
+    "target_good_met_on_this_consumed_aggregate": true
+  },
+  "expanded_script_variants": {
+    "supported": 141,
+    "questions": 150,
+    "fraction": 0.94,
+    "target_good_met_on_this_consumed_aggregate": false
+  },
+  "target_good_per_language_met": false,
+  "first_unseen_result_preserved": {
+    "supported": 104,
+    "questions": 120,
+    "english_supported": 88,
+    "serbian_cyrillic_supported": 16
+  },
+  "literal_source_span_lower_bounds": {
+    "previous_selected_profile": {
+      "en": 88,
+      "sr-Cyrl": 13
+    },
+    "facets_v3_current_L6": {
+      "sr-Cyrl": 19
+    },
+    "facets_v3_multilingual_mMARCO": {
+      "en": 89,
+      "sr-Cyrl": 21,
+      "sr-Latn": 24
+    }
+  },
+  "reviews": {
+    "mechanically_complete_source_proofs": 134,
+    "AI_case_reviews": 16,
+    "AI_additional_complete_equivalent_support": 7,
+    "incomplete_cases": 9,
+    "pending": 0,
+    "independent_human_reviews": 0
+  },
+  "bounds": {
+    "top_k": 50,
+    "max_output_chars": 48000,
+    "max_reranker_pairs": 400,
+    "inference_threads": 1
+  },
+  "new_same_candidate_cross_corpus_measurements": {
+    "kernel_questions": 120,
+    "rfc_questions": 120,
+    "gpp_questions": 1322,
+    "state": "queued_or_running; no replacement of older results",
+    "selection_sha256": "4d72b513ee90fe85ae7712f84c9f72bf4939fd4453099c15881b02b94afafc0b",
+    "gpp_order": "after original full-corpus selected primary baseline; original inputs and first results unchanged",
+    "gpp_metric_limitation": "native provided-context reference-span support initially, full standalone semantic scope remains separately reviewable"
+  },
+  "provenance": {
+    ".cache/multilingual-v1/selection.json": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
+    ".cache/multilingual-v1/query-variants.jsonl": "419ee47f8e17347ac2f3b83989be75395a38f88b6bc3d410219c008caf6e6bf4",
+    "data/benchmarks/scale-v1/runs/quality-v4/multilingual-development-v1/run.json": "f4d329bed7f9c2aef9e7e47177088465f0926e2f6e18b616e0caaa149b44bf99",
+    "data/benchmarks/scale-v1/runs/quality-v4/multilingual-development-v1/evaluation.sqlite": "5a2412ce40e8c7eb37695ebc2316dd8ac551ed064d4fade262a47b92212ca6fb",
+    "data/benchmarks/scale-v1/runs/quality-v4/multilingual-source-review-v1-v3-mmarco/run.json": "19f8e64a798526d6e8b791a5e239c46ef19098dd38fe416e7f5103241c695c1f",
+    "data/benchmarks/scale-v1/runs/quality-v4/multilingual-source-review-v1-v3-mmarco/observations.jsonl": "cf1b577cea1faa6b7293ddfbb213eae3be6d51bb36cadcad5faada84af9f5ffa",
+    "data/benchmarks/scale-v1/runs/quality-v4/multilingual-source-review-v1-v3-mmarco/reviews.jsonl": "065f8cd0e239e8ffac2ab053d64274e44a1bf5d4934d6845468cfc6219127911",
+    "data/benchmarks/scale-v1/runs/quality-v4/multilingual-source-review-v1-v3-mmarco/semantic-summary.json": "d0dbe77a489d3402534003c804e0b940b9d11b5b4d880e1bd40d16eb9ccca8f9"
+  },
+  "limitations": [
+    "The same T7 questions are now observed and used for development; this is not a fresh held-out score.",
+    "Latin variants transliterate the existing Cyrillic questions; they do not add independent source families.",
+    "All 16 unresolved literal cases received source-quoted AI judgment; independent human approval remains zero.",
+    "Only English and Serbian scripts are quality-measured here; no all-languages guarantee.",
+    "The original 120-question aggregate weights English three times as much as Serbian and cannot establish a per-language 95% target.",
+    "In-memory candidate experiment over a verified immutable input bundle; no new portable production candidate verification.",
+    "Kernel/RFC older 118/120 and119/120 scores are not scores of this multilingual candidate."
+  ],
+  "portable_candidate": false,
+  "automatic_quality_approval": false
+}

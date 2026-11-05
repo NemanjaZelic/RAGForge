@@ -367,3 +367,16 @@ is being frozen; it is not a new holdout or an adopted production winner.
 No new 95% claim. Required languages/fresh per-language validation remain open.
 The ongoing 3GPP runtime and original measurement inputs are unchanged.
 See MULTILINGUAL.md and benchmarks/multilingual-preparation-v1.json.
+
+
+2026-11-05 reviewed multilingual T7 repeat: 180/180 actual comparison calls,
+zero query errors. New candidate complete-fact support: English90/90, Serbian
+Cyrillic25/30, Latin26/30; 134 mechanical source proofs and16AI case judgments
+(seven additional complete equivalents,nine incomplete),zero pending,zerohumans.
+Original120 composition115/120=95.8333%; expanded variants141/150=94%.
+Serbian per-language95 target remains unmet. Original unseen104/120 is intact.
+The repeat is consumed development, not a new holdout or production adoption.
+Fresh same-candidate Kernel/RFC calls are queued; new GPP candidate calls wait
+for its unchanged first primary baseline. Old Kernel/RFC scores are not reused
+as multilingual-candidate scores. Detailed numeric report:
+benchmarks/t7-multilingual-development-reviewed-v1.json.

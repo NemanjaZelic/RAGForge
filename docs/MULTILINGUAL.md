@@ -66,3 +66,39 @@ all requested facts, correct scope and source citations, plus English regression
 The first T7 score cannot become a fresh unseen score again after tuning.
 
 [Software/model provenance](benchmarks/multilingual-preparation-v1.json).
+
+
+## Reviewed measurement after language changes — 2026-11-05
+
+All 180 comparison calls finished without query errors. The multilingual
+candidate has 150 actual calls; every one of its 7,500 returned passages was
+verified against the immutable source index. Source-fact review is complete:
+134 full source-quote/span proofs and 16 source-quoted AI judgments, with seven
+additional complete equivalent answers and nine incomplete cases. There are
+zero pending primary reviews and zero independent human approvals.
+
+| Query language/script | Complete required-fact support |
+|---|---:|
+| English | 90/90 (100%) |
+| Serbian Cyrillic | 25/30 (83.3333%) |
+| Serbian Latin | 26/30 (86.6667%) |
+
+On the original 90-English/30-Cyrillic composition this is 115/120 (95.8333%).
+Including the 30 extra Latin variants gives 141/150 (94%). The original mix
+weights English three times as heavily as Serbian; its passing aggregate does
+not establish the requested 95% for every language. Serbian still misses that
+target. The first unseen score 104/120 remains unchanged and separately stored.
+This repeat is a consumed development measurement and needs a new holdout for
+a new unseen-test claim. It does not measure generated-answer accuracy.
+
+The strict literal diagnostic was 89/90 English, 21/30 Cyrillic and 24/30 Latin.
+Those lower bounds are not the final source-reviewed figures above.
+
+[Exact counts, provenance and limits](benchmarks/t7-multilingual-development-reviewed-v1.json).
+
+The same frozen candidate is now queued for fresh actual calls on the unchanged
+120 Kernel and 120 RFC questions. A 1,322-question GPP candidate check waits for
+the original full-corpus primary baseline. Old Kernel/RFC scores will not be
+reported as new-candidate scores. The GPP reference-span metric retains its
+provided-context/native-answer limitation until separate semantic review.
+No first inputs/results, bundle assets or original GPP runtime are rewritten.
