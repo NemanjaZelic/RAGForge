@@ -16,18 +16,18 @@
   "original_questions_answers_splits_unchanged": true,
   "original_zero_chunk_documents": 6,
   "quality_gate": "not_approved_native_reference_scope_and_complete_fact_review_pending",
-  "quality_queries_completed_lower_bound": 25,
+  "quality_queries_completed_lower_bound": 50,
   "quality_queries_planned": 3966,
   "query_progress_quantum": 25,
   "questions": 1322,
   "questions_with_byte_identical_source_alternatives": 721,
   "reference_support_counts": [
     {
-      "complete_native_answer_span_supported": 7,
-      "errors": 16,
+      "complete_native_answer_span_supported": 8,
+      "errors": 45,
       "method": "hybrid",
-      "queries": 26,
-      "symbol_preserving_native_answer_supported": 7,
+      "queries": 59,
+      "symbol_preserving_native_answer_supported": 8,
       "track": "native_source_alignment_diagnostic"
     }
   ],
