@@ -39,7 +39,7 @@
   "scope": "consumed T7 development; strict source-span support lower bounds, not unseen or semantic accuracy",
   "selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
   "source_commit": "c7e8dbcd4971f0acb7774481d242afb62b23814e",
-  "state": "running_development_diagnostic",
+  "state": "all_development_queries_complete_pending_source_review",
   "top_k": 50,
   "total_steps": 2
 }
