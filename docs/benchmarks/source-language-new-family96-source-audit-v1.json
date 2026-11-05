@@ -1,0 +1,42 @@
+{
+  "actual_queries_completed": 96,
+  "actual_query_errors": 0,
+  "actual_returned_chunks_verified": 4800,
+  "ai_reviewed_cases": 3,
+  "automatic_quality_approval": false,
+  "by_language": {
+    "en": {
+      "not_supported_reviewed_cases": 1,
+      "pending_cases": 0,
+      "reviewed_cases": 32,
+      "supported_reviewed_cases": 31,
+      "total_cases": 32
+    },
+    "sr-Cyrl": {
+      "not_supported_reviewed_cases": 1,
+      "pending_cases": 0,
+      "reviewed_cases": 32,
+      "supported_reviewed_cases": 31,
+      "total_cases": 32
+    },
+    "sr-Latn": {
+      "not_supported_reviewed_cases": 1,
+      "pending_cases": 0,
+      "reviewed_cases": 32,
+      "supported_reviewed_cases": 31,
+      "total_cases": 32
+    }
+  },
+  "completed_steps": 1,
+  "independent_human_reviews": 0,
+  "insufficient_cases": 3,
+  "mechanically_supported_cases": 93,
+  "pending_cases": 0,
+  "reviewed_cases": 96,
+  "scope": "First frozen new-source-family paired-language retrieval with supplied translations. 16source clusters, not96independent examples or new-domain/automatic-MT proof.",
+  "state": "source_audit_complete",
+  "summary_sha256": "dff3b38780307d63009c7816c666ae7248696f03dcc0ad729bd104cd61a050e6",
+  "supported_cases": 93,
+  "total_cases": 96,
+  "total_steps": 1
+}
