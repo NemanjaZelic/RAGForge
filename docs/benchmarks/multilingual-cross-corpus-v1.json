@@ -37,7 +37,7 @@
       "errors": 0,
       "metric_scope": "strict original fact-source span lower bound; all-minimum-facts semantic review pending",
       "portable_candidate": false,
-      "queries_completed": 72,
+      "queries_completed": 73,
       "questions": 120,
       "run_recipe_sha256": "9e4b561d865abc936a8d4a174848ef6da8770e446577769cf75b1c3d85ca6328",
       "semantic_review_pending": true,
