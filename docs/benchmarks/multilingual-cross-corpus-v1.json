@@ -47,6 +47,6 @@
   "runtime_selection_sha256": "9bfe858a6cf4a32574da878bbe30282a8df9182c89535ae4173de642a24e2371",
   "scope": "same multilingual candidate after changes; strict mechanical lower bounds until separate source-fact review; GPP native-reference scope remains distinct",
   "selection_sha256": "4d72b513ee90fe85ae7712f84c9f72bf4939fd4453099c15881b02b94afafc0b",
-  "state": "running_candidate_regression",
+  "state": "waiting_for_original_gpp_primary",
   "total_steps": 3
 }
