@@ -906,3 +906,22 @@ mypy, schema drift and all six CI jobs (41996006990). No production source chang
 during the frozen new-family run. Other corpus candidate regressions and GPP
 remain separate and pending; no global replacement or all-four-corpora completion
 claim. See SOURCE-LANGUAGE-QUERIES.md and both reviewed JSON reports.
+
+
+## 2026-11-05 — full 3GPP index completed; page-context runtime corrected
+
+The original 4,686,456-vector/ANN index and selected full-corpus bundle are
+complete and fully verified. The first selected evaluation was stopped after
+74 committed calls (58 execution errors): parent mapping incorrectly charged
+unrelated PDF pages against its context-read budget. All first results and
+frozen inputs remain intact. A page-local bounded cache fixes this without
+rebuilding the index. Original grants, text/page/line matching and global cache
+bounds remain enforced.
+
+The correction passed 354 tests, 14 explicit optional/platform skips, external
+bank drift, Ruff, mypy, schema drift and all six CI jobs. Actual replay succeeds
+for the three initially failing queries; a fourth previously working response
+is identical. All 200 returned chunks were source-verified. The corrected full
+run resumes those four saved rows over the unchanged 1,322-question bank, with
+separate controls and a corrected multilingual follow-up. Complete 3GPP quality
+scores remain pending. See PAGE-SCOPED-CONTEXT.md and its numerical fix report.
