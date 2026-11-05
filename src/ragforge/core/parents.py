@@ -23,7 +23,9 @@ class ParentMapper:
     def __init__(self, children: SQLiteEngine, parents: SQLiteEngine) -> None:
         self.children = children
         self.parents = parents
-        self._cache: OrderedDict[str, list[tuple[dict[str, object], str]]] = OrderedDict()
+        self._cache: OrderedDict[tuple[str, int | None], list[tuple[dict[str, object], str]]] = (
+            OrderedDict()
+        )
         self._cache_chars = 0
         with children._connect() as child, parents._connect() as parent:
             sql = (
@@ -55,15 +57,18 @@ class ParentMapper:
                 body = normalized(row["text"])
                 if len(body) < 20:
                     continue
-                if doc not in self._cache:
-                    # Bounded per-document scan; refuse pathological documents
-                    # instead of silently dropping an arbitrary tail.
+                cache_key = (doc, source["page"])
+                if cache_key not in self._cache:
+                    # Page provenance already excludes other PDF pages from mapping.
+                    # Apply it before the bounded read, retaining the full matching
+                    # page rather than charging unrelated pages against its budget.
                     values: list[tuple[dict[str, object], str]] = []
                     chars = 0
                     for candidate in parent.execute(
                         "SELECT chunk_id,text,source_json FROM chunks "
-                        "WHERE document_id=? ORDER BY ordinal",
-                        (doc,),
+                        "WHERE document_id=? AND json_extract(source_json, '$.page') IS ? "
+                        "ORDER BY ordinal",
+                        cache_key,
                     ):
                         chars += len(candidate["text"])
                         if len(values) >= 20000 or chars > 2_000_000:
@@ -74,15 +79,15 @@ class ParentMapper:
                     ):
                         _, removed = self._cache.popitem(last=False)
                         self._cache_chars -= sum(len(str(v[0]["text"])) for v in removed)
-                    self._cache[doc] = values
+                    self._cache[cache_key] = values
                     self._cache_chars += chars
-                self._cache.move_to_end(doc)
+                self._cache.move_to_end(cache_key)
                 width = min(64, len(body))
                 probes = [body[:width], body[-width:]]
                 start = max(0, (len(body) - width) // 2)
                 probes.append(body[start : start + width])
                 matches = []
-                for candidate, text in self._cache[doc]:
+                for candidate, text in self._cache[cache_key]:
                     location = json.loads(str(candidate["source_json"]))
                     if location["page"] != source["page"]:
                         continue

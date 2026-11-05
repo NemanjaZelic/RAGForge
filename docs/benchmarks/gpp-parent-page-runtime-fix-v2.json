@@ -1,0 +1,34 @@
+{
+  "state": "software_fix_verified_actual_corrected_queries_pending",
+  "completed_steps": 1,
+  "total_steps": 2,
+  "scope": "Runtime page-scope correction; aborted initial attempt retained. No complete GPP accuracy result.",
+  "aborted_first_attempt": {
+    "queries": 74,
+    "errors": 58,
+    "evaluation_sqlite_sha256": "9d5c05a539faa861aef78714975d6693cc69e0f96ee08c3660b568e85b4eaa04",
+    "frozen_recipe_sha256": "bf1f1e562203e9b7e301751e7a59fdf792e803fbc3f6041301cfd018c0041578",
+    "first_outputs_not_overwritten": true,
+    "index_not_rebuilt": true
+  },
+  "software_checks": {
+    "pytest_passed": 354,
+    "explicit_optional_platform_skipped": 14,
+    "external_frozen_bank_drift_enabled": true,
+    "ruff_format_files": 180,
+    "mypy_source_files": 56,
+    "schema_drift_passed": true,
+    "focused_parent_and_portable_exact_ann_tests_passed": 8
+  },
+  "parent_read_limits": {
+    "matching_scope_rows": 20000,
+    "matching_scope_characters": 2000000,
+    "cached_scopes": 8,
+    "cached_text_characters": 8000000,
+    "dense_candidates": 200
+  },
+  "patch": "Load and cache exact(document_id,page) before applying unchanged parent-context read bounds; preserve actual-text and line-overlap checks.",
+  "index_rebuild_required": false,
+  "all_original_questions_and_evidence_unchanged": true,
+  "automatic_quality_approval": false
+}
