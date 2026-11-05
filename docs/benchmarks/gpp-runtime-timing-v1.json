@@ -1,0 +1,27 @@
+{
+  "active_runtime_or_model_changed": false,
+  "all_original_questions_and_saved_outputs_preserved": true,
+  "automatic_quality_approval": false,
+  "completed_steps": 0,
+  "estimate_excludes_later_controls_and_multilingual_run": true,
+  "estimated_remaining_primary_hours_at_recent_rate": 19.16169962355877,
+  "execution_errors": 0,
+  "performance_diagnostics": {
+    "actual_source_page_map_seconds": 2.4846593998372555,
+    "diagnostic_batch_size": 8,
+    "diagnostic_inference_threads": 2,
+    "existing_full_budget_scan_seconds": 6.961475499905646,
+    "ordinal_range_prototype_seconds": 1.3016149001196027,
+    "prototype_not_deployed": true,
+    "prototype_outputs_identical": true,
+    "representative_reranker_pairs": 200,
+    "representative_reranker_seconds": 35.89532780018635
+  },
+  "primary_calls_completed": 173,
+  "primary_calls_total": 1322,
+  "recent50_mean_seconds": 60.03665678399615,
+  "scope": "Measured progress and approximate primary ETA. Diagnostics run under concurrent load, not a final quality result or additive component accounting.",
+  "state": "actual_corrected_evaluation_continues",
+  "total_steps": 1,
+  "unix_time": 1793910759.502491
+}
