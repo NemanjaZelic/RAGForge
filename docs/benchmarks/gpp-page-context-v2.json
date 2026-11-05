@@ -1,0 +1,28 @@
+{
+  "automatic_quality_approval": false,
+  "baseline_runtime_selection_sha256": "f93d92406e1519ad5201b480c7a64793574f531275bae0e5ee3eb697417f21d8",
+  "completed_steps": 0,
+  "counts": {
+    "baseline_calls": 4,
+    "baseline_errors": 0,
+    "baseline_primary_calls": 4,
+    "baseline_primary_total": 1322,
+    "baseline_total": 3966,
+    "multilingual_calls": 0,
+    "multilingual_errors": 0,
+    "multilingual_total": 1322
+  },
+  "independent_human_reviews": 0,
+  "index_rebuilt": false,
+  "multilingual_selection_sha256": "0dab94f7928f894be21b1c44a2003b19024490665b921276184fe4a46fde5dc0",
+  "original_first_partial_attempt": {
+    "all_original_outputs_retained": true,
+    "calls": 74,
+    "errors": 58
+  },
+  "runtime_patch_commit": "c1607418c3f1e8bb9b70c667fb8503f0dd0f7518",
+  "same_original_questions_and_evidence": true,
+  "scope": "Corrected page-scoped GPP regression on original native references; strict source-span counts are lower bounds, not final semantic or generated-answer accuracy.",
+  "state": "starting_corrected_full_evaluation",
+  "total_steps": 4
+}
