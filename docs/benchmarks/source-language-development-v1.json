@@ -1,0 +1,20 @@
+{
+  "automatic_quality_approval": false,
+  "completed_steps": 0,
+  "counts": {},
+  "first_unseen_result_unchanged": true,
+  "independent_human_reviews": 0,
+  "inference_threads": 2,
+  "input_artifact_build_id": "d8cfd6e082fa2d1221488db129bda60deed8cba3bef5b7c58cdc02addc547d18",
+  "max_output_chars": 48000,
+  "max_reranker_pairs": 400,
+  "portable_candidate": false,
+  "queries_completed": 0,
+  "queries_planned": 150,
+  "scope": "consumed T7 source-language-query development; strict source-span support lower bounds, not unseen or semantic accuracy",
+  "selection_sha256": "8987c3a4a8f2424a4a48d6d3977b45a4b1b5e9e524ff97b723f2debc5f8a1b47",
+  "source_commit": "e10beddc70b52630cd09cf93a6c1733850083489",
+  "state": "running_development_diagnostic",
+  "top_k": 50,
+  "total_steps": 1
+}
