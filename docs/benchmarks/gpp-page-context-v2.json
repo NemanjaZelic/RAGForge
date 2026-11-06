@@ -3,12 +3,12 @@
   "baseline_runtime_selection_sha256": "f93d92406e1519ad5201b480c7a64793574f531275bae0e5ee3eb697417f21d8",
   "completed_steps": 0,
   "counts": {
-    "baseline_calls": 2426,
+    "baseline_calls": 2450,
     "baseline_errors": 0,
     "baseline_primary_calls": 1322,
     "baseline_primary_total": 1322,
     "baseline_total": 3966,
-    "multilingual_calls": 82,
+    "multilingual_calls": 84,
     "multilingual_errors": 0,
     "multilingual_total": 1322
   },
