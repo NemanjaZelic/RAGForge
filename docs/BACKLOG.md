@@ -419,3 +419,22 @@ mypy, schema drift and all six CI jobs (41996006990). No production source chang
 during the frozen new-family run. Other corpus candidate regressions and GPP
 remain separate and pending; no global replacement or all-four-corpora completion
 claim. See SOURCE-LANGUAGE-QUERIES.md and both reviewed JSON reports.
+
+
+## 2026-11-06 — prepared exact storage accounting optimization
+
+A separate `perf/exact-runtime-overhead` branch replaces per-file Path/lstat
+storage traversal with fresh non-following scandir metadata. Logical sizes,
+30-second refresh, planned allocation/accounting, byte budget and physical
+free-space reserve stay intact; links/reparse points and read errors fail
+closed. Whole-tree observations: 6.961 s original versus 1.460 s optimized,
+under concurrent load, not a controlled end-to-end comparison. Same retained
+source-input tree: exactly 3,565,090,422 bytes both, 1.447 s versus 0.458 s.
+
+360 tests pass, 16 explicit model/platform skips; external bank drift, Ruff
+(182 files), mypy (56 source files) and schema drift pass. Nine frozen supervisor
+input hashes match. No running evaluation snapshot, candidate pool, model,
+request budget or benchmark process changed/restarted. This optimization is
+prepared for subsequent runs. Prioritized unadopted probes and numerical
+limitations: EXACT-PERFORMANCE-OPTIMIZATIONS.md and
+benchmarks/exact-runtime-overhead-v1.json. No quality gate is closed by timings.

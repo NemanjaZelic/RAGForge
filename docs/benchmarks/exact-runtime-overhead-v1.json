@@ -1,0 +1,93 @@
+{
+  "active_benchmark_restarted": false,
+  "active_candidate_count_changed": false,
+  "active_runtime_changed": false,
+  "live_tree_observations": {
+    "limitations": "Separate observations under concurrent load and growing tree; no controlled end-to-end comparison.",
+    "optimized": {
+      "limit_bytes": 60000000000,
+      "logical_bytes": 55546637158,
+      "optimized_scan_seconds": 1.4603287000209093,
+      "reserve_free_bytes": 15000000000,
+      "runtime": "D:/RAGForge/src/ragforge/jobs/budget.py",
+      "scope": "Actual optimized implementation, one read-only scan during the unchanged live evaluation; the tree can grow, not a paired immutable-tree byte comparison."
+    },
+    "original": {
+      "full_budget_scan_seconds": 6.961475499905646,
+      "limit_bytes": 60000000000,
+      "logical_bytes": 55532727142,
+      "reserve_bytes": 15000000000
+    }
+  },
+  "other_unadopted_probes": {
+    "duplicate_scope": "Literal query identity only; not an estimate of intermediate-cache hits.",
+    "exact_query_duplicates": 17,
+    "parent_mapping": [
+      {
+        "actual_source_pages": 35,
+        "input_child_candidates": 140,
+        "mapped_candidates": 80,
+        "method": "current_page_scan",
+        "same_result": true,
+        "seconds": 2.4846593998372555
+      },
+      {
+        "actual_source_pages": 35,
+        "input_child_candidates": 140,
+        "mapped_candidates": 80,
+        "method": "exact_ordinal_range_prototype",
+        "same_result": true,
+        "seconds": 1.3016149001196027
+      }
+    ],
+    "primary_questions": 1322,
+    "representative_reranker": {
+      "batch_size": 8,
+      "inference_threads": 2,
+      "pair_count": 200,
+      "scope": "Representative real returned passages repeated to200pairs; offline local diagnostic under concurrent evaluation, not a quality sample or precise end-to-end component sum.",
+      "score_seconds": 35.89532780018635
+    }
+  },
+  "preserved_guards": {
+    "active_limit_bytes": 60000000000,
+    "links_and_reparse_points_rejected": true,
+    "logical_path_bytes": true,
+    "planned_allocation_and_accounting": true,
+    "read_errors_fail_closed": true,
+    "refresh_seconds": 30,
+    "reserve_free_bytes": 15000000000
+  },
+  "quality_gate_changed": false,
+  "retained_input_tree_parity": {
+    "measurements": [
+      {
+        "implementation": "original",
+        "logical_bytes": 3565090422,
+        "seconds": 1.4469838000368327
+      },
+      {
+        "implementation": "optimized",
+        "logical_bytes": 3565090422,
+        "seconds": 0.4578414000570774
+      }
+    ],
+    "same_logical_bytes": true,
+    "scope": "Same retained source-input tree, no content read or mutation, one scan per implementation; original first, OS caches not cleared."
+  },
+  "scope": "Storage accounting overhead only; no retrieval quality or end-to-end speed claim.",
+  "source_sha256": "fe67fed732c2ea9cdc114ec98cd5ed833991d34db74436119273b06e9c09c960",
+  "source_sha256_scope": "Raw working-copy bytes at measurement time; Git normalizes line endings.",
+  "state": "prepared_separately_from_running_evaluation",
+  "unix_time": 1793923471.1951797,
+  "verification": {
+    "external_bank_drift_enabled": true,
+    "frozen_supervisor_input_hashes_verified": 9,
+    "mypy_source_files": 56,
+    "pytest_passed": 360,
+    "pytest_skipped": 16,
+    "ruff_format_files": 182,
+    "ruff_lint": "passed",
+    "schema_drift": "passed"
+  }
+}

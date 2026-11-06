@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import stat
 import time
 from pathlib import Path
 
@@ -31,15 +32,21 @@ class StorageBudget:
             raise ValueError("planned allocation must be nonnegative")
         if refresh or time.monotonic() - self.refreshed >= 30:
             total = 0
-            for parent, dirs, files in os.walk(self.root, followlinks=False):
-                file_names = set(files)
-                for name in dirs + files:
-                    path = Path(parent) / name
-                    info = path.lstat()
-                    if is_link(info):
-                        raise ValueError("links are forbidden in benchmark storage")
-                    if name in file_names:
-                        total += info.st_size
+            pending = [self.root]
+            while pending:
+                directory = pending.pop()
+                # Recheck before descent, including entries changed since enumeration.
+                if is_link(directory.lstat()):
+                    raise ValueError("links are forbidden in benchmark storage")
+                with os.scandir(directory) as entries:
+                    for entry in entries:
+                        info = entry.stat(follow_symlinks=False)
+                        if is_link(info):
+                            raise ValueError("links are forbidden in benchmark storage")
+                        if stat.S_ISDIR(info.st_mode):
+                            pending.append(Path(entry.path))
+                        else:
+                            total += info.st_size
             self.used = total
             self.refreshed = time.monotonic()
         if self.used + planned_bytes > self.limit:
