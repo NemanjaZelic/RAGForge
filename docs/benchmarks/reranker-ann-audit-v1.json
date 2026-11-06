@@ -1,0 +1,57 @@
+{
+  "active_benchmark_restarted": false,
+  "active_runtime_changed": false,
+  "ann_audit": {
+    "per_shard_query_threads": 1,
+    "scope": "Header/code inspection only; ANN wall time not isolated.",
+    "shards": 188,
+    "shards_currently_sequential": true,
+    "vectors": 4686456
+  },
+  "completed_steps": 1,
+  "existing_model": {
+    "already_int8_quantized": true,
+    "current_batch_size": 8,
+    "current_threads": 2,
+    "id": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "provider": "CPUExecutionProvider"
+  },
+  "existing_representative_reranker_sample": {
+    "batch_size": 8,
+    "inference_threads": 2,
+    "pair_count": 200,
+    "scope": "Representative real returned passages repeated to200pairs; offline local diagnostic under concurrent evaluation, not a quality sample or precise end-to-end component sum.",
+    "score_seconds": 35.89532780018635
+  },
+  "hardware": {
+    "cpu": "Intel Core i7-1195G7",
+    "gpu": "Intel Iris Xe Graphics",
+    "logical_processors": 8,
+    "physical_cores": 4
+  },
+  "quality_loss_absent_confirmed": false,
+  "scope": "Read-only hardware/code/tokenization audit. No ANN latency, new neural speedup, or quality improvement measured.",
+  "sources": [
+    "https://onnxruntime.ai/docs/execution-providers/OpenVINO-ExecutionProvider.html",
+    "https://onnxruntime.ai/docs/performance/transformers-optimization.html",
+    "https://onnxruntime.ai/docs/performance/tune-performance/threading.html"
+  ],
+  "token_audit": {
+    "active_runtime_changed": false,
+    "at_512_tokens": 12,
+    "fraction_of_potential_512_padding_avoided_upper_bound": 0.35216145833333334,
+    "max_tokens": 512,
+    "mean_tokens": 331.6933333333333,
+    "min_tokens": 145,
+    "pairs": 150,
+    "questions": 3,
+    "scope": "Tokenization-only audit of full source rows for final returned chunks from three recent questions, original query per question; not all original reranker candidates/facets, not a latency or accuracy measurement."
+  },
+  "total_steps": 1,
+  "unmeasured_priorities": [
+    "CPU threads and batch-shape benchmarking with unchanged full candidate pool.",
+    "Intel OpenVINO CPU/iGPU experiment, preserving model precision before considering lower precision; backend compatibility and benefit unverified.",
+    "Within-query length bucketing preserving every non-padding token; batch-dependent quantization requires score/order/evidence regression.",
+    "Bounded parallel ANN shard search, preserving every shard, search parameters, per-shard calculations, validations and deterministic merge; ANN wall-time isolation still needed."
+  ]
+}
