@@ -1,7 +1,7 @@
 {
   "automatic_quality_approval": false,
   "baseline_runtime_selection_sha256": "f93d92406e1519ad5201b480c7a64793574f531275bae0e5ee3eb697417f21d8",
-  "completed_steps": 2,
+  "completed_steps": 3,
   "counts": {
     "baseline_calls": 3966,
     "baseline_errors": 0,
@@ -23,6 +23,6 @@
   "runtime_patch_commit": "c1607418c3f1e8bb9b70c667fb8503f0dd0f7518",
   "same_original_questions_and_evidence": true,
   "scope": "Corrected page-scoped GPP regression on original native references; strict source-span counts are lower bounds, not final semantic or generated-answer accuracy.",
-  "state": "resuming_original_raw_controls",
+  "state": "resuming_original_deferred_rfc",
   "total_steps": 4
 }
