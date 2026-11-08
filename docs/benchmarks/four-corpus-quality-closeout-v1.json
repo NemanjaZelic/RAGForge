@@ -1,0 +1,451 @@
+{
+  "active_frozen_job_status": {
+    "automatic_quality_approval": false,
+    "baseline_calls": 3966,
+    "baseline_errors": 0,
+    "baseline_primary_calls": 1322,
+    "baseline_primary_total": 1322,
+    "baseline_total": 3966,
+    "child_pid": 26484,
+    "multilingual_calls": 1322,
+    "multilingual_errors": 0,
+    "multilingual_total": 1322,
+    "pid": 33572,
+    "state": "resuming_original_deferred_rfc",
+    "unix_time": 1794165008.3426695
+  },
+  "all_four_at_least_95_confirmed": false,
+  "all_four_at_least_99_confirmed": false,
+  "automatic_quality_approval": false,
+  "completed_steps": 4,
+  "full_bank_gpp_semantic_review_complete": false,
+  "gpp_explicit_version_subset_review": {
+    "ai_reviewed_cases": 12,
+    "automatic_quality_approval": false,
+    "broader_question_exhaustiveness_not_certified": true,
+    "full_bank_questions": 1322,
+    "full_bank_semantic_accuracy_estimated": false,
+    "fully_independent_annotation": false,
+    "human_reviewed_cases": 0,
+    "measurement_queries": 12,
+    "mechanically_supported_cases": 0,
+    "not_supported_reviewed_cases": 1,
+    "pending_cases": 0,
+    "quality_gate": "semantic_reviews_require_independent_validation",
+    "requirements_inferred_from_frozen_native_reference_answers": true,
+    "reviewed_cases": 12,
+    "scope": "Retrospective AI source-fact judgments for all 12 pre-existing explicit-version questions only; not a new holdout or an estimate over all 1322 native questions.",
+    "source_verified_by_complete_5288_output_audit": true,
+    "supported_fraction_of_total": 0.9166666666666666,
+    "supported_reviewed_cases": 11,
+    "target_excellent": 0.99,
+    "target_good": 0.95,
+    "total_cases": 12,
+    "unchanged_reference_data": true
+  },
+  "gpp_native_reference_audit": {
+    "all_original_questions_answers_and_splits_unchanged": true,
+    "artifact_build_id": "9b20c4e2b01e22dfecec0ba65d0afd303552e68730b1ef44f94f857e2256f30d",
+    "automatic_quality_approval": false,
+    "bank_scope_audit": {
+      "cases_with_only_short_native_answer_alternatives_at_most_three_words": 447,
+      "duplicate_groups_with_different_native_answer_sets": 10,
+      "exact_duplicate_query_groups": 16,
+      "explicit_version_cases": 12,
+      "extra_exact_duplicate_queries": 17,
+      "provided_context_original_questions": 1310,
+      "reason": "Locked labels explicitly declare all questions ineligible for strict exhaustive full-corpus semantic scoring. Native answer presence and equivalent-reference diagnostics cannot be promoted to all-requested-fact accuracy without separately adjudicated scope and requirements.",
+      "semantic_accuracy_95_or_99_certified": false,
+      "strict_full_corpus_semantic_approved_cases": 0
+    },
+    "completed_steps": 2,
+    "errors": 0,
+    "inputs_sha256": {
+      "3gpp-etsi.jsonl": "95d614519379f6a2bc2b5d8099861bfb1caf0605c7e34240bef7d7b7f14a2649",
+      "answer-evidence-with-identical-sources.jsonl": "005a7733f371d053f58025189c39c4ed9435c62fb3370d6768aba92925b0abc8",
+      "answer-source-bindings.json": "96780855a24d1cdc33035d3da8a2f3c3f225cdd016a84ab3ba14e32010153775",
+      "requirements.json": "197e0da450d6a1344589ddac35e574c3585c3970e40bc7d0b782b836f732ddd2"
+    },
+    "measurement_sha256": {
+      "baseline": {
+        "evaluation_sqlite": "371412e5632f17b2309b2207f62d9e75b0017941baf8aaaaf7bdff325bdaa2a2",
+        "recipe": "fe1da14800c28569ef359dd02717e3e36ee3440ca5584c37e31c7df74d335135"
+      },
+      "multilingual": {
+        "evaluation_sqlite": "550db3ba47377d5760284c9d5afcf7390217741f5b7f05dd923229ec8b707c66",
+        "recipe": "a63696c376bfdf6d1a59ce6f6a043eb11bc3a4a9e4fd34e80d665cfebe15a999"
+      }
+    },
+    "native_full_corpus_labels_strictly_eligible": 0,
+    "questions": 1322,
+    "scope": "Complete saved-output/source-identity and native-reference diagnostic audit, not exhaustive semantic or generated-answer accuracy.",
+    "script_sha256": "4aba6e617a708b83a563931d7dd85e324de2217dcc455c8c4cd71d0a5071804a",
+    "state": "all_5288_outputs_verified_native_reference_diagnostic_complete",
+    "total_queries_verified": 5288,
+    "total_returned_chunks_verified": 264388,
+    "total_steps": 2,
+    "tracks": {
+      "baseline": {
+        "bm25": {
+          "literal_native_answer_present_anywhere_diagnostic_only": 918,
+          "original_native_span_supported": 623,
+          "queries": 1322,
+          "returned_chunks_source_verified": 66096,
+          "symbol_preserving_original_answer_supported": 586
+        },
+        "dense": {
+          "literal_native_answer_present_anywhere_diagnostic_only": 968,
+          "original_native_span_supported": 611,
+          "queries": 1322,
+          "returned_chunks_source_verified": 66099,
+          "symbol_preserving_original_answer_supported": 576
+        },
+        "hybrid": {
+          "literal_native_answer_present_anywhere_diagnostic_only": 1040,
+          "original_native_span_supported": 703,
+          "queries": 1322,
+          "returned_chunks_source_verified": 66098,
+          "symbol_preserving_original_answer_supported": 659
+        }
+      },
+      "multilingual": {
+        "hybrid": {
+          "literal_native_answer_present_anywhere_diagnostic_only": 1094,
+          "original_native_span_supported": 752,
+          "queries": 1322,
+          "returned_chunks_source_verified": 66095,
+          "symbol_preserving_original_answer_supported": 702
+        }
+      }
+    },
+    "unix_time": 1794164304.6025019
+  },
+  "independent_human_reviews": 0,
+  "kernel_multilingual_candidate": {
+    "actual_queries_completed": 120,
+    "actual_query_errors": 0,
+    "ai_reviewed_cases": 27,
+    "automatic_quality_approval": false,
+    "by_complexity": {
+      "multi": {
+        "ai_reviewed_cases": 16,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 23,
+        "not_supported_reviewed_cases": 4,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 39,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.8974358974358975,
+        "supported_reviewed_cases": 35,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 39
+      },
+      "single": {
+        "ai_reviewed_cases": 11,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 70,
+        "not_supported_reviewed_cases": 3,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 81,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.9629629629629629,
+        "supported_reviewed_cases": 78,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 81
+      }
+    },
+    "by_language": {
+      "original-bank-unsegmented": {
+        "ai_reviewed_cases": 27,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 93,
+        "not_supported_reviewed_cases": 7,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 120,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.9416666666666667,
+        "supported_reviewed_cases": 113,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 120
+      }
+    },
+    "candidate": "v3-mmarco",
+    "human_reviewed_cases": 0,
+    "locked_questions_unchanged": true,
+    "mechanically_supported_cases": 93,
+    "not_supported_reviewed_cases": 7,
+    "pending_cases": 0,
+    "quality_gate": "semantic_reviews_require_independent_validation",
+    "returned_chunks_verified_against_index": 6000,
+    "reviewed_cases": 120,
+    "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+    "supported_fraction_of_total": 0.9416666666666667,
+    "supported_reviewed_cases": 113,
+    "target_excellent": 0.99,
+    "target_good": 0.95,
+    "total_cases": 120
+  },
+  "legacy_rfc_followup": {
+    "embedding_checkpoint": {
+      "approximate_embedding_hours_at_observed_rate": 3.8519291178385417,
+      "count": 662398,
+      "embedding_pipeline": "length-buckets-512-batch32-v2",
+      "next_row": 561152,
+      "recent_observed_window": {
+        "rows": 4096,
+        "scope": "Single observed checkpoint interval from 18:54:23 to 19:03:44 UTC on 2026-11-08; only an embedding estimate, excludes ANN, verification and later comparison queries.",
+        "seconds": 561
+      }
+    },
+    "purpose": "Previously authorized original section rebuild and raw/reranked comparison; separate from the finished multilingual quality regression.",
+    "same_as_current_120_case_multilingual_regression": false,
+    "status": {
+      "state": "preparing_verified_quality_bundle"
+    }
+  },
+  "original_results_and_test_inputs_unchanged": true,
+  "production_candidate_globally_replaced": false,
+  "quality_target_status": "not_met_kernel_multilingual_113_of_120_and_gpp_full_semantic_accuracy_not_certified",
+  "rfc_multilingual_candidate": {
+    "actual_queries_completed": 120,
+    "actual_query_errors": 0,
+    "ai_reviewed_cases": 38,
+    "automatic_quality_approval": false,
+    "by_complexity": {
+      "multi": {
+        "ai_reviewed_cases": 20,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 27,
+        "not_supported_reviewed_cases": 3,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 47,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.9361702127659575,
+        "supported_reviewed_cases": 44,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 47
+      },
+      "single": {
+        "ai_reviewed_cases": 18,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 55,
+        "not_supported_reviewed_cases": 0,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 73,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 1.0,
+        "supported_reviewed_cases": 73,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 73
+      }
+    },
+    "by_language": {
+      "original-bank-unsegmented": {
+        "ai_reviewed_cases": 38,
+        "automatic_quality_approval": false,
+        "human_reviewed_cases": 0,
+        "mechanically_supported_cases": 82,
+        "not_supported_reviewed_cases": 3,
+        "pending_cases": 0,
+        "quality_gate": "semantic_reviews_require_independent_validation",
+        "reviewed_cases": 120,
+        "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+        "supported_fraction_of_total": 0.975,
+        "supported_reviewed_cases": 117,
+        "target_excellent": 0.99,
+        "target_good": 0.95,
+        "total_cases": 120
+      }
+    },
+    "candidate": "v3-mmarco",
+    "human_reviewed_cases": 0,
+    "locked_questions_unchanged": true,
+    "mechanically_supported_cases": 82,
+    "not_supported_reviewed_cases": 3,
+    "pending_cases": 0,
+    "quality_gate": "semantic_reviews_require_independent_validation",
+    "returned_chunks_verified_against_index": 5885,
+    "reviewed_cases": 120,
+    "scope": "source-quoted semantic retrieval support judgment; not generated-answer accuracy",
+    "supported_fraction_of_total": 0.975,
+    "supported_reviewed_cases": 117,
+    "target_excellent": 0.99,
+    "target_good": 0.95,
+    "total_cases": 120
+  },
+  "scope": "Aggregate traceable retrieval evidence results. Finished execution is separate from passing quality targets; diagnostics and reviewed support are not interchangeable.",
+  "source_proof_data_remains_local": true,
+  "state": "audits_saved_waiting_only_for_legacy_rfc_execution",
+  "t7_consumed_development": {
+    "actual_packaged_offline_query_response_matches_development_response": true,
+    "actual_queries": 150,
+    "automatic_quality_approval": false,
+    "by_language": {
+      "en": {
+        "incomplete": 0,
+        "pending": 0,
+        "queries": 90,
+        "support_percent": 100.0,
+        "supported": 90
+      },
+      "sr-Cyrl": {
+        "incomplete": 0,
+        "pending": 0,
+        "queries": 30,
+        "support_percent": 100.0,
+        "supported": 30
+      },
+      "sr-Latn": {
+        "incomplete": 0,
+        "pending": 0,
+        "queries": 30,
+        "support_percent": 100.0,
+        "supported": 30
+      }
+    },
+    "expanded_150_composition_supported": 150,
+    "first_new_family_result_report": "source-language-new-family-reviewed-v1.json",
+    "incomplete": 0,
+    "independent_human_reviews": 0,
+    "measurement_recipe_sha256": "9555fced2917d6a6c5acec1363c9166ddfa03fa755af5cd760f8393b02f38292",
+    "mechanical_source_proof_cases": 149,
+    "model_spec_sha256": "f3e8c37df30491e99c3be0ce4592eba83c02e9a626672f090c7706887885a805",
+    "original_120_composition_supported": 120,
+    "original_first_unseen_result_preserved": true,
+    "original_source_fact_requirements_unchanged": true,
+    "other_corpus_candidate_regressions_pending_separate_review": true,
+    "pending": 0,
+    "portable_artifact_build_id": "c1748d8d97117df32832d66ec5b0889c46862392b7b247266d887cbed941962d",
+    "query_errors": 0,
+    "returned_chunks_verified": 7500,
+    "review_summary_sha256": "9a044d8c1082f8a4e426cdd83ff05210dc728039c5a0d35b19e2808cb12c8690",
+    "scope": "All requested-fact support in actual evidence on consumed T7 development, with supplied faithful source-language questions. Not unseen, automatic MT generation or generated-answer accuracy.",
+    "selection_sha256": "8987c3a4a8f2424a4a48d6d3977b45a4b1b5e9e524ff97b723f2debc5f8a1b47",
+    "software_checks": {
+      "external_frozen_bank_drift_checked": true,
+      "mypy_source_files": 56,
+      "optional_platform_skipped": 14,
+      "production_ci_jobs_passed": 6,
+      "production_code_ci_run": 41996006990,
+      "pytest_passed": 353,
+      "ruff_files": 178,
+      "schema_drift_passed": true
+    },
+    "source_commit": "e10beddc70b52630cd09cf93a6c1733850083489",
+    "source_quoted_AI_judgments": 1,
+    "state": "all_consumed_development_queries_and_source_reviews_complete",
+    "supplied_translations_frozen_before_new_outputs": true,
+    "supported": 150,
+    "utc": "2026-11-05T11:02:24.942259+00:00"
+  },
+  "t7_first_new_family": {
+    "actual_queries": 96,
+    "all_measured_languages_at_least_95_percent": true,
+    "all_measured_languages_at_least_99_percent": false,
+    "answer_evidence_sha256": "8235f866a0ecf5e0f5ddb94639717a3e5bdeb172d2065679bb56d8ae9d85f68b",
+    "automatic_quality_approval": false,
+    "by_language": {
+      "en": {
+        "incomplete": 1,
+        "pending": 0,
+        "queries": 32,
+        "support_percent": 96.875,
+        "supported": 31
+      },
+      "sr-Cyrl": {
+        "incomplete": 1,
+        "pending": 0,
+        "queries": 32,
+        "support_percent": 96.875,
+        "supported": 31
+      },
+      "sr-Latn": {
+        "incomplete": 1,
+        "pending": 0,
+        "queries": 32,
+        "support_percent": 96.875,
+        "supported": 31
+      }
+    },
+    "by_question_group": {
+      "multi": {
+        "incomplete": 3,
+        "queries": 48,
+        "support_percent": 93.75,
+        "supported": 45
+      },
+      "single": {
+        "incomplete": 0,
+        "queries": 48,
+        "support_percent": 100.0,
+        "supported": 48
+      }
+    },
+    "candidate_freeze_sha256": "08063433602aeb8cf353e9b378d9ed7e294b970fbda0dc0c59b73060bc82aa43",
+    "candidate_source_commit": "e10beddc70b52630cd09cf93a6c1733850083489",
+    "casebank_lock_sha256": "88699477512ec3c6cd31f5539ca850948355ec4d8237432d86d03d722fc46643",
+    "casebank_sha256": "73a496137569afe39e62462cce1eaec9c5399501e184c590bbb5bdc1f7eb2e33",
+    "complete_requested_fact_support_percent": 96.875,
+    "excluded_original_T7_families": 30,
+    "incomplete_cases": 3,
+    "independent_human_reviews": 0,
+    "limits": [
+      "16 source clusters, paired languages and related single/multi questions; not96independent samples.",
+      "New questions/source families within indexed PostgreSQL18 documentation, not new-domain or unknown-pretraining-data proof.",
+      "AI-authored source references, no independent human approval.",
+      "Source-language query supplied by caller/agent; raw Serbian alone and arbitrary automatic translation quality are not established by this result.",
+      "Multi-paragraph subgroup is45/48=93.75%; per-language overall31/32 passes95, not every complexity subgroup.",
+      "Frozen selection inherits historical development translation_protocol_sha256; actual new-family translation protocol is the candidate-freeze hash and all96query variants locked before first inference.",
+      "Other corpus candidate regressions and GPP build/evaluation remain separate; this is not an all-four-corpora completion claim."
+    ],
+    "measurement_recipe_sha256": "273a8114744732053b25dc56ba08b60b6738e3e7606f79b8a8bb1b8cf0cd1b40",
+    "mechanical_full_source_quote_or_span_proof_cases": 93,
+    "minimum_requirements_sha256": "c55053c8dd21fdce7bb5461f3727cfd2b4e60cc1a892a11f04d5645b0bdbe4f2",
+    "model_spec_sha256": "f3e8c37df30491e99c3be0ce4592eba83c02e9a626672f090c7706887885a805",
+    "one_underlying_incomplete_question_in_all_three_languages": true,
+    "original_T7_first_results_unchanged": true,
+    "original_locked_new_family_questions_and_requirements_unchanged": true,
+    "paired_base_questions": 32,
+    "pending_cases": 0,
+    "portable_artifact_build_id": "c1748d8d97117df32832d66ec5b0889c46862392b7b247266d887cbed941962d",
+    "portable_artifact_offline_response_parity_verified": true,
+    "query_errors": 0,
+    "query_variants_sha256": "e72e97c8a24d6e4d6561c0f5c6cf6e6f96b25e1856c876938df8fbf83031f576",
+    "request_limits": {
+      "inference_threads": 2,
+      "max_output_chars": 48000,
+      "max_reranker_pairs": 400,
+      "top_k": 50
+    },
+    "required_source_fact_group_assignments": 144,
+    "returned_chunks_verified_against_immutable_index": 4800,
+    "review_summary_sha256": "dff3b38780307d63009c7816c666ae7248696f03dcc0ad729bd104cd61a050e6",
+    "reviewed_cases": 96,
+    "scope": "Complete requested-fact support in actually returned evidence; supplied faithful source-language queries, not automatic-translation generation or generated-answer accuracy.",
+    "selection_sha256": "ab210ea53d5e339730dea64f65df7da6f0953be83caa0d9e0761caa1484ce5fe",
+    "source_families": 16,
+    "source_quoted_AI_judgments": 3,
+    "state": "all_first_frozen_new_family_queries_and_source_reviews_complete",
+    "supported_cases": 93,
+    "supported_source_fact_group_assignments": 141,
+    "utc": "2026-11-05T10:55:04.702662+00:00"
+  },
+  "total_steps": 5,
+  "unix_time": 1794165026.0912616,
+  "unreviewed_gpp_question_scope_cases": 1310
+}
