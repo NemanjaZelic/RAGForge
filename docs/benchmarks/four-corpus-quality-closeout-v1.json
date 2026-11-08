@@ -12,7 +12,7 @@
     "multilingual_total": 1322,
     "pid": 33572,
     "state": "resuming_original_deferred_rfc",
-    "unix_time": 1794176097.65573
+    "unix_time": 1794179340.1582901
   },
   "all_four_at_least_95_confirmed": false,
   "all_four_at_least_99_confirmed": false,
@@ -196,10 +196,10 @@
   },
   "legacy_rfc_followup": {
     "embedding_checkpoint": {
-      "approximate_embedding_hours_at_observed_rate": 0.267762451171875,
+      "approximate_embedding_hours_at_observed_rate": 0.0,
       "count": 662398,
       "embedding_pipeline": "length-buckets-512-batch32-v2",
-      "next_row": 655360,
+      "next_row": 662398,
       "recent_observed_window": {
         "rows": 4096,
         "scope": "Single observed checkpoint interval from 18:54:23 to 19:03:44 UTC on 2026-11-08; only an embedding estimate, excludes ANN, verification and later comparison queries.",
@@ -209,7 +209,7 @@
     "purpose": "Previously authorized original section rebuild and raw/reranked comparison; separate from the finished multilingual quality regression.",
     "same_as_current_120_case_multilingual_regression": false,
     "status": {
-      "state": "preparing_verified_quality_bundle"
+      "state": "running_quality_comparison"
     }
   },
   "original_results_and_test_inputs_unchanged": true,
@@ -446,6 +446,6 @@
     "utc": "2026-11-05T10:55:04.702662+00:00"
   },
   "total_steps": 5,
-  "unix_time": 1794176102.8786986,
+  "unix_time": 1794179354.0581145,
   "unreviewed_gpp_question_scope_cases": 1310
 }
