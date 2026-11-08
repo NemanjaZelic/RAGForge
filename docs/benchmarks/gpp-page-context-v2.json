@@ -23,6 +23,6 @@
   "runtime_patch_commit": "c1607418c3f1e8bb9b70c667fb8503f0dd0f7518",
   "same_original_questions_and_evidence": true,
   "scope": "Corrected page-scoped GPP regression on original native references; strict source-span counts are lower bounds, not final semantic or generated-answer accuracy.",
-  "state": "corrected_full_evaluation",
+  "state": "corrected_calls_complete_semantic_review_pending",
   "total_steps": 4
 }
