@@ -1,37 +1,18 @@
 {
   "active_frozen_job_status": {
-    "automatic_quality_approval": false,
     "baseline_calls": 3966,
-    "baseline_errors": 0,
-    "baseline_primary_calls": 1322,
-    "baseline_primary_total": 1322,
-    "baseline_total": 3966,
-    "legacy_comparison": {
-      "raw": {
-        "errors": 0,
-        "expected": 240,
-        "queries": 240
-      },
-      "reranked": {
-        "errors": 0,
-        "expected": 240,
-        "queries": 240
-      }
-    },
+    "errors": 0,
     "multilingual_calls": 1322,
-    "multilingual_errors": 0,
-    "multilingual_total": 1322,
-    "original_failed_status_path": "D:\\RAGForge\\.cache\\gpp-page-context-v2\\status.json",
-    "pid": 9624,
-    "recovery_scope": "Status supervision only; original parent failed during atomic status replacement. Existing frozen RFC processes and results are reused.",
-    "state": "all_requested_execution_complete_pending_source_scope_reviews",
-    "unix_time": 1794182996.6005447
+    "pending_inference": 0,
+    "pending_semantic_reviews": 0,
+    "pid": null,
+    "state": "all_requested_execution_and_retrospective_source_reviews_complete"
   },
   "all_four_at_least_95_confirmed": false,
   "all_four_at_least_99_confirmed": false,
   "automatic_quality_approval": false,
   "completed_steps": 5,
-  "full_bank_gpp_semantic_review_complete": false,
+  "full_bank_gpp_semantic_review_complete": true,
   "gpp_explicit_version_subset_review": {
     "ai_reviewed_cases": 12,
     "automatic_quality_approval": false,
@@ -132,6 +113,37 @@
       }
     },
     "unix_time": 1794164304.6025019
+  },
+  "gpp_original_full_review": {
+    "combined_percent": 91.90620272314675,
+    "combined_supported": 1215,
+    "combined_total": 1322,
+    "explicit_version_supported": 11,
+    "explicit_version_total": 12,
+    "insufficient": 107,
+    "native_supported": 1204,
+    "native_total": 1310,
+    "pending": 0
+  },
+  "gpp_selected_source_context_review": {
+    "at_least_95": false,
+    "at_least_99": false,
+    "combined_percent": 93.72163388804842,
+    "combined_supported": 1239,
+    "combined_total": 1322,
+    "explicit_version_supported": 11,
+    "explicit_version_total": 12,
+    "insufficient": 83,
+    "native_supported": 1228,
+    "native_total": 1310,
+    "paired_native": {
+      "both_insufficient": 82,
+      "both_supported": 1204,
+      "losses": 0,
+      "wins": 24
+    },
+    "pending": 0,
+    "source_information_preserved": true
   },
   "independent_human_reviews": 0,
   "kernel_multilingual_candidate": {
@@ -398,7 +410,7 @@
   },
   "original_results_and_test_inputs_unchanged": true,
   "production_candidate_globally_replaced": false,
-  "quality_target_status": "not_met_kernel_multilingual_113_of_120_and_gpp_full_semantic_accuracy_not_certified",
+  "quality_target_status": "not_met_3gpp_source_context_1239_of_1322_93_72_percent",
   "rfc_multilingual_candidate": {
     "actual_queries_completed": 120,
     "actual_query_errors": 0,
@@ -473,8 +485,15 @@
     "total_cases": 120
   },
   "scope": "Aggregate traceable retrieval evidence results. Finished execution is separate from passing quality targets; diagnostics and reviewed support are not interchangeable.",
+  "source_context_integration": {
+    "complete": true,
+    "default_globally_changed": false,
+    "mismatches": 0,
+    "parity_cases": 1322,
+    "source_commit": "67a092d74ac5e1ff60cac7b2e261b03b8d815149"
+  },
   "source_proof_data_remains_local": true,
-  "state": "execution_complete_quality_target_not_met",
+  "state": "all_execution_and_retrospective_reviews_complete_target_not_met",
   "t7_consumed_development": {
     "actual_packaged_offline_query_response_matches_development_response": true,
     "actual_queries": 150,
@@ -630,6 +649,6 @@
     "utc": "2026-11-05T10:55:04.702662+00:00"
   },
   "total_steps": 5,
-  "unix_time": 1794182996.6042857,
-  "unreviewed_gpp_question_scope_cases": 1310
+  "unix_time": 1794219916.7624235,
+  "unreviewed_gpp_question_scope_cases": 0
 }
