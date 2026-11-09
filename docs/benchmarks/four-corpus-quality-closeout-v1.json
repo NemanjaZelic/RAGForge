@@ -15,17 +15,17 @@
       "reranked": {
         "errors": 0,
         "expected": 240,
-        "queries": 214
+        "queries": 217
       }
     },
     "multilingual_calls": 1322,
     "multilingual_errors": 0,
     "multilingual_total": 1322,
     "original_failed_status_path": "D:\\RAGForge\\.cache\\gpp-page-context-v2\\status.json",
-    "pid": 24440,
+    "pid": 9624,
     "recovery_scope": "Status supervision only; original parent failed during atomic status replacement. Existing frozen RFC processes and results are reused.",
     "state": "resuming_original_deferred_rfc",
-    "unix_time": 1794182451.4583209
+    "unix_time": 1794182508.9292517
   },
   "all_four_at_least_95_confirmed": false,
   "all_four_at_least_99_confirmed": false,
@@ -459,6 +459,6 @@
     "utc": "2026-11-05T10:55:04.702662+00:00"
   },
   "total_steps": 5,
-  "unix_time": 1794182451.4606898,
+  "unix_time": 1794182508.9324582,
   "unreviewed_gpp_question_scope_cases": 1310
 }
