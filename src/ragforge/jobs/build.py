@@ -5,6 +5,7 @@ import json
 import os
 import stat
 import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
@@ -22,7 +23,15 @@ def atomic_json(path: Path, value: dict[str, Any]) -> None:
             stream.write("\n")
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        for attempt in range(8):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError as error:
+                # Brief readers/antivirus can deny Windows rename/delete sharing.
+                if getattr(error, "winerror", None) not in {5, 32, 33} or attempt == 7:
+                    raise
+                time.sleep(min(0.02 * 2**attempt, 0.25))
     finally:
         if os.path.exists(temporary):
             os.unlink(temporary)

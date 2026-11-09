@@ -1,0 +1,43 @@
+{
+  "active_run_pointer_uses_recovery_status": true,
+  "automatic_quality_approval": false,
+  "completed_queries_rerun": 0,
+  "failure": {
+    "operation": "atomic status-file replacement",
+    "retrieval_error": false,
+    "type": "PermissionError",
+    "winerror": 5
+  },
+  "fix": {
+    "maximum_backoff_seconds": 1.05,
+    "maximum_replace_attempts": 8,
+    "other_errors_fail_immediately": true,
+    "owned_temporary_cleaned": true,
+    "prior_checkpoint_preserved_on_failure": true,
+    "windows_errors": [
+      5,
+      32,
+      33
+    ]
+  },
+  "frozen_runtime_and_inputs_unchanged": true,
+  "frozen_source_files_verified": 107,
+  "local_checks": {
+    "external_bank_drift_enabled": true,
+    "mypy_source_files": 56,
+    "new_checkpoint_tests_passed": 6,
+    "pytest_passed": 366,
+    "real_windows_reader_lock_test": "passed",
+    "ruff_format_files": 184,
+    "ruff_lint": "passed",
+    "schema_drift": "passed",
+    "skipped_optional_or_platform": 16
+  },
+  "original_failed_status_retained": true,
+  "quality_gate_changed": false,
+  "source_bytes_sha256": "e9abaaf387e6332d9022bc9f8be4c2318fb61ee0012fe0e2dbe3d0ef852b3e8e",
+  "source_sha256_scope": "Raw working copy bytes; Git normalizes line endings.",
+  "state": "status_supervision_recovered_existing_inference_continues",
+  "supervisor_input_hashes_verified": 9,
+  "unix_time": 1794182718.7695377
+}

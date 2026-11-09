@@ -944,3 +944,22 @@ request budget or benchmark process changed/restarted. This optimization is
 prepared for subsequent runs. Prioritized unadopted probes and numerical
 limitations: EXACT-PERFORMANCE-OPTIMIZATIONS.md and
 benchmarks/exact-runtime-overhead-v1.json. No quality gate is closed by timings.
+
+
+## 2026-11-09 — recovered Windows status checkpoint sharing failure
+
+The original GPP supervisor stopped with WinError5 while replacing its status
+checkpoint; the existing RFC comparison child continued normally. Every completed
+query is retained. Separate recovery monitoring follows those existing processes
+and reads live Windows status files with delete sharing; the original failed
+status and frozen evaluators stay unchanged. The active-run pointer identifies
+the recovery status. No model inference was restarted or repeated.
+
+Future atomic checkpoint writes retry Windows errors5/32/33 for at most eight
+replace attempts and1.05s total backoff, using the same fsynced temporary payload.
+Persistent/unrelated failures remain failures and preserve prior state. Six new
+checks include an actual Windows reader lock. Full local validation:366passed,
+16explicit optional/platform skips, external bank drift,Ruff184,mypy56 and schema
+checks passed. All107frozen source files and nine supervisor input hashes match.
+No quality threshold is approved by the operational recovery. See
+WINDOWS-CHECKPOINT-RECOVERY.md and benchmarks/windows-checkpoint-recovery-v1.json.
