@@ -45,6 +45,7 @@ dev = [
   "mypy>=1.15,<2",
   "reportlab>=4.4,<5",
   "onnx>=1.20,<2",
+  "pyyaml>=6,<7",
 ]
 
 [tool.hatch.build.targets.wheel]

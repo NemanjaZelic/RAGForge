@@ -192,12 +192,11 @@ def main(argv: list[str] | None = None) -> int:
                     rerank_workers=min(8, arguments.threads),
                     warm_up=True,
                 )
-                print(f"MCP config: {Path(result['output']) / 'mcp.json'}")
                 print(f"Agent skill: {Path(result['output']) / result['skill']}")
-                print(
-                    "Import this MCP config into your agent. "
-                    "Existing agent settings were not changed."
-                )
+                print(f"Claude / generic MCP: {Path(result['output']) / 'mcp.json'}")
+                print(f"Codex MCP: {Path(result['output']) / result['codex_config']}")
+                print(f"Connect the agent: {Path(result['output']) / result['instructions']}")
+                print("Install the skill and its MCP connection using the generated guide.")
             elif arguments.action == "serve":
                 from ragforge.adapters.mcp import create_server
 

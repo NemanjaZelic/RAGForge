@@ -84,7 +84,7 @@ na drugom jeziku možeš eksplicitno dodati veran prevod u jezik dokumentacije:
 `--query-translation "How does authentication work?"`. Runtime ne poziva servis
 za automatsko prevođenje.
 
-## 3. Agent integracija — opciona komanda
+## 3. Završni korak — skill i veza za agenta
 
 ```powershell
 .\ragforge.cmd agent
@@ -94,12 +94,16 @@ za automatsko prevođenje.
 bash ragforge.sh agent
 ```
 
-Dobijaš putanju do `agent/<verzija>/mcp.json` i agent skill-a. U MCP klijentu uvezi
-prikazani `mcp.json`; način uvoza zavisi od klijenta. Komanda ne menja postojeća
-podešavanja drugih aplikacija. Generisani server ima uključenu inicijalizaciju
-modela pre prvog zahteva i koristi trajni proces za ponovnu upotrebu modela i keša.
-Posle pomeranja projekta/baze ili prelaska na drugi računar generiši konfiguraciju
-ponovo, jer ona sadrži lokalne apsolutne putanje.
+Dobijaš `SKILL.md` sa pravilima kada i kako agent pretražuje i čita dokumentaciju,
+`mcp.json` za Claude Code/kompatibilne klijente, `codex.toml` za Codex/OpenAI lokalne
+klijente i `INSTALL.md` sa tačnim koracima. **Poveži i skill i MCP** — samo MCP
+konfiguracija ne učitava uputstva skill-a. Ovo je glavni završetak toka za rad sa
+agentom; direktni `ask` ostaje dostupan za samostalnu proveru izvora.
+
+[Agent integracija](AGENT-INTEGRATION.md) objašnjava gde se fajlovi postavljaju.
+Generator ne menja postojeća podešavanja drugih aplikacija. Posle novog build-a,
+pomeranja baze ili prelaska na drugi računar ponovo generiši konfiguraciju i
+ažuriraj/restartuj povezani MCP server.
 
 MCP server možeš pokrenuti i preko `ragforge.cmd serve` ili
 `bash ragforge.sh serve`. On čeka MCP klijenta; nije interaktivni terminalski chat.

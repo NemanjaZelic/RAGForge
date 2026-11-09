@@ -52,7 +52,11 @@ def test_generated_files_separate_config_from_untrusted_metadata(tmp_path: Path)
     assert server["args"] == ["-m", "ragforge", "serve", str(bundle.resolve())]
     assert set(p.relative_to(output).as_posix() for p in output.rglob("*") if p.is_file()) == {
         "mcp.json",
+        "codex.toml",
+        "INSTALL.md",
         result["skill"],
+        f"skills/{result['server_name']}/agents/openai.yaml",
+        f"skills/{result['server_name']}/references/tool-usage.md",
         f"skills/{result['server_name']}/references/collection.json",
     }
     before = (output / "mcp.json").read_bytes()
