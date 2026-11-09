@@ -654,6 +654,12 @@ def use(
     top_k: int = typer.Option(5, min=1, max=50),
     max_output_chars: int = typer.Option(16000, min=1, max=100000),
     threads: int = typer.Option(4, min=1, max=32),
+    rerank_workers: int = typer.Option(
+        4,
+        min=1,
+        max=8,
+        help="Parallel unchanged reranker batches, capped by --threads; 1 for serial.",
+    ),
     rerank: Annotated[bool | None, typer.Option("--rerank/--no-rerank")] = None,
     endpoint: Annotated[str | None, typer.Option()] = None,
     connection: Annotated[
@@ -685,6 +691,8 @@ def use(
 
             if source_context is not None:
                 raise ValueError("external source context is only supported in local mode")
+            if rerank_workers != 4:
+                raise ValueError("reranker worker overrides are local runtime settings")
             if artifact is not None or (endpoint is None and connection is None):
                 raise ValueError(
                     "shared mode requires an endpoint/connection and no local artifact argument"
@@ -701,7 +709,10 @@ def use(
             ):
                 raise ValueError("local mode requires a bundle and no shared endpoint/CA options")
             result = BundleEngine(
-                artifact, threads=threads, source_context=source_context
+                artifact,
+                threads=threads,
+                source_context=source_context,
+                rerank_workers=rerank_workers,
             ).retrieve(request)
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
@@ -740,6 +751,12 @@ def serve(
         Path | None, typer.Option(help="Prepared shared deployment directory.")
     ] = None,
     threads: int = typer.Option(4, min=1, max=32),
+    rerank_workers: int = typer.Option(
+        4,
+        min=1,
+        max=8,
+        help="Parallel unchanged reranker batches, capped by --threads; 1 for serial.",
+    ),
     transport: str = typer.Option("stdio", help="stdio or authenticated shared http."),
     auth_file: Annotated[
         Path | None, typer.Option(help="Explicit shared JWT/access policy.")
@@ -779,6 +796,7 @@ def serve(
                 host=host,
                 port=port,
                 threads=threads,
+                rerank_workers=rerank_workers,
                 tls_cert=tls_cert,
                 tls_key=tls_key,
                 expected_build_id=expected_build_id,
@@ -807,9 +825,9 @@ def serve(
         typer.echo(json.dumps({"error": "MCP support requires the ragforge[mcp] extra."}), err=True)
         raise typer.Exit(code=2) from error
     try:
-        create_server(artifact, threads=threads, source_context=source_context).run(
-            transport="stdio"
-        )
+        create_server(
+            artifact, threads=threads, source_context=source_context, rerank_workers=rerank_workers
+        ).run(transport="stdio")
     except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error

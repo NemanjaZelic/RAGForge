@@ -80,6 +80,8 @@ uv run python scripts/export_schemas.py --check
 - Local ONNX CPU embeddings, exact cosine or explicit optional sharded ANN, and RRF
   over the same SQLite sources; resumable vector/shard construction for large corpora.
 - Balanced defaults to hybrid; raw BM25 never imports/loads embedding libraries.
+- Bounded parallel reranker execution with unchanged model batches and an explicit serial
+  reference mode. See [query latency measurements and target](docs/QUERY-LATENCY.md).
 - Optional verified local cross-encoder reranking, section-aware chunks, and answer-fact
   evaluation with accepted alternative citations. See [quality work and limits](docs/QUALITY.md).
 - Optional bounded question planning and short-section context completion in the same engine,
@@ -103,7 +105,7 @@ and cited local query results. Text-bearing PDF and hybrid are release requireme
 OCR is deferred. Balanced/hybrid is the planned default; BM25 is an explicit
 lightweight query option on the same bundle and the benchmark baseline.
 
-`mixed documents Ã¢â€ â€™ parse/chunk Ã¢â€ â€™ BM25 + dense Ã¢â€ â€™ bundle Ã¢â€ â€™ hybrid query Ã¢â€ â€™ cited source`
+`mixed documents ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ parse/chunk ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ BM25 + dense ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ bundle ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ hybrid query ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ cited source`
 
 The local `build`, `use`, `verify` and `context` commands work on the same engine.
 Model preparation is explicit and separate; build/query never download anything.

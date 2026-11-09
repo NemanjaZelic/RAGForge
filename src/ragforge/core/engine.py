@@ -25,7 +25,14 @@ if TYPE_CHECKING:
 
 
 class BundleEngine:
-    def __init__(self, root: Path, *, threads: int = 4, source_context: Path | None = None) -> None:
+    def __init__(
+        self,
+        root: Path,
+        *,
+        threads: int = 4,
+        source_context: Path | None = None,
+        rerank_workers: int = 4,
+    ) -> None:
         self.root = root
         self.manifest = verify_bundle(root)
         self.collection = self.manifest.collections[0]
@@ -33,7 +40,10 @@ class BundleEngine:
         self._document_titles = {
             d.document_id: d.title for d in self.collection.documents if d.title
         }
+        if type(rerank_workers) is not int or not 1 <= rerank_workers <= 8:
+            raise ValueError("reranker workers must be between 1 and 8")
         self.threads = threads
+        self.rerank_workers = rerank_workers
         self._source_context: SourceContext | None = None
         declared_context = self.manifest.source_context
         if declared_context is not None and source_context is not None:
@@ -203,7 +213,9 @@ class BundleEngine:
         if expanded == query:
             return query
         if self._reranker is None:
-            self._reranker = ONNXReranker(self.root / "models/reranker", threads=self.threads)
+            self._reranker = ONNXReranker(
+                self.root / "models/reranker", threads=self.threads, workers=self.rerank_workers
+            )
         if len(self._reranker.tokenizer.encode(expanded).ids) > self._reranker.spec.max_tokens - 16:
             return query
         return expanded
@@ -221,7 +233,9 @@ class BundleEngine:
         if not ranks:
             return [], {}
         if self._reranker is None:
-            self._reranker = ONNXReranker(self.root / "models/reranker", threads=self.threads)
+            self._reranker = ONNXReranker(
+                self.root / "models/reranker", threads=self.threads, workers=self.rerank_workers
+            )
         passages = []
         documents = {}
         with self.sqlite._connect() as connection:

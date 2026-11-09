@@ -1,0 +1,208 @@
+{
+  "date": "2026-11-09",
+  "hardware": {
+    "cpu": "Intel Core i7-1195G7",
+    "gpu": "Intel Iris Xe",
+    "logical_processors": 8,
+    "physical_cores": 4,
+    "ram_bytes": 12510113792
+  },
+  "kernel_rfc_same_thread_budget_paired_sample": [
+    {
+      "baseline_seconds": 14.175654700025916,
+      "below_10_seconds": false,
+      "bundle_constructor_seconds": 4.283805300015956,
+      "corpus": "kernel",
+      "exact_serial_parallel_response": true,
+      "first_query_in_process": true,
+      "frozen_selected_payload_order_source_parity": true,
+      "parallel_seconds": 10.310771799879149,
+      "rerank_workers": 4,
+      "returned_chunks": 50,
+      "sample": 0,
+      "threads": 4
+    },
+    {
+      "baseline_seconds": 8.74770320020616,
+      "below_10_seconds": true,
+      "bundle_constructor_seconds": 4.283805300015956,
+      "corpus": "kernel",
+      "exact_serial_parallel_response": true,
+      "first_query_in_process": false,
+      "frozen_selected_payload_order_source_parity": true,
+      "parallel_seconds": 6.954206099966541,
+      "rerank_workers": 4,
+      "returned_chunks": 50,
+      "sample": 1,
+      "threads": 4
+    },
+    {
+      "baseline_seconds": 25.110908299917355,
+      "below_10_seconds": false,
+      "bundle_constructor_seconds": 41.770204700063914,
+      "corpus": "rfc",
+      "exact_serial_parallel_response": true,
+      "first_query_in_process": true,
+      "frozen_selected_payload_order_source_parity": true,
+      "parallel_seconds": 12.073198599973693,
+      "rerank_workers": 4,
+      "returned_chunks": 49,
+      "sample": 0,
+      "threads": 4
+    },
+    {
+      "baseline_seconds": 18.796877600019798,
+      "below_10_seconds": false,
+      "bundle_constructor_seconds": 41.770204700063914,
+      "corpus": "rfc",
+      "exact_serial_parallel_response": true,
+      "first_query_in_process": false,
+      "frozen_selected_payload_order_source_parity": true,
+      "parallel_seconds": 14.272045300109312,
+      "rerank_workers": 4,
+      "returned_chunks": 49,
+      "sample": 1,
+      "threads": 4
+    }
+  ],
+  "policy": {
+    "default_requested_workers": 4,
+    "max_workers": 8,
+    "provider": "CPUExecutionProvider",
+    "result_cache_used": false,
+    "same_candidate_counts": true,
+    "same_model_batch_size_and_padding": true,
+    "same_model_weights": true,
+    "same_quantization": true,
+    "same_source_text_and_output_limits": true,
+    "same_tokenizer": true,
+    "worker_count_capped_by_requested_threads": true
+  },
+  "rejected_probes": {
+    "additional_attention_fusion": {
+      "changed_in_product": false,
+      "reason": "Existing model quantizes QK and attention-value intermediates; replacing these with ordinary fused attention removes quantization boundaries and does not preserve the current arithmetic."
+    },
+    "larger_batch_size": [
+      {
+        "batch_size": 8,
+        "exact_scores": false,
+        "max_absolute_logit_difference": 1.684830129146576,
+        "pairs": 58,
+        "same_full_ranking": false,
+        "scope": "Real unchanged captured T7 candidate inputs; no candidate cutoff or text shortening; standalone scorer timing.",
+        "seconds": 4.47821670002304,
+        "threads": 4
+      },
+      {
+        "batch_size": 8,
+        "exact_scores": false,
+        "max_absolute_logit_difference": 1.684830129146576,
+        "pairs": 58,
+        "same_full_ranking": false,
+        "scope": "Real unchanged captured T7 candidate inputs; no candidate cutoff or text shortening; standalone scorer timing.",
+        "seconds": 5.830837800167501,
+        "threads": 2
+      }
+    ],
+    "memory_scheduling": {
+      "changed_in_product": false,
+      "scope": "Arena-off was slower; pattern-off difference too small to select from one sample."
+    },
+    "openvino_cpu": {
+      "compile_seconds": 3.44588220003061,
+      "device": "CPU",
+      "exact_scores": false,
+      "max_absolute_logit_difference": 1.0602091550827026,
+      "pairs": 58,
+      "precision_hint": "f32",
+      "same_full_ranking": false,
+      "seconds": 8.487330399919301
+    },
+    "openvino_gpu": {
+      "compile_seconds": 15.442445799941197,
+      "device": "GPU",
+      "exact_scores": false,
+      "max_absolute_logit_difference": 0.9725823402404785,
+      "pairs": 58,
+      "precision_hint": "f32",
+      "same_full_ranking": false,
+      "seconds": 4.627485899953172
+    }
+  },
+  "reranker_score_parity": {
+    "all_exact": true,
+    "groups": 12,
+    "maximum_absolute_difference": 0,
+    "original_batches_preserved": true,
+    "pairs": 1009
+  },
+  "scope": "Small engineering regression on consumed T7/Kernel/RFC questions; model inputs, logits and complete evidence outputs verified. No new quality percentage or representative latency guarantee.",
+  "selection_checks": {
+    "all_payloads_order_sources_and_scores_unchanged": true,
+    "complete_responses_compared": 7,
+    "kernel_rfc_samples_match_original_frozen_selected_payloads": 4,
+    "t7_samples_match_fresh_original_serial_complete_responses": 3
+  },
+  "software_checks": {
+    "focused_initial_checks_passed": 28,
+    "full_pytest_passed": 388,
+    "full_pytest_skipped": 17,
+    "mypy_source_files": 59,
+    "ruff_check": true,
+    "ruff_format_check": true,
+    "schema_drift_check": true
+  },
+  "state": "safe_parallel_reranking_validated_under_10_second_target_open",
+  "t7_three_language_sample": [
+    {
+      "baseline_seconds": 26.882994799874723,
+      "baseline_threads": 2,
+      "complete_response_exact": true,
+      "first_request_in_process": true,
+      "parallel_seconds": 15.72088409983553,
+      "parallel_threads": 8,
+      "parallel_workers": 8,
+      "sample": 0,
+      "speedup": 1.7100180008423298
+    },
+    {
+      "baseline_seconds": 34.85406300006434,
+      "baseline_threads": 2,
+      "complete_response_exact": true,
+      "first_request_in_process": false,
+      "parallel_seconds": 20.436593299964443,
+      "parallel_threads": 8,
+      "parallel_workers": 8,
+      "sample": 1,
+      "speedup": 1.7054732404996769
+    },
+    {
+      "baseline_seconds": 41.74939540005289,
+      "baseline_threads": 2,
+      "complete_response_exact": true,
+      "first_request_in_process": false,
+      "parallel_seconds": 23.64818730019033,
+      "parallel_threads": 8,
+      "parallel_workers": 8,
+      "sample": 2,
+      "speedup": 1.7654374464345044
+    }
+  ],
+  "target_met_for_every_measured_question": false,
+  "target_seconds": 10,
+  "timing_limits": [
+    "Kernel/RFC compare four requested model threads in both serial and parallel scheduling. T7 compares previous two-thread serial with explicit eight-thread/eight-worker scheduling; do not attribute its full gain to scheduling alone.",
+    "Bundle constructor timings are verification/metadata only, not complete startup. Rerankers were explicitly loaded outside query timers. First requests retain lazy embedding/ANN initialization; subsequent requests reuse their process.",
+    "Only seven questions; not a population p95 or maximum-latency certification.",
+    "Baseline and candidate tests were serially scheduled without other local inference jobs; OS caches were not cleared.",
+    "No new 3GPP benchmark was executed. Old frozen quality and first-unseen results were not rewritten."
+  ],
+  "user_constraints": {
+    "existing_laptop_only": true,
+    "new_spend": 0,
+    "no_new_3gpp_query_executed": true,
+    "startup_separate": true,
+    "target_includes_llm_generation": false
+  }
+}

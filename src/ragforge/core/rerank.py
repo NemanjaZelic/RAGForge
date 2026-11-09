@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
 
@@ -12,6 +14,10 @@ from ragforge.artifacts.manifest import FileRecord
 from ragforge.core.embedding import file_hash
 from ragforge.core.source import is_link
 from ragforge.types import ContractModel
+
+if TYPE_CHECKING:
+    import numpy as np
+    from numpy.typing import NDArray
 
 
 class RerankerSpec(ContractModel):
@@ -65,10 +71,14 @@ def reranker_spec(directory: Path) -> RerankerSpec:
 
 
 class ONNXReranker:
-    def __init__(self, directory: Path, *, threads: int = 4) -> None:
+    def __init__(self, directory: Path, *, threads: int = 4, workers: int = 4) -> None:
         self.spec = reranker_spec(directory)
         if type(threads) is not int or not 1 <= threads <= 32:
             raise ValueError("CPU threads must be between 1 and 32")
+        if type(workers) is not int or not 1 <= workers <= 8:
+            raise ValueError("reranker workers must be between 1 and 8")
+        # One shared session, a bounded total CPU budget, identical model batches.
+        self.workers = min(workers, threads)
         import onnxruntime as ort  # type: ignore[import-untyped]
         from tokenizers import Tokenizer
 
@@ -81,7 +91,7 @@ class ONNXReranker:
             raise ValueError("reranker pad token missing")
         self.tokenizer.enable_padding(pad_id=pad_id, pad_token=self.spec.pad_token)
         options = ort.SessionOptions()
-        options.intra_op_num_threads = threads
+        options.intra_op_num_threads = max(1, threads // self.workers)
         options.inter_op_num_threads = 1
         options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
         options.use_deterministic_compute = True
@@ -120,21 +130,43 @@ class ONNXReranker:
         try:
             result: list[float] = []
             batch_size = self.spec.batch_size
-            for start in range(0, len(passages), batch_size):
-                encodings = self.tokenizer.encode_batch(
-                    [(query, passage) for passage in passages[start : start + batch_size]]
-                )
-                values = {
-                    "input_ids": np.asarray([e.ids for e in encodings], dtype=np.int64),
-                    "attention_mask": np.asarray(
-                        [e.attention_mask for e in encodings], dtype=np.int64
-                    ),
-                    "token_type_ids": np.asarray([e.type_ids for e in encodings], dtype=np.int64),
-                }
-                logits = np.asarray(self.session.run(None, {k: values[k] for k in self.inputs})[0])
-                if logits.shape != (len(encodings), 1) or not np.isfinite(logits).all():
+
+            def inputs() -> Iterator[dict[str, NDArray[np.int64]]]:
+                # Tokenization stays on the caller thread. Inference workers see only
+                # immutable arrays, with the exact original batch membership/padding.
+                for start in range(0, len(passages), batch_size):
+                    encodings = self.tokenizer.encode_batch(
+                        [(query, passage) for passage in passages[start : start + batch_size]]
+                    )
+                    values = {
+                        "input_ids": np.asarray([e.ids for e in encodings], dtype=np.int64),
+                        "attention_mask": np.asarray(
+                            [e.attention_mask for e in encodings], dtype=np.int64
+                        ),
+                        "token_type_ids": np.asarray(
+                            [e.type_ids for e in encodings], dtype=np.int64
+                        ),
+                    }
+                    yield {key: values[key] for key in self.inputs}
+
+            def infer(values: dict[str, NDArray[np.int64]]) -> list[float]:
+                size = len(values["input_ids"])
+                logits = np.asarray(self.session.run(None, values)[0])
+                if logits.shape != (size, 1) or not np.isfinite(logits).all():
                     raise ValueError("invalid reranker logits")
-                result.extend(float(v) for v in logits[:, 0])
+                return [float(v) for v in logits[:, 0]]
+
+            if self.workers == 1 or len(passages) <= batch_size:
+                for values in inputs():
+                    result.extend(infer(values))
+            else:
+                pool = ThreadPoolExecutor(max_workers=self.workers)
+                try:
+                    # map restores input order even when later batches finish first.
+                    for scores in pool.map(infer, inputs()):
+                        result.extend(scores)
+                finally:
+                    pool.shutdown(wait=True, cancel_futures=True)
             return result
         finally:
             self.tokenizer.no_truncation()
