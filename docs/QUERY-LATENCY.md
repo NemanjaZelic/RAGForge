@@ -1,5 +1,8 @@
 # Query latency
 
+Latest: [large-corpus exact retrieval and cache optimization (v2)](QUERY-LATENCY-V2.md).
+The v1 measurements below remain historical; v2 permits one individual 3GPP probe.
+
 The current target is **under 10 seconds from a RAG request to returned sources**
 in an already started process. Bundle verification, loading and warm-up are
 reported separately. Text generation by the calling agent is outside this target.
@@ -62,7 +65,7 @@ The larger-batch alternative changed ranking and was slower, so it was rejected.
 Existing isolated OpenVINO CPU/GPU probes also changed ranking; neither was
 adopted. No models or dependencies were downloaded for these probes. The user
 requested Kernel/RFC/T7 validation instead of another 3GPP run; no new 3GPP query
-was executed after that instruction.
+was executed during the v1 measurements. The subsequent v2 scope explicitly permits individual 3GPP probes.
 
 **The under-10-second target is not achieved for every question.** Retain the
 quality result and continue profiling the remaining neural cost. Broader latency
@@ -84,6 +87,6 @@ these comparisons hold the requested CPU thread budget fixed.
 The complete local software suite passes (388 tests; 17 explicitly skipped
 platform/external-data/model cases), as do lint, format, types and schema checks.
 The optimized runtime still exceeds 10 seconds on six of the seven measured
-queries. Further work stays on this laptop, without new costs or 3GPP reruns.
+queries. Further work stays on this laptop without new costs. The later v2 scope permits individual 3GPP probes while excluding a full 3GPP benchmark.
 
 Reference: [ONNX Runtime threading](https://onnxruntime.ai/docs/performance/tune-performance/threading.html).

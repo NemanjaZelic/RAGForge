@@ -167,3 +167,49 @@ def test_large_paginated_document_maps_each_page_without_loading_other_pages(tmp
     with pytest.raises(ValueError, match="parent document context budget exceeded"):
         mapper.map_ranks(ranks[:1], 10, [doc])
     assert mapper.map_ranks(ranks[1:], 10, [doc])
+
+
+def test_noncontiguous_page_ordinals_and_range_budget_fallback(tmp_path, monkeypatch):
+    from ragforge.core import parents as module
+
+    child, parent = indexes(tmp_path)
+    with child._connect() as db:
+        rank = db.execute(
+            "SELECT chunk_id,text,document_id FROM chunks ORDER BY rowid LIMIT 1"
+        ).fetchone()
+    with sqlite3.connect(child.database) as db:
+        raw = db.execute(
+            "SELECT source_json FROM chunks WHERE chunk_id=?", (rank["chunk_id"],)
+        ).fetchone()[0]
+        source = json.loads(raw)
+        source["page"] = 1
+        db.execute(
+            "UPDATE chunks SET source_json=? WHERE chunk_id=?",
+            (json.dumps(source), rank["chunk_id"]),
+        )
+    with sqlite3.connect(parent.database) as db:
+        db.row_factory = sqlite3.Row
+        rows = db.execute(
+            "SELECT chunk_id,source_json FROM chunks WHERE document_id=? ORDER BY ordinal",
+            (rank["document_id"],),
+        ).fetchall()
+        page_one_ids = set()
+        for i, row in enumerate(rows):
+            source = json.loads(row["source_json"])
+            source["page"] = 1 if i % 2 == 0 else 2
+            if source["page"] == 1:
+                page_one_ids.add(row["chunk_id"])
+            # Every page contains matching text, so dropping the residual page
+            # predicate would incorrectly accept page two inside page one's span.
+            db.execute(
+                "UPDATE chunks SET source_json=?,text=? WHERE chunk_id=?",
+                (json.dumps(source), rank["text"], row["chunk_id"]),
+            )
+    ranks = [(rank["chunk_id"], 1.0)]
+    mapped = ParentMapper(child, parent).map_ranks(ranks)
+    assert mapped and {key for key, _ in mapped} <= page_one_ids
+    monkeypatch.setattr(module, "MAX_PAGE_RANGES", 1)
+    fallback = ParentMapper(child, parent)
+    assert fallback.map_ranks(ranks) == mapped
+    assert fallback._bounds[rank["document_id"]] is None
+    assert fallback._bounds_entries == 0

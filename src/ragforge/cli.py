@@ -660,6 +660,9 @@ def use(
         max=8,
         help="Parallel unchanged reranker batches, capped by --threads; 1 for serial.",
     ),
+    rerank_cache_batches: int = typer.Option(
+        512, min=0, max=4096, help="Bounded exact-batch memory cache; 0 disables it."
+    ),
     rerank: Annotated[bool | None, typer.Option("--rerank/--no-rerank")] = None,
     endpoint: Annotated[str | None, typer.Option()] = None,
     connection: Annotated[
@@ -691,8 +694,8 @@ def use(
 
             if source_context is not None:
                 raise ValueError("external source context is only supported in local mode")
-            if rerank_workers != 4:
-                raise ValueError("reranker worker overrides are local runtime settings")
+            if rerank_workers != 4 or rerank_cache_batches != 512:
+                raise ValueError("reranker resource overrides are local runtime settings")
             if artifact is not None or (endpoint is None and connection is None):
                 raise ValueError(
                     "shared mode requires an endpoint/connection and no local artifact argument"
@@ -713,6 +716,7 @@ def use(
                 threads=threads,
                 source_context=source_context,
                 rerank_workers=rerank_workers,
+                rerank_cache_batches=rerank_cache_batches,
             ).retrieve(request)
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
@@ -757,6 +761,12 @@ def serve(
         max=8,
         help="Parallel unchanged reranker batches, capped by --threads; 1 for serial.",
     ),
+    rerank_cache_batches: int = typer.Option(
+        512, min=0, max=4096, help="Bounded exact-batch memory cache; 0 disables it."
+    ),
+    warm_up: bool = typer.Option(
+        False, "--warm-up", help="Load and warm default models/index before accepting requests."
+    ),
     transport: str = typer.Option("stdio", help="stdio or authenticated shared http."),
     auth_file: Annotated[
         Path | None, typer.Option(help="Explicit shared JWT/access policy.")
@@ -797,6 +807,8 @@ def serve(
                 port=port,
                 threads=threads,
                 rerank_workers=rerank_workers,
+                rerank_cache_batches=rerank_cache_batches,
+                warm_up=warm_up,
                 tls_cert=tls_cert,
                 tls_key=tls_key,
                 expected_build_id=expected_build_id,
@@ -826,7 +838,12 @@ def serve(
         raise typer.Exit(code=2) from error
     try:
         create_server(
-            artifact, threads=threads, source_context=source_context, rerank_workers=rerank_workers
+            artifact,
+            threads=threads,
+            source_context=source_context,
+            rerank_workers=rerank_workers,
+            rerank_cache_batches=rerank_cache_batches,
+            warm_up=warm_up,
         ).run(transport="stdio")
     except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)

@@ -32,6 +32,7 @@ class BundleEngine:
         threads: int = 4,
         source_context: Path | None = None,
         rerank_workers: int = 4,
+        rerank_cache_batches: int = 512,
     ) -> None:
         self.root = root
         self.manifest = verify_bundle(root)
@@ -43,7 +44,10 @@ class BundleEngine:
         if type(rerank_workers) is not int or not 1 <= rerank_workers <= 8:
             raise ValueError("reranker workers must be between 1 and 8")
         self.threads = threads
+        if type(rerank_cache_batches) is not int or not 0 <= rerank_cache_batches <= 4096:
+            raise ValueError("reranker cache batches must be between 0 and 4096")
         self.rerank_workers = rerank_workers
+        self.rerank_cache_batches = rerank_cache_batches
         self._source_context: SourceContext | None = None
         declared_context = self.manifest.source_context
         if declared_context is not None and source_context is not None:
@@ -159,7 +163,7 @@ class BundleEngine:
             return self._rerank_response(ranks, request, method, ranking_query)
         return self.sqlite.ranked_response(ranks, request, method)
 
-    def _rank_dense(self, request: RetrieveRequest, limit: int) -> list[tuple[str, float]]:
+    def _prepare_dense(self) -> None:
         from ragforge.core.dense import BACKEND, BACKEND_VERSION, DenseStore
 
         dense = self.collection.dense_index
@@ -189,9 +193,15 @@ class BundleEngine:
             if backend == (ANN_BACKEND, ANN_VERSION):
                 from ragforge.core.ann import AnnStore
 
-                self._dense = AnnStore(self.root / dense.path, dense_sqlite, model.dimensions)
+                self._dense = AnnStore(
+                    self.root / dense.path, dense_sqlite, model.dimensions, workers=self.threads
+                )
             else:
                 self._dense = DenseStore(self.root / dense.path, dense_sqlite, model.dimensions)
+
+    def _rank_dense(self, request: RetrieveRequest, limit: int) -> list[tuple[str, float]]:
+        self._prepare_dense()
+        assert self._embedder is not None and self._dense is not None
         vector = self._embedder.encode([request.query], query=True)[0]
         filters = request.filters.document_ids if request.filters is not None else None
         ranks = self._dense.rank(vector, 200 if self._parents is not None else limit, filters)
@@ -199,9 +209,38 @@ class BundleEngine:
             ranks = self._parents.map_ranks(ranks, limit, filters)
         return ranks
 
+    def _get_reranker(self) -> ONNXReranker:
+        from ragforge.core.rerank import ONNXReranker
+
+        if self._reranker is None:
+            self._reranker = ONNXReranker(
+                self.root / "models/reranker",
+                threads=self.threads,
+                workers=self.rerank_workers,
+                cache_batches=self.rerank_cache_batches,
+            )
+        return self._reranker
+
+    def warm_up(self) -> dict[str, bool]:
+        """Explicit startup work; no document query or external model service."""
+        method = self.manifest.default_search_method
+        dense = method in {"dense", "hybrid"}
+        rerank = self.manifest.retrieval_configuration is not None and method != "bm25"
+        if dense:
+            self._prepare_dense()
+            assert self._embedder is not None
+            self._embedder.encode(["warmup"], query=True)
+        if rerank:
+            model = self._get_reranker()
+            # Distinct neutral inputs prepare worker buffers, not a user-query cache.
+            count = model.spec.batch_size * model.workers
+            model.score(
+                "warmup", [("warmup " + str(i) + " ") * model.spec.max_tokens for i in range(count)]
+            )
+        return {"query_model": dense, "dense_index": dense, "reranker": rerank}
+
     def _ranking_query(self, query: str, allowed_documents: list[str] | None = None) -> str:
         from ragforge.core.aliases import expand_query
-        from ragforge.core.rerank import ONNXReranker
 
         aliases = self._aliases
         if allowed_documents is not None:
@@ -212,11 +251,8 @@ class BundleEngine:
         expanded = expand_query(query, aliases)
         if expanded == query:
             return query
-        if self._reranker is None:
-            self._reranker = ONNXReranker(
-                self.root / "models/reranker", threads=self.threads, workers=self.rerank_workers
-            )
-        if len(self._reranker.tokenizer.encode(expanded).ids) > self._reranker.spec.max_tokens - 16:
+        reranker = self._get_reranker()
+        if len(reranker.tokenizer.encode(expanded).ids) > reranker.spec.max_tokens - 16:
             return query
         return expanded
 
@@ -228,14 +264,9 @@ class BundleEngine:
     ) -> tuple[list[tuple[str, float]], dict[str, str]]:
         import json
 
-        from ragforge.core.rerank import ONNXReranker
-
         if not ranks:
             return [], {}
-        if self._reranker is None:
-            self._reranker = ONNXReranker(
-                self.root / "models/reranker", threads=self.threads, workers=self.rerank_workers
-            )
+        reranker = self._get_reranker()
         passages = []
         documents = {}
         with self.sqlite._connect() as connection:
@@ -252,7 +283,7 @@ class BundleEngine:
                     prefix += title + "\n"
                 passages.append(prefix + (source.get("section") or "") + "\n" + row["text"])
                 documents[key] = row["document_id"]
-        scores = self._reranker.score(ranking_query or request.query, passages)
+        scores = reranker.score(ranking_query or request.query, passages)
         ordered = sorted(
             zip((key for key, _ in ranks), scores, strict=True),
             key=lambda pair: (-pair[1], pair[0]),

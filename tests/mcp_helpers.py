@@ -57,7 +57,12 @@ socket.gethostbyname_ex = blocked
 
 
 def offline_client(
-    artifact: Path, directory: Path, *, forbid_ml: bool = False, mode: str = "auto"
+    artifact: Path,
+    directory: Path,
+    *,
+    forbid_ml: bool = False,
+    mode: str = "auto",
+    warm_up: bool = False,
 ) -> Client:
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "sitecustomize.py").write_text(GUARD, encoding="utf-8")
@@ -71,6 +76,7 @@ def offline_client(
             "from ragforge.cli import app; app()",
             "serve",
             str(artifact),
+            *(["--warm-up"] if warm_up else []),
         ],
         env={
             "PYTHONPATH": str(directory),

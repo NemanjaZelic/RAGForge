@@ -94,11 +94,20 @@ def create_shared_app(
     *,
     threads: int = 4,
     rerank_workers: int = 4,
+    rerank_cache_batches: int = 512,
+    warm_up: bool = False,
     expected_build_id: str | None = None,
 ) -> ASGIApp:
-    engine = BundleEngine(artifact, threads=threads, rerank_workers=rerank_workers)
+    engine = BundleEngine(
+        artifact,
+        threads=threads,
+        rerank_workers=rerank_workers,
+        rerank_cache_batches=rerank_cache_batches,
+    )
     if expected_build_id is not None and engine.manifest.build_id != expected_build_id:
         raise ValueError("active deployment build ID does not match verified bundle")
+    if warm_up:
+        engine.warm_up()
     scoped = ScopedEngine(engine, policy)
     verifier = JWTVerifier(policy)
     server = create_server(
@@ -213,6 +222,8 @@ def run_shared(
     port: int = 8765,
     threads: int = 4,
     rerank_workers: int = 4,
+    rerank_cache_batches: int = 512,
+    warm_up: bool = False,
     tls_cert: Path | None = None,
     tls_key: Path | None = None,
     expected_build_id: str | None = None,
@@ -235,6 +246,8 @@ def run_shared(
         policy,
         threads=threads,
         rerank_workers=rerank_workers,
+        rerank_cache_batches=rerank_cache_batches,
+        warm_up=warm_up,
         expected_build_id=expected_build_id,
     )
     uvicorn.run(

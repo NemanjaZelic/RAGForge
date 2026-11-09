@@ -255,7 +255,8 @@ def test_reranker_spec_controls_bounded_memory_batching(tiny_reranker):
     data = json.loads(path.read_text())
     data["batch_size"] = 1
     path.write_text(json.dumps(data))
-    scorer = ONNXReranker(tiny_reranker, threads=1)
+    # Disable exact reuse so every actual inference batch remains observable.
+    scorer = ONNXReranker(tiny_reranker, threads=1, cache_batches=0)
     original = scorer.session.run
     sizes = []
 

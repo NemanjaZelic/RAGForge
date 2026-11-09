@@ -97,7 +97,7 @@ def test_cli_serial_parallel_options_keep_exact_offline_response(
     bundle = tmp_path / "bundle"
     build_bundle(corpus, bundle, profile="minimal", reranker_directory=tiny_reranker)
     base = ["use", str(bundle), "--query", "rollback token", "--rerank", "--threads", "4"]
-    serial = offline_cli([*base, "--rerank-workers", "1"])
+    serial = offline_cli([*base, "--rerank-workers", "1", "--rerank-cache-batches", "0"])
     parallel = offline_cli([*base, "--rerank-workers", "4"])
     assert serial.returncode == parallel.returncode == 0, (serial.stderr, parallel.stderr)
     assert json.loads(serial.stdout) == json.loads(parallel.stdout)

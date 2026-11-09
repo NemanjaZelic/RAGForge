@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
+from collections import OrderedDict
 from collections.abc import Iterator
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
+from threading import Lock, RLock
 from typing import TYPE_CHECKING, Annotated, Literal
 
 from pydantic import Field
@@ -71,12 +74,22 @@ def reranker_spec(directory: Path) -> RerankerSpec:
 
 
 class ONNXReranker:
-    def __init__(self, directory: Path, *, threads: int = 4, workers: int = 4) -> None:
+    def __init__(
+        self, directory: Path, *, threads: int = 4, workers: int = 4, cache_batches: int = 512
+    ) -> None:
         self.spec = reranker_spec(directory)
         if type(threads) is not int or not 1 <= threads <= 32:
             raise ValueError("CPU threads must be between 1 and 32")
         if type(workers) is not int or not 1 <= workers <= 8:
             raise ValueError("reranker workers must be between 1 and 8")
+        if type(cache_batches) is not int or not 0 <= cache_batches <= 4096:
+            raise ValueError("reranker cache batches must be between 0 and 4096")
+        self.cache_batches = cache_batches
+        self._score_lock = RLock()
+        self._cache_lock = Lock()
+        self._batch_cache: OrderedDict[bytes, tuple[float, ...]] = OrderedDict()
+        self._inflight: dict[bytes, Future[tuple[float, ...]]] = {}
+        self._cache_hits = self._cache_misses = 0
         # One shared session, a bounded total CPU budget, identical model batches.
         self.workers = min(workers, threads)
         import onnxruntime as ort  # type: ignore[import-untyped]
@@ -101,6 +114,7 @@ class ONNXReranker:
             sess_options=options,
             providers=["CPUExecutionProvider"],
         )
+        self._cache_session = self.session
         self.inputs = {item.name for item in self.session.get_inputs()}
         if not {"input_ids", "attention_mask"} <= self.inputs or not self.inputs <= {
             "input_ids",
@@ -112,7 +126,79 @@ class ONNXReranker:
         if len(outputs) != 1 or len(outputs[0].shape) != 2 or outputs[0].shape[-1] != 1:
             raise ValueError("reranker must expose one logit per pair")
 
+    def cache_info(self) -> dict[str, int]:
+        with self._cache_lock:
+            return {
+                "capacity": self.cache_batches,
+                "entries": len(self._batch_cache),
+                "hits": self._cache_hits,
+                "misses": self._cache_misses,
+            }
+
+    def _infer_batch(self, values: dict[str, NDArray[np.int64]]) -> list[float]:
+        import numpy as np
+
+        def compute() -> tuple[float, ...]:
+            logits = np.asarray(self._cache_session.run(None, values)[0])
+            if logits.shape != (len(values["input_ids"]), 1) or not np.isfinite(logits).all():
+                raise ValueError("invalid reranker logits")
+            return tuple(float(v) for v in logits[:, 0])
+
+        if self.cache_batches == 0:
+            with self._cache_lock:
+                self._cache_misses += 1
+            return list(compute())
+        digest = hashlib.sha256()
+        for name, value in sorted(values.items()):
+            digest.update(
+                (name + "\0" + value.dtype.str + "\0" + repr(value.shape) + "\0").encode()
+            )
+            digest.update(value.tobytes(order="C"))
+        key = digest.digest()
+        with self._cache_lock:
+            cached = self._batch_cache.get(key)
+            if cached is not None:
+                self._batch_cache.move_to_end(key)
+                self._cache_hits += 1
+                return list(cached)
+            future = self._inflight.get(key)
+            owner = future is None
+            if owner:
+                future = Future()
+                self._inflight[key] = future
+                self._cache_misses += 1
+            else:
+                self._cache_hits += 1
+        assert future is not None
+        if not owner:
+            return list(future.result())
+        try:
+            scores = compute()
+        except BaseException as error:
+            with self._cache_lock:
+                self._inflight.pop(key)
+                future.set_exception(error)
+            raise
+        with self._cache_lock:
+            self._batch_cache[key] = scores
+            self._batch_cache.move_to_end(key)
+            while len(self._batch_cache) > self.cache_batches:
+                self._batch_cache.popitem(last=False)
+            self._inflight.pop(key)
+            future.set_result(scores)
+        return list(scores)
+
     def score(self, query: str, passages: list[str]) -> list[float]:
+        # The tokenizer is mutable. Serialize separate public calls while keeping
+        # independent, already-tokenized batches parallel inside each call.
+        with self._score_lock:
+            with self._cache_lock:
+                if self._cache_session is not self.session:
+                    self._batch_cache.clear()
+                    self._cache_session = self.session
+            return self._score(query, passages)
+
+    def _score(self, query: str, passages: list[str]) -> list[float]:
         import numpy as np
 
         if (
@@ -149,21 +235,14 @@ class ONNXReranker:
                     }
                     yield {key: values[key] for key in self.inputs}
 
-            def infer(values: dict[str, NDArray[np.int64]]) -> list[float]:
-                size = len(values["input_ids"])
-                logits = np.asarray(self.session.run(None, values)[0])
-                if logits.shape != (size, 1) or not np.isfinite(logits).all():
-                    raise ValueError("invalid reranker logits")
-                return [float(v) for v in logits[:, 0]]
-
             if self.workers == 1 or len(passages) <= batch_size:
                 for values in inputs():
-                    result.extend(infer(values))
+                    result.extend(self._infer_batch(values))
             else:
                 pool = ThreadPoolExecutor(max_workers=self.workers)
                 try:
                     # map restores input order even when later batches finish first.
-                    for scores in pool.map(infer, inputs()):
+                    for scores in pool.map(self._infer_batch, inputs()):
                         result.extend(scores)
                 finally:
                     pool.shutdown(wait=True, cancel_futures=True)

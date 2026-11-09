@@ -1,0 +1,495 @@
+{
+  "report_version": "2",
+  "date": "2026-11-09",
+  "scope": "Exact runtime optimizations on existing laptop; one original GPP question with three requests only, plus five existing non-GPP regression questions; no full GPP benchmark; startup excluded from request latency",
+  "target_seconds": 10,
+  "under_10_for_all_new_queries": false,
+  "new_spend": 0,
+  "models_corpora_candidate_counts_unchanged": true,
+  "original_plan_sha256": "1023b17b63b39957b71dfbf490099c89537f34434bdb16fbb907cc478dde6524",
+  "ann_controlled_single_vector_replays": [
+    {
+      "mode": "original",
+      "workers": 1,
+      "seconds": 9.883154100039974,
+      "sql_reads": 188,
+      "sql_rows": 37600,
+      "shards_searched": 188,
+      "same_exact_dense_ranks_and_scores": true,
+      "returned": 200
+    },
+    {
+      "mode": "pruned_parallel8",
+      "workers": 8,
+      "seconds": 0.29854459990747273,
+      "sql_reads": 1,
+      "sql_rows": 200,
+      "shards_searched": 188,
+      "same_exact_dense_ranks_and_scores": true,
+      "returned": 200
+    },
+    {
+      "mode": "original",
+      "workers": 1,
+      "seconds": 3.751714700134471,
+      "sql_reads": 188,
+      "sql_rows": 37600,
+      "shards_searched": 188,
+      "same_exact_dense_ranks_and_scores": true,
+      "returned": 200
+    },
+    {
+      "mode": "pruned_parallel8",
+      "workers": 8,
+      "seconds": 0.2744593000970781,
+      "sql_reads": 1,
+      "sql_rows": 200,
+      "shards_searched": 188,
+      "same_exact_dense_ranks_and_scores": true,
+      "returned": 200
+    },
+    {
+      "mode": "original",
+      "workers": 1,
+      "seconds": 3.277789100073278,
+      "sql_reads": 188,
+      "sql_rows": 37600,
+      "shards_searched": 188,
+      "same_exact_dense_ranks_and_scores": true,
+      "returned": 200
+    }
+  ],
+  "ann_caveat": "Alternating order; initial old/new executions have cache bias. Isolated replay excludes full request memory pressure and neural cost. All188shards and original search parameters retained, cutoff ties preserved.",
+  "parent_single_mapping_replays": [
+    {
+      "mode": "original_first",
+      "seconds": 2.435869899811223,
+      "input_anchors": 200,
+      "mapped": 100,
+      "same_exact_original_mapping": true,
+      "cached_text_chars": 41653,
+      "cached_page_range_entries": 0
+    },
+    {
+      "mode": "grouped_ranges",
+      "seconds": 0.27143450011499226,
+      "input_anchors": 200,
+      "mapped": 100,
+      "same_exact_original_mapping": true,
+      "cached_text_chars": 34476,
+      "cached_page_range_entries": 4809
+    },
+    {
+      "mode": "original_after_warm",
+      "seconds": 0.6744377999566495,
+      "input_anchors": 200,
+      "mapped": 100,
+      "same_exact_original_mapping": true,
+      "cached_text_chars": 41653,
+      "cached_page_range_entries": 4809
+    },
+    {
+      "mode": "grouped_ranges_after_warm",
+      "seconds": 0.2831329999025911,
+      "input_anchors": 200,
+      "mapped": 100,
+      "same_exact_original_mapping": true,
+      "cached_text_chars": 34476,
+      "cached_page_range_entries": 4809
+    }
+  ],
+  "gpp_single_question": {
+    "unique_questions": 1,
+    "maximum_requests": 3,
+    "threads": 8,
+    "workers": 8,
+    "bundle_verify_seconds": 140.29886250011623,
+    "reranker_model_load_seconds": 1.8381268999073654,
+    "warm_up_seconds": 23.776780700078234,
+    "warm_up_flags": {
+      "query_model": true,
+      "dense_index": true,
+      "reranker": true
+    },
+    "scope": "Single fixed real GPP question; warmed startup separate; exact full-response and all pair-score parity required; repeated cache results are NOT novel-question target evidence",
+    "measurements": [
+      {
+        "mode": "optimized_fresh",
+        "seconds": 27.964313899865374,
+        "same_complete_response": true,
+        "same_all_reranker_inputs_and_scores": true,
+        "reranker_pairs": 191,
+        "cache_hits": 0,
+        "cache_misses": 96,
+        "components_seconds": {
+          "ann_seconds": 3.3321426000911742,
+          "parent_seconds": 2.310275499941781,
+          "reranker_seconds": 17.773684700019658
+        },
+        "under_10_seconds": false
+      },
+      {
+        "mode": "optimized_repeated",
+        "seconds": 7.348204999929294,
+        "same_complete_response": true,
+        "same_all_reranker_inputs_and_scores": true,
+        "reranker_pairs": 191,
+        "cache_hits": 96,
+        "cache_misses": 0,
+        "components_seconds": {
+          "ann_seconds": 0.45568379992619157,
+          "parent_seconds": 2.377195999957621,
+          "reranker_seconds": 0.13524660002440214
+        },
+        "under_10_seconds": true
+      },
+      {
+        "mode": "legacy_warm_no_neural_cache",
+        "seconds": 28.926640100078657,
+        "same_complete_response": true,
+        "same_all_reranker_inputs_and_scores": true,
+        "reranker_pairs": 191,
+        "cache_hits": 0,
+        "cache_misses": 96,
+        "components_seconds": {
+          "reranker_seconds": 16.761046999832615
+        },
+        "under_10_seconds": false
+      }
+    ]
+  },
+  "gpp_caveat": "First optimized vs warmed legacy not a controlled steady-state speedup. Repeat 96cachehits is NOT novel question latency. Previous 59.551s included lazy init and is not comparable with explicit warmed startup.",
+  "non_gpp_uncached_regression": [
+    {
+      "corpus": "kernel",
+      "sample": 0,
+      "query_seconds": 11.013498299987987,
+      "verify_and_warm_seconds": 9.60065590008162,
+      "exact_complete_response": true,
+      "neural_cache_enabled": false,
+      "under_10_seconds": false
+    },
+    {
+      "corpus": "rfc",
+      "sample": 0,
+      "query_seconds": 12.012530300067738,
+      "verify_and_warm_seconds": 50.78920490015298,
+      "exact_complete_response": true,
+      "neural_cache_enabled": false,
+      "under_10_seconds": false
+    },
+    {
+      "corpus": "t7",
+      "sample": 0,
+      "language": "en",
+      "query_seconds": 17.52655219985172,
+      "verify_and_warm_seconds": 6.980100399814546,
+      "exact_complete_response": true,
+      "neural_cache_enabled": false,
+      "under_10_seconds": false
+    },
+    {
+      "corpus": "t7",
+      "sample": 1,
+      "language": "sr-Cyrl",
+      "query_seconds": 25.625426100101322,
+      "verify_and_warm_seconds": 6.980100399814546,
+      "exact_complete_response": true,
+      "neural_cache_enabled": false,
+      "under_10_seconds": false
+    },
+    {
+      "corpus": "t7",
+      "sample": 2,
+      "language": "sr-Latn",
+      "query_seconds": 23.079765500035137,
+      "verify_and_warm_seconds": 6.980100399814546,
+      "exact_complete_response": true,
+      "neural_cache_enabled": false,
+      "under_10_seconds": false
+    }
+  ],
+  "software_checks": [
+    {
+      "check": "pytest",
+      "passed": true,
+      "seconds": 130.3091901000589,
+      "tests_passed": 410,
+      "tests_skipped": 17
+    },
+    {
+      "check": "ruff_check",
+      "passed": true,
+      "seconds": 0.19026529998518527
+    },
+    {
+      "check": "ruff_format",
+      "passed": true,
+      "seconds": 0.1789180999621749
+    },
+    {
+      "check": "mypy",
+      "passed": true,
+      "seconds": 1.6137093000579625
+    },
+    {
+      "check": "schema_drift",
+      "passed": true,
+      "seconds": 0.771399199962616
+    }
+  ],
+  "reranker_resource_replays": [
+    {
+      "threads": 8,
+      "workers": 8,
+      "intra_op_threads": 1,
+      "pairs": 64,
+      "seconds": 5.134758200030774,
+      "all_scores_identical_to_full_original_single_query": true
+    },
+    {
+      "threads": 4,
+      "workers": 4,
+      "intra_op_threads": 1,
+      "pairs": 64,
+      "seconds": 5.391926400130615,
+      "all_scores_identical_to_full_original_single_query": true
+    },
+    {
+      "threads": 8,
+      "workers": 4,
+      "intra_op_threads": 2,
+      "pairs": 64,
+      "seconds": 5.637309399899095,
+      "all_scores_identical_to_full_original_single_query": true
+    },
+    {
+      "threads": 4,
+      "workers": 2,
+      "intra_op_threads": 2,
+      "pairs": 64,
+      "seconds": 7.164133399957791,
+      "all_scores_identical_to_full_original_single_query": true
+    },
+    {
+      "threads": 2,
+      "workers": 2,
+      "intra_op_threads": 1,
+      "pairs": 64,
+      "seconds": 8.397096199914813,
+      "all_scores_identical_to_full_original_single_query": true
+    },
+    {
+      "threads": 8,
+      "workers": 8,
+      "intra_op_threads": 1,
+      "pairs": 64,
+      "seconds": 5.330211700173095,
+      "all_scores_identical_to_full_original_single_query": true
+    }
+  ],
+  "batch_execution_order_probe": [
+    {
+      "mode": "original_order",
+      "seconds": 12.455976499943063,
+      "pairs": 191,
+      "batches": 96,
+      "min_sequence_tokens": 211,
+      "max_sequence_tokens": 438,
+      "same_all_original_scores": true
+    },
+    {
+      "mode": "longest_batches_first",
+      "seconds": 13.655772299971431,
+      "pairs": 191,
+      "batches": 96,
+      "min_sequence_tokens": 211,
+      "max_sequence_tokens": 438,
+      "same_all_original_scores": true
+    },
+    {
+      "mode": "original_order",
+      "seconds": 14.949800800066441,
+      "pairs": 191,
+      "batches": 96,
+      "min_sequence_tokens": 211,
+      "max_sequence_tokens": 438,
+      "same_all_original_scores": true
+    }
+  ],
+  "neural_operator_diagnostic": {
+    "scope": "Diagnostic profile of first 16 actual T7 model pairs, one CPU thread, same batches and exact logits; not a RAG latency or quality measurement",
+    "exact_logits": true,
+    "operators": [
+      {
+        "op": "DynamicQuantizeMatMul",
+        "microseconds": 1328084,
+        "calls": 496,
+        "fraction": 0.5517929644199144
+      },
+      {
+        "op": "MatMulIntegerToFloat",
+        "microseconds": 330381,
+        "calls": 288,
+        "fraction": 0.13726685313430156
+      },
+      {
+        "op": "Softmax",
+        "microseconds": 246323,
+        "calls": 96,
+        "fraction": 0.10234239579334334
+      },
+      {
+        "op": "SkipLayerNormalization",
+        "microseconds": 151360,
+        "calls": 96,
+        "fraction": 0.06288712392785265
+      },
+      {
+        "op": "Add",
+        "microseconds": 122756,
+        "calls": 224,
+        "fraction": 0.05100272056611707
+      },
+      {
+        "op": "Gelu",
+        "microseconds": 69488,
+        "calls": 96,
+        "fraction": 0.028870906894150533
+      },
+      {
+        "op": "Transpose",
+        "microseconds": 58656,
+        "calls": 384,
+        "fraction": 0.0243704224439226
+      },
+      {
+        "op": "DynamicQuantizeLinear",
+        "microseconds": 28715,
+        "calls": 288,
+        "fraction": 0.011930521693897257
+      },
+      {
+        "op": "LayerNormalization",
+        "microseconds": 20113,
+        "calls": 104,
+        "fraction": 0.008356558691602142
+      },
+      {
+        "op": "Mul",
+        "microseconds": 15244,
+        "calls": 200,
+        "fraction": 0.006333584283537168
+      },
+      {
+        "op": "Reshape",
+        "microseconds": 5557,
+        "calls": 400,
+        "fraction": 0.0023088249713733955
+      },
+      {
+        "op": "Gather",
+        "microseconds": 4655,
+        "calls": 352,
+        "fraction": 0.0019340615875010178
+      },
+      {
+        "op": "Where",
+        "microseconds": 3932,
+        "calls": 24,
+        "fraction": 0.0016336692077452207
+      },
+      {
+        "op": "Slice",
+        "microseconds": 3204,
+        "calls": 104,
+        "fraction": 0.0013311994256397983
+      },
+      {
+        "op": "Cast",
+        "microseconds": 2931,
+        "calls": 128,
+        "fraction": 0.001217773257350265
+      },
+      {
+        "op": "DequantizeLinear",
+        "microseconds": 2881,
+        "calls": 24,
+        "fraction": 0.0011969992338540134
+      },
+      {
+        "op": "Shape",
+        "microseconds": 2581,
+        "calls": 208,
+        "fraction": 0.0010723550928765043
+      },
+      {
+        "op": "Unsqueeze",
+        "microseconds": 2238,
+        "calls": 240,
+        "fraction": 0.0009298452916922187
+      },
+      {
+        "op": "Concat",
+        "microseconds": 2139,
+        "calls": 112,
+        "fraction": 0.0008887127251696406
+      },
+      {
+        "op": "Sqrt",
+        "microseconds": 1769,
+        "calls": 192,
+        "fraction": 0.0007349849512973794
+      },
+      {
+        "op": "Div",
+        "microseconds": 1163,
+        "calls": 96,
+        "fraction": 0.0004832037865228107
+      },
+      {
+        "op": "Expand",
+        "microseconds": 950,
+        "calls": 16,
+        "fraction": 0.0003947064464287792
+      },
+      {
+        "op": "Not",
+        "microseconds": 451,
+        "calls": 8,
+        "fraction": 0.00018738169193618885
+      },
+      {
+        "op": "Sub",
+        "microseconds": 438,
+        "calls": 8,
+        "fraction": 0.00018198044582716345
+      },
+      {
+        "op": "Equal",
+        "microseconds": 300,
+        "calls": 24,
+        "fraction": 0.00012464414097750922
+      },
+      {
+        "op": "Tanh",
+        "microseconds": 278,
+        "calls": 8,
+        "fraction": 0.00011550357063915853
+      },
+      {
+        "op": "CumSum",
+        "microseconds": 265,
+        "calls": 8,
+        "fraction": 0.00011010232453013314
+      }
+    ]
+  },
+  "rejected_changes": [
+    "Smaller reranker candidate count or changed batching/quantization",
+    "SQLite read tuning: apparent benefit explained by cache order",
+    "Native BM25 LIMIT: no controlled meaningful benefit",
+    "Alternative local GPU path with score drift"
+  ],
+  "privacy": "Aggregate numerical records only; no questions, passages, source quotes, per-case native answers, model assets or captured raw outputs"
+}

@@ -53,6 +53,8 @@ def create_server(
     *,
     threads: int = 4,
     rerank_workers: int = 4,
+    rerank_cache_batches: int = 512,
+    warm_up: bool = False,
     engine: RetrievalEngine | None = None,
     source_context: Path | None = None,
     token_verifier: TokenVerifier | None = None,
@@ -61,9 +63,19 @@ def create_server(
     """Verify and bind one bundle; callers cannot select arbitrary filesystem paths."""
     if engine is not None and source_context is not None:
         raise ValueError("source context must be configured on the supplied engine")
-    engine = engine or BundleEngine(
-        artifact, threads=threads, source_context=source_context, rerank_workers=rerank_workers
-    )
+    if engine is None:
+        local = BundleEngine(
+            artifact,
+            threads=threads,
+            source_context=source_context,
+            rerank_workers=rerank_workers,
+            rerank_cache_batches=rerank_cache_batches,
+        )
+        if warm_up:
+            local.warm_up()
+        engine = local
+    elif warm_up:
+        raise ValueError("warm the supplied engine before creating the MCP server")
     server: MCPServer[None] = MCPServer(
         "RAGForge",
         version=__version__,

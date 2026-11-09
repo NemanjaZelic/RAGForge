@@ -10,6 +10,7 @@ import os
 import struct
 from bisect import bisect_left
 from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, Literal
 
@@ -191,7 +192,12 @@ def write_ann(
 class AnnStore:
     """Approximate global search; exact float16-vector scoring within document filters."""
 
-    def __init__(self, path: Path, database: SQLiteEngine, dimensions: int) -> None:
+    def __init__(
+        self, path: Path, database: SQLiteEngine, dimensions: int, *, workers: int = 1
+    ) -> None:
+        if type(workers) is not int or not 1 <= workers <= 32:
+            raise ValueError("ANN workers must be between 1 and 32")
+        self.workers = min(workers, 8)
         Index = index_type()
 
         self.database = database
@@ -218,6 +224,29 @@ class AnnStore:
             self.indexes.append(index)
             self.ends.append(shard.first_row + shard.rows - 1)
 
+    def _candidate_scores(
+        self, shard_index: int, keys: list[int], vector: NDArray[np.float32]
+    ) -> list[tuple[int, float]]:
+        import numpy as np
+
+        if not keys:
+            return []
+        if len(set(keys)) != len(keys) or any(
+            not self.header.shards[shard_index].first_row <= key <= self.ends[shard_index]
+            for key in keys
+        ):
+            raise ValueError("ANN graph returned duplicate or out-of-shard keys")
+        stored = self.indexes[shard_index].get(np.asarray(keys, dtype=np.uint64), dtype="f32")
+        if stored is None or any(row is None for row in stored):
+            raise ValueError("ANN candidate vector is missing")
+        values = np.asarray(stored, dtype=np.float32)
+        norms = np.linalg.norm(values, axis=1)
+        if not np.isfinite(values).all() or not (norms > 0).all():
+            raise ValueError("invalid ANN candidate vectors")
+        # Preserve each original shard's matrix shape and floating-point operation.
+        scores = (values @ vector) / norms
+        return [(key, float(scores[i])) for i, key in enumerate(keys)]
+
     def rank(
         self,
         vector: NDArray[np.float32],
@@ -226,28 +255,18 @@ class AnnStore:
     ) -> list[tuple[str, float]]:
         import numpy as np
 
+        if type(limit) is not int or not 1 <= limit <= 200:
+            raise ValueError("ANN candidate limit must be between 1 and 200")
+        if vector.shape != (self.header.dimensions,) or not np.isfinite(vector).all():
+            raise ValueError("invalid ANN query vector")
         best: list[tuple[str, float]] = []
         with self.database._connect() as connection:
 
-            def score(shard_index: int, keys: list[int]) -> None:
+            def resolve(candidates: list[tuple[int, float]]) -> None:
                 nonlocal best
-                if not keys:
+                if not candidates:
                     return
-                if any(
-                    not self.header.shards[shard_index].first_row <= key <= self.ends[shard_index]
-                    for key in keys
-                ):
-                    raise ValueError("ANN graph returned an out-of-shard key")
-                stored = self.indexes[shard_index].get(
-                    np.asarray(keys, dtype=np.uint64), dtype="f32"
-                )
-                if stored is None or any(row is None for row in stored):
-                    raise ValueError("ANN candidate vector is missing")
-                values = np.asarray(stored, dtype=np.float32)
-                norms = np.linalg.norm(values, axis=1)
-                if not np.isfinite(values).all() or not (norms > 0).all():
-                    raise ValueError("invalid ANN candidate vectors")
-                scores = (values @ vector) / norms
+                keys = [key for key, _ in candidates]
                 rows = connection.execute(
                     "SELECT rowid,chunk_id FROM chunks WHERE rowid IN ("
                     + ",".join("?" for _ in keys)
@@ -257,14 +276,42 @@ class AnnStore:
                 mapping = {int(row["rowid"]): str(row["chunk_id"]) for row in rows}
                 if len(mapping) != len(keys):
                     raise ValueError("ANN key does not map to a unique SQLite chunk")
-                candidates = [(mapping[key], float(scores[i])) for i, key in enumerate(keys)]
-                best = sorted(best + candidates, key=lambda item: (-item[1], item[0]))[:limit]
+                selected = [(mapping[key], score) for key, score in candidates]
+                best = sorted(best + selected, key=lambda item: (-item[1], item[0]))[:limit]
 
             if document_ids is None:
-                for index, graph in enumerate(self.indexes):
+
+                def search(shard: int) -> list[tuple[int, float]]:
+                    graph = self.indexes[shard]
                     matches = graph.search(vector, count=min(limit, len(graph)), threads=1)
-                    score(index, [int(key) for key in matches.keys])
+                    return self._candidate_scores(shard, [int(key) for key in matches.keys], vector)
+
+                # Every shard still performs the original search and exact scoring.
+                # Only SQL identity reads for strictly losing scores are eliminated.
+                # The constructor verifies contiguous row IDs, and shard key ranges
+                # are validated above, so losing keys cannot conceal missing rows.
+                candidates = []
+                if self.workers == 1 or len(self.indexes) <= 1:
+                    for shard in range(len(self.indexes)):
+                        candidates.extend(search(shard))
+                else:
+                    pool = ThreadPoolExecutor(max_workers=self.workers)
+                    try:
+                        for batch in pool.map(search, range(len(self.indexes))):
+                            candidates.extend(batch)
+                    finally:
+                        pool.shutdown(wait=True, cancel_futures=True)
+                if candidates:
+                    cutoff = sorted((score for _, score in candidates), reverse=True)[
+                        min(limit, len(candidates)) - 1
+                    ]
+                    # All boundary ties must survive until chunk-ID tie breaking.
+                    candidates = [item for item in candidates if item[1] >= cutoff]
+                    for start in range(0, len(candidates), 512):
+                        resolve(candidates[start : start + 512])
             else:
+                # Grants filter SQL before reading vectors; broad/narrow filters
+                # retain the original exhaustive stored-vector scoring semantics.
                 cursor = connection.execute(
                     "SELECT rowid FROM chunks WHERE document_id IN ("
                     + ",".join("?" for _ in document_ids)
@@ -276,6 +323,6 @@ class AnnStore:
                     for row in rows:
                         key = int(row["rowid"])
                         groups.setdefault(bisect_left(self.ends, key), []).append(key)
-                    for index, keys in groups.items():
-                        score(index, keys)
+                    for shard, keys in groups.items():
+                        resolve(self._candidate_scores(shard, keys, vector))
         return best

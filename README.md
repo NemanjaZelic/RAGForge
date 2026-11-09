@@ -81,7 +81,9 @@ uv run python scripts/export_schemas.py --check
   over the same SQLite sources; resumable vector/shard construction for large corpora.
 - Balanced defaults to hybrid; raw BM25 never imports/loads embedding libraries.
 - Bounded parallel reranker execution with unchanged model batches and an explicit serial
-  reference mode. See [query latency measurements and target](docs/QUERY-LATENCY.md).
+  reference mode, exact whole-batch memory cache, and optional server warm-up.
+  Large ANN collections defer losing-candidate SQL reads while retaining every shard and
+  boundary tie. See [query latency measurements and target](docs/QUERY-LATENCY.md).
 - Optional verified local cross-encoder reranking, section-aware chunks, and answer-fact
   evaluation with accepted alternative citations. See [quality work and limits](docs/QUALITY.md).
 - Optional bounded question planning and short-section context completion in the same engine,
