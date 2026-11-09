@@ -1,11 +1,31 @@
 {
   "active_frozen_job_status": {
     "automatic_quality_approval": false,
-    "error": "[WinError 5] Access is denied: 'D:\\\\RAGForge\\\\.cache\\\\gpp-page-context-v2\\\\.checkpoint-hstqlvba' -> 'D:\\\\RAGForge\\\\.cache\\\\gpp-page-context-v2\\\\status.json'",
-    "error_type": "PermissionError",
-    "pid": 33572,
-    "state": "failed_resumable",
-    "unix_time": 1794182142.3136995
+    "baseline_calls": 3966,
+    "baseline_errors": 0,
+    "baseline_primary_calls": 1322,
+    "baseline_primary_total": 1322,
+    "baseline_total": 3966,
+    "legacy_comparison": {
+      "raw": {
+        "errors": 0,
+        "expected": 240,
+        "queries": 240
+      },
+      "reranked": {
+        "errors": 0,
+        "expected": 240,
+        "queries": 214
+      }
+    },
+    "multilingual_calls": 1322,
+    "multilingual_errors": 0,
+    "multilingual_total": 1322,
+    "original_failed_status_path": "D:\\RAGForge\\.cache\\gpp-page-context-v2\\status.json",
+    "pid": 24440,
+    "recovery_scope": "Status supervision only; original parent failed during atomic status replacement. Existing frozen RFC processes and results are reused.",
+    "state": "resuming_original_deferred_rfc",
+    "unix_time": 1794182451.4583209
   },
   "all_four_at_least_95_confirmed": false,
   "all_four_at_least_99_confirmed": false,
@@ -283,7 +303,7 @@
   },
   "scope": "Aggregate traceable retrieval evidence results. Finished execution is separate from passing quality targets; diagnostics and reviewed support are not interchangeable.",
   "source_proof_data_remains_local": true,
-  "state": "execution_failed_resumable",
+  "state": "audits_saved_waiting_only_for_legacy_rfc_execution",
   "t7_consumed_development": {
     "actual_packaged_offline_query_response_matches_development_response": true,
     "actual_queries": 150,
@@ -439,6 +459,6 @@
     "utc": "2026-11-05T10:55:04.702662+00:00"
   },
   "total_steps": 5,
-  "unix_time": 1794182162.2678564,
+  "unix_time": 1794182451.4606898,
   "unreviewed_gpp_question_scope_cases": 1310
 }
