@@ -593,6 +593,50 @@ def enhance(
     typer.echo(json.dumps({"build_id": result.build_id, "reused_index_bytes": True}))
 
 
+@app.command("source-context")
+def source_context_command(
+    artifact: Path,
+    output: Annotated[Path, typer.Option(help="New corpus-only context catalogue.")],
+    storage_root: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Extract source-bound definition candidates without models or benchmark inputs."""
+    from ragforge.artifacts.source_context import build_source_context
+    from ragforge.jobs.budget import StorageBudget
+
+    try:
+        result = build_source_context(
+            artifact, output, storage=StorageBudget(storage_root) if storage_root else None
+        )
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps(result))
+
+
+@app.command("attach-context")
+def attach_context_command(
+    artifact: Path,
+    catalogue: Path,
+    output: Annotated[Path, typer.Option(help="New portable bundle with source context.")],
+    storage_root: Annotated[Path | None, typer.Option()] = None,
+) -> None:
+    """Attach a verified catalogue in a new version, reusing the original index bytes."""
+    from ragforge.artifacts.source_context import attach_source_context
+    from ragforge.jobs.budget import StorageBudget
+
+    try:
+        result = attach_source_context(
+            artifact,
+            catalogue,
+            output,
+            storage=StorageBudget(storage_root) if storage_root else None,
+        )
+    except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
+        typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
+        raise typer.Exit(code=2) from error
+    typer.echo(json.dumps({"build_id": result.build_id, "reused_index_bytes": True}))
+
+
 @app.command()
 def use(
     artifact: Annotated[
@@ -617,6 +661,9 @@ def use(
     ] = None,
     token_env: str = typer.Option("RAGFORGE_ACCESS_TOKEN"),
     ca_file: Annotated[Path | None, typer.Option()] = None,
+    source_context: Annotated[
+        Path | None, typer.Option(help="Explicit source-bound local context catalogue.")
+    ] = None,
 ) -> None:
     """Query the same local engine; balanced defaults to hybrid, minimal to BM25."""
     try:
@@ -636,6 +683,8 @@ def use(
         if mode == "shared":
             from ragforge.shared.client import SharedClient
 
+            if source_context is not None:
+                raise ValueError("external source context is only supported in local mode")
             if artifact is not None or (endpoint is None and connection is None):
                 raise ValueError(
                     "shared mode requires an endpoint/connection and no local artifact argument"
@@ -651,7 +700,9 @@ def use(
                 or ca_file is not None
             ):
                 raise ValueError("local mode requires a bundle and no shared endpoint/CA options")
-            result = BundleEngine(artifact, threads=threads).retrieve(request)
+            result = BundleEngine(
+                artifact, threads=threads, source_context=source_context
+            ).retrieve(request)
     except (ValueError, OSError, RuntimeError) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error
@@ -697,6 +748,9 @@ def serve(
     port: int = typer.Option(8765, min=1, max=65535),
     tls_cert: Annotated[Path | None, typer.Option()] = None,
     tls_key: Annotated[Path | None, typer.Option()] = None,
+    source_context: Annotated[
+        Path | None, typer.Option(help="Explicit source-bound catalogue for local stdio.")
+    ] = None,
 ) -> None:
     """Run read-only stdio MCP or explicit authenticated REST/MCP HTTP."""
     if transport == "http":
@@ -706,6 +760,8 @@ def serve(
             typer.echo(json.dumps({"error": "HTTP support requires ragforge[shared]."}), err=True)
             raise typer.Exit(code=2) from error
         try:
+            if source_context is not None:
+                raise ValueError("HTTP requires source context inventoried in the bundle")
             expected_build_id = None
             if deployment is not None:
                 from ragforge.shared.registry import read_deployment
@@ -751,7 +807,9 @@ def serve(
         typer.echo(json.dumps({"error": "MCP support requires the ragforge[mcp] extra."}), err=True)
         raise typer.Exit(code=2) from error
     try:
-        create_server(artifact, threads=threads).run(transport="stdio")
+        create_server(artifact, threads=threads, source_context=source_context).run(
+            transport="stdio"
+        )
     except (ValueError, OSError, RuntimeError, sqlite3.Error) as error:
         typer.echo(json.dumps({"error": str(error)}, ensure_ascii=True), err=True)
         raise typer.Exit(code=2) from error

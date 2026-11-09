@@ -1,0 +1,77 @@
+# Optional source context
+
+`source-context` builds a small catalogue of literal acronym definitions from a
+verified bundle's own indexed text. It reads no benchmark questions, reference
+answers or review labels, and performs no model inference. Extracted definitions
+are candidates, including ambiguous or noisy meanings; source text remains
+untrusted evidence for the calling agent.
+
+```bash
+ragforge source-context ./bundle --output ./definitions.sqlite
+ragforge use ./bundle --source-context ./definitions.sqlite --query 'What is DNS?' --top-k 50 --max-output-chars 48000
+ragforge serve ./bundle --source-context ./definitions.sqlite
+```
+
+The external catalogue is an explicit local CLI/stdio setting, bound to the
+collection and SHA-256 of the exact source index. It must be supplied again after
+relocation. To make a self-contained version, copy the verified base assets and
+catalogue into a new bundle:
+
+```bash
+ragforge attach-context ./bundle ./definitions.sqlite --output ./context-bundle
+ragforge verify ./context-bundle
+ragforge use ./context-bundle --query 'What is DNS?' --top-k 50 --max-output-chars 48000
+ragforge serve ./context-bundle
+```
+
+The original bundle is immutable. The new manifest inventories the catalogue,
+includes it in the build identity and verifies every retained definition against
+its physical indexed source. Existing bundles keep their previous build IDs.
+The optional `--storage-root` on both preparation commands applies the existing
+storage budget before allocation. Attaching requires space for a full new copy of
+the bundle; local external use avoids that copy.
+
+Authenticated shared HTTP requires an inventoried catalogue in the bundle.
+`serve --transport http --source-context ...` and shared-client external overrides
+are rejected, so the deployed build identity describes all runtime assets.
+CLI, stdio MCP and shared HTTP use the same core retrieval implementation.
+
+## Selection and limits
+
+After ordinary retrieval/reranking/section completion, source context can replace
+only redundant copies of the same whitespace-normalized text, section and PDF
+specification family. Text shorter than 200 characters is never treated as a
+cross-document duplicate. An explicit release/version query preserves distinct
+document identities, including when a caller provides a translated query.
+Every original unique information key remains in the final context.
+
+The fixed policy tries up to 16 definition candidates, up to three literal FTS
+queries (six source chunks total), then actual adjacent chunks around at most
+16 distinct original anchors. At most 16 duplicate slots change. Document grants
+are applied in SQL before selecting expansion candidates or source bodies.
+Request chunk/character limits and the bundle's per-document cap still apply.
+No extra embedding or reranker inference is performed. Returned scores encode
+final context order when changed; they are not new model predictions or confidence.
+A response without replaceable duplicate information is returned unchanged.
+
+Definition extraction and technical query grammar currently cover ASCII acronym
+forms and English queries. A faithful caller-provided documentation-language
+`query_translation` can guide this optional stage; the application does not
+perform automatic translation or claim equal accuracy for every language.
+
+## Quality evidence
+
+The complete consumed 3GPP measurement contains 1,322 cases. Retrospective AI
+review found source support for 1,215 original responses (91.91%). The frozen
+source-context policy supports 1,239 (93.72%): 24 improvements and no supported
+case lost. This comprises 1,228/1,310 native cases and 11/12 explicit-version
+cases; 83 cases remain insufficient. No cases were removed to increase the score.
+All reviews are complete. This measures evidence available in context, not
+end-to-end generated-answer accuracy, unseen generalization or independent human
+approval. The requested 95% across all four collections/languages is not achieved.
+Numeric provenance is recorded separately; local source text and per-case review
+records are not published.
+
+The upstream multilingual reranker outputs were reused from the frozen experimental
+MM measurement. That selection is distinct from the base bundle default; the
+93.72% result is not a newly measured default-bundle or all-language score.

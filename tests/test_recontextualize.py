@@ -116,6 +116,7 @@ def test_old_balanced_identity_omits_absent_mapping_metadata(tmp_path, tiny_mode
     del data["collections"][0]["dense_index"]["source_chunks"]
     for d in data["collections"][0]["documents"]:
         d.pop("title", None)
+    data.pop("source_context", None)
     expected = hashlib.sha256(
         json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
     ).hexdigest()

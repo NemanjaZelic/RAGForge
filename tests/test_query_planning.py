@@ -192,6 +192,7 @@ def test_portable_planning_scopes_every_passage_and_keeps_reranker_queries_origi
     data["retrieval_configuration"].pop("section_context", None)
     for doc in data["collections"][0]["documents"]:
         doc.pop("title", None)
+    data.pop("source_context", None)
     expected = hashlib.sha256(
         json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
     ).hexdigest()

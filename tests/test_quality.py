@@ -61,6 +61,7 @@ def test_legacy_pipeline_and_bundle_identity_are_preserved(tmp_path: Path) -> No
     data = m.model_dump(mode="json", exclude={"build_id", "retrieval_configuration"})
     for d in data["collections"][0]["documents"]:
         d.pop("title", None)
+    data.pop("source_context", None)
     expected = hashlib.sha256(
         json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
     ).hexdigest()

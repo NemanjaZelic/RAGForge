@@ -121,6 +121,7 @@ class BundleManifest(ContractModel):
     default_search_method: SearchMethod = "bm25"
     query_model: QueryModel | None = None
     retrieval_configuration: RetrievalConfiguration | None = None
+    source_context: RelativePath | None = None
     index_backend: Literal["sqlite-fts5"]
     index_schema_version: Literal[1]
     sqlite_build_version: Annotated[str, Field(min_length=1)]
@@ -141,6 +142,11 @@ class BundleManifest(ContractModel):
         expected = f"collections/{collection.collection_id}/index.sqlite"
         if collection.database_path != expected or expected not in paths:
             raise ValueError("collection database must have its canonical inventoried path")
+        if self.source_context is not None and (
+            self.source_context != f"collections/{collection.collection_id}/source-context.sqlite"
+            or self.source_context not in paths
+        ):
+            raise ValueError("source context must have its canonical inventoried path")
         # Prevent case-insensitive aliases in a portable inventory.
         if len({path.casefold() for path in paths}) != len(paths):
             raise ValueError("case collision in file inventory")

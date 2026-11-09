@@ -19,8 +19,8 @@ See the [explicit change list](docs/PLAN-CHANGES.md) for proposals and status.
 The [real-documentation testing plan](docs/TESTING-PLAN.md) starts with three
 corpora and 30 reviewed questions each, then expands toward five diverse corpora.
 Three complete frozen corpora (18,434 files) and draft evidence questions are local.
-Full-source ingestion has been audited; large retrieval measurements are in progress.
-The question labels still need independent review. See [scale execution](docs/SCALING.md).
+Full-source ingestion and scheduled large retrieval measurements are complete.
+Retrospective 3GPP source review is complete; quality targets and independent validation remain open. See [scale execution](docs/SCALING.md).
 Read the [plan review](docs/PLAN-REVIEW.md), [architecture decisions](docs/ARCHITECTURE.md)
 and [implementation backlog](docs/BACKLOG.md) before starting feature work.
 
@@ -86,6 +86,9 @@ uv run python scripts/export_schemas.py --check
   enabled with `recontextualize --query-planning facets-v2 --section-context section-start-v2`.
   Generated agent instructions for planned section bundles specify the wider measured
   request limits (`top_k=50`, `max_output_chars=48000`).
+- Optional source-bound definition and adjacent-context completion in the shared engine;
+  corpus-only preparation, explicit local use or portable attachment.
+  See [source context and measured limits](docs/SOURCE-CONTEXT.md).
 - Verified bundle inventories, copied query model/licenses and atomic publication to a new directory.
 - Validated minimal/balanced draft manifests and BM25/dense/hybrid query contracts; engine protocol.
 - Synthetic manifest examples in `examples/manifests/`; these are not built bundles.
@@ -100,7 +103,7 @@ and cited local query results. Text-bearing PDF and hybrid are release requireme
 OCR is deferred. Balanced/hybrid is the planned default; BM25 is an explicit
 lightweight query option on the same bundle and the benchmark baseline.
 
-`mixed documents → parse/chunk → BM25 + dense → bundle → hybrid query → cited source`
+`mixed documents Ã¢â€ â€™ parse/chunk Ã¢â€ â€™ BM25 + dense Ã¢â€ â€™ bundle Ã¢â€ â€™ hybrid query Ã¢â€ â€™ cited source`
 
 The local `build`, `use`, `verify` and `context` commands work on the same engine.
 Model preparation is explicit and separate; build/query never download anything.

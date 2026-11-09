@@ -1,0 +1,122 @@
+{
+  "all_four_corpora_at_least_95_confirmed": false,
+  "all_languages_95_confirmed": false,
+  "automatic_quality_approval": false,
+  "benchmark_execution": {
+    "baseline_calls": 3966,
+    "errors": 0,
+    "inference_pending": 0,
+    "multilingual_calls": 1322,
+    "semantic_reviews_pending": 0
+  },
+  "completed_steps": 8,
+  "corpus_catalogue": {
+    "benchmark_inputs_read": 0,
+    "distinct_meanings": 16915,
+    "distinct_short_forms": 8784,
+    "elapsed_seconds": 319.36896399990655,
+    "neural_inference_calls": 0,
+    "retained_cap_reached": false,
+    "retained_source_proofs": 29838,
+    "sha256": "c53fa8e05f8a8421275ad5c94d6239e020ba62ff79eac3bf1dad66f12907d923",
+    "source_chunks_scanned": 1507936,
+    "source_index_sha256": "247533c43601bdbc610be9d2d0d8d9d85ea05e26867b2a4240b3e0f2ab241c59"
+  },
+  "date": "2026-11-09",
+  "independent_human_reviews": 0,
+  "integration_parity": {
+    "cases": 1322,
+    "changed_responses": 1287,
+    "context_stage_seconds_max": 7.42588509991765,
+    "context_stage_seconds_p50": 0.10786290001124144,
+    "corpus_catalogue_relations_match_frozen_prototype": true,
+    "neural_calls": 0,
+    "payload_order_source_mismatches": 0,
+    "replay_elapsed_seconds": 249.79450009996071,
+    "scope": "Upstream saved outputs reused; exact selected payload/order/source parity excluding context-order scores. Consumed regression, not unseen testing or new full retrieval latency.",
+    "total": 1322
+  },
+  "limitations": [
+    "MM upstream selection remains distinct from retained L6 Kernel/RFC and caller-translated T7 policies; scores cannot be combined into one uniform configuration claim.",
+    "83 GPP cases still insufficient under unchanged full-question requirements; no cases removed or relaxed.",
+    "Native requirements and source/reference limitations remain; no independent human quality approval.",
+    "The source-context policy was selected on consumed results; exact implementation parity does not make these unseen results.",
+    "English/ASCII technical grammar; documentation-language query translation must be supplied faithfully by the caller."
+  ],
+  "live_full_corpus_cli_smoke": {
+    "definition_source_present": true,
+    "full_process_wall_seconds": 236.19500919990242,
+    "live_cli_exit_code": 0,
+    "rerank": false,
+    "returned_chunks": 50,
+    "returned_text_chars": 42409,
+    "scope": "One actual offline catalogue-enabled CLI smoke query on the full 3GPP corpus; not a quality score or the MM benchmark runtime.",
+    "search_method": "bm25"
+  },
+  "original": {
+    "combined_percent": 91.90620272314675,
+    "combined_supported": 1215,
+    "combined_total": 1322,
+    "explicit_version_supported": 11,
+    "explicit_version_total": 12,
+    "insufficient": 107,
+    "native_supported": 1204,
+    "native_total": 1310,
+    "pending": 0
+  },
+  "provenance": {
+    "candidate_deltas_sha256": "6d24041e1f31150bb177b59b9d26a80e00253fa13230ea849955a14560056069",
+    "candidate_recipe_sha256": "51d9ece653ee62adbb03cfc9f007711d6213cbad54676fcc8aafb2e0cc928a5f",
+    "candidate_review_recipe_sha256": "2e71099ec8e0fef6a12c9015a349189af5832ff8d3d4d33e547449dd346febd6",
+    "candidate_reviews_sha256": "ffdd827d01c8d5401eaf0e81a82e76f876eecc09904798fae0b980950f867908",
+    "explicit_version_reviews_sha256": "e5db116573a52cf80cad7bd3036a0351f79cfb2889f3025be5b3b1bbd78b8086",
+    "full_source_audit_sha256": "90a55aaedd89394269e30da823bcc3caea05009b177855471ae468b86de3782a",
+    "original_measurement_sha256": "550db3ba47377d5760284c9d5afcf7390217741f5b7f05dd923229ec8b707c66",
+    "original_review_recipe_sha256": "101de71bfc6bdf1f52939d3f63fd4126511b9494f9514593c719cdfaece0224f",
+    "original_reviews_sha256": "55a77ab242dd0f1351e2d5b00d6d6e92888a8bb5188f1c144801a1180c456a20"
+  },
+  "runtime": {
+    "external_catalogue_local_cli_stdio_only": true,
+    "full_gpp_clone_reason": "Would exceed unchanged 60GB benchmark storage budget; explicit source-bound local catalogue was built and exercised.",
+    "full_gpp_portable_clone_created": false,
+    "full_neural_retrieval_latency_remeasured": false,
+    "http_requires_inventoried_asset": true,
+    "new_context_neural_calls": 0,
+    "old_bundle_identities_preserved": true,
+    "opt_in": true,
+    "shared_engine_cli_mcp_http": true,
+    "upstream_neural_outputs_reused": true
+  },
+  "scope": "Retrospective AI full-question source-evidence support on consumed frozen MM outputs. Not generated-answer accuracy, unseen testing, independent human approval, or default-bundle quality.",
+  "software_checks": {
+    "full_pytest_passed": 380,
+    "full_pytest_skipped": 17,
+    "mypy": true,
+    "ruff_check": true,
+    "ruff_format_check": true,
+    "schema_drift_check": true,
+    "subsequent_focused_context_tests_passed": 16
+  },
+  "source_context_v2": {
+    "at_least_95": false,
+    "at_least_99": false,
+    "combined_percent": 93.72163388804842,
+    "combined_supported": 1239,
+    "combined_total": 1322,
+    "explicit_version_supported": 11,
+    "explicit_version_total": 12,
+    "insufficient": 83,
+    "native_supported": 1228,
+    "native_total": 1310,
+    "paired_native": {
+      "both_insufficient": 82,
+      "both_supported": 1204,
+      "losses": 0,
+      "wins": 24
+    },
+    "pending": 0,
+    "source_information_preserved": true
+  },
+  "state": "all_gpp_execution_reviews_and_source_context_integration_complete_target_not_met",
+  "total_steps": 8
+}

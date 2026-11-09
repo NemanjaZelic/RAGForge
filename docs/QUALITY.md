@@ -74,7 +74,7 @@ original labels. Local questions/quotes are excluded from Git.
   a model-free baseline. `use --rerank` explicitly enables reranking even for
   BM25; `--no-rerank` disables it. The same optional `rerank` request field is
   available in MCP and REST. A request to rerank a bundle lacking a model fails.
-- Candidate pools are explicit, 50–200 per branch, at most 400 hybrid candidates.
+- Candidate pools are explicit, 50â€“200 per branch, at most 400 hybrid candidates.
   Both candidate branches apply collection/document permissions **before**
   reranking. The reranker checks that scope again. Output top-k and character
   budgets are unchanged; returned text is original indexed text, not model output.
@@ -510,3 +510,27 @@ recommended_search_request in the generated collection metadata. The generated
 files are passive for user review; no host config is installed. Direct request
 defaults remain their existing values. The measured wide-profile scores do not
 apply to requests using smaller limits. See [agent integration](MCP.md).
+
+
+## 2026-11-09 completed 3GPP review and source-context integration
+
+All 3,966 scheduled baseline calls and 1,322 multilingual calls are complete,
+with zero retrieval errors and no pending source reviews. On all 1,322 unchanged
+questions, the frozen MM response contexts support 1,215 (91.91%). The selected
+source-context policy supports 1,239 (93.72%), a paired gain of 24 with no losses.
+There are 83 insufficient cases. This is retrospective source-evidence support,
+not generated-answer accuracy or independent/unseen quality approval. The 95%
+all-four-corpora/all-language target remains unmet.
+
+The optional policy is implemented in the common engine. Production selection
+matches the frozen prototype in all 1,322 payloads, source citations and orders;
+no new neural calls were needed for that parity check. The full-corpus catalogue
+was built from indexed sources only, verified, and used successfully in a real
+local CLI query. Offline CLI/stdio, portable relocation and authenticated HTTP
+document grants are covered by functional tests. See [commands and limits](SOURCE-CONTEXT.md)
+and [numeric provenance](benchmarks/gpp-source-context-complete-v1.json).
+
+The MM upstream model selection is experimental and distinct from the retained
+L6 Kernel/RFC policies. Source-context parity preserves a consumed MM result;
+it does not establish the default bundle's accuracy or a single configuration
+that achieves 95% on every corpus. Historical first-frozen results stay unchanged.

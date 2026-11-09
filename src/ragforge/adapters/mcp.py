@@ -53,11 +53,14 @@ def create_server(
     *,
     threads: int = 4,
     engine: RetrievalEngine | None = None,
+    source_context: Path | None = None,
     token_verifier: TokenVerifier | None = None,
     auth: AuthSettings | None = None,
 ) -> MCPServer[None]:
     """Verify and bind one bundle; callers cannot select arbitrary filesystem paths."""
-    engine = engine or BundleEngine(artifact, threads=threads)
+    if engine is not None and source_context is not None:
+        raise ValueError("source context must be configured on the supplied engine")
+    engine = engine or BundleEngine(artifact, threads=threads, source_context=source_context)
     server: MCPServer[None] = MCPServer(
         "RAGForge",
         version=__version__,

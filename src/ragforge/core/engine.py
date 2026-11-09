@@ -21,10 +21,11 @@ if TYPE_CHECKING:
     from ragforge.core.dense import DenseStore
     from ragforge.core.parents import ParentMapper
     from ragforge.core.rerank import ONNXReranker
+    from ragforge.core.source_context import SourceContext
 
 
 class BundleEngine:
-    def __init__(self, root: Path, *, threads: int = 4) -> None:
+    def __init__(self, root: Path, *, threads: int = 4, source_context: Path | None = None) -> None:
         self.root = root
         self.manifest = verify_bundle(root)
         self.collection = self.manifest.collections[0]
@@ -33,6 +34,25 @@ class BundleEngine:
             d.document_id: d.title for d in self.collection.documents if d.title
         }
         self.threads = threads
+        self._source_context: SourceContext | None = None
+        declared_context = self.manifest.source_context
+        if declared_context is not None and source_context is not None:
+            raise ValueError("choose inventoried or external source context, not both")
+        if declared_context is not None or source_context is not None:
+            from ragforge.core.source_context import SourceContext
+
+            catalogue = root / declared_context if declared_context else source_context
+            assert catalogue is not None
+            checksum = next(
+                r.sha256 for r in self.manifest.files if r.path == self.collection.database_path
+            )
+            self._source_context = SourceContext(
+                catalogue,
+                self.sqlite,
+                checksum,
+                self.collection.collection_id,
+                verify=source_context is not None,
+            )
         self._aliases: dict[str, str] = {}
         self._alias_scopes: dict[str, set[str]] = {}
         if (
@@ -54,6 +74,17 @@ class BundleEngine:
         self._parents: ParentMapper | None = None
 
     def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
+        response = self._retrieve(request)
+        if self._source_context is None:
+            return response
+        config = self.manifest.retrieval_configuration
+        return self._source_context.supplement(
+            request,
+            response,
+            max_chunks_per_document=config.max_chunks_per_document if config else None,
+        )
+
+    def _retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
         method = request.search_method or self.manifest.default_search_method
         if method not in self.manifest.capabilities:
             raise ValueError("search method is unsupported by this bundle profile")

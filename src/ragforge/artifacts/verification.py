@@ -28,6 +28,8 @@ def build_identity(manifest: BundleManifest) -> str:
     data = manifest.model_dump(mode="json", exclude={"build_id"})
     if data.get("retrieval_configuration") is None:
         data.pop("retrieval_configuration", None)  # Preserve identities of earlier v1 bundles.
+    if data.get("source_context") is None:
+        data.pop("source_context", None)
     config_data = data.get("retrieval_configuration")
     if config_data is not None and config_data.get("query_aliases") is None:
         config_data.pop("query_aliases", None)
@@ -96,6 +98,8 @@ def verify_bundle(root: Path) -> BundleManifest:
         raise ValueError("unexpected or missing bundle file")
     collection = manifest.collections[0]
     required = {collection.database_path}
+    if manifest.source_context is not None:
+        required.add(manifest.source_context)
     if manifest.profile == "balanced":
         assert collection.dense_index is not None and manifest.query_model is not None
         required.add(collection.dense_index.path)
@@ -224,4 +228,13 @@ def verify_bundle(root: Path) -> BundleManifest:
             reranker.license,
         ) != (spec_r.model_id, spec_r.revision, spec_r.license):
             raise ValueError("reranker identity/inventory does not match descriptor")
+    if manifest.source_context is not None:
+        from ragforge.core.definitions import verify_catalogue
+
+        verify_catalogue(
+            root / manifest.source_context,
+            engine,
+            inventory[collection.database_path].sha256,
+            collection.collection_id,
+        )
     return manifest
