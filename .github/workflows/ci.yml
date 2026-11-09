@@ -29,6 +29,7 @@ jobs:
       - run: uv run --no-sync mypy
       - run: uv run --no-sync python scripts/export_schemas.py --check
       - run: uv build
+      - run: uv run --no-sync python scripts/check_distribution.py dist
   real-model:
     strategy:
       fail-fast: false
@@ -68,3 +69,29 @@ jobs:
       - name: Linux OS network isolation
         if: runner.os == 'Linux'
         run: sudo --preserve-env=RAGFORGE_MODEL_DIR,RAGFORGE_RERANKER_DIR unshare --net .venv/bin/python -m pytest tests/test_real_model.py -q
+
+  quickstart-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.6"
+          python-version: "3.13"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            models/e5-small
+            models/mmarco-minilm-reranker
+          key: quickstart-linux-e5-mmarco-${{ hashFiles('scripts/prepare_models.py', 'scripts/prepare_reranker.py', 'scripts/setup_models.py') }}
+      - name: First Linux setup through the user command
+        run: bash setup.sh --python "$(uv python find 3.13)"
+      - name: Repeated setup without network downloads
+        run: bash setup.sh --offline --python "$(uv python find 3.13)"
+      - name: Build, search and prepare agent through native Bash launchers
+        run: |
+          bash ragforge.sh build examples/mini-docs
+          bash ragforge.sh ask "How are access tokens sent?"
+          bash ragforge.sh agent --output ".cache/agent with spaces"
+      - name: Actual generated agent configuration
+        run: .venv/bin/python scripts/check_quickstart_mcp.py ".cache/agent with spaces/mcp.json"

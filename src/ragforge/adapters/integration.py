@@ -24,10 +24,30 @@ def skill_name(collection_id: str) -> str:
 
 
 def create_integration(
-    artifact: Path, output: Path, *, description: str | None = None
+    artifact: Path,
+    output: Path,
+    *,
+    description: str | None = None,
+    threads: int | None = None,
+    rerank_workers: int | None = None,
+    warm_up: bool = False,
 ) -> dict[str, str]:
+    if threads is not None and (type(threads) is not int or not 1 <= threads <= 32):
+        raise ValueError("CPU threads must be between 1 and 32")
+    if rerank_workers is not None and (
+        type(rerank_workers) is not int or not 1 <= rerank_workers <= 8
+    ):
+        raise ValueError("reranker workers must be between 1 and 8")
+    server_args = ["-m", "ragforge", "serve"]
     engine = BundleEngine(artifact)
     artifact = artifact.resolve(strict=True)
+    server_args.append(str(artifact))
+    if threads is not None:
+        server_args.extend(["--threads", str(threads)])
+    if rerank_workers is not None:
+        server_args.extend(["--rerank-workers", str(rerank_workers)])
+    if warm_up:
+        server_args.append("--warm-up")
     collection = engine.list_collections()[0]
     name = skill_name(collection.collection_id)
     description = (
@@ -124,7 +144,7 @@ def create_integration(
                     # Preserve the venv entry point: resolving its symlink on Linux
                     # would select the base interpreter without installed extras.
                     "command": str(Path(sys.executable).absolute()),
-                    "args": ["-m", "ragforge", "serve", str(artifact)],
+                    "args": server_args,
                     "env": {"PYTHONIOENCODING": "utf-8", "OTEL_SDK_DISABLED": "true"},
                 }
             }

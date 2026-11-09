@@ -40,3 +40,7 @@ Thumbs.db
 
 # Host-specific shared deployment state
 /deployments/
+
+# Simple local documentation workflow
+/documents/
+/agent/

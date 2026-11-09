@@ -14,6 +14,8 @@ from ragforge.core.rerank import RerankerSpec, reranker_spec
 
 MODEL = "cross-encoder/ms-marco-MiniLM-L6-v2"
 REVISION = "233902d25c440f23af6f7d6e94d2946bac0bee0a"
+MMARCO_MODEL = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+MMARCO_REVISION = "1427fd652930e4ba29e8149678df786c240d8825"
 
 
 def main():
@@ -32,8 +34,8 @@ def main():
         license_name, pad_token, batch_size = "MIT", "<pad>", 1
         graph = "onnx/model_quantized.onnx"
     if args.model == "mmarco-minilm":
-        model = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
-        revision = "1427fd652930e4ba29e8149678df786c240d8825"
+        model = MMARCO_MODEL
+        revision = MMARCO_REVISION
         pad_token, batch_size = "<pad>", 2
     base = f"https://huggingface.co/{model}/resolve/{revision}/"
     sources = {

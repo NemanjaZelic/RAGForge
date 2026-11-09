@@ -24,6 +24,38 @@ Retrospective 3GPP source review is complete; quality targets and independent va
 Read the [plan review](docs/PLAN-REVIEW.md), [architecture decisions](docs/ARCHITECTURE.md)
 and [implementation backlog](docs/BACKLOG.md) before starting feature work.
 
+## Start with three commands
+
+64-bit Python 3.11+ is required (3.13 tested). Run commands from the downloaded
+repository folder. Setup explicitly installs the locked local environment and
+prepares the public query model and multilingual reranker; existing verified
+models are reused. No global Python packages or external LLM API are needed.
+
+| Step | Windows PowerShell | Linux Bash |
+|---|---|---|
+| Set up once | `.\setup.cmd` | `bash setup.sh` |
+| Put your files into `documents/`, then build | `.\ragforge.cmd build` | `bash ragforge.sh build` |
+| Prepare an agent connection (optional) | `.\ragforge.cmd agent` | `bash ragforge.sh agent` |
+
+Alternatively pass your documentation folder to `build`, for example
+`bash ragforge.sh build "/home/me/My Documents"` or
+`.\ragforge.cmd build "D:\My Documents"`.
+
+Each successful build creates a new verified bundle and remembers it. The agent
+command prints the generated `mcp.json` and skill paths; import the config into
+your MCP client. It includes warm-up and local CPU settings. It does not edit
+existing agent settings. Build/search never download models or run benchmarks.
+
+Search directly with `.\ragforge.cmd ask "Your question"` on Windows or
+`bash ragforge.sh ask "Your question"` on Linux. This prints source evidence and
+citations; the connected agent generates the final answer. Updated documents
+require running `build` again. Existing versions remain available.
+
+Supported input: UTF-8 Markdown/TXT/HTML and text-bearing PDF. OCR is deferred.
+The basic setup is not a reproduction of the separately prepared quality
+benchmark bundles. See [complete usage in Serbian](docs/QUICKSTART-SR.md) for
+Linux prerequisites, existing bundles, updates and advanced commands.
+
 ## Development on this computer
 
 Project location: `D:\RAGForge`. Python 3.13 is available.
@@ -107,7 +139,7 @@ and cited local query results. Text-bearing PDF and hybrid are release requireme
 OCR is deferred. Balanced/hybrid is the planned default; BM25 is an explicit
 lightweight query option on the same bundle and the benchmark baseline.
 
-`mixed documents ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ parse/chunk ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ BM25 + dense ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ bundle ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ hybrid query ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ cited source`
+`mixed documents ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ parse/chunk ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ BM25 + dense ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ bundle ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ hybrid query ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ cited source`
 
 The local `build`, `use`, `verify` and `context` commands work on the same engine.
 Model preparation is explicit and separate; build/query never download anything.
