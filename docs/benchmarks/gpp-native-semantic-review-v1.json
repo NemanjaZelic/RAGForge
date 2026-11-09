@@ -1,0 +1,22 @@
+{
+  "all_scheduled_inference_complete": true,
+  "completed_steps": 100,
+  "full_bank_95_confirmed": false,
+  "incomplete_reviewed_cases": 10,
+  "independent_human_reviews": 0,
+  "no_automatic_semantic_verdicts": true,
+  "original_questions_and_outputs_unchanged": true,
+  "pending_cases": 1210,
+  "quality_target_status": "not_confirmed_partial_native_context_review",
+  "query_errors": 0,
+  "reviewed_cases": 100,
+  "reviews_sha256": "57ee76332f823021932f3fe9f1b7fe7de0c7e4cdcf7d5174b7aadc4b769f8e06",
+  "run_recipe_sha256": "4cb4116e8ca3fae874e12672ed9be2fc80144c28c1462e617edf58c347594b8d",
+  "scope": "Retrospective AI source-quoted full native-question judgments; incomplete review is not a final accuracy. Native provided-context scope and non-independent annotations remain limitations.",
+  "scope_warning": "Do not extrapolate this ordered prefix to the complete bank. Context-dependent original questions and native annotation defects are documented in local judgments. Original automatic metrics remain unchanged.",
+  "supported_fraction_of_reviewed": 0.9,
+  "supported_reviewed_cases": 90,
+  "total_cases": 1310,
+  "total_steps": 1310,
+  "unix_time": 1794198937.5869617
+}
