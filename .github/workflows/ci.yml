@@ -84,6 +84,8 @@ jobs:
             models/e5-small
             models/mmarco-minilm-reranker
           key: quickstart-linux-e5-mmarco-${{ hashFiles('scripts/prepare_models.py', 'scripts/prepare_reranker.py', 'scripts/setup_models.py') }}
+      - name: Prepare the documented Python prerequisite
+        run: uv python install 3.13
       - name: First Linux setup through the user command
         run: bash setup.sh --python "$(uv python find 3.13)"
       - name: Repeated setup without network downloads
