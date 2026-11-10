@@ -101,3 +101,8 @@ complete candidate union is retained, but GPU batching changes and logits need
 not match exactly. The fixed source subset improved to 30/32 without new losses;
 a separate small MCP comparison measured 10.37 s before / 8.80 s after at the median,
 with one updated call still above ten seconds. Neither global target is closed.
+
+A [later English lexical-policy check](ENGLISH-LEXICAL-TERMS.md) retains the
+strict 30/32 source score and improves the measured latency, with a guard for
+compound questions. Both the favorable first run and a slower low-memory repeat
+are retained. A stable ten-second bound and the 95% target remain open.

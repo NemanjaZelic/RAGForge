@@ -158,9 +158,10 @@ def _planned_response(
 ) -> RetrievalResponse:
     """Versioned bounded recipe, at most 400 total reranker pairs.
 
-    Original BM25/dense candidate union and scoring query are preserved. GPU
-    overlap changes batch padding and may change logits. Verified aliases add
-    candidates only. Every branch receives the
+    The complete configured candidate union and original scoring query are
+    preserved. English GPU content terms may change lexical candidates; GPU
+    overlap may change logits through padding. Verified aliases add candidates
+    only. Every branch receives the
     caller's document scope before search and again before passage inference.
     The shared response builder applies the final character/document limits.
     """
@@ -191,6 +192,16 @@ def _planned_response(
     references_found = find_references(request.query, inventory, allowed)
     facets = make_facets(request.query)
     lexical: Ranker = engine.sqlite.rank_bm25
+    # Multi-facet questions keep every literal lexical branch: content-only
+    # terms can otherwise lose a clause's evidence in the shared output budget.
+    if (
+        config.query_language == "en"
+        and config.reranker.runtime == "openvino-gpu-f16"
+        and not facets
+    ):
+        from ragforge.core.english_lexical import content_lexical
+
+        lexical = content_lexical(lexical)
     if config.query_language == "en" and engine.threads > 1:
         from ragforge.core.lexical_plan import prefetch_lexical
 

@@ -126,3 +126,8 @@ Six smaller-corpus MCP checks retained all prior evidence. A separate twelve-cal
 5/6 updated calls were below ten seconds, with a 10.90 s maximum. Full-bank 95% and
 a universal sub-ten-second bound remain unconfirmed. GPU batching changes; these
 are source-information checks, not exact-logit or generated-answer certification.
+
+A [later English lexical-policy check](ENGLISH-LEXICAL-TERMS.md) retains the
+strict 30/32 source score and improves the measured latency, with a guard for
+compound questions. Both the favorable first run and a slower low-memory repeat
+are retained. A stable ten-second bound and the 95% target remain open.
