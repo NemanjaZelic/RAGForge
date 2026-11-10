@@ -21,7 +21,7 @@ class ReviewObservation(ContractModel):
     artifact_build_id: Sha256
     run_recipe_sha256: Sha256
     facts: Annotated[list[str], Field(min_length=1, max_length=100)]
-    chunks: Annotated[list[RetrievedChunk], Field(max_length=50)]
+    chunks: Annotated[list[RetrievedChunk], Field(max_length=82)]
 
     def fingerprint(self) -> str:
         payload = self.model_dump(mode="json")

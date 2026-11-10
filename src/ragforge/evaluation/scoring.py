@@ -85,7 +85,7 @@ def score_response(
 ) -> dict[str, Any]:
     if not 1 <= evidence_cutoff <= 50 or not 0 < minimum_coverage <= 1:
         raise ValueError("invalid evidence scoring bounds")
-    if any(result.collection_id != case.collection_id for result in response.results):
+    if any(result.collection_id != case.collection_id for result in response.evidence_chunks()):
         raise ValueError("retrieval escaped the evaluated collection")
     record: dict[str, Any] = {
         "case_id": case.case_id,
@@ -104,7 +104,7 @@ def score_response(
     ranked = [r.document_id for r in response.results]
     first = next((i for i, key in enumerate(ranked[:10], 1) if key in relevant), None)
     coverage = score_evidence_pool(
-        case.collection_id, case.evidence_groups, response.results[:evidence_cutoff], source
+        case.collection_id, case.evidence_groups, response.evidence_chunks(evidence_cutoff), source
     )
     groups = coverage["group_coverages"]
     record.update(

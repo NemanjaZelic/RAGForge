@@ -4,16 +4,21 @@ set -euo pipefail
 project_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 python_command="${RAGFORGE_PYTHON:-python3}"
 models_directory="${project_root}/models"
+document_language=multilingual
 offline=0
 while (($#)); do
     case "$1" in
         --offline) offline=1; shift ;;
+        --document-language)
+            if (($# < 2)); then printf 'Missing document language\n' >&2; exit 2; fi
+            if [[ "$2" != 'multilingual' && "$2" != 'en' ]]; then printf 'Document language must be multilingual or en\n' >&2; exit 2; fi
+            document_language="$2"; shift 2 ;;
         --models-directory|--python)
             if (($# < 2)); then printf 'Missing value for %s\n' "$1" >&2; exit 2; fi
             if [[ "$1" == '--python' ]]; then python_command="$2"; else models_directory="$2"; fi
             shift 2 ;;
         -h|--help)
-            printf 'Usage: bash setup.sh [--offline] [--models-directory PATH] [--python PYTHON]\n'
+            printf 'Usage: bash setup.sh [--offline] [--models-directory PATH] [--python PYTHON] [--document-language multilingual|en]\n'
             exit 0 ;;
         *) printf 'Unknown setup option: %s\n' "$1" >&2; exit 2 ;;
     esac
@@ -49,7 +54,7 @@ if [[ ! -x "$uv_path" ]]; then
 fi
 printf 'Installing the locked local environment...\n'
 "$uv_path" sync --project "$project_root" --python "$python_command" --locked --all-extras
-setup_args=(python "${project_root}/scripts/setup_models.py" --models-directory "$models_directory")
+setup_args=(python "${project_root}/scripts/setup_models.py" --models-directory "$models_directory" --document-language "$document_language")
 if ((offline)); then setup_args+=(--offline); fi
 "$uv_path" run --project "$project_root" --locked --offline --no-sync "${setup_args[@]}"
 "$uv_path" run --project "$project_root" --locked --offline --no-sync ragforge doctor

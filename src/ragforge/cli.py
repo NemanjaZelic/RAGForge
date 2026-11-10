@@ -519,7 +519,7 @@ def recontextualize(
         None, help="Explicit facets-v1, facets-v2 or multilingual facets-v3 planning."
     ),
     section_context: str | None = typer.Option(
-        None, help="Explicit section-start-v1 or section-start-v2 completion."
+        None, help="Explicit section-start-v1, section-start-v2 or section-gaps-v3 completion."
     ),
 ) -> None:
     """Reuse small-chunk dense vectors with larger source-identical context chunks."""
@@ -530,12 +530,14 @@ def recontextualize(
     try:
         if query_planning not in (None, "facets-v1", "facets-v2", "facets-v3"):
             raise ValueError("query planning must be facets-v1, facets-v2 or facets-v3")
-        if section_context not in (None, "section-start-v1", "section-start-v2"):
-            raise ValueError("section context must be section-start-v1 or section-start-v2")
+        if section_context not in (None, "section-start-v1", "section-start-v2", "section-gaps-v3"):
+            raise ValueError(
+                "section context must be section-start-v1, section-start-v2 or section-gaps-v3"
+            )
         if plan_queries and query_planning in {"facets-v2", "facets-v3"}:
             raise ValueError("choose --plan-queries or an explicit query-planning policy")
-        if complete_sections and section_context == "section-start-v2":
-            raise ValueError("choose --complete-sections or explicit section-start-v2")
+        if complete_sections and section_context in {"section-start-v2", "section-gaps-v3"}:
+            raise ValueError("choose --complete-sections or an explicit section context policy")
         selected_planning: QueryPlanning | None = (
             "facets-v3"
             if query_planning == "facets-v3"
@@ -546,7 +548,9 @@ def recontextualize(
             else None
         )
         selected_sections: SectionContext | None = (
-            "section-start-v2"
+            "section-gaps-v3"
+            if section_context == "section-gaps-v3"
+            else "section-start-v2"
             if section_context == "section-start-v2"
             else "section-start-v1"
             if complete_sections or section_context == "section-start-v1"

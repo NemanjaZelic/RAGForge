@@ -75,17 +75,48 @@ class RetrievedChunk(ContractModel):
     source: SourceLocation
     rank_score: float
     retrieval_method: SearchMethod
+    # An attached context excerpt is an exact substring of this indexed chunk.
+    # Offsets count Python Unicode characters, not bytes or model tokens.
+    text_offset: Annotated[int | None, Field(ge=0, le=100000, strict=True)] = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
 
 
 class RetrievalResponse(ContractModel):
     contract_version: Literal["1"]
     results: Annotated[list[RetrievedChunk], Field(max_length=50)]
+    context: Annotated[list[RetrievedChunk], Field(max_length=32)] = Field(
+        default_factory=list,
+        exclude_if=lambda value: not value,
+    )
+
+    def evidence_chunks(self, cutoff: int | None = None) -> list[RetrievedChunk]:
+        primary = self.results if cutoff is None else self.results[:cutoff]
+        # Ranked cutoffs stay ranked cutoffs. A full-response evidence check also
+        # includes the explicitly returned, unranked context within the same budget.
+        return (
+            [*primary, *self.context] if cutoff is None or cutoff >= len(self.results) else primary
+        )
 
     @model_validator(mode="after")
     def bounded_unique_results(self) -> Self:
-        if sum(len(result.text) for result in self.results) > 100000:
+        if sum(len(result.text) for result in self.evidence_chunks()) > 100000:
             raise ValueError("total result text exceeds 100000 characters")
-        keys = [(r.collection_id, r.chunk_id) for r in self.results]
+        for extra in self.context:
+            anchors = [
+                r
+                for r in self.results
+                if (
+                    r.collection_id == extra.collection_id
+                    and r.document_id == extra.document_id
+                    and r.source.path == extra.source.path
+                    and r.source.page == extra.source.page
+                    and r.source.section == extra.source.section
+                )
+            ]
+            if not anchors:
+                raise ValueError("context must match a same-page or same-section source result")
+        keys = [(r.collection_id, r.chunk_id) for r in self.evidence_chunks()]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate result chunk")
         return self

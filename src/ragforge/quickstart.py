@@ -11,6 +11,7 @@ import sqlite3
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Literal
 from uuid import uuid4
 
 from ragforge.adapters.integration import create_integration
@@ -32,6 +33,7 @@ SETUP = "setup.cmd" if sys.platform == "win32" else "bash setup.sh"
 class ModelPaths(ContractModel):
     query_model: str
     reranker: str
+    document_language: Literal["multilingual", "en"] = "multilingual"
 
 
 class ActiveBundle(ContractModel):
@@ -103,7 +105,13 @@ def ready_documentation(
             f"Prepared models are missing. Run {SETUP} first; build never downloads models."
         )
     model_spec(query_model)
-    reranker_spec(reranker)
+    ranker = reranker_spec(reranker)
+    english = models.document_language == "en"
+    if english and ranker.model_id != "cross-encoder/ms-marco-MiniLM-L6-v2":
+        raise ValueError(
+            "English documentation setup requires its prepared English reranker; "
+            "rerun setup --document-language en."
+        )
     stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S") + "-" + uuid4().hex[:8]
     provenance = None
     if url is not None:
@@ -150,6 +158,10 @@ def ready_documentation(
         destination,
         collection_id="documents",
         web_sources=provenance,
+        rerank_batch_size=1 if english else None,
+        query_planning="facets-v3" if english else None,
+        section_context="section-gaps-v3" if english else None,
+        query_language="en" if english else None,
         model_directory=query_model,
         reranker_directory=reranker,
         chunk_config=ChunkConfig(strategy="sections"),
@@ -278,7 +290,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 if not response.results:
                     print("No matching source evidence found.")
-                for rank, item in enumerate(response.results, 1):
+                for rank, item in enumerate(response.evidence_chunks(), 1):
                     source = item.source
                     location = source.url or source.path
                     if source.page is not None:

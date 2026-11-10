@@ -446,6 +446,19 @@
           "default": null,
           "title": "Query Aliases"
         },
+        "query_language": {
+          "anyOf": [
+            {
+              "const": "en",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Query Language"
+        },
         "query_planning": {
           "anyOf": [
             {
@@ -471,7 +484,8 @@
             {
               "enum": [
                 "section-start-v1",
-                "section-start-v2"
+                "section-start-v2",
+                "section-gaps-v3"
               ],
               "type": "string"
             },

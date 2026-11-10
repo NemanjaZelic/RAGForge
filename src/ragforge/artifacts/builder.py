@@ -21,9 +21,11 @@ from ragforge.artifacts.manifest import (
     DocumentRecord,
     FileRecord,
     QueryModel,
+    QueryPlanning,
     RerankerModel,
     RetrievalConfiguration,
     RuntimeRequirements,
+    SectionContext,
 )
 from ragforge.artifacts.verification import build_identity, bundle_files, verify_bundle
 from ragforge.core.chunk import ChunkConfig, chunker_version
@@ -76,6 +78,10 @@ def build_bundle(
     web_sources: Path | None = None,
     reranker_directory: Path | None = None,
     rerank_candidates: int = 100,
+    rerank_batch_size: int | None = None,
+    query_planning: QueryPlanning | None = None,
+    section_context: SectionContext | None = None,
+    query_language: Literal["en"] | None = None,
     max_chunks_per_document: int | None = None,
     chunk_config: ChunkConfig | None = None,
     token_aware: bool = False,
@@ -129,6 +135,10 @@ def build_bundle(
             web_sources=web_sources,
             reranker_directory=reranker_directory,
             rerank_candidates=rerank_candidates,
+            rerank_batch_size=rerank_batch_size,
+            query_planning=query_planning,
+            section_context=section_context,
+            query_language=query_language,
             max_chunks_per_document=max_chunks_per_document,
             chunk_config=chunk_config,
             token_aware=token_aware,
@@ -159,6 +169,10 @@ def _build_bundle(
     web_sources: Path | None = None,
     reranker_directory: Path | None = None,
     rerank_candidates: int = 100,
+    rerank_batch_size: int | None = None,
+    query_planning: QueryPlanning | None = None,
+    section_context: SectionContext | None = None,
+    query_language: Literal["en"] | None = None,
     max_chunks_per_document: int | None = None,
     chunk_config: ChunkConfig | None = None,
     token_aware: bool = False,
@@ -214,11 +228,30 @@ def _build_bundle(
         raise ValueError("max chunks per document must be between 1 and 50")
     if max_chunks_per_document is not None and reranker_directory is None:
         raise ValueError("document diversity requires an explicit reranker")
+    if rerank_batch_size is not None and (
+        type(rerank_batch_size) is not int or not 1 <= rerank_batch_size <= 8
+    ):
+        raise ValueError("reranker batch size must be 1..8")
+    if query_planning not in (None, "facets-v1", "facets-v2", "facets-v3"):
+        raise ValueError("unsupported query planning policy")
+    if section_context not in (None, "section-start-v1", "section-start-v2", "section-gaps-v3"):
+        raise ValueError("unsupported section context policy")
+    if query_language not in (None, "en"):
+        raise ValueError("unsupported query language")
+    if reranker_directory is None and any(
+        value is not None
+        for value in (rerank_batch_size, query_planning, section_context, query_language)
+    ):
+        raise ValueError("retrieval tuning requires an explicit local reranker")
     reranker_descriptor = None
     if reranker_directory is not None:
         from ragforge.core.rerank import reranker_spec
 
         reranker_descriptor = reranker_spec(reranker_directory)
+        if rerank_batch_size is not None:
+            reranker_descriptor = reranker_descriptor.model_copy(
+                update={"batch_size": rerank_batch_size}
+            )
 
     limits = scan_limits or ScanLimits()
     if dense_backend not in {"exact", "ann"} or (profile == "minimal" and dense_backend != "exact"):
@@ -288,6 +321,16 @@ def _build_bundle(
                 "candidates": rerank_candidates,
                 "max_chunks_per_document": max_chunks_per_document,
             }
+        if reranker_descriptor is not None:
+            tuning = recipe["retrieval_configuration"]
+            assert isinstance(tuning, dict)
+            for key, value in (
+                ("query_planning", query_planning),
+                ("section_context", section_context),
+                ("query_language", query_language),
+            ):
+                if value is not None:
+                    tuning[key] = value
         workspace = BuildWorkspace(work_directory, output, recipe, resume=resume)
         stage = workspace.stage
         if workspace.published:
@@ -458,8 +501,20 @@ def _build_bundle(
                 shutil.copyfile(reranker_directory / relative, destination_r)
                 if storage:
                     storage.account(destination_r.stat().st_size - old_size)
+            if rerank_batch_size is not None:
+                target = reranker_root / "reranker.json"
+                before = target.stat().st_size
+                payload = (reranker_descriptor.model_dump_json(indent=2) + "\n").encode("utf-8")
+                if storage:
+                    storage.check(max(0, len(payload) - before))
+                target.write_bytes(payload)
+                if storage:
+                    storage.account(len(payload) - before)
             retrieval_configuration = RetrievalConfiguration(
                 candidates_per_method=rerank_candidates,
+                query_planning=query_planning,
+                section_context=section_context,
+                query_language=query_language,
                 max_chunks_per_document=max_chunks_per_document,
                 reranker=RerankerModel(
                     model_id=reranker_descriptor.model_id,

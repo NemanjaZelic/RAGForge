@@ -1,5 +1,7 @@
 param(
     [string]$ModelDirectory = '',
+    [ValidateSet('multilingual', 'en')]
+    [string]$DocumentLanguage = 'multilingual',
     [switch]$Offline
 )
 $ErrorActionPreference = 'Stop'
@@ -20,7 +22,7 @@ if ($LASTEXITCODE -ne 0) { throw 'RAGForge needs 64-bit Python 3.11 or newer (3.
 Write-Host 'Installing the locked local environment...'
 & (Join-Path $PSScriptRoot 'dev.ps1') setup
 if ($LASTEXITCODE -ne 0) { throw 'Environment setup failed.' }
-$setupArgs = @('python', (Join-Path $PSScriptRoot 'setup_models.py'))
+$setupArgs = @('python', (Join-Path $PSScriptRoot 'setup_models.py'), '--document-language', $DocumentLanguage)
 if ($ModelDirectory) { $setupArgs += @('--models-directory', $ModelDirectory) }
 if ($Offline) { $setupArgs += '--offline' }
 & (Join-Path $PSScriptRoot 'dev.ps1') run @setupArgs

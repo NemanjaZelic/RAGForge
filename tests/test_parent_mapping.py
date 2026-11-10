@@ -208,8 +208,67 @@ def test_noncontiguous_page_ordinals_and_range_budget_fallback(tmp_path, monkeyp
     ranks = [(rank["chunk_id"], 1.0)]
     mapped = ParentMapper(child, parent).map_ranks(ranks)
     assert mapped and {key for key, _ in mapped} <= page_one_ids
+    warmed = ParentMapper(child, parent)
+    assert warmed.warm_up()
+    assert warmed.map_ranks(ranks) == mapped
+    assert warmed._warm_bounds and not warmed._bounds
+    monkeypatch.setattr(module, "MAX_WARM_PAGE_RANGES", 1)
+    limited = ParentMapper(child, parent)
+    assert not limited.warm_up() and not limited._warm_bounds
+    assert limited.map_ranks(ranks) == mapped
     monkeypatch.setattr(module, "MAX_PAGE_RANGES", 1)
     fallback = ParentMapper(child, parent)
     assert fallback.map_ranks(ranks) == mapped
     assert fallback._bounds[rank["document_id"]] is None
     assert fallback._bounds_entries == 0
+
+
+def test_line_interval_index_matches_exhaustive_scan_with_nested_ranges(tmp_path, monkeypatch):
+    from ragforge.core import parents as module
+
+    child, parent = indexes(tmp_path)
+    with child._connect() as db:
+        row = db.execute(
+            "SELECT chunk_id,source_json FROM chunks ORDER BY rowid LIMIT 1"
+        ).fetchone()
+    source = json.loads(row["source_json"])
+    source.update(line_start=50, line_end=60)
+    with sqlite3.connect(child.database) as db:
+        db.execute(
+            "UPDATE chunks SET source_json=? WHERE chunk_id=?",
+            (json.dumps(source), row["chunk_id"]),
+        )
+    with sqlite3.connect(parent.database) as db:
+        rows = db.execute("SELECT chunk_id,source_json FROM chunks ORDER BY rowid").fetchall()
+        for i, (key, raw) in enumerate(rows):
+            location = json.loads(raw)
+            first, last = [(1, 100), (2, 3), (50, 60), (None, None), (200, 210)][i % 5]
+            location.update(line_start=first, line_end=last)
+            db.execute(
+                "UPDATE chunks SET source_json=? WHERE chunk_id=?", (json.dumps(location), key)
+            )
+    ranks = [(row["chunk_id"], 1.0)]
+    indexed = ParentMapper(child, parent).map_ranks(ranks)
+    assert indexed
+    monkeypatch.setattr(module, "bisect_left", lambda values, target: 0)
+    monkeypatch.setattr(module, "bisect_right", lambda values, target: len(values))
+    assert ParentMapper(child, parent).map_ranks(ranks) == indexed
+
+
+def test_sql_line_prefilter_matches_full_scan_and_does_not_poison_page_cache(tmp_path, monkeypatch):
+    child, parent = indexes(tmp_path)
+    ranks = child.rank_bm25(RetrieveRequest(query="Sentence 10"), 10)
+    filtered = ParentMapper(child, parent)
+    expected = filtered.map_ranks(ranks)
+    assert expected
+    assert not filtered._cache  # A query-specific subset is never cached as a whole page.
+    exhaustive = ParentMapper(child, parent)
+    original = exhaustive._page_rows
+    monkeypatch.setattr(
+        exhaustive,
+        "_page_rows",
+        lambda db, document, page, line_ranges=None: original(db, document, page),
+    )
+    assert exhaustive.map_ranks(ranks) == expected
+    second = child.rank_bm25(RetrieveRequest(query="Sentence 29"), 5)
+    assert filtered.map_ranks(second) == exhaustive.map_ranks(second)

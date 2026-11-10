@@ -10,6 +10,7 @@ from ragforge.core.contracts import (
     CollectionDescription,
     FetchContextRequest,
     RetrievalResponse,
+    RetrievedChunk,
     RetrieveRequest,
 )
 from ragforge.core.embedding import ONNXEmbedder
@@ -98,17 +99,35 @@ class BundleEngine:
     def _source_urls(self, response: RetrievalResponse) -> RetrievalResponse:
         if not self._web_urls:
             return response
-        results = []
-        for item in response.results:
-            url = self._web_urls.get(item.source.path)
-            if url is None:
-                raise ValueError("returned source is missing its verified URL provenance")
-            results.append(
-                item.model_copy(update={"source": item.source.model_copy(update={"url": url})})
-            )
-        return response.model_copy(update={"results": results})
+
+        def annotated(items: list[RetrievedChunk]) -> list[RetrievedChunk]:
+            result = []
+            for item in items:
+                url = self._web_urls.get(item.source.path)
+                if url is None:
+                    raise ValueError("returned source is missing its verified URL provenance")
+                result.append(
+                    item.model_copy(update={"source": item.source.model_copy(update={"url": url})})
+                )
+            return result
+
+        return response.model_copy(
+            update={"results": annotated(response.results), "context": annotated(response.context)}
+        )
 
     def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
+        config = self.manifest.retrieval_configuration
+        if config and config.query_language == "en" and request.query_translation is not None:
+            method = request.search_method or self.manifest.default_search_method
+            if method != "hybrid" or request.rerank is False:
+                raise ValueError(
+                    "query translation requires hybrid retrieval with a local reranker"
+                )
+            # The explicitly declared English-docs profile uses the caller's
+            # faithful source-language query. No translation service is called.
+            request = request.model_copy(
+                update={"query": request.query_translation, "query_translation": None}
+            )
         response = self._retrieve(request)
         if self._source_context is not None:
             config = self.manifest.retrieval_configuration
@@ -116,6 +135,19 @@ class BundleEngine:
                 request,
                 response,
                 max_chunks_per_document=config.max_chunks_per_document if config else None,
+            )
+        config = self.manifest.retrieval_configuration
+        method = request.search_method or self.manifest.default_search_method
+        rerank = request.rerank if request.rerank is not None else method != "bm25"
+        if config and config.section_context == "section-gaps-v3" and rerank:
+            from ragforge.core.section_gaps import complete_section_gaps
+
+            response = complete_section_gaps(
+                self.sqlite,
+                request,
+                response,
+                max_chunks_per_document=config.max_chunks_per_document,
+                page_bounds=self._parents.page_range if self._parents is not None else None,
             )
         return self._source_urls(response)
 
@@ -250,7 +282,23 @@ class BundleEngine:
         if dense:
             self._prepare_dense()
             assert self._embedder is not None
-            self._embedder.encode(["warmup"], query=True)
+            neutral = self._embedder.encode(["warmup"], query=True)[0]
+            from ragforge.core.ann import AnnStore
+
+            config = self.manifest.retrieval_configuration
+            if (
+                self._parents is not None
+                and config
+                and config.query_language == "en"
+                and any(
+                    d.source_path.casefold().endswith(".pdf") for d in self.collection.documents
+                )
+            ):
+                self._parents.warm_up()
+            if isinstance(self._dense, AnnStore):
+                # Perform this after metadata scans so they cannot evict the
+                # graph's common read paths immediately before the first query.
+                self._dense.warm_up(neutral)
         if rerank:
             model = self._get_reranker()
             # Distinct neutral inputs prepare worker buffers, not a user-query cache.
@@ -352,7 +400,9 @@ class BundleEngine:
                 request,
                 response,
                 max_chunks_per_document=config.max_chunks_per_document,
-                policy=config.section_context,
+                policy="section-start-v2"
+                if config.section_context == "section-gaps-v3"
+                else config.section_context,
             )
         return response
 

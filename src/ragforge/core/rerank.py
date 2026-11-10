@@ -9,7 +9,7 @@ from collections.abc import Iterator
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 from threading import Lock, RLock
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Literal, Protocol
 
 from pydantic import Field
 
@@ -21,6 +21,12 @@ from ragforge.types import ContractModel
 if TYPE_CHECKING:
     import numpy as np
     from numpy.typing import NDArray
+
+
+class _ScoringSession(Protocol):
+    def run(
+        self, outputs: None, values: dict[str, NDArray[np.int64]]
+    ) -> list[NDArray[np.float32]]: ...
 
 
 class RerankerSpec(ContractModel):
@@ -109,8 +115,9 @@ class ONNXReranker:
         options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
         options.use_deterministic_compute = True
         # No model filesystem base: an external-weight graph cannot read local files.
+        graph = (directory / "model.onnx").read_bytes()
         self.session = ort.InferenceSession(
-            (directory / "model.onnx").read_bytes(),
+            graph,
             sess_options=options,
             providers=["CPUExecutionProvider"],
         )
@@ -125,6 +132,54 @@ class ONNXReranker:
         outputs = self.session.get_outputs()
         if len(outputs) != 1 or len(outputs[0].shape) != 2 or outputs[0].shape[-1] != 1:
             raise ValueError("reranker must expose one logit per pair")
+
+        self.execution_optimization = "original"
+        from ragforge.core.signed_weights import prepare_signed_weights
+
+        try:
+            prepared = prepare_signed_weights(graph)
+            if prepared is not None:
+                candidate = ort.InferenceSession(
+                    prepared.content, sess_options=options, providers=["CPUExecutionProvider"]
+                )
+                if self._same_initial_scores(candidate):
+                    self.session = candidate
+                    self._cache_session = candidate
+                    self.execution_optimization = "vnni-signed-weights"
+        except Exception:
+            # Optional execution tuning must never replace the original model
+            # on unsupported kernels, parser errors or failed startup checks.
+            self.execution_optimization = "original"
+
+    def _same_initial_scores(self, candidate: _ScoringSession) -> bool:
+        import numpy as np
+
+        # Neutral startup probes, never user documents or answers. Include a
+        # short and a long dynamic shape before selecting the derived session.
+        for repeats in (1, self.spec.max_tokens):
+            self.tokenizer.enable_truncation(
+                max_length=self.spec.max_tokens, strategy="only_second"
+            )
+            try:
+                encoded = self.tokenizer.encode_batch(
+                    [
+                        ("warmup", "warmup token " * repeats),
+                        ("warmup", "transaction retry source " * repeats),
+                    ]
+                )
+            finally:
+                self.tokenizer.no_truncation()
+            arrays = {
+                "input_ids": np.asarray([e.ids for e in encoded], dtype=np.int64),
+                "attention_mask": np.asarray([e.attention_mask for e in encoded], dtype=np.int64),
+                "token_type_ids": np.asarray([e.type_ids for e in encoded], dtype=np.int64),
+            }
+            values = {name: arrays[name] for name in self.inputs}
+            original = self.session.run(None, values)[0]
+            optimized = candidate.run(None, values)[0]
+            if not np.isfinite(original).all() or not np.array_equal(original, optimized):
+                return False
+        return True
 
     def cache_info(self) -> dict[str, int]:
         with self._cache_lock:

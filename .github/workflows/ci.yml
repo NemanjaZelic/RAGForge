@@ -83,6 +83,7 @@ jobs:
           path: |
             models/e5-small
             models/mmarco-minilm-reranker
+            models/ms-marco-minilm-reranker
           key: quickstart-linux-e5-mmarco-${{ hashFiles('scripts/prepare_models.py', 'scripts/prepare_reranker.py', 'scripts/setup_models.py') }}
       - name: Prepare the documented Python prerequisite
         run: uv python install 3.13
@@ -97,3 +98,14 @@ jobs:
           bash ragforge.sh agent --output ".cache/agent with spaces"
       - name: Actual generated agent configuration
         run: .venv/bin/python scripts/check_quickstart_mcp.py ".cache/agent with spaces/mcp.json"
+
+      - name: Explicit English documentation setup through the user command
+        run: bash setup.sh --document-language en --python "$(uv python find 3.13)"
+      - name: Reuse the English profile entirely offline
+        run: bash setup.sh --document-language en --offline --python "$(uv python find 3.13)"
+      - name: Build the English profile and generate its agent skill
+        run: |
+          bash ragforge.sh build examples/mini-docs
+          bash ragforge.sh agent --output ".cache/English agent with spaces"
+      - name: English profile actual generated MCP connection
+        run: .venv/bin/python scripts/check_quickstart_mcp.py ".cache/English agent with spaces/mcp.json"

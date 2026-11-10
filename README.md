@@ -48,6 +48,28 @@ existing agent settings and publishes a new output folder each time.
 
 See [agent integration](docs/AGENT-INTEGRATION.md) for the complete final step.
 
+## Faster searches of English documentation
+
+For **English source documents**, choose the explicit English setup profile:
+
+```bash
+bash setup.sh --document-language en
+bash ragforge.sh build
+bash ragforge.sh agent
+```
+
+Windows uses `.\setup.cmd -DocumentLanguage en`, then the same `build` and
+`agent` commands through `.\ragforge.cmd`. This selects the smaller pinned English
+reranker, single-pair inference and bounded source context. The generated skill
+asks the agent to search with a faithful English question and answer in your
+language, preserving identifiers, numbers and negation. Retrieval itself does
+not call a translator or an LLM service.
+
+Rebuild and regenerate the agent files when switching profiles; existing bundles
+keep their configuration. Keep the default multilingual profile for other source
+languages. For setup options and the measured scope, see
+[the English documentation profile](docs/ENGLISH-DOCUMENTATION.md).
+
 ## Start with three commands
 
 64-bit Python 3.11+ is required, with `venv` and `pip`; 3.13 is tested. Run commands

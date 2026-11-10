@@ -224,6 +224,19 @@ class AnnStore:
             self.indexes.append(index)
             self.ends.append(shard.first_row + shard.rows - 1)
 
+    def warm_up(self, vector: NDArray[np.float32]) -> None:
+        """Touch immutable graph pages and initialize neutral search scratch.
+
+        No question result is stored. This explicit startup work is separate
+        from novel-query latency and uses bounded extra Python memory.
+        """
+        if not getattr(self, "_pages_warmed", False):
+            # Portable for Windows and Linux, including read-only mmaps. Read
+            # one byte per OS page without copying the full graph into RAM.
+            sum(self.mapping[offset] for offset in range(0, len(self.mapping), mmap.PAGESIZE))
+            self._pages_warmed = True
+        self.rank(vector, 200)
+
     def _candidate_scores(
         self, shard_index: int, keys: list[int], vector: NDArray[np.float32]
     ) -> list[tuple[int, float]]:

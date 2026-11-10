@@ -98,11 +98,13 @@ def create_integration(
             engine.manifest.profile == "balanced"
             and retrieval is not None
             and retrieval.query_planning in {"facets-v1", "facets-v2", "facets-v3"}
-            and retrieval.section_context in {"section-start-v1", "section-start-v2"}
+            and retrieval.section_context
+            in {"section-start-v1", "section-start-v2", "section-gaps-v3"}
         )
         body = skill_body(
             name,
             wide_context=wide_context,
+            query_language=retrieval.query_language if retrieval else None,
             translated_search=(
                 retrieval is not None and engine.manifest.default_search_method == "hybrid"
             ),
@@ -122,6 +124,8 @@ def create_integration(
             "search_methods": engine.manifest.capabilities,
             "sample_source_paths": [doc.source_path for doc in engine.collection.documents[:20]],
         }
+        if retrieval and retrieval.query_language:
+            metadata["recommended_query_language"] = retrieval.query_language
         if engine.manifest.web_sources is not None:
             from ragforge.core.web_sources import read_web_sources
 

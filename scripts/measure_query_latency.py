@@ -89,6 +89,10 @@ async def measure(arguments: argparse.Namespace) -> dict[str, object]:
                         "mcp_roundtrip_seconds": elapsed,
                         "under_10_seconds": elapsed < 10,
                         "returned_chunks": len(result["results"]),
+                        "attached_context_chunks": len(result.get("context", [])),
+                        "total_evidence_characters": sum(
+                            len(c["text"]) for c in [*result["results"], *result.get("context", [])]
+                        ),
                         "response_sha256": digest,
                     }
                 )

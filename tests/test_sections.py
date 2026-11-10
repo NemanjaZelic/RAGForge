@@ -185,7 +185,7 @@ def test_v2_completes_the_sole_missing_first_chunk_without_displacing_strong_hit
     assert sum(c.document_id == "a" * 64 for c in result.results) == 3
     assert any(c.chunk_id == "0" * 64 for c in result.results)
     assert all(c.document_id in request.filters.document_ids for c in result.results)
-    assert sum(len(c.text) for c in result.results) <= request.max_output_chars
+    assert sum(len(c.text) for c in result.evidence_chunks()) <= request.max_output_chars
 
 
 def test_v2_cross_document_completion_respects_document_cap(section_index):
@@ -204,3 +204,207 @@ def test_v2_cannot_exceed_request_character_budget(section_index):
         update={"max_output_chars": sum(len(c.text) for c in original.results)}
     )
     assert complete_sections(engine, request, original, policy="section-start-v2") is original
+
+
+def gap_context(section_index):
+    engine, request, _ = section_index
+    ranks = [(f"{i:064x}", 100 - i) for i in [0, *range(2, 21), *range(22, 52)]]
+    return engine, request, engine.ranked_response(ranks, request, "hybrid")
+
+
+def test_gap_completion_keeps_bracketing_anchors_and_exact_source_chunks(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, original = gap_context(section_index)
+    result = complete_section_gaps(engine, request, original)
+    assert len(result.results) == 50 and len({c.chunk_id for c in result.results}) == 50
+    assert any(c.chunk_id == f"{21:064x}" for c in result.context)
+    assert all(any(c.chunk_id == f"{i:064x}" for c in result.results) for i in [20, 22])
+    assert [(c.chunk_id, c.text) for c in result.results[:20]] == [
+        (c.chunk_id, c.text) for c in original.results[:20]
+    ]
+    assert sum(len(c.text) for c in result.evidence_chunks()) <= request.max_output_chars
+    with engine._connect() as db:
+        for c in result.evidence_chunks():
+            row = db.execute("SELECT * FROM chunks WHERE chunk_id=?", (c.chunk_id,)).fetchone()
+            assert c == engine._chunk(row, c.rank_score, c.retrieval_method)
+
+
+def test_gap_completion_refuses_scope_before_any_database_access(section_index, monkeypatch):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, original = gap_context(section_index)
+    monkeypatch.setattr(engine, "_connect", lambda: pytest.fail("must validate scope first"))
+    with pytest.raises(RetrievalError, match="outside request scope"):
+        complete_section_gaps(
+            engine, request.model_copy(update={"collection_id": "wrong"}), original
+        )
+
+
+def test_gap_completion_respects_character_budget_and_page_boundaries(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, original = gap_context(section_index)
+    with sqlite3.connect(engine.database) as db:
+        db.execute("UPDATE chunks SET text=? WHERE chunk_id=?", ("large " * 1000, f"{21:064x}"))
+    limited = request.model_copy(
+        update={"max_output_chars": sum(len(c.text) for c in original.results)}
+    )
+    assert complete_section_gaps(engine, limited, original) is original
+    with sqlite3.connect(engine.database) as db:
+        source = json.dumps({"path": "guide.html", "section": "Guide > Detail", "page": 2})
+        db.execute("UPDATE chunks SET source_json=? WHERE chunk_id=?", (source, f"{22:064x}"))
+    ranks = [(c.chunk_id, c.rank_score) for c in original.results]
+    response = engine.ranked_response(ranks, request, "hybrid")
+    assert complete_section_gaps(engine, request, response) is response
+
+
+def test_gap_context_preserves_every_section_representative(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, original = gap_context(section_index)
+    with sqlite3.connect(engine.database) as db:
+        for ordinal in range(23, 53):
+            source = json.dumps({"path": "guide.html", "section": f"Guide > Unique {ordinal}"})
+            db.execute(
+                "UPDATE chunks SET source_json=? WHERE chunk_id=?", (source, f"{ordinal:064x}")
+            )
+    original = engine.ranked_response(
+        [(c.chunk_id, c.rank_score) for c in original.results], request, "hybrid"
+    )
+    result = complete_section_gaps(engine, request, original)
+    assert result.results == original.results
+    assert any(c.chunk_id == f"{21:064x}" for c in result.context)
+
+
+def test_single_hit_can_return_its_complete_short_section_without_losing_sources(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, _ = section_index
+    with sqlite3.connect(engine.database) as db:
+        for ordinal in range(20, 25):
+            source = json.dumps({"path": "guide.html", "section": "Guide > Specific definition"})
+            db.execute(
+                "UPDATE chunks SET source_json=? WHERE chunk_id=?", (source, f"{ordinal:064x}")
+            )
+    selected = [i for i in range(53) if i not in {1, 20, 21, 23, 24}]
+    original = engine.ranked_response([(f"{i:064x}", 100 - i) for i in selected], request, "hybrid")
+    assert sum(c.source.section == "Guide > Specific definition" for c in original.results) == 1
+    result = complete_section_gaps(engine, request, original)
+    assert result.results == original.results
+    assert {c.chunk_id for c in result.context} == {f"{i:064x}" for i in [20, 21, 23, 24]}
+    assert sum(len(c.text) for c in result.evidence_chunks()) <= request.max_output_chars
+
+
+def test_short_pdf_page_is_completed_even_without_a_section_heading(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, _ = section_index
+    with sqlite3.connect(engine.database) as db:
+        for ordinal in range(20, 25):
+            source = json.dumps({"path": "guide.html", "page": 3})
+            db.execute(
+                "UPDATE chunks SET source_json=? WHERE chunk_id=?", (source, f"{ordinal:064x}")
+            )
+    selected = [i for i in range(53) if i not in {1, 20, 21, 23, 24}]
+    original = engine.ranked_response([(f"{i:064x}", 100 - i) for i in selected], request, "hybrid")
+    result = complete_section_gaps(engine, request, original)
+    assert result.results == original.results
+    assert {c.chunk_id for c in result.context if c.source.page == 3} == {
+        f"{i:064x}" for i in [20, 21, 23, 24]
+    }
+    assert all(c.source.page == 3 for c in result.context)
+
+
+def test_unheaded_text_adds_neighbors_without_removing_primary_evidence(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, _ = section_index
+    with sqlite3.connect(engine.database) as db:
+        db.execute("UPDATE chunks SET source_json=?", (json.dumps({"path": "guide.html"}),))
+    request = request.model_copy(update={"max_output_chars": 16000})
+    original = engine.ranked_response(
+        [(f"{i:064x}", 100 - i) for i in range(0, 53, 2)], request, "hybrid"
+    )
+    result = complete_section_gaps(engine, request, original)
+    assert result.context
+    assert sum(len(c.text) for c in result.evidence_chunks()) <= request.max_output_chars
+    assert all(c.rank_score == 0 for c in result.context)
+    assert result.results == original.results
+    assert {c.chunk_id for c in result.results}.isdisjoint(c.chunk_id for c in result.context)
+
+
+def test_unheaded_neighbor_excerpt_is_verbatim_and_preserves_all_primary_hits(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, _ = section_index
+    with sqlite3.connect(engine.database) as db:
+        db.execute("UPDATE chunks SET source_json=?", (json.dumps({"path": "guide.html"}),))
+        db.execute(
+            "UPDATE chunks SET text=? WHERE chunk_id=?",
+            ("Beginning. " + "verbatim source " * 150 + "Nearest boundary.", f"{1:064x}"),
+        )
+    original = engine.ranked_response(
+        [(f"{i:064x}", 100 - i) for i in range(0, 53, 2)], request, "hybrid"
+    )
+    request = request.model_copy(
+        update={"max_output_chars": sum(len(c.text) for c in original.results) + 200}
+    )
+    result = complete_section_gaps(engine, request, original)
+    assert result.results == original.results
+    assert len(result.context) == 1
+    extra = result.context[0]
+    assert len(extra.text) == 200 and extra.text.startswith("Beginning.")
+    assert extra.text_offset is not None
+    with engine._connect() as db:
+        stored = db.execute(
+            "SELECT text FROM chunks WHERE chunk_id=?", (extra.chunk_id,)
+        ).fetchone()[0]
+    assert extra.text == stored[extra.text_offset : extra.text_offset + len(extra.text)]
+    assert sum(len(c.text) for c in result.evidence_chunks()) == request.max_output_chars
+
+
+def test_previous_neighbor_excerpt_uses_its_tail(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, _ = section_index
+    with sqlite3.connect(engine.database) as db:
+        db.execute("UPDATE chunks SET source_json=?", (json.dumps({"path": "guide.html"}),))
+        db.execute(
+            "UPDATE chunks SET text=? WHERE chunk_id=?",
+            ("source " * 300 + "Closest preceding boundary.", f"{1:064x}"),
+        )
+    selected = [2, *range(4, 53, 2), 0]
+    original = engine.ranked_response([(f"{i:064x}", 100 - i) for i in selected], request, "hybrid")
+    request = request.model_copy(
+        update={"max_output_chars": sum(len(c.text) for c in original.results) + 200}
+    )
+    result = complete_section_gaps(engine, request, original)
+    assert result.results == original.results
+    assert result.context[0].text.endswith("Closest preceding boundary.")
+    assert result.context[0].text_offset > 0
+
+
+def test_verified_page_bounds_do_not_change_full_context(section_index):
+    from ragforge.core.section_gaps import complete_section_gaps
+
+    engine, request, _ = section_index
+    with sqlite3.connect(engine.database) as db:
+        for ordinal in [20, 22, 24]:
+            db.execute(
+                "UPDATE chunks SET source_json=? WHERE chunk_id=?",
+                (json.dumps({"path": "guide.html", "page": 3}), f"{ordinal:064x}"),
+            )
+    selected = [i for i in range(53) if i not in {1, 20, 24}]
+    original = engine.ranked_response([(f"{i:064x}", 100 - i) for i in selected], request, "hybrid")
+    full = complete_section_gaps(engine, request, original)
+    bounded = complete_section_gaps(
+        engine,
+        request,
+        original,
+        page_bounds=lambda document, page: (20, 24) if page == 3 else None,
+    )
+    assert bounded == full
+    assert {c.chunk_id for c in bounded.context if c.source.page == 3} == {
+        f"{i:064x}" for i in [20, 24]
+    }

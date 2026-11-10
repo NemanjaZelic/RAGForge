@@ -11,9 +11,12 @@ import sys
 import tempfile
 from collections.abc import Callable
 from pathlib import Path
+from typing import Literal
 
 from prepare_models import CANDIDATES
 from prepare_reranker import MMARCO_MODEL, MMARCO_REVISION
+from prepare_reranker import MODEL as ENGLISH_MODEL
+from prepare_reranker import REVISION as ENGLISH_REVISION
 
 from ragforge.artifacts.builder import publish_new
 from ragforge.core.embedding import ModelSpec, model_spec
@@ -72,27 +75,38 @@ def prepare(
     return destination
 
 
-def setup_models(project: Path, models: Path, *, offline: bool = False) -> ModelPaths:
+def setup_models(
+    project: Path,
+    models: Path,
+    *,
+    offline: bool = False,
+    document_language: Literal["multilingual", "en"] = "multilingual",
+) -> ModelPaths:
+    if document_language not in {"multilingual", "en"}:
+        raise ValueError("document language must be multilingual or en")
     candidate = CANDIDATES["e5-small"]
     query = prepare(
         models / "e5-small",
         script=ROOT / "scripts/prepare_models.py",
         script_args=["e5-small"],
-        expected_id=candidate["id"],
-        expected_revision=candidate["revision"],
+        expected_id=str(candidate["id"]),
+        expected_revision=str(candidate["revision"]),
         validate=model_spec,
         offline=offline,
     )
     reranker = prepare(
-        models / "mmarco-minilm-reranker",
+        models
+        / ("ms-marco-minilm-reranker" if document_language == "en" else "mmarco-minilm-reranker"),
         script=ROOT / "scripts/prepare_reranker.py",
-        script_args=["--model", "mmarco-minilm"],
-        expected_id=MMARCO_MODEL,
-        expected_revision=MMARCO_REVISION,
+        script_args=["--model", "minilm-l6" if document_language == "en" else "mmarco-minilm"],
+        expected_id=ENGLISH_MODEL if document_language == "en" else MMARCO_MODEL,
+        expected_revision=ENGLISH_REVISION if document_language == "en" else MMARCO_REVISION,
         validate=reranker_spec,
         offline=offline,
     )
-    paths = ModelPaths(query_model=str(query), reranker=str(reranker))
+    paths = ModelPaths(
+        query_model=str(query), reranker=str(reranker), document_language=document_language
+    )
     atomic_json(state_directory(project) / "models.json", paths.model_dump(mode="json"))
     return paths
 
@@ -101,9 +115,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--models-directory", type=Path, default=ROOT / "models")
     parser.add_argument("--offline", action="store_true")
+    parser.add_argument(
+        "--document-language", choices=["multilingual", "en"], default="multilingual"
+    )
     args = parser.parse_args()
     try:
-        setup_models(ROOT, args.models_directory, offline=args.offline)
+        setup_models(
+            ROOT,
+            args.models_directory,
+            offline=args.offline,
+            document_language=args.document_language,
+        )
         return 0
     except (ValueError, OSError, RuntimeError, subprocess.SubprocessError) as error:
         print(f"Setup failed: {error}", file=sys.stderr)

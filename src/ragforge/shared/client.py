@@ -175,11 +175,13 @@ class SharedClient:
             raise ValueError("shared server returned an invalid retrieval contract") from None
         if (
             len(result.results) > request.top_k
-            or sum(len(r.text) for r in result.results) > request.max_output_chars
+            or sum(len(r.text) for r in result.evidence_chunks()) > request.max_output_chars
             or request.collection_id is not None
-            and any(r.collection_id != request.collection_id for r in result.results)
+            and any(r.collection_id != request.collection_id for r in result.evidence_chunks())
             or request.filters is not None
-            and any(r.document_id not in request.filters.document_ids for r in result.results)
+            and any(
+                r.document_id not in request.filters.document_ids for r in result.evidence_chunks()
+            )
         ):
             raise ValueError("shared response escaped the requested scope or budget")
         return result
@@ -192,11 +194,12 @@ class SharedClient:
         except ValidationError:
             raise ValueError("shared server returned an invalid context contract") from None
         if (
-            sum(len(r.text) for r in result.results) > request.max_output_chars
-            or any(r.collection_id != request.collection_id for r in result.results)
+            sum(len(r.text) for r in result.evidence_chunks()) > request.max_output_chars
+            or any(r.collection_id != request.collection_id for r in result.evidence_chunks())
+            or bool(result.context)
             or len(result.results) > 2 * request.neighbors + 1
-            or len({r.document_id for r in result.results}) > 1
-            or not any(r.chunk_id == request.chunk_id for r in result.results)
+            or len({r.document_id for r in result.evidence_chunks()}) > 1
+            or not any(r.chunk_id == request.chunk_id for r in result.evidence_chunks())
         ):
             raise ValueError("shared context escaped the requested scope or budget")
         return result

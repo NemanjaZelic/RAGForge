@@ -22,7 +22,7 @@ def complete_sections(
     response: RetrievalResponse,
     *,
     max_chunks_per_document: int | None = None,
-    policy: Literal["section-start-v1", "section-start-v2"] = "section-start-v1",
+    policy: Literal["section-start-v1", "section-start-v2", "section-gaps-v3"] = "section-start-v1",
 ) -> RetrievalResponse:
     """Exchange weak same-document hits for short section starts and successors.
 
@@ -32,6 +32,19 @@ def complete_sections(
     its first chunk; per-document caps still apply. Version one is unchanged.
     Scores describe final context order, not confidence.
     """
+    if policy == "section-gaps-v3":
+        from ragforge.core.section_gaps import complete_section_gaps
+
+        base = complete_sections(
+            sqlite,
+            request,
+            response,
+            max_chunks_per_document=max_chunks_per_document,
+            policy="section-start-v2",
+        )
+        return complete_section_gaps(
+            sqlite, request, base, max_chunks_per_document=max_chunks_per_document
+        )
     if policy not in {"section-start-v1", "section-start-v2"}:
         raise ValueError("unsupported section completion policy")
     original = response.results

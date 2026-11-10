@@ -7,11 +7,13 @@ not assert facts or interpret retrieved document instructions.
 from __future__ import annotations
 
 import re
+from contextlib import ExitStack
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ragforge.core.contracts import RetrievalResponse, RetrieveRequest
     from ragforge.core.engine import BundleEngine
+    from ragforge.core.lexical_plan import Ranker
 
 _MODALS = {
     "MUST",
@@ -147,6 +149,13 @@ def maximum_branch_rank(branches: list[list[tuple[str, float]]]) -> list[tuple[s
 
 
 def planned_response(engine: BundleEngine, request: RetrieveRequest) -> RetrievalResponse:
+    with ExitStack() as stack:
+        return _planned_response(engine, request, stack)
+
+
+def _planned_response(
+    engine: BundleEngine, request: RetrieveRequest, stack: ExitStack
+) -> RetrievalResponse:
     """Versioned bounded recipe, at most 400 total reranker pairs.
 
     Original BM25/dense candidates and their original-query reranker scores are
@@ -176,6 +185,27 @@ def planned_response(engine: BundleEngine, request: RetrieveRequest) -> Retrieva
 
         find_references = find_references_v2
     allowed = request.filters.document_ids if request.filters is not None else None
+    hint = engine._ranking_query(request.query, allowed)
+    inventory = [(d.document_id, d.source_path) for d in engine.collection.documents]
+    references_found = find_references(request.query, inventory, allowed)
+    facets = make_facets(request.query)
+    lexical: Ranker = engine.sqlite.rank_bm25
+    if config.query_language == "en" and engine.threads > 1:
+        from ragforge.core.lexical_plan import prefetch_lexical
+
+        lexical_requests = [(request, 100)]
+        if hint != request.query:
+            lexical_requests.append((request.model_copy(update={"query": hint}), 100))
+        for document_id in references_found:
+            scoped = request.model_copy(
+                update={"filters": RetrievalFilters(document_ids=[document_id])}
+            )
+            lexical_requests.append((scoped, 8))
+        for facet in facets:
+            lexical_requests.append((request.model_copy(update={"query": facet}), 32))
+        lexical = stack.enter_context(
+            prefetch_lexical(lexical, lexical_requests, workers=engine.threads)
+        )
     documents: dict[str, str] = {}
     pairs = 0
 
@@ -189,27 +219,24 @@ def planned_response(engine: BundleEngine, request: RetrieveRequest) -> Retrieva
         return ordered
 
     dense = engine._rank_dense(request, 100)
-    lexical = engine.sqlite.rank_bm25(request, 100)
-    base = score(request.query, reciprocal_rank_fusion(lexical, dense, 200))
+    base_lexical = lexical(request, 100)
+    base = score(request.query, reciprocal_rank_fusion(base_lexical, dense, 200))
     base_ids = {key for key, _ in base}
-    hint = engine._ranking_query(request.query, allowed)
     aliases: list[tuple[str, float]] = []
     if hint != request.query:
         aliases = [
             item
-            for item in engine.sqlite.rank_bm25(request.model_copy(update={"query": hint}), 100)
+            for item in lexical(request.model_copy(update={"query": hint}), 100)
             if item[0] not in base_ids
         ][:50]
     aliases = score(request.query, aliases)
     main = _ordered(base + aliases)
     references = []
-    inventory = [(d.document_id, d.source_path) for d in engine.collection.documents]
-    for document_id in find_references(request.query, inventory, allowed):
+    for document_id in references_found:
         scoped = request.model_copy(
             update={"filters": RetrievalFilters(document_ids=[document_id])}
         )
-        references.append(score(request.query, engine.sqlite.rank_bm25(scoped, 8)))
-    facets = make_facets(request.query)
+        references.append(score(request.query, lexical(scoped, 8)))
     branches = []
     if facets:
         limit = min(64, (400 - pairs) // len(facets))
@@ -217,13 +244,13 @@ def planned_response(engine: BundleEngine, request: RetrieveRequest) -> Retrieva
         vectors = engine._embedder.encode(facets, query=True)
         for facet, vector in zip(facets, vectors, strict=True):
             local = request.model_copy(update={"query": facet})
-            lexical = engine.sqlite.rank_bm25(local, 32)
+            facet_lexical = lexical(local, 32)
             dense = engine._dense.rank(vector, 64, allowed)
             if engine._parents is not None:
                 dense = engine._parents.map_ranks(dense, 32, allowed)
             else:
                 dense = dense[:32]
-            candidates = reciprocal_rank_fusion(lexical, dense, limit)
+            candidates = reciprocal_rank_fusion(facet_lexical, dense, limit)
             branches.append(score(facet, candidates))
     ranks = maximum_branch_rank([main, *references, *branches])
     return engine._selected_response(ranks, documents, request, "hybrid")

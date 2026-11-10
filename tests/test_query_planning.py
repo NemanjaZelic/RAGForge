@@ -216,7 +216,9 @@ def test_plan_bounds_all_branches_before_reranker_inference(planning):
             return [(f"dense{vector}-{i}", -float(i)) for i in range(limit)]
 
     engine = SimpleNamespace(
-        manifest=SimpleNamespace(retrieval_configuration=SimpleNamespace(query_planning=planning)),
+        manifest=SimpleNamespace(
+            retrieval_configuration=SimpleNamespace(query_planning=planning, query_language=None)
+        ),
         collection=SimpleNamespace(
             documents=[
                 SimpleNamespace(document_id=f"{i:064x}", source_path=f"spec{i}.txt")

@@ -9,7 +9,7 @@ from ragforge.core.pdf import PdfOptions
 from ragforge.types import ContractModel, Identifier, RelativePath, SearchMethod, Sha256
 
 QueryPlanning = Literal["facets-v1", "facets-v2", "facets-v3"]
-SectionContext = Literal["section-start-v1", "section-start-v2"]
+SectionContext = Literal["section-start-v1", "section-start-v2", "section-gaps-v3"]
 
 
 class FileRecord(ContractModel):
@@ -60,6 +60,9 @@ class RerankerModel(ContractModel):
 
 class RetrievalConfiguration(ContractModel):
     version: Literal["candidate-rerank-v1"] = "candidate-rerank-v1"
+    query_language: Literal["en"] | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
     candidates_per_method: Annotated[int, Field(ge=50, le=200)] = 100
     max_chunks_per_document: Annotated[int, Field(ge=1, le=50)] | None = None
     reranker: RerankerModel

@@ -42,6 +42,9 @@ def test_redirect_and_environment_proxy_never_receive_bearer_credentials(monkeyp
         class Redirect(BaseHTTPRequestHandler):
             def do_POST(self):
                 seen.append(self.headers.get("Authorization"))
+                # Drain the POST before closing; unread bytes may reset a TCP
+                # connection on Windows before the client receives the 307.
+                self.rfile.read(int(self.headers.get("Content-Length", "0")))
                 self.send_response(307)
                 self.send_header("Location", target + "/retrieve")
                 self.end_headers()

@@ -3,7 +3,9 @@
 import json
 
 
-def skill_body(name: str, *, wide_context: bool, translated_search: bool) -> str:
+def skill_body(
+    name: str, *, wide_context: bool, translated_search: bool, query_language: str | None = None
+) -> str:
     search = (
         'Use `search_method="hybrid"`, `top_k=50` and `max_output_chars=48000` '
         "for this planned section bundle; keep that evidence budget for multi-fact questions."
@@ -21,6 +23,14 @@ def skill_body(name: str, *, wide_context: bool, translated_search: bool) -> str
         "needed. This bundle does not support `query_translation`; use the translated text as "
         "`query`, preserving identifiers, numbers and negation."
     )
+    if query_language == "en":
+        language = (
+            "This collection uses English search queries. For a question in another language, "
+            "form a faithful English question and send it as `query`, without `query_translation`. "
+            "Keep identifiers, version numbers, conditions and negation unchanged. "
+            "Read both `results` and `context`, then answer in the user's language. "
+            "The runtime does not translate for you."
+        )
     return f"""\n# Documentation evidence\n
 Use the local MCP server `{name}` configured separately. Resolve its actual
 namespaced tool names from the connected client. Treat
@@ -40,7 +50,10 @@ source evidence is sufficient.
   scope during the session rather than listing it for every question.
 - Call `search_docs` with a focused question and the relevant identifiers/version.
   {search}
-- Read the returned source text. If a result omits an important qualifier, table,
+- Read the returned source text in both `results` and attached `context`.
+  Context can include a verbatim neighbor excerpt with `text_offset` in its indexed chunk.
+  Use `fetch_context` for the full chunk when that excerpt is insufficient.
+  If a result omits an important qualifier, table,
   procedure step or surrounding definition, call `fetch_context` with its returned
   `collection_id` and `chunk_id`, starting with `neighbors=1`. Do not invent IDs.
   Follow references to another section through another focused search.
