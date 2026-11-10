@@ -277,6 +277,8 @@ class BundleEngine:
     def warm_up(self) -> dict[str, bool]:
         """Explicit startup work; no document query or external model service."""
         method = self.manifest.default_search_method
+        config = self.manifest.retrieval_configuration
+        gpu = config is not None and config.reranker.runtime == "openvino-gpu-f16"
         dense = method in {"dense", "hybrid"}
         rerank = self.manifest.retrieval_configuration is not None and method != "bm25"
         if dense:
@@ -295,7 +297,7 @@ class BundleEngine:
                 )
             ):
                 self._parents.warm_up()
-            if isinstance(self._dense, AnnStore):
+            if isinstance(self._dense, AnnStore) and not gpu:
                 # Perform this after metadata scans so they cannot evict the
                 # graph's common read paths immediately before the first query.
                 self._dense.warm_up(neutral)
@@ -306,6 +308,12 @@ class BundleEngine:
             model.score(
                 "warmup", [("warmup " + str(i) + " ") * model.spec.max_tokens for i in range(count)]
             )
+        if dense and gpu:
+            # GPU compilation and neutral shape preparation allocate shared RAM.
+            # Touch graph pages afterwards so that allocation cannot immediately
+            # evict the graph before the first novel query. No query cache.
+            if isinstance(self._dense, AnnStore):
+                self._dense.warm_up(neutral)
         return {"query_model": dense, "dense_index": dense, "reranker": rerank}
 
     def _ranking_query(self, query: str, allowed_documents: list[str] | None = None) -> str:

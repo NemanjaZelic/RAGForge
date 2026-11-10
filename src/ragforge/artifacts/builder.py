@@ -518,6 +518,7 @@ def _build_bundle(
                 max_chunks_per_document=max_chunks_per_document,
                 reranker=RerankerModel(
                     model_id=reranker_descriptor.model_id,
+                    runtime=reranker_descriptor.runtime,
                     revision=reranker_descriptor.revision,
                     license=reranker_descriptor.license,
                     files=["models/reranker/" + p for p in sorted(reranker_paths)],

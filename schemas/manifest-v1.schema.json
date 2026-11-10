@@ -392,8 +392,11 @@
           "type": "string"
         },
         "runtime": {
-          "const": "onnxruntime-cpu",
           "default": "onnxruntime-cpu",
+          "enum": [
+            "onnxruntime-cpu",
+            "openvino-gpu-f16"
+          ],
           "title": "Runtime",
           "type": "string"
         }

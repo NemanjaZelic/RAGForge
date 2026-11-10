@@ -38,6 +38,7 @@ def enhance_bundle(
         max_chunks_per_document=max_chunks_per_document,
         reranker=RerankerModel(
             model_id=spec.model_id,
+            runtime=spec.runtime,
             revision=spec.revision,
             license=spec.license,
             files=["models/reranker/" + p for p in sorted(model_paths)],

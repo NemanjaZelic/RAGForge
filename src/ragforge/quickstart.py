@@ -34,6 +34,7 @@ class ModelPaths(ContractModel):
     query_model: str
     reranker: str
     document_language: Literal["multilingual", "en"] = "multilingual"
+    accelerator: Literal["cpu", "intel-gpu"] = "cpu"
 
 
 class ActiveBundle(ContractModel):
@@ -158,7 +159,7 @@ def ready_documentation(
         destination,
         collection_id="documents",
         web_sources=provenance,
-        rerank_batch_size=1 if english else None,
+        rerank_batch_size=(8 if ranker.runtime == "openvino-gpu-f16" else 1) if english else None,
         query_planning="facets-v3" if english else None,
         section_context="section-gaps-v3" if english else None,
         query_language="en" if english else None,

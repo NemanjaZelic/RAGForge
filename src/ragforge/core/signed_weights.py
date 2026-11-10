@@ -10,6 +10,10 @@ import importlib
 import os
 import platform
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from onnx import ModelProto
 
 
 @dataclass(frozen=True)
@@ -33,20 +37,14 @@ def supports_signed_weights() -> bool:
         return False
 
 
-def prepare_signed_weights(content: bytes) -> SignedGraph | None:
-    if not supports_signed_weights():
-        return None
-    try:
-        import onnx
-    except ImportError:
-        return None
-    import numpy as np
-    from onnx import numpy_helper
+def inline_model(content: bytes) -> ModelProto | None:
+    """Parse without a filesystem base; reject external or nested tensor data."""
+    import onnx
 
     model = onnx.load_model_from_string(content)
     # Keep this transform deliberately narrow. Never resolve external tensor
     # paths, nested control-flow graphs, functions or sparse representations.
-    if model.functions or model.graph.sparse_initializer:
+    if model.functions or model.graph.sparse_initializer or model.training_info:
         return None
     tensors = list(model.graph.initializer)
     for node in model.graph.node:
@@ -63,6 +61,22 @@ def prepare_signed_weights(content: bytes) -> SignedGraph | None:
             elif attribute.type == onnx.AttributeProto.TENSORS:
                 tensors.extend(attribute.tensors)
     if any(t.external_data or t.data_location == onnx.TensorProto.EXTERNAL for t in tensors):
+        return None
+    return model
+
+
+def prepare_signed_weights(content: bytes) -> SignedGraph | None:
+    if not supports_signed_weights():
+        return None
+    try:
+        import onnx
+    except ImportError:
+        return None
+    import numpy as np
+    from onnx import numpy_helper
+
+    model = inline_model(content)
+    if model is None:
         return None
     initial = {t.name: t for t in model.graph.initializer}
     overridable = {value.name for value in model.graph.input}

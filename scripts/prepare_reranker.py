@@ -1,4 +1,4 @@
-"""Explicit online maintenance: provision one pinned public, CPU-only reranker.
+"""Explicit online maintenance: provision one pinned public, local reranker.
 
 Never imported by build or inference. No document data is sent to the model hub.
 """
@@ -22,12 +22,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
     parser.add_argument(
-        "--model", choices=["minilm-l6", "bge-base", "mmarco-minilm"], default="minilm-l6"
+        "--model",
+        choices=["minilm-l6", "minilm-l6-gpu", "bge-base", "mmarco-minilm"],
+        default="minilm-l6",
     )
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     model, revision, license_name, pad_token, batch_size = MODEL, REVISION, "Apache-2.0", "[PAD]", 8
     graph = "onnx/model_quint8_avx2.onnx"
+    if args.model == "minilm-l6-gpu":
+        graph = "onnx/model.onnx"
     if args.model == "bge-base":
         model = "onnx-community/bge-reranker-base-ONNX"
         revision = "f131ae72114cb18333648a2ee6b0942849e8ab95"
@@ -68,7 +72,12 @@ def main():
         "6c2513767fb63d008a4377bef7a7a3555433d9436342bb53e35a3a72ffc52d4b"
     ):
         raise ValueError("pinned multilingual mMARCO graph checksum mismatch")
+    if args.model == "minilm-l6-gpu" and file_hash(args.output / "model.onnx") != (
+        "5d3e70fd0c9ff14b9b5169a51e957b7a9c74897afd0a35ce4bd318150c1d4d4a"
+    ):
+        raise ValueError("pinned English GPU graph checksum mismatch")
     spec = RerankerSpec(
+        runtime="openvino-gpu-f16" if args.model == "minilm-l6-gpu" else "onnxruntime-cpu",
         model_id=model,
         revision=revision,
         license=license_name,

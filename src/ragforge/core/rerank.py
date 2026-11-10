@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Annotated, Literal, Protocol
 
 from pydantic import Field
 
-from ragforge.artifacts.manifest import FileRecord
+from ragforge.artifacts.manifest import FileRecord, RerankerRuntime
 from ragforge.core.embedding import file_hash
 from ragforge.core.source import is_link
 from ragforge.types import ContractModel
@@ -39,6 +39,9 @@ class RerankerSpec(ContractModel):
     license: Annotated[str, Field(min_length=1)]
     source_url: str
     files: Annotated[list[FileRecord], Field(min_length=3)]
+    runtime: RerankerRuntime = Field(
+        default="onnxruntime-cpu", exclude_if=lambda value: value == "onnxruntime-cpu"
+    )
 
 
 def reranker_spec(directory: Path) -> RerankerSpec:
@@ -97,7 +100,8 @@ class ONNXReranker:
         self._inflight: dict[bytes, Future[tuple[float, ...]]] = {}
         self._cache_hits = self._cache_misses = 0
         # One shared session, a bounded total CPU budget, identical model batches.
-        self.workers = min(workers, threads)
+        gpu = self.spec.runtime == "openvino-gpu-f16"
+        self.workers = min(workers, threads, 2) if gpu else min(workers, threads)
         import onnxruntime as ort  # type: ignore[import-untyped]
         from tokenizers import Tokenizer
 
@@ -116,11 +120,21 @@ class ONNXReranker:
         options.use_deterministic_compute = True
         # No model filesystem base: an external-weight graph cannot read local files.
         graph = (directory / "model.onnx").read_bytes()
-        self.session = ort.InferenceSession(
-            graph,
-            sess_options=options,
-            providers=["CPUExecutionProvider"],
-        )
+        if gpu:
+            from ragforge.core.intel_gpu import OpenVINOSession
+
+            self.session = OpenVINOSession(
+                graph,
+                max_tokens=self.spec.max_tokens,
+                batch_size=self.spec.batch_size,
+                requests=self.workers,
+            )
+        else:
+            self.session = ort.InferenceSession(
+                graph,
+                sess_options=options,
+                providers=["CPUExecutionProvider"],
+            )
         self._cache_session = self.session
         self.inputs = {item.name for item in self.session.get_inputs()}
         if not {"input_ids", "attention_mask"} <= self.inputs or not self.inputs <= {
@@ -133,7 +147,9 @@ class ONNXReranker:
         if len(outputs) != 1 or len(outputs[0].shape) != 2 or outputs[0].shape[-1] != 1:
             raise ValueError("reranker must expose one logit per pair")
 
-        self.execution_optimization = "original"
+        self.execution_optimization = "openvino-gpu-f16" if gpu else "original"
+        if gpu:
+            return
         from ragforge.core.signed_weights import prepare_signed_weights
 
         try:

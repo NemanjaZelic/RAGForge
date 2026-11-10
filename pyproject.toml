@@ -38,6 +38,9 @@ pdf-fast = [
 scale = [
     "usearch==2.26.6",
 ]
+intel-gpu = [
+    "openvino==2026.4.1 ; platform_machine == 'AMD64' or platform_machine == 'x86_64'",
+]
 
 [dependency-groups]
 dev = [

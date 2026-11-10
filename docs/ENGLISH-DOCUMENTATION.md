@@ -66,8 +66,8 @@ entries are evidence, not additional ranked hits or model confidence scores.
 
 ## Execution and validation scope
 
-Single-pair batches avoid padding short passages up to longer neighbors. This
-can change quantized-model scores, so quality must be checked against required
+The default CPU profile uses single-pair batches to avoid padding short passages
+up to longer neighbors. This can change quantized-model scores, so quality must be checked against required
 source facts rather than score equality. No candidates or returned primary
 source text are shortened as part of this profile.
 
@@ -90,3 +90,7 @@ Time a few actual MCP requests, with startup separate and the neural cache off:
 
 Windows uses `.venv\Scripts\python.exe`. This command accepts at most five
 questions and does not start a full corpus benchmark.
+
+An [explicit Intel GPU option](INTEL-GPU.md) uses FP32 source weights with GPU
+FP16 computation and batches of eight. It has its own source-quality checks
+and requires a supported local driver; CPU remains the default.

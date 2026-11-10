@@ -135,6 +135,8 @@ def test_setup_english_selection_and_failed_switch_are_atomic(
         return destination.absolute()
 
     monkeypatch.setattr(setup, "prepare", prepared)
+    checked_spec = reranker_spec(tiny_reranker)
+    monkeypatch.setattr(setup, "reranker_spec", lambda path: checked_spec)
     paths = setup.setup_models(tmp_path, tmp_path / "models", offline=True, document_language="en")
     assert paths.document_language == "en"
     assert calls[1][0].name == "ms-marco-minilm-reranker"

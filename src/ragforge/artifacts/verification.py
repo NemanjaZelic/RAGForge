@@ -234,7 +234,8 @@ def verify_bundle(root: Path) -> BundleManifest:
             reranker.model_id,
             reranker.revision,
             reranker.license,
-        ) != (spec_r.model_id, spec_r.revision, spec_r.license):
+            reranker.runtime,
+        ) != (spec_r.model_id, spec_r.revision, spec_r.license, spec_r.runtime):
             raise ValueError("reranker identity/inventory does not match descriptor")
     if manifest.source_context is not None:
         from ragforge.core.definitions import verify_catalogue

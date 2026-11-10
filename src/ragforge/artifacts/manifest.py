@@ -50,10 +50,13 @@ class QueryModel(ContractModel):
     license: Annotated[str, Field(min_length=1)]
 
 
+RerankerRuntime = Literal["onnxruntime-cpu", "openvino-gpu-f16"]
+
+
 class RerankerModel(ContractModel):
     model_id: Annotated[str, Field(min_length=1)]
     revision: Annotated[str, Field(min_length=1)]
-    runtime: Literal["onnxruntime-cpu"] = "onnxruntime-cpu"
+    runtime: RerankerRuntime = "onnxruntime-cpu"
     files: Annotated[list[RelativePath], Field(min_length=4)]
     license: Annotated[str, Field(min_length=1)]
 

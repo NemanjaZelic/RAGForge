@@ -2,9 +2,14 @@ param(
     [string]$ModelDirectory = '',
     [ValidateSet('multilingual', 'en')]
     [string]$DocumentLanguage = 'multilingual',
+    [ValidateSet('cpu', 'intel-gpu')]
+    [string]$Accelerator = 'cpu',
     [switch]$Offline
 )
 $ErrorActionPreference = 'Stop'
+if ($Accelerator -eq 'intel-gpu' -and $DocumentLanguage -ne 'en') {
+    throw 'Intel GPU requires -DocumentLanguage en.'
+}
 $projectRoot = Split-Path $PSScriptRoot -Parent
 $env:PYTHONIOENCODING = 'utf-8'
 if ($Offline) {
@@ -22,7 +27,7 @@ if ($LASTEXITCODE -ne 0) { throw 'RAGForge needs 64-bit Python 3.11 or newer (3.
 Write-Host 'Installing the locked local environment...'
 & (Join-Path $PSScriptRoot 'dev.ps1') setup
 if ($LASTEXITCODE -ne 0) { throw 'Environment setup failed.' }
-$setupArgs = @('python', (Join-Path $PSScriptRoot 'setup_models.py'), '--document-language', $DocumentLanguage)
+$setupArgs = @('python', (Join-Path $PSScriptRoot 'setup_models.py'), '--document-language', $DocumentLanguage, '--accelerator', $Accelerator)
 if ($ModelDirectory) { $setupArgs += @('--models-directory', $ModelDirectory) }
 if ($Offline) { $setupArgs += '--offline' }
 & (Join-Path $PSScriptRoot 'dev.ps1') run @setupArgs

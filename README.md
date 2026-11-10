@@ -70,6 +70,15 @@ keep their configuration. Keep the default multilingual profile for other source
 languages. For setup options and the measured scope, see
 [the English documentation profile](docs/ENGLISH-DOCUMENTATION.md).
 
+## Optional Intel GPU on the current laptop
+
+For English documentation, use the existing supported Intel GPU with
+`bash setup.sh --document-language en --accelerator intel-gpu` on Linux or
+`.\setup.cmd -DocumentLanguage en -Accelerator intel-gpu` on Windows. Then run the
+same `build` and `agent` commands below. CPU remains the default. A working
+Intel graphics driver is required; no additional hardware or hosted service
+is used. See [GPU setup and validation scope](docs/INTEL-GPU.md).
+
 ## Start with three commands
 
 64-bit Python 3.11+ is required, with `venv` and `pip`; 3.13 is tested. Run commands
