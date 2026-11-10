@@ -30,6 +30,8 @@ def build_identity(manifest: BundleManifest) -> str:
         data.pop("retrieval_configuration", None)  # Preserve identities of earlier v1 bundles.
     if data.get("source_context") is None:
         data.pop("source_context", None)
+    if data.get("web_sources") is None:
+        data.pop("web_sources", None)
     config_data = data.get("retrieval_configuration")
     if config_data is not None and config_data.get("query_aliases") is None:
         config_data.pop("query_aliases", None)
@@ -100,6 +102,8 @@ def verify_bundle(root: Path) -> BundleManifest:
     required = {collection.database_path}
     if manifest.source_context is not None:
         required.add(manifest.source_context)
+    if manifest.web_sources is not None:
+        required.add(manifest.web_sources)
     if manifest.profile == "balanced":
         assert collection.dense_index is not None and manifest.query_model is not None
         required.add(collection.dense_index.path)
@@ -121,6 +125,10 @@ def verify_bundle(root: Path) -> BundleManifest:
             raise ValueError("bundle exceeds supported verification byte limits")
         if size != record.size_bytes or file_hash(path) != record.sha256:
             raise ValueError(f"bundle checksum mismatch: {record.path}")
+    if manifest.web_sources is not None:
+        from ragforge.core.web_sources import read_web_sources, verify_web_sources
+
+        verify_web_sources(read_web_sources(root / manifest.web_sources), collection)
     engine = SQLiteEngine(root / collection.database_path)
     with engine._connect() as connection:
         if connection.execute("PRAGMA quick_check").fetchone()[0] != "ok":

@@ -115,6 +115,20 @@
           ],
           "default": null,
           "title": "Section"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "maxLength": 4096,
+              "pattern": "^https?://",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
         }
       },
       "required": [

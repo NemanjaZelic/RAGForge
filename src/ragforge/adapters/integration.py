@@ -122,6 +122,17 @@ def create_integration(
             "search_methods": engine.manifest.capabilities,
             "sample_source_paths": [doc.source_path for doc in engine.collection.documents[:20]],
         }
+        if engine.manifest.web_sources is not None:
+            from ragforge.core.web_sources import read_web_sources
+
+            web = read_web_sources(artifact / engine.manifest.web_sources)
+            metadata["website_snapshot"] = {
+                "seed_url": web.seed_url,
+                "fetched_at": web.fetched_at,
+                "complete": web.complete,
+                "max_pages": web.max_pages,
+                "max_depth": web.max_depth,
+            }
         if wide_context:
             metadata["recommended_search_request"] = {
                 "search_method": "hybrid",

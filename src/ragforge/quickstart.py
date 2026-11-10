@@ -87,19 +87,58 @@ def ready_documentation(
     query_model: Path | None = None,
     reranker: Path | None = None,
     threads: int = 4,
+    url: str | None = None,
+    site_max_pages: int = 100,
+    site_max_depth: int = 2,
+    allow_partial_site: bool = False,
 ) -> Path:
     project = project.resolve(strict=True)
-    documents = (documents if documents is not None else project / "documents").absolute()
+    if url is not None and documents is not None:
+        raise ValueError("Choose a document folder or --url, not both.")
     models = model_paths(project)
     query_model = query_model if query_model is not None else Path(models.query_model)
     reranker = reranker if reranker is not None else Path(models.reranker)
     if not query_model.exists() or not reranker.exists():
-        raise ValueError(f"Prepared models are missing. Run {SETUP} first; build never downloads.")
+        raise ValueError(
+            f"Prepared models are missing. Run {SETUP} first; build never downloads models."
+        )
     model_spec(query_model)
     reranker_spec(reranker)
+    stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S") + "-" + uuid4().hex[:8]
+    provenance = None
+    if url is not None:
+        from ragforge.importing.website import SiteOptions, import_site
+
+        print("Importing static website documentation...", file=sys.stderr, flush=True)
+        snapshot = import_site(
+            url,
+            project / "data/web" / stamp,
+            options=SiteOptions(max_pages=site_max_pages, max_depth=site_max_depth),
+            progress=lambda event: print(
+                f"Imported {event['pages']} pages; {event['queued']} URLs queued.",
+                file=sys.stderr,
+                flush=True,
+            ),
+        )
+        documents, provenance = snapshot.documents, snapshot.provenance
+        print(f"Saved website snapshot: {snapshot.directory}", file=sys.stderr, flush=True)
+    else:
+        documents = (documents if documents is not None else project / "documents").absolute()
+        # Explicit reuse of a saved snapshot remains entirely offline.
+        sibling = documents.parent / "web-sources.json"
+        if documents.name == "pages" and sibling.is_file():
+            provenance = sibling
     if not documents.is_dir():
         raise ValueError("Document folder does not exist. Put files in documents or pass a folder.")
-    stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S") + "-" + uuid4().hex[:8]
+    if provenance is not None:
+        from ragforge.core.web_sources import read_web_sources
+
+        catalogue = read_web_sources(provenance)
+        if not catalogue.complete and not allow_partial_site:
+            raise ValueError(
+                "Website import is incomplete; previous active bundle is unchanged. "
+                "Review import-report.json, increase limits or explicitly use --allow-partial-site."
+            )
     destination = (
         output if output is not None else project / "kb" / ("documents-" + stamp)
     ).absolute()
@@ -110,6 +149,7 @@ def ready_documentation(
         documents,
         destination,
         collection_id="documents",
+        web_sources=provenance,
         model_directory=query_model,
         reranker_directory=reranker,
         chunk_config=ChunkConfig(strategy="sections"),
@@ -134,6 +174,20 @@ def parser() -> argparse.ArgumentParser:
         "build", help="Turn the documents folder into a verified searchable bundle."
     )
     build.add_argument("documents", nargs="?", type=Path)
+    build.add_argument(
+        "--url", help="Import a public static documentation website before building."
+    )
+    build.add_argument(
+        "--site-max-pages", type=int, choices=range(1, 1001), default=100, metavar="1..1000"
+    )
+    build.add_argument(
+        "--site-max-depth", type=int, choices=range(0, 11), default=2, metavar="0..10"
+    )
+    build.add_argument(
+        "--allow-partial-site",
+        action="store_true",
+        help="Explicitly accept an incomplete website snapshot after reviewing it.",
+    )
     build.add_argument("--output", type=Path)
     build.add_argument("--model", type=Path, help="Override the already prepared query model.")
     build.add_argument("--reranker", type=Path, help="Override the already prepared reranker.")
@@ -170,6 +224,10 @@ def main(argv: list[str] | None = None) -> int:
             bundle = ready_documentation(
                 project,
                 arguments.documents,
+                url=arguments.url,
+                site_max_pages=arguments.site_max_pages,
+                site_max_depth=arguments.site_max_depth,
+                allow_partial_site=arguments.allow_partial_site,
                 output=arguments.output,
                 query_model=arguments.model,
                 reranker=arguments.reranker,
@@ -222,7 +280,7 @@ def main(argv: list[str] | None = None) -> int:
                     print("No matching source evidence found.")
                 for rank, item in enumerate(response.results, 1):
                     source = item.source
-                    location = source.path
+                    location = source.url or source.path
                     if source.page is not None:
                         location += f" (page {source.page})"
                     elif source.line_start is not None:

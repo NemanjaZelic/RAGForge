@@ -52,7 +52,8 @@ Read [tool usage](references/tool-usage.md) when you need request fields or exam
 
 ## Answer from evidence
 
-Cite the actual source path and available page or line range beside each supported
+Cite `source.url` when available; otherwise cite the actual source path. Include
+available page or line ranges beside each supported
 claim. Answer in the user's language. Distinguish source facts from your inference;
 flag conflicting versions and missing evidence instead of filling gaps from memory.
 Ranking scores are not confidence estimates. If the MCP server is unavailable,
@@ -91,7 +92,8 @@ def tool_usage(collection_id: str, *, wide_context: bool) -> str:
         "For a configuration change, retrieve the setting and its supported version\n"
         "before writing code. A filename match alone does not support an answer.\n\n"
         "## Cite and stop\n\n"
-        "Use the returned `source.path`, `source.page`, or `source.line_start`/\n"
+        "Cite `source.url` when available, otherwise `source.path`; include\n"
+        "`source.page` or `source.line_start`/\n"
         "`source.line_end` with the claim supported by that text. If no source\n"
         "supports the claim after focused reformulation, state the evidence gap.\n"
         "Do not convert rank scores into a probability of correctness.\n"

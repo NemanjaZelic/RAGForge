@@ -73,6 +73,7 @@ def build_bundle(
     title: str = "Documents",
     profile: Literal["minimal", "balanced"] = "balanced",
     model_directory: Path | None = None,
+    web_sources: Path | None = None,
     reranker_directory: Path | None = None,
     rerank_candidates: int = 100,
     max_chunks_per_document: int | None = None,
@@ -125,6 +126,7 @@ def build_bundle(
             title=title,
             profile=profile,
             model_directory=model_directory,
+            web_sources=web_sources,
             reranker_directory=reranker_directory,
             rerank_candidates=rerank_candidates,
             max_chunks_per_document=max_chunks_per_document,
@@ -154,6 +156,7 @@ def _build_bundle(
     title: str = "Documents",
     profile: Literal["minimal", "balanced"] = "balanced",
     model_directory: Path | None = None,
+    web_sources: Path | None = None,
     reranker_directory: Path | None = None,
     rerank_candidates: int = 100,
     max_chunks_per_document: int | None = None,
@@ -239,6 +242,15 @@ def _build_bundle(
     report = scan_corpus(source, collection_id, limits)
     if not report.documents:
         raise ValueError("corpus contains no supported documents")
+    web_catalogue = None
+    if web_sources is not None:
+        from ragforge.core.web_sources import read_web_sources
+
+        web_catalogue = read_web_sources(web_sources)
+        actual = {item.source_path: item.content_sha256 for item in web_catalogue.sources}
+        expected = {item.source_path: item.content_sha256 for item in report.documents}
+        if actual != expected:
+            raise ValueError("web URL provenance differs from the scanned source snapshot")
     output.parent.mkdir(parents=True, exist_ok=True)
     parent = output.parent.resolve(strict=True)
     output = parent / output.name
@@ -268,6 +280,8 @@ def _build_bundle(
             "max_index_chunks": max_index_chunks,
             "max_index_text_chars": max_index_text_chars,
         }
+        if web_catalogue is not None:
+            recipe["web_sources"] = web_catalogue.model_dump(mode="json")
         if reranker_descriptor is not None:
             recipe["retrieval_configuration"] = {
                 "reranker": reranker_descriptor.model_dump(mode="json"),
@@ -455,6 +469,18 @@ def _build_bundle(
                 ),
             )
             licenses.append(reranker_descriptor.license + ": reranker; see models/reranker/LICENSE")
+        web_path = None
+        if web_catalogue is not None:
+            web_path = f"collections/{collection_id}/web-sources.json"
+            destination_web = stage / web_path
+            if storage:
+                storage.check(len(web_catalogue.model_dump_json().encode("utf-8")))
+            before_web = destination_web.stat().st_size if destination_web.exists() else 0
+            destination_web.write_text(
+                web_catalogue.model_dump_json(indent=2) + "\n", encoding="utf-8"
+            )
+            if storage:
+                storage.account(destination_web.stat().st_size - before_web)
         descriptor = stage / "manifest.json"
         if descriptor.exists():
             if workspace is None or is_link(descriptor.lstat()):
@@ -481,6 +507,7 @@ def _build_bundle(
             default_search_method="hybrid" if profile == "balanced" else "bm25",
             query_model=query_model,
             retrieval_configuration=retrieval_configuration,
+            web_sources=web_path,
             index_backend="sqlite-fts5",
             index_schema_version=1,
             sqlite_build_version=sqlite3.sqlite_version,

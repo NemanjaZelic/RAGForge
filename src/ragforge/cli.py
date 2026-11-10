@@ -28,6 +28,7 @@ from ragforge.core.parse import load_document
 from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanError, ScanLimits, scan_corpus
 from ragforge.core.sqlite import SQLiteEngine, create_index
+from ragforge.core.web_sources import WebSources
 from ragforge.shared.client import ConnectionProfile
 from ragforge.shared.policy import SharedPolicy
 from ragforge.types import ContractModel
@@ -48,6 +49,7 @@ class SchemaName(StrEnum):
     retrieval_response = "retrieval-response"
     shared_policy = "shared-policy"
     shared_connection = "shared-connection"
+    web_sources = "web-sources"
 
 
 def schema_document(name: SchemaName) -> dict[str, Any]:
@@ -57,6 +59,7 @@ def schema_document(name: SchemaName) -> dict[str, Any]:
         SchemaName.retrieval_response: RetrievalResponse,
         SchemaName.shared_policy: SharedPolicy,
         SchemaName.shared_connection: ConnectionProfile,
+        SchemaName.web_sources: WebSources,
     }
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",

@@ -19,6 +19,19 @@ class SourceLocation(ContractModel):
     line_start: PositiveInt | None = None
     line_end: PositiveInt | None = None
     section: str | None = None
+    url: Annotated[str, Field(max_length=4096, pattern=r"^https?://")] | None = Field(
+        default=None,
+        exclude_if=lambda value: value is None,
+    )
+
+    @field_validator("url")
+    @classmethod
+    def source_url(cls, value: str | None) -> str | None:
+        if value is not None:
+            from ragforge.core.web_sources import normalize_url
+
+            return normalize_url(value)
+        return value
 
     @model_validator(mode="after")
     def ordered_lines(self) -> Self:

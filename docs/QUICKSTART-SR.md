@@ -59,6 +59,19 @@ Za dokumente koji su već negde drugde:
 bash ragforge.sh build "/home/korisnik/Moja dokumentacija"
 ```
 
+Kao drugu opciju, umesto lokalnog foldera prosledi javni sajt sa dokumentacijom:
+
+```bash
+bash ragforge.sh build --url "https://example.org/docs/"
+```
+
+Windows: `.\ragforge.cmd build --url "https://example.org/docs/"`.
+Preuzimanje je eksplicitan korak pre lokalnog build-a. Čuva se lokalni snimak i
+originalni URL svakog izvora. Podrazumevano: 100 stranica, dubina dva linka, isti
+sajt i izabrani poddirektorijum, uz `robots.txt`. Nepotpuno preuzimanje ne menja
+aktivnu bazu. Detalji i ograničenja su u [uvozu sajta](WEBSITE-IMPORT.md).
+Zatim koristi isti završni `agent` korak ispod.
+
 Komanda čita dokumente, deli ih na delove, gradi leksički i ANN indeks, uključuje
 pripremljeni lokalni reranker i proverava završen paket. Ispisuje `Ready:` i
 putanju nove baze u `kb/`. Tek nakon uspešne provere pamti bazu kao aktivnu.
@@ -78,7 +91,8 @@ Za samostalnu pretragu:
 bash ragforge.sh ask "Kako funkcioniše autentifikacija?"
 ```
 
-Rezultat su tekstualni izvori sa putanjama i dostupnim stranicama/linijama.
+Rezultat su tekstualni izvori sa originalnim URL-ovima ili lokalnim putanjama
+i dostupnim stranicama/linijama.
 RAGForge pronalazi dokaze; povezani AI agent sastavlja konačan odgovor. Za pitanje
 na drugom jeziku možeš eksplicitno dodati veran prevod u jezik dokumentacije:
 `--query-translation "How does authentication work?"`. Runtime ne poziva servis

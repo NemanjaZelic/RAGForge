@@ -1,0 +1,179 @@
+{
+  "target_seconds": 10,
+  "status": "OPEN: selected Kernel/RFC requests under 10 s; selected T7 requests above 10 s",
+  "scope": "Five fixed non-GPP questions, two real stdio MCP requests each; startup separate; neural cache disabled; complete frozen-response parity and all input/score pair parity required; no quality-score estimate",
+  "default_change": "Parallel lexical/dense proposal rejected: mixed timings; current retrieval scheduling retained",
+  "startup_excluded_from_target": true,
+  "new_gpp_requests": 0,
+  "measurements": [
+    {
+      "corpus": "kernel",
+      "sample": 0,
+      "language": "en",
+      "startup_seconds": 11.881274800049141,
+      "exact_complete_frozen_response": true,
+      "exact_all_reranker_inputs_and_scores": true,
+      "neural_cache_enabled": false,
+      "runs": [
+        {
+          "mode": "sequential",
+          "engine_seconds": 7.775675500044599,
+          "pairs": 189,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 7.893493800191209,
+          "under_10_seconds": true
+        },
+        {
+          "mode": "parallel",
+          "engine_seconds": 8.104014199925587,
+          "pairs": 189,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 8.118213100126013,
+          "under_10_seconds": true
+        }
+      ]
+    },
+    {
+      "corpus": "rfc",
+      "sample": 0,
+      "language": "en",
+      "startup_seconds": 53.62719859997742,
+      "exact_complete_frozen_response": true,
+      "exact_all_reranker_inputs_and_scores": true,
+      "neural_cache_enabled": false,
+      "runs": [
+        {
+          "mode": "parallel",
+          "engine_seconds": 8.887612400110811,
+          "pairs": 186,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 8.929120300104842,
+          "under_10_seconds": true
+        },
+        {
+          "mode": "sequential",
+          "engine_seconds": 9.514220699900761,
+          "pairs": 186,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 9.533292600186542,
+          "under_10_seconds": true
+        }
+      ]
+    },
+    {
+      "corpus": "t7",
+      "sample": 0,
+      "language": "en",
+      "startup_seconds": 7.7519062999635935,
+      "exact_complete_frozen_response": true,
+      "exact_all_reranker_inputs_and_scores": true,
+      "neural_cache_enabled": false,
+      "runs": [
+        {
+          "mode": "sequential",
+          "engine_seconds": 15.050957399886101,
+          "pairs": 289,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 15.087048599962145,
+          "under_10_seconds": false
+        },
+        {
+          "mode": "parallel",
+          "engine_seconds": 14.55694939987734,
+          "pairs": 289,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 14.574883700115606,
+          "under_10_seconds": false
+        }
+      ]
+    },
+    {
+      "corpus": "t7",
+      "sample": 1,
+      "language": "sr-Cyrl",
+      "startup_seconds": 7.7519062999635935,
+      "exact_complete_frozen_response": true,
+      "exact_all_reranker_inputs_and_scores": true,
+      "neural_cache_enabled": false,
+      "runs": [
+        {
+          "mode": "sequential",
+          "engine_seconds": 19.870676000136882,
+          "pairs": 328,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 19.88988499995321,
+          "under_10_seconds": false
+        },
+        {
+          "mode": "parallel",
+          "engine_seconds": 19.231650599977,
+          "pairs": 328,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 19.253781100036576,
+          "under_10_seconds": false
+        }
+      ]
+    },
+    {
+      "corpus": "t7",
+      "sample": 2,
+      "language": "sr-Latn",
+      "startup_seconds": 7.7519062999635935,
+      "exact_complete_frozen_response": true,
+      "exact_all_reranker_inputs_and_scores": true,
+      "neural_cache_enabled": false,
+      "runs": [
+        {
+          "mode": "sequential",
+          "engine_seconds": 21.934285700088367,
+          "pairs": 392,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 21.95541200018488,
+          "under_10_seconds": false
+        },
+        {
+          "mode": "parallel",
+          "engine_seconds": 23.071756900055334,
+          "pairs": 392,
+          "cache_hits": 0,
+          "mcp_roundtrip_seconds": 23.091569299809635,
+          "under_10_seconds": false
+        }
+      ]
+    }
+  ],
+  "reranker_session_probe": [
+    {
+      "mode": "shared8_initial",
+      "sessions": 1,
+      "workers": 8,
+      "pairs": 64,
+      "seconds": 4.63119630003348,
+      "exact_all_original_scores": true
+    },
+    {
+      "mode": "four_sessions_8_workers",
+      "sessions": 4,
+      "workers": 8,
+      "pairs": 64,
+      "seconds": 5.530879999976605,
+      "exact_all_original_scores": true
+    },
+    {
+      "mode": "shared8_warm",
+      "sessions": 1,
+      "workers": 8,
+      "pairs": 64,
+      "seconds": 4.66814580000937,
+      "exact_all_original_scores": true
+    },
+    {
+      "mode": "four_sessions_8_workers_warm",
+      "sessions": 4,
+      "workers": 8,
+      "pairs": 64,
+      "seconds": 4.5420677999500185,
+      "exact_all_original_scores": true
+    }
+  ]
+}

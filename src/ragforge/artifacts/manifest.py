@@ -122,6 +122,7 @@ class BundleManifest(ContractModel):
     query_model: QueryModel | None = None
     retrieval_configuration: RetrievalConfiguration | None = None
     source_context: RelativePath | None = None
+    web_sources: RelativePath | None = Field(default=None, exclude_if=lambda value: value is None)
     index_backend: Literal["sqlite-fts5"]
     index_schema_version: Literal[1]
     sqlite_build_version: Annotated[str, Field(min_length=1)]
@@ -147,6 +148,11 @@ class BundleManifest(ContractModel):
             or self.source_context not in paths
         ):
             raise ValueError("source context must have its canonical inventoried path")
+        if self.web_sources is not None and (
+            self.web_sources != f"collections/{collection.collection_id}/web-sources.json"
+            or self.web_sources not in paths
+        ):
+            raise ValueError("web provenance must have its canonical inventoried path")
         # Prevent case-insensitive aliases in a portable inventory.
         if len({path.casefold() for path in paths}) != len(paths):
             raise ValueError("case collision in file inventory")

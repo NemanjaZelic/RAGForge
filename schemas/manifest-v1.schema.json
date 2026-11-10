@@ -664,6 +664,21 @@
       "minLength": 1,
       "title": "Sqlite Build Version",
       "type": "string"
+    },
+    "web_sources": {
+      "anyOf": [
+        {
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[^\\\\:\\x00-\\x1f<>\"|?*]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Web Sources"
     }
   },
   "required": [

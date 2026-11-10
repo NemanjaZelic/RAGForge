@@ -38,6 +38,14 @@ class BundleEngine:
         self.manifest = verify_bundle(root)
         self.collection = self.manifest.collections[0]
         self.sqlite = SQLiteEngine(root / self.collection.database_path)
+        self._web_urls: dict[str, str] = {}
+        if self.manifest.web_sources is not None:
+            from ragforge.core.web_sources import read_web_sources
+
+            self._web_urls = {
+                item.source_path: item.url
+                for item in read_web_sources(root / self.manifest.web_sources).sources
+            }
         self._document_titles = {
             d.document_id: d.title for d in self.collection.documents if d.title
         }
@@ -87,16 +95,29 @@ class BundleEngine:
         self._dense: DenseStore | AnnStore | None = None
         self._parents: ParentMapper | None = None
 
+    def _source_urls(self, response: RetrievalResponse) -> RetrievalResponse:
+        if not self._web_urls:
+            return response
+        results = []
+        for item in response.results:
+            url = self._web_urls.get(item.source.path)
+            if url is None:
+                raise ValueError("returned source is missing its verified URL provenance")
+            results.append(
+                item.model_copy(update={"source": item.source.model_copy(update={"url": url})})
+            )
+        return response.model_copy(update={"results": results})
+
     def retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
         response = self._retrieve(request)
-        if self._source_context is None:
-            return response
-        config = self.manifest.retrieval_configuration
-        return self._source_context.supplement(
-            request,
-            response,
-            max_chunks_per_document=config.max_chunks_per_document if config else None,
-        )
+        if self._source_context is not None:
+            config = self.manifest.retrieval_configuration
+            response = self._source_context.supplement(
+                request,
+                response,
+                max_chunks_per_document=config.max_chunks_per_document if config else None,
+            )
+        return self._source_urls(response)
 
     def _retrieve(self, request: RetrieveRequest) -> RetrievalResponse:
         method = request.search_method or self.manifest.default_search_method
@@ -336,7 +357,7 @@ class BundleEngine:
         return response
 
     def fetch_context(self, request: FetchContextRequest) -> RetrievalResponse:
-        return self.sqlite.fetch_context(request)
+        return self._source_urls(self.sqlite.fetch_context(request))
 
     def list_collections(self) -> list[CollectionDescription]:
         return self.sqlite.list_collections()
