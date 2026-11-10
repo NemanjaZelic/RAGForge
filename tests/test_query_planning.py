@@ -250,3 +250,76 @@ def test_plan_bounds_all_branches_before_reranker_inference(planning):
         ),
     )
     assert len(requests) == 399
+
+
+@pytest.mark.parametrize(
+    ("runtime", "threads", "overlap"),
+    [("openvino-gpu-f16", 8, True), ("openvino-gpu-f16", 1, False), ("onnxruntime-cpu", 8, False)],
+)
+def test_gpu_scores_dense_candidates_before_lexical_finishes_without_extra_pairs(
+    runtime, threads, overlap
+):
+    from threading import Event
+
+    from ragforge.core.contracts import RetrievalFilters
+
+    lexical_started, dense_scored = Event(), Event()
+    owner = "a" * 64
+    dense = [(f"dense{i}", float(-i)) for i in range(100)]
+    lexical = dense[:20] + [(f"lexical{i}", float(-i)) for i in range(80)]
+    expected = {key for key, _ in dense + lexical}
+    scored = []
+    selected = []
+
+    def rank(request, limit):
+        assert request.filters.document_ids == [owner]
+        assert limit == 100
+        lexical_started.set()
+        if overlap:
+            assert dense_scored.wait(10), "reranking waited for lexical completion"
+        return lexical
+
+    def rank_dense(request, limit):
+        assert request.filters.document_ids == [owner]
+        if threads > 1:
+            assert lexical_started.wait(10)
+        return dense
+
+    def score(ranks, request, query):
+        assert query == request.query
+        keys = [key for key, _ in ranks]
+        assert not set(keys) & set(scored), "candidate scored twice"
+        scored.extend(keys)
+        if overlap and len(scored) == 100:
+            assert keys == [key for key, _ in dense]
+            dense_scored.set()
+        return [(key, float(len(key))) for key in keys], {key: owner for key in keys}
+
+    def select(ranks, owners, request, method):
+        assert method == "hybrid"
+        assert set(owners.values()) == {owner}
+        selected.extend(key for key, _ in ranks)
+        return RetrievalResponse(contract_version="1", results=[])
+
+    engine = SimpleNamespace(
+        manifest=SimpleNamespace(
+            retrieval_configuration=SimpleNamespace(
+                query_planning="facets-v3",
+                query_language="en",
+                reranker=SimpleNamespace(runtime=runtime),
+            )
+        ),
+        threads=threads,
+        collection=SimpleNamespace(documents=[]),
+        sqlite=SimpleNamespace(rank_bm25=rank),
+        _rank_dense=rank_dense,
+        _ranking_query=lambda query, allowed: query,
+        _score_candidates=score,
+        _selected_response=select,
+    )
+    planned_response(
+        engine,
+        RetrieveRequest(query="What is ZQP?", filters=RetrievalFilters(document_ids=[owner])),
+    )
+    assert len(scored) == len(expected) == 180
+    assert set(scored) == set(selected) == expected

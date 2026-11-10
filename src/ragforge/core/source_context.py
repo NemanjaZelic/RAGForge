@@ -285,7 +285,13 @@ class SourceContext:
                     )
             if expanded:
                 queries.append(" OR ".join(expanded))
-        if len(queries) < 3 and len(terms) > 3:
+        purpose_question = bool(
+            re.match(r"\s*what\s+(?:is|are)\s+the\s+(?:purpose|role|function)\s+of\b", query, re.I)
+        )
+        if purpose_question and len(terms) > 3 and len(names) == 1:
+            focused_terms = [w for w in terms if w != names[0]][:3] + names
+            queries = queries[:2] + [" AND ".join(_fts_word(w) for w in focused_terms)]
+        elif len(queries) < 3 and len(terms) > 3:
             queries.append(" AND ".join(_fts_word(w) for w in terms[:3]))
         branches = []
         definition_question = bool(
@@ -308,6 +314,14 @@ class SourceContext:
                     rows,
                     key=lambda r: (
                         not bool(
+                            re.search(
+                                r"\b(?:allows?|enables?|used\s+to|in\s+order\s+to|so\s+that)\b",
+                                r["text"],
+                                re.I,
+                            )
+                        )
+                        if purpose_question
+                        else not bool(
                             re.search(
                                 r"\b(?:is|are)\s+(?:defined|a|an)\b|\bconsists?\b|\bcomprises?\b",
                                 r["text"],

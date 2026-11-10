@@ -94,3 +94,10 @@ the lost case in that development subset: 15/16, with an additional 16-case chec
 unchanged at 14/16 and no newly lost supported cases. It adds no neural passes
 and applies when an existing source-context catalogue is configured. The full
 3GPP quality and latency targets still require further validation.
+
+A [subsequent quality / latency checkpoint](QUALITY-LATENCY-20261110.md) adds
+bounded dense-candidate reranking while lexical search is still running. The
+complete candidate union is retained, but GPU batching changes and logits need
+not match exactly. The fixed source subset improved to 30/32 without new losses;
+a separate small MCP comparison measured 10.37 s before / 8.80 s after at the median,
+with one updated call still above ten seconds. Neither global target is closed.

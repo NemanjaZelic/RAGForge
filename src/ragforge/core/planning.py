@@ -158,8 +158,9 @@ def _planned_response(
 ) -> RetrievalResponse:
     """Versioned bounded recipe, at most 400 total reranker pairs.
 
-    Original BM25/dense candidates and their original-query reranker scores are
-    preserved. Verified aliases add candidates only. Every branch receives the
+    Original BM25/dense candidate union and scoring query are preserved. GPU
+    overlap changes batch padding and may change logits. Verified aliases add
+    candidates only. Every branch receives the
     caller's document scope before search and again before passage inference.
     The shared response builder applies the final character/document limits.
     """
@@ -219,8 +220,27 @@ def _planned_response(
         return ordered
 
     dense = engine._rank_dense(request, 100)
+    # The union is at most 100 dense + 100 lexical candidates: all dense
+    # candidates survive the 200-item fusion budget. Score them while the
+    # independent lexical future is running, then score only unseen IDs.
+    # The original query, complete candidate union and 400-pair cap remain.
+    overlap = (
+        config.query_language == "en"
+        and config.reranker.runtime == "openvino-gpu-f16"
+        and engine.threads > 1
+    )
+    dense_scores = score(request.query, dense) if overlap and dense else None
     base_lexical = lexical(request, 100)
-    base = score(request.query, reciprocal_rank_fusion(base_lexical, dense, 200))
+    fused = reciprocal_rank_fusion(base_lexical, dense, 200)
+    if dense_scores is not None:
+        dense_ids = {key for key, _ in dense_scores}
+        assert dense_ids <= {key for key, _ in fused}
+        base = _ordered(
+            dense_scores
+            + score(request.query, [pair for pair in fused if pair[0] not in dense_ids])
+        )
+    else:
+        base = score(request.query, fused)
     base_ids = {key for key, _ in base}
     aliases: list[tuple[str, float]] = []
     if hint != request.query:

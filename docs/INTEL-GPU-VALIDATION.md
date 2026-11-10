@@ -116,3 +116,13 @@ development case with zero additional neural query plans. Its previous subset
 improves from 14/16 to 15/16 and its additional 16-case subset remains at 14/16.
 These bounded improvements do not establish the full-corpus accuracy or latency
 targets.
+
+## Later bounded overlap checkpoint
+
+The [quality / latency checkpoint](QUALITY-LATENCY-20261110.md) records a second
+source recovery: 29/32 to 30/32 on the unchanged consumed subset, zero new losses.
+Six smaller-corpus MCP checks retained all prior evidence. A separate twelve-call
+3GPP A/B comparison measured a 10.37 s baseline median and 8.80 s updated median;
+5/6 updated calls were below ten seconds, with a 10.90 s maximum. Full-bank 95% and
+a universal sub-ten-second bound remain unconfirmed. GPU batching changes; these
+are source-information checks, not exact-logit or generated-answer certification.

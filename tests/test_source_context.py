@@ -358,3 +358,45 @@ def test_exact_lookup_retains_previous_plural_and_typo_fallback(context_bundle, 
     context = SourceContext(catalogue, engine.sqlite, checksum, "docs")
     result = context.supplement(RetrieveRequest(query=query, top_k=3), original)
     assert any(expected in c.text for c in result.results)
+
+
+def test_purpose_sources_keep_subject_and_actor_without_requiring_question_verb(tmp_path):
+    source = tmp_path / "source"
+    source.mkdir()
+    duplicate = "ZQP delivery procedure. " + "The receiver processes incoming messages. " * 8
+    for version in [100, 101, 102]:
+        pdf(source / f"ts01v{version}p.pdf", duplicate)
+    (source / "name.txt").write_text(
+        "Queue Processing (ZQP) identifies the receiver.", encoding="utf-8"
+    )
+    (source / "mapping.txt").write_text(
+        "Status flags of messages sent to the ZQP list values zero and one. " * 4,
+        encoding="utf-8",
+    )
+    proof = "Status flags in messages allow the ZQP to choose a recovery action."
+    (source / "purpose.txt").write_text(proof, encoding="utf-8")
+    base = tmp_path / "base"
+    manifest = build_bundle(source, base, collection_id="docs", profile="minimal")
+    catalogue = tmp_path / "definitions.sqlite"
+    build_source_context(base, catalogue)
+    engine = BundleEngine(base)
+    context = SourceContext(catalogue, engine.sqlite, manifest.files[0].sha256, "docs")
+    original = engine.retrieve(RetrieveRequest(query="delivery procedure", top_k=3))
+    assert len({information_key(c, False) for c in original.results}) == 1
+    request = RetrieveRequest(
+        query="What is the purpose of the status flags of messages sent to the ZQP?",
+        top_k=3,
+    )
+    response = context.supplement(request, original)
+    assert any(proof in c.text for c in response.results)
+    assert {information_key(c, False) for c in original.results} <= {
+        information_key(c, False) for c in response.results
+    }
+    allowed = [c.document_id for c in original.results]
+    restricted = request.model_copy(update={"filters": RetrievalFilters(document_ids=allowed)})
+    assert context.supplement(restricted, original) == original
+    small = request.model_copy(
+        update={"max_output_chars": sum(len(c.text) for c in original.results)}
+    )
+    bounded = context.supplement(small, original)
+    assert sum(len(c.text) for c in bounded.results) <= small.max_output_chars

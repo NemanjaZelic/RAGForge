@@ -89,3 +89,9 @@ See [the bounded recovery check](SOURCE-USAGE-RECOVERY.md) for source-quality
 results and measured processor cost. Its English GPU subset recovers one missed
 case without new losses; it does not replace the full multilingual result above
 with a new full-bank score.
+
+Longer purpose/role/function questions can also keep their leading subject and a
+single technical actor in a bounded focused branch. Purpose explanations receive
+priority inside the existing row/candidate limits. The [later quality and latency
+check](QUALITY-LATENCY-20261110.md) recovered one additional full-question source
+case, reaching 30/32 on the same consumed subset; the 95% target remains open.
