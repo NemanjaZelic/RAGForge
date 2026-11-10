@@ -100,3 +100,13 @@ test also passed separately.
 Use [the GPU setup guide](INTEL-GPU.md) to select the profile, then build and
 generate the agent integration. Raw corpora, questions, evidence quotes, models
 and complete responses stay outside Git.
+
+## Later, broader subset check
+
+The [84-request follow-up](QUALITY-SPOTCHECK-20261110.md) found one source-quality
+regression in its 16-case 3GPP subset: 14/16 versus 15/16 for the earlier
+multilingual profile. A fresh English CPU control repeated that miss. The other
+68 selected language/technical cases retained their required information.
+Five of the 16 3GPP engine calls exceeded ten seconds. These findings limit the
+earlier selected-query success; they must be included when assessing readiness
+for larger 3GPP collections. No full 3GPP run was performed.

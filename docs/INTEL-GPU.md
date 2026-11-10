@@ -81,3 +81,10 @@ supplied translations cannot certify all future queries below ten seconds.
 
 See [recorded development validation](INTEL-GPU-VALIDATION.md) for the measured
 latency and preserved source-information counts, including earlier misses.
+
+A [later bounded quality spot check](QUALITY-SPOTCHECK-20261110.md) retained all
+68 checked cases in the smaller groups, but scored 14/16 on 3GPP versus 15/16
+for its earlier multilingual profile. One required-information case was lost;
+a current English CPU control repeated the same blind spot. The larger 3GPP
+sample also included five engine calls above ten seconds. Quality retention and
+a universal ten-second limit for 3GPP remain unproven.
