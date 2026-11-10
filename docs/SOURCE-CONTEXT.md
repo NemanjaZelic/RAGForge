@@ -75,3 +75,17 @@ records are not published.
 The upstream multilingual reranker outputs were reused from the frozen experimental
 MM measurement. That selection is distinct from the base bundle default; the
 93.72% result is not a newly measured default-bundle or all-language score.
+
+## Short questions about purpose and use
+
+The same source-only definition lookup accepts short technical questions such
+as `What is ZQP used for?`, `What does ZQP do?` and `What is the purpose of ZQP?`
+for an uppercase/digit technical short form. Several source meanings can be
+returned. This adds no model inference and preserves existing duplicate-slot,
+character and document-grant limits. Exact authorized catalogue matches avoid a
+global short-form scan; the existing plural/typo fallback remains available.
+
+See [the bounded recovery check](SOURCE-USAGE-RECOVERY.md) for source-quality
+results and measured processor cost. Its English GPU subset recovers one missed
+case without new losses; it does not replace the full multilingual result above
+with a new full-bank score.

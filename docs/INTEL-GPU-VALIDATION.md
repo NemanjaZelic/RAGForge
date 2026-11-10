@@ -110,3 +110,9 @@ multilingual profile. A fresh English CPU control repeated that miss. The other
 Five of the 16 3GPP engine calls exceeded ten seconds. These findings limit the
 earlier selected-query success; they must be included when assessing readiness
 for larger 3GPP collections. No full 3GPP run was performed.
+
+The later [source-use recovery](SOURCE-USAGE-RECOVERY.md) restores the lost
+development case with zero additional neural query plans. Its previous subset
+improves from 14/16 to 15/16 and its additional 16-case subset remains at 14/16.
+These bounded improvements do not establish the full-corpus accuracy or latency
+targets.

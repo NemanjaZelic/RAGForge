@@ -33,11 +33,22 @@ DEFINITION = re.compile(
 )
 
 
+USAGE = re.compile(
+    r"\s*(?:what\s+(?:is|are)(?:\s+(?:the|a|an))?\s+"
+    r"([A-Za-z][A-Za-z0-9/-]{1,15})\s+(?:used\s+for|for)|"
+    r"what\s+(?:does|do)\s+([A-Za-z][A-Za-z0-9/-]{1,15})\s+do|"
+    r"what\s+(?:is|are)\s+the\s+(?:purpose|role|function|use|uses)\s+of\s+"
+    r"(?:the\s+)?([A-Za-z][A-Za-z0-9/-]{1,15}))\s*[?.!]?\s*",
+    re.I,
+)
+
+
 def definition_short(query: str) -> str | None:
-    match = DEFINITION.fullmatch(re.sub(r"[\"\u201c\u201d']", "", query))
+    cleaned = re.sub(r"[\"\u201c\u201d']", "", query)
+    match = DEFINITION.fullmatch(cleaned) or USAGE.fullmatch(cleaned)
     if match is None:
         return None
-    value = match[1] or match[2]
+    value = next(value for value in match.groups() if value is not None)
     return (
         value.casefold()
         if (sum(c.isupper() for c in value) >= 2 or any(c.isdigit() for c in value))
@@ -174,6 +185,11 @@ class SourceContext:
         short = definition_short(query)
         if short is None:
             return []
+        # Most requests name an exact, authorized form. Avoid enumerating the
+        # whole catalogue unless plural/typo matching is actually necessary.
+        entries = self._entries(bank, [short], allowed)
+        if entries:
+            return self._definition_chunks(entries, source, method, allowed)
         sql = "SELECT DISTINCT short FROM definitions"
         params: list[str] = []
         if allowed is not None:
@@ -187,6 +203,15 @@ class SourceContext:
             typo = short[:-1] if short.endswith("s") else short
             matches = [s for s in shorts if one_edit(typo, s)]
         entries = self._entries(bank, matches, allowed)
+        return self._definition_chunks(entries, source, method, allowed)
+
+    def _definition_chunks(
+        self,
+        entries: list[sqlite3.Row],
+        source: sqlite3.Connection,
+        method: SearchMethod,
+        allowed: list[str] | None,
+    ) -> list[RetrievedChunk]:
         actual = {r["chunk_id"]: self._actual(r, source, allowed) for r in entries}
         scoped_counts = Counter((r["short"], r["meaning"]) for r in entries)
         entries.sort(
@@ -393,10 +418,11 @@ class SourceContext:
             method = result[0].retrieval_method
             for chunk in self._definitions(query, source, bank, method, allowed):
                 add(chunk)
-            for chunk in self._focused(query, source, bank, method, allowed):
-                add(chunk)
+            if pending and added < 16:
+                for chunk in self._focused(query, source, bank, method, allowed):
+                    add(chunk)
             anchor_rows = []
-            for chunk in anchors[:16]:
+            for chunk in anchors[:16] if pending and added < 16 else []:
                 row = source.execute(
                     "SELECT document_id,ordinal FROM chunks WHERE collection_id=? AND chunk_id=?",
                     (self.collection_id, chunk.chunk_id),

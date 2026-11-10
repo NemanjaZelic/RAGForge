@@ -280,3 +280,81 @@ def test_corrupt_sqlite_catalogue_returns_controlled_cli_error(
     assert used.returncode == 2
     assert json.loads(used.stderr)["error"] == "cannot use source-definition catalogue"
     assert "Traceback" not in used.stderr
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        "What is ZQP used for?",
+        "What is the ZQP for?",
+        "What does ZQP do?",
+        "What is the purpose of ZQP?",
+        "What is the role of ZQP?",
+        "What is the function of the ZQP?",
+        "What are the uses of ZQP?",
+    ],
+)
+def test_purpose_questions_recognize_only_explicit_technical_short_forms(query):
+    assert definition_short(query) == "zqp"
+    assert definition_short(query.replace("ZQP", "work")) is None
+    assert definition_short(query[:-1] + " and what else?") is None
+
+
+def test_purpose_context_keeps_multiple_meanings_and_needs_no_neural_call(
+    context_bundle, monkeypatch
+):
+    _, catalogue, engine, original, checksum = context_bundle
+    context = SourceContext(catalogue, engine.sqlite, checksum, "docs")
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("No capacity remains after filling the two duplicate slots")
+
+    monkeypatch.setattr(context, "_focused", forbidden)
+    request = RetrieveRequest(query="What is DNS used for?", top_k=3)
+    result = context.supplement(request, original)
+    assert len(result.results) == 3
+    assert any("Domain Name System" in c.text for c in result.results)
+    assert any("Data Network Service" in c.text for c in result.results)
+    assert {information_key(c, False) for c in original.results} <= {
+        information_key(c, False) for c in result.results
+    }
+    assert sum(len(c.text) for c in result.results) <= request.max_output_chars
+
+
+def test_exact_definition_lookup_skips_global_enumeration_and_scopes_before_read(
+    context_bundle, monkeypatch
+):
+    _, catalogue, engine, original, checksum = context_bundle
+    context = SourceContext(catalogue, engine.sqlite, checksum, "docs")
+    from ragforge.core.definitions import catalogue_connection
+
+    statements = []
+    with catalogue_connection(catalogue, checksum, "docs") as bank, engine.sqlite._connect() as db:
+        bank.set_trace_callback(statements.append)
+        all_meanings = context._definitions("What is DNS?", db, bank, "hybrid", None)
+    assert len(all_meanings) == 2
+    assert not any("SELECT DISTINCT short" in statement for statement in statements)
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Must not read foreign definition bodies")
+
+    monkeypatch.setattr(context, "_actual", forbidden)
+    allowed = [c.document_id for c in original.results]
+    scoped = RetrieveRequest(
+        query="What does DNS do?", top_k=3, filters=RetrievalFilters(document_ids=allowed)
+    )
+    assert context.supplement(scoped, original) == original
+
+
+@pytest.mark.parametrize(
+    "query,expected",
+    [
+        ("What is DNSS?", "Domain Name System"),
+        ("What is DNT?", "Domain Name System"),
+    ],
+)
+def test_exact_lookup_retains_previous_plural_and_typo_fallback(context_bundle, query, expected):
+    _, catalogue, engine, original, checksum = context_bundle
+    context = SourceContext(catalogue, engine.sqlite, checksum, "docs")
+    result = context.supplement(RetrieveRequest(query=query, top_k=3), original)
+    assert any(expected in c.text for c in result.results)

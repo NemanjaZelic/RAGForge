@@ -88,3 +88,9 @@ for its earlier multilingual profile. One required-information case was lost;
 a current English CPU control repeated the same blind spot. The larger 3GPP
 sample also included five engine calls above ten seconds. Quality retention and
 a universal ten-second limit for 3GPP remain unproven.
+
+A subsequent [source-use recognition change](SOURCE-USAGE-RECOVERY.md) restores
+the lost case in that development subset: 15/16, with an additional 16-case check
+unchanged at 14/16 and no newly lost supported cases. It adds no neural passes
+and applies when an existing source-context catalogue is configured. The full
+3GPP quality and latency targets still require further validation.
