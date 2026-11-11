@@ -1,17 +1,22 @@
 # Retrieval quality and answer-bearing evidence
 
 The user target is at least **95%**, with **99%** considered excellent. Neither
-threshold has been demonstrated. Document Recall@5 is a component diagnostic;
+threshold has been demonstrated across all corpora and languages. The
+[explicit-title QASPER validation](DOCUMENT-SCOPE-RESULTS.md) reached 120/120
+complete native-evidence support below 10 seconds on a frozen English
+paper-disjoint sample. That bounded result does not establish a global quality
+guarantee. Document Recall@5 is a component diagnostic;
 it is not answer accuracy. RAGForge returns sources, not generated answers.
 
-## New independent T8 test
+## Original independent T8 first test
 
 The [first QASPER test](UNSEEN-T8-QASPER.md) used 120 unchanged English questions
 on 416 papers. Complete native evidence was 97/120 (80.83%); adding seven
 source-quoted AI sufficiency judgments gives 104/120 (86.67%), with independent
 human review pending. All 120 actual MCP calls were below 10 seconds (maximum
-4.270 s). Speed passed on this corpus; the 95% quality target failed. No runtime
-tuning used these test results. This is source support, not generated-answer
+4.270 s). Speed passed on this corpus; the 95% quality target failed. The runtime
+was frozen before the first T8 requests. Subsequent title-scope development and
+validation are described in the separate report. This is source support, not generated-answer
 accuracy or proof for all languages or 3GPP-scale latency.
 
 ## What counts as success

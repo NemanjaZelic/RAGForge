@@ -1,0 +1,166 @@
+{
+  "name": "Explicit document-title scope quality and actual MCP latency",
+  "date": "2026-11-11",
+  "product_commit": "9c62cfc09281144cea59bdebea1f236c1b2b1ecf",
+  "prospective_validation_protocol_commit": "9c62cfc09281144cea59bdebea1f236c1b2b1ecf",
+  "source_dataset": "AllenAI QASPER official test v0.3; within-project development and paper-disjoint validation partitions",
+  "original_T8_first_result": {
+    "complete_native_evidence": 97,
+    "cases": 120,
+    "fraction": 0.8083333333333333,
+    "secondary_AI_support": 104,
+    "original_results_unchanged": true,
+    "median_seconds": 2.634157699998468,
+    "max_seconds": 4.270307899918407
+  },
+  "development_replay": {
+    "partition": "consumed original T8 development replay",
+    "product_commit": "9c62cfc09281144cea59bdebea1f236c1b2b1ecf",
+    "case_count": 120,
+    "distinct_papers": 120,
+    "language": "en",
+    "corpus_papers": 416,
+    "index_chunks": 15490,
+    "quality": {
+      "metric": "all native textual evidence for any eligible annotation alternative; actual indexed source provenance verified",
+      "complete_native_evidence": 120,
+      "fraction": 1.0,
+      "wilson95_interval": [
+        0.9689808335812966,
+        1
+      ],
+      "observed_target_95_met": true,
+      "semantic_bonus_cases": 0,
+      "generated_answer_quality_measured": false
+    },
+    "latency": {
+      "scope": "actual MCP search_docs RPC; startup excluded; neutral warmup; neural cache disabled",
+      "median_seconds": 0.4966498998692259,
+      "p95_empirical_seconds": 0.8496278000529855,
+      "p99_empirical_seconds": 1.9468659001868218,
+      "max_seconds": 1.971956100082025,
+      "min_seconds": 0.1877634001430124,
+      "under10_count": 120,
+      "all_under10": true,
+      "startup_seconds": 8.896859899861738,
+      "MCP_errors": 0,
+      "evaluation_errors": 0
+    },
+    "joint_complete_native_evidence_and_under10": 120,
+    "checks": {
+      "source_rows_verified": true,
+      "output_limits_verified": true,
+      "source_confirmed_title_scope_resolved": 120,
+      "max_reranker_pairs": 125,
+      "neural_cache_hits": 0,
+      "network_attempts": 0,
+      "label_access_denied_in_server": true
+    },
+    "bindings": {
+      "protocol_sha256": "3cbeb478e070ddb3f36052f9b34efe3c3f4e037b0b9281c6d61d32af5e6c4547",
+      "questions_sha256": "8eeb9b0d2f540e150783943cc6527e3a3db90e296b06d3b13e747cd90b5a946f",
+      "native_reference_sha256": "685959bba1bcb806ad1f441c742c8f500ca05765b49cecd0ef175d2bed1a9858",
+      "measurement_recipe_sha256": "070a021162d47af2115082c4742ffd70dda39d5a2ec9a7dc80a12a1810541de5",
+      "response_set_sha256": "c1412453c13df2c3ada64686b2d38fbf83d827d77180bbbbb69c989653041347",
+      "manifest_sha256": "e994ebb16cc7349b612b5268011a8b9e41429adb4c55fa10b650c42a7af72677"
+    },
+    "question_or_label_changes_after_outputs": false,
+    "retries_or_replacements": 0,
+    "no_new_models_or_rebuild": true,
+    "full_GPP_run": false
+  },
+  "first_validation": {
+    "partition": "first validation on disjoint papers and questions; same QASPER corpus",
+    "product_commit": "9c62cfc09281144cea59bdebea1f236c1b2b1ecf",
+    "case_count": 120,
+    "distinct_papers": 120,
+    "language": "en",
+    "corpus_papers": 416,
+    "index_chunks": 15490,
+    "quality": {
+      "metric": "all native textual evidence for any eligible annotation alternative; actual indexed source provenance verified",
+      "complete_native_evidence": 120,
+      "fraction": 1.0,
+      "wilson95_interval": [
+        0.9689808335812966,
+        1
+      ],
+      "observed_target_95_met": true,
+      "semantic_bonus_cases": 0,
+      "generated_answer_quality_measured": false
+    },
+    "latency": {
+      "scope": "actual MCP search_docs RPC; startup excluded; neutral warmup; neural cache disabled",
+      "median_seconds": 0.5358616999583319,
+      "p95_empirical_seconds": 1.0434914000798017,
+      "p99_empirical_seconds": 1.5016926999669522,
+      "max_seconds": 2.0593252000398934,
+      "min_seconds": 0.15851760003715754,
+      "under10_count": 120,
+      "all_under10": true,
+      "startup_seconds": 8.008930699899793,
+      "MCP_errors": 0,
+      "evaluation_errors": 0
+    },
+    "joint_complete_native_evidence_and_under10": 120,
+    "checks": {
+      "source_rows_verified": true,
+      "output_limits_verified": true,
+      "source_confirmed_title_scope_resolved": 120,
+      "max_reranker_pairs": 139,
+      "neural_cache_hits": 0,
+      "network_attempts": 0,
+      "label_access_denied_in_server": true
+    },
+    "bindings": {
+      "protocol_sha256": "cab81693bbb9d8d91340aacc6ce6c6aaf37c394b3af855c430e57e85656075a5",
+      "questions_sha256": "0518e711880c266ba9c619231940ef4d8c500afc94d429ba4abfdf3f470bc0bf",
+      "native_reference_sha256": "f487edc00e632edc1df7de7cf8991d834f61b34f017a4369f3ee272616f737f9",
+      "measurement_recipe_sha256": "dc5ee9b1f2f41141aa0b268ebf4c092187243dde000578abd944d43bdcb010d7",
+      "response_set_sha256": "76c9e71f1126fd7e5d2f5b8bd38c00b9de50ce15565d2859f06c3a62664bbc71",
+      "manifest_sha256": "e994ebb16cc7349b612b5268011a8b9e41429adb4c55fa10b650c42a7af72677"
+    },
+    "question_or_label_changes_after_outputs": false,
+    "retries_or_replacements": 0,
+    "no_new_models_or_rebuild": true,
+    "full_GPP_run": false
+  },
+  "validation_papers_and_questions_disjoint_from_development": true,
+  "validation_runtime_tuned_after_first_outputs": false,
+  "all_native_labels_unchanged": true,
+  "unscoped_regression": {
+    "previous_queries_checked": 60,
+    "request_identity_preserved": 60,
+    "added_SQL_calls": 0,
+    "new_neural_queries": 0,
+    "new_accuracy_measurement": false,
+    "original_GPP_subset": {
+      "supported": 30,
+      "total": 32,
+      "fraction": 0.9375,
+      "rerun": false
+    },
+    "record_file_sha256": "2710191178ed5982cb77103b3327e76a0c02e92ebf8aba2e2a740aef380cdf35"
+  },
+  "software_checks": {
+    "product_commit": "9c62cfc09281144cea59bdebea1f236c1b2b1ecf",
+    "pytest": {
+      "passed": 578,
+      "skipped": 19,
+      "failed": 0,
+      "seconds": 187.35
+    },
+    "ruff_check": true,
+    "ruff_format_check": true,
+    "mypy": true,
+    "schema_drift_check": true,
+    "code_changed_after_checks": false,
+    "unix_time": 1794398371.3276627
+  },
+  "public_raw_data_or_questions_or_quotes": false,
+  "all_language_quality_proven": false,
+  "GPP_scale_latency_proven": false,
+  "generated_answer_accuracy_measured": false,
+  "unknown_pretrained_model_training_overlap": true,
+  "report": "../DOCUMENT-SCOPE-RESULTS.md"
+}
