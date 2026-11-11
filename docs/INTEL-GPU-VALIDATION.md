@@ -141,3 +141,12 @@ model, precision, candidates and source budgets remain. The original consumed
 information. Isolated measurements and actual latency are reported separately,
 including calls over ten seconds. The original 95% and reliable ten-second
 targets remain open.
+
+## Source-only compound definition recovery
+
+The [compound-definition follow-up](COMPOUND-DEFINITION-RECOVERY.md) recovers one
+additional demonstrated development miss without another neural pass. The
+original 32-case score remains 30/32 with no new losses; all 16 additional frozen
+responses and six smaller-corpus controls retain their complete prior evidence.
+Counterbalanced MCP measurements and source-only processing cost are reported
+separately. No full-bank 95% or universal latency claim is made.

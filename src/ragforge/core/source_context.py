@@ -111,6 +111,27 @@ def _fts_word(word: str) -> str:
     return '"' + value.replace('"', '""') + '"' + ("*" if prefix else "")
 
 
+def parenthetical_subject(query: str) -> str | None:
+    """A short unqualified multiword definition, using only literal query words."""
+    match = re.fullmatch(
+        r"\s*what\s+(?:is|are)\s+(?:(?:a|an|the)\s+)?"
+        r"([A-Za-z0-9][A-Za-z0-9_/-]*(?:\s+[A-Za-z0-9][A-Za-z0-9_/-]*){1,5})"
+        r"\s*[?.!]?\s*",
+        query,
+        re.I,
+    )
+    if match is None or VERSION.search(query):
+        return None
+    subject = " ".join(match[1].split())
+    if len(subject) > 128 or any(
+        word.casefold() in STOP
+        or word.casefold() in {"not", "no", "never", "neither", "nor", "only", "except", "unless"}
+        for word in subject.split()
+    ):
+        return None
+    return subject
+
+
 class SourceContext:
     """Source-proven candidate selection. Text definitions remain untrusted data."""
 
@@ -297,18 +318,37 @@ class SourceContext:
         definition_question = bool(
             re.match(r"\s*(what\s+(is|are)|how\s+(many|much))\b", query, re.I)
         )
-        for statement in list(dict.fromkeys(queries))[:3]:
+        statements = list(dict.fromkeys(queries))[:3]
+        subject = parenthetical_subject(query)
+        definition_branch = None
+        if subject is not None and len(statements) == 2:
+            # Keep the original literal branch. Prefer an explicit compound
+            # label over its broad fallback, restoring that fallback on no hit.
+            # An empty probe still fits the original three-statement ceiling.
+            definition_branch = 1
+            statements.insert(definition_branch, '"' + subject.casefold() + '"')
+        for branch_index, statement in enumerate(statements):
             sql = (
                 "SELECT c.*,bm25(chunk_fts) AS relevance FROM chunk_fts "
                 "JOIN chunks c ON c.rowid=chunk_fts.rowid WHERE chunk_fts MATCH ? "
                 "AND c.collection_id=?"
             )
             params = [statement, self.collection_id]
+            if subject is not None and branch_index == definition_branch:
+                # Collapse ordinary source line wrapping only for this literal
+                # predicate; the returned source text is never normalized.
+                text = "replace(replace(replace(c.text,char(10),' '),char(13),' '),char(9),' ')"
+                text = "replace(replace(" + text + ",'  ',' '),'  ',' ')"
+                text = "replace(replace(" + text + ",'( ','('),' )',')')"
+                sql += " AND instr(lower(" + text + "),?)>0"
+                params.append("(" + subject.casefold() + ")")
             if allowed is not None:
                 sql += " AND c.document_id IN (" + ",".join("?" for _ in allowed) + ")"
                 params += allowed
             sql += " ORDER BY relevance,c.chunk_id LIMIT 64"
             rows = source.execute(sql, params).fetchall()
+            if branch_index == definition_branch and not rows:
+                continue
             if definition_question:
                 rows = sorted(
                     rows,
@@ -333,6 +373,8 @@ class SourceContext:
                     ),
                 )
             branches.append(rows)
+            if branch_index == definition_branch:
+                break
         result = []
         seen = set()
         families = set()

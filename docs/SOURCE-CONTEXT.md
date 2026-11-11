@@ -95,3 +95,13 @@ single technical actor in a bounded focused branch. Purpose explanations receive
 priority inside the existing row/candidate limits. The [later quality and latency
 check](QUALITY-LATENCY-20261110.md) recovered one additional full-question source
 case, reaching 30/32 on the same consumed subset; the 95% target remains open.
+
+## Compound technical definitions
+
+Short unqualified multiword definition questions can prefer a verbatim source
+that labels the full term in parentheses, within an otherwise available focused
+search slot. The original literal branch remains; an empty probe restores the
+old fallback within the same three-query ceiling. Source text, grants, output
+budgets and the 16 duplicate-slot limit remain. No extra neural pass or catalogue
+rebuild is needed. See the [compound-definition check](COMPOUND-DEFINITION-RECOVERY.md)
+for the demonstrated recovery, unchanged original 30/32 score and measured costs.
