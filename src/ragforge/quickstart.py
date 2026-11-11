@@ -21,6 +21,7 @@ from ragforge.core.chunk import ChunkConfig
 from ragforge.core.contracts import RetrieveRequest
 from ragforge.core.embedding import model_spec
 from ragforge.core.engine import BundleEngine
+from ragforge.core.parse import TextOptions
 from ragforge.core.rerank import reranker_spec
 from ragforge.core.source import is_link
 from ragforge.jobs.build import atomic_json
@@ -158,6 +159,7 @@ def ready_documentation(
         documents,
         destination,
         collection_id="documents",
+        text_options=TextOptions(control_characters="escape"),
         web_sources=provenance,
         rerank_batch_size=(8 if ranker.runtime == "openvino-gpu-f16" else 1) if english else None,
         query_planning="facets-v3" if english else None,
@@ -170,6 +172,11 @@ def ready_documentation(
         dense_backend="ann",
         threads=threads,
     )
+    if "controls-escaped-v1" in manifest.build_configuration.parser_version:
+        print(
+            "Control characters were represented as visible text; original files are unchanged.",
+            file=sys.stderr,
+        )
     # The existing builder atomically publishes only a fully verified new bundle.
     # A failure never switches the previous active version or overwrites its data.
     pointer = ActiveBundle(bundle=str(destination), build_id=manifest.build_id)

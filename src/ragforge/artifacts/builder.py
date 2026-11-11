@@ -31,7 +31,7 @@ from ragforge.artifacts.verification import build_identity, bundle_files, verify
 from ragforge.core.chunk import ChunkConfig, chunker_version
 from ragforge.core.embedding import ONNXEmbedder, file_hash, model_spec
 from ragforge.core.limits import MAX_DENSE_ROWS
-from ragforge.core.parse import load_document
+from ragforge.core.parse import TextOptions, load_document
 from ragforge.core.pdf import PdfOptions
 from ragforge.core.scan import ScanLimits, scan_corpus
 from ragforge.core.source import is_link
@@ -90,6 +90,7 @@ def build_bundle(
     allow_failed_documents: bool = False,
     threads: int = 4,
     pdf_options: PdfOptions | None = None,
+    text_options: TextOptions | None = None,
     ingest_job: Path | None = None,
     max_index_chunks: int = 100000,
     max_index_text_chars: int = 100000000,
@@ -147,6 +148,7 @@ def build_bundle(
             allow_failed_documents=allow_failed_documents,
             threads=threads,
             pdf_options=pdf_options,
+            text_options=text_options,
             ingest_job=ingest_job,
             max_index_chunks=max_index_chunks,
             max_index_text_chars=max_index_text_chars,
@@ -181,6 +183,7 @@ def _build_bundle(
     allow_failed_documents: bool = False,
     threads: int = 4,
     pdf_options: PdfOptions | None = None,
+    text_options: TextOptions | None = None,
     ingest_job: Path | None = None,
     max_index_chunks: int = 100000,
     max_index_text_chars: int = 100000000,
@@ -202,6 +205,8 @@ def _build_bundle(
             raise ValueError("PDF configuration must match the ingestion job")
         if scan_limits is not None and scan_limits != ScanLimits(**cached.scan_limits):
             raise ValueError("scan configuration must match the ingestion job")
+        if text_options is not None and text_options != cached.text_options:
+            raise ValueError("text configuration must match the ingestion job")
         pdf_options = cached.pdf_options
         scan_limits = ScanLimits(**cached.scan_limits)
     if not 1 <= max_index_chunks <= MAX_DENSE_ROWS or max_index_text_chars < 1:
@@ -331,6 +336,8 @@ def _build_bundle(
             ):
                 if value is not None:
                     tuning[key] = value
+        if text_options is not None:
+            recipe["text_options"] = text_options.model_dump(mode="json")
         workspace = BuildWorkspace(work_directory, output, recipe, resume=resume)
         stage = workspace.stage
         if workspace.published:
@@ -351,7 +358,14 @@ def _build_bundle(
             documents = cached_documents(ingest_job, report, allow_failed=allow_failed_documents)
         else:
             documents = (
-                load_document(source, collection_id, record, limits, pdf_options=pdf_options)
+                load_document(
+                    source,
+                    collection_id,
+                    record,
+                    limits,
+                    pdf_options=pdf_options,
+                    text_options=text_options,
+                )
                 for record in report.documents
             )
         last_index_bytes = database.stat().st_size if database.exists() else 0

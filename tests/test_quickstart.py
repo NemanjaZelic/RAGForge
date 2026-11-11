@@ -183,3 +183,38 @@ def test_native_linux_launcher_forwards_spaces_and_returns_citations(
     )
     assert result.returncode == 0, result.stderr
     assert "[1]" in result.stdout and "(lines " in result.stdout
+
+
+@pytest.mark.parametrize("extension", ["txt", "md", "html"])
+def test_original_build_command_escapes_controls_without_extra_steps(
+    tmp_path, tiny_model, tiny_reranker, capsys, extension
+):
+    from ragforge.artifacts.verification import verify_bundle
+
+    project = tmp_path / "simple project"
+    documents = project / "documents"
+    documents.mkdir(parents=True)
+    raw = b"authentication\x00 token\x1b documentation\ntransaction rollback\x07\n"
+    source = documents / ("manual." + extension)
+    source.write_bytes(raw)
+    state = project / ".cache/quickstart"
+    state.mkdir(parents=True)
+    # Same prepared-model state that setup writes; no build flags or manual ingest.
+    (state / "models.json").write_text(
+        json.dumps({"query_model": str(tiny_model), "reranker": str(tiny_reranker)}),
+        encoding="utf-8",
+    )
+    assert main(["--project", str(project), "build"]) == 0
+    assert "Control characters were represented as visible text" in capsys.readouterr().err
+    bundle = active_bundle(project)
+    manifest = verify_bundle(bundle)
+    assert "controls-escaped-v1" in manifest.build_configuration.parser_version
+    engine = BundleEngine(bundle)
+    results = engine.retrieve(RetrieveRequest(query="authentication", search_method="bm25"))
+    assert results.results[0].source.path == source.name
+    assert "authentication\\x00 token\\x1b" in results.results[0].text
+    if extension != "html":
+        assert results.results[0].source.line_start == 1
+    assert source.read_bytes() == raw
+    # The existing agent command consumes the newly remembered bundle directly.
+    assert main(["--project", str(project), "agent"]) == 0

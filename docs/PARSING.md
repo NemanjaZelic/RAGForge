@@ -88,3 +88,18 @@ exit 2 i JSON error na stderr bez delimičnog stdout-a. Chunk preview ne pravi i
 .\scripts\dev.ps1 run ragforge chunk examples/mini-docs --chunk-size-chars 500 --overlap-chars 50
 ```
 
+
+
+## Simple setup/build workflow
+
+The original `setup.cmd` / `ragforge.cmd build` and `setup.sh` / `ragforge.sh build`
+workflow automatically escapes unsupported control characters in UTF-8 text,
+Markdown and HTML sources as visible `\xNN` text. No extra command, preprocessing,
+ingestion job or flag is required. Original source bytes, hashes and physical
+line numbers are preserved. The parser records its escape policy in the bundle,
+and build prints a notice when it was needed. Model preparation stays in setup;
+build remains offline and selects only a successfully verified new bundle.
+
+The lower-level parser and advanced CLI retain their explicit strict text policy.
+Invalid UTF-8 still fails with an error; this workflow does not guess encodings
+or silently omit unreadable documents.
