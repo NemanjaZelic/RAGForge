@@ -111,3 +111,6 @@ for the demonstrated recovery, unchanged original 30/32 score and measured costs
 A [bounded three-prototype comparison](ACRONYM-CONTEXT-EXPERIMENT.md) found no
 confirmed additional whole-question recovery. None of its acronym-ranking
 changes was adopted; the preceding retrieval implementation remains in use.
+
+A later [explicit-reference lookup probe](REFERENCE-LOOKUP-EXPERIMENT.md) also
+kept all 60 outputs identical while adding costly lookups. It was not adopted.
