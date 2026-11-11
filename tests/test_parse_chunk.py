@@ -212,3 +212,56 @@ def test_empty_document_after_exact_chunk_budget_is_still_reported(tmp_path: Pat
     assert result.exit_code == 0, result.output
     report = json.loads(result.stdout)
     assert report["documents"][1]["warnings"] == ["no extractable text"]
+
+
+@pytest.mark.parametrize("encoding", ["utf-8-sig", "utf-16", "utf-32", "cp1252", "latin-1"])
+def test_auto_text_decoding_preserves_content_and_original_hash(tmp_path, encoding):
+    from ragforge.core.parse import TextOptions
+
+    text = "authentication café\r\ntransaction résumé\r\n"
+    raw = text.encode(encoding)
+    source = tmp_path / "manual.txt"
+    source.write_bytes(raw)
+    record = scan_corpus(tmp_path, "mini").documents[0]
+    parsed = load_document(
+        tmp_path, "mini", record, text_options=TextOptions(fallback_encoding="auto")
+    )
+    assert parsed.blocks[0].text == text.replace("\r\n", "\n")
+    assert (parsed.blocks[0].line_start, parsed.blocks[0].line_end) == (1, 2)
+    assert parsed.record.content_sha256 == hashlib.sha256(raw).hexdigest()
+    assert source.read_bytes() == raw
+
+
+@pytest.mark.parametrize(
+    "encoding,marker",
+    [
+        ("utf-16-be", b"\xfe\xff"),
+        ("utf-32-be", b"\x00\x00\xfe\xff"),
+    ],
+)
+def test_auto_decodes_big_endian_unicode(encoding, marker):
+    from ragforge.core.text_encoding import decode_text
+
+    text = "authentication čćžšđ"
+    decoded, _, assumed = decode_text(marker + text.encode(encoding))
+    assert decoded == text and not assumed
+
+
+def test_auto_respects_html_charset_and_ignores_document_code_examples():
+    from ragforge.core.text_encoding import decode_text
+
+    text = '<meta charset="windows-1250"><p>čćžšđ</p>'
+    assert decode_text(text.encode("cp1250"), html=True) == (text, "cp1250", False)
+    example = b'<p>Example: charset="unknown"</p>'
+    assert decode_text(example, html=True) == (example.decode(), "utf-8", False)
+    assert decode_text(b"token\x81", html=False) == ("token\x81", "iso8859-1", True)
+
+
+@pytest.mark.parametrize("raw", [b"\xff\xfea", b'<meta charset="unknown"><p>hello</p>'])
+def test_auto_decode_failure_names_source_and_does_not_replace_bytes(tmp_path, raw):
+    from ragforge.core.parse import TextOptions
+
+    (tmp_path / "bad.html").write_bytes(raw)
+    record = scan_corpus(tmp_path, "mini").documents[0]
+    with pytest.raises(ParseError, match="bad.html.*cannot decode source"):
+        load_document(tmp_path, "mini", record, text_options=TextOptions(fallback_encoding="auto"))

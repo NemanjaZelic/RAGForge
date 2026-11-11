@@ -12,6 +12,7 @@ from ragforge.core.identity import document_id
 from ragforge.core.pdf import PdfError, PdfOptions, PdfPageReport, extract_pdf
 from ragforge.core.scan import FORMATS, ScanLimits, ScannedDocument
 from ragforge.core.source import SourceError, checked_stat, is_link, read_file
+from ragforge.core.text_encoding import decode_text
 from ragforge.types import ContractModel
 
 PARSER_VERSION = "text-v1"
@@ -21,7 +22,7 @@ HTML_PARSER_VERSION = "html-main-v2"
 class TextOptions(ContractModel):
     """Explicit legacy policies; UTF-8 and control rejection remain the default."""
 
-    fallback_encoding: Literal["none", "latin-1"] = "none"
+    fallback_encoding: Literal["none", "latin-1", "auto"] = "none"
     control_characters: Literal["reject", "escape"] = "reject"
 
 
@@ -353,11 +354,21 @@ def parse_document(
     warnings: list[str] = []
     suffix = ""
     try:
-        text = raw.decode("utf-8-sig")
-    except UnicodeDecodeError as error:
+        if text_options.fallback_encoding == "auto":
+            text, encoding, assumed = decode_text(raw, html=record.format == "html")
+            if encoding not in {"utf-8", "utf-8-sig"}:
+                policy = "fallback" if assumed else "detected"
+                warnings.append(f"source decoded using {policy} encoding {encoding}")
+                suffix += f";encoding-auto-{policy}-{encoding}-v1"
+        else:
+            text = raw.decode("utf-8-sig")
+    except (LookupError, ValueError) as error:
+        if text_options.fallback_encoding == "auto":
+            raise ParseError(f"{record.source_path!r}: cannot decode source: {error}") from error
         if text_options.fallback_encoding != "latin-1":
             raise ParseError(
-                "source must be UTF-8 (optional BOM); invalid bytes are not replaced"
+                f"{record.source_path!r}: source must be UTF-8 (optional BOM); "
+                "invalid bytes are not replaced"
             ) from error
         text = raw.decode("latin-1")
         warnings.append("decoded using explicitly selected latin-1 fallback")

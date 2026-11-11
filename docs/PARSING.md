@@ -101,5 +101,12 @@ and build prints a notice when it was needed. Model preparation stays in setup;
 build remains offline and selects only a successfully verified new bundle.
 
 The lower-level parser and advanced CLI retain their explicit strict text policy.
-Invalid UTF-8 still fails with an error; this workflow does not guess encodings
-or silently omit unreadable documents.
+The simple build also reads UTF-16/UTF-32 with a BOM and common explicitly
+declared HTML encodings (including Windows-1250/1251/1252). UTF-8 remains first
+choice for unmarked text. Other unmarked byte sequences use Windows-1252, or
+Latin-1 if Windows-1252 cannot decode them, with a visible notice. This is a
+documented fallback, not reliable language detection: check accented characters
+in old files with no encoding declaration. Malformed BOM-marked Unicode and
+unsupported or invalid declared encodings fail with the source filename.
+The selected codec/policy is recorded in parser metadata; source bytes and
+checksums stay unchanged. No document is silently omitted.

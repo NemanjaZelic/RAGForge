@@ -218,3 +218,45 @@ def test_original_build_command_escapes_controls_without_extra_steps(
     assert source.read_bytes() == raw
     # The existing agent command consumes the newly remembered bundle directly.
     assert main(["--project", str(project), "agent"]) == 0
+
+
+def test_original_build_handles_mixed_source_encodings_without_extra_flags(
+    tmp_path, tiny_model, tiny_reranker, capsys
+):
+    import hashlib
+
+    from ragforge.artifacts.verification import verify_bundle
+
+    docs = tmp_path / "documents"
+    docs.mkdir()
+    sources = {
+        "unicode.txt": "authentication café\n".encode("utf-16"),
+        "legacy.md": "transaction – résumé\n".encode("cp1252"),
+        "declared.html": '<meta charset="windows-1250"><p>rollback čćžšđ</p>'.encode("cp1250"),
+    }
+    for name, raw in sources.items():
+        (docs / name).write_bytes(raw)
+    state = tmp_path / ".cache/quickstart"
+    state.mkdir(parents=True)
+    (state / "models.json").write_text(
+        json.dumps({"query_model": str(tiny_model), "reranker": str(tiny_reranker)}),
+        encoding="utf-8",
+    )
+    assert main(["--project", str(tmp_path), "build"]) == 0
+    notice = capsys.readouterr().err
+    assert "encoding was handled automatically" in notice
+    assert "fallback; check accented characters" in notice
+    bundle = active_bundle(tmp_path)
+    manifest = verify_bundle(bundle)
+    for record in manifest.collections[0].documents:
+        assert record.content_sha256 == hashlib.sha256(sources[record.source_path]).hexdigest()
+        assert (docs / record.source_path).read_bytes() == sources[record.source_path]
+    engine = BundleEngine(bundle)
+    for query, expected in [
+        ("authentication", "café"),
+        ("transaction", "résumé"),
+        ("rollback", "čćžšđ"),
+    ]:
+        result = engine.retrieve(RetrieveRequest(query=query, search_method="bm25"))
+        assert expected in result.results[0].text
+    assert main(["--project", str(tmp_path), "agent"]) == 0

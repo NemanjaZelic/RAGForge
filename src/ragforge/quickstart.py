@@ -159,7 +159,7 @@ def ready_documentation(
         documents,
         destination,
         collection_id="documents",
-        text_options=TextOptions(control_characters="escape"),
+        text_options=TextOptions(fallback_encoding="auto", control_characters="escape"),
         web_sources=provenance,
         rerank_batch_size=(8 if ranker.runtime == "openvino-gpu-f16" else 1) if english else None,
         query_planning="facets-v3" if english else None,
@@ -172,7 +172,18 @@ def ready_documentation(
         dense_backend="ann",
         threads=threads,
     )
-    if "controls-escaped-v1" in manifest.build_configuration.parser_version:
+    parser_version = manifest.build_configuration.parser_version
+    if "encoding-auto-" in parser_version:
+        print(
+            "Source text encoding was handled automatically; original files are unchanged.",
+            file=sys.stderr,
+        )
+    if "encoding-auto-fallback-" in parser_version:
+        print(
+            "Unmarked legacy text used Windows-1252/Latin-1 fallback; check accented characters.",
+            file=sys.stderr,
+        )
+    if "controls-escaped-v1" in parser_version:
         print(
             "Control characters were represented as visible text; original files are unchanged.",
             file=sys.stderr,
