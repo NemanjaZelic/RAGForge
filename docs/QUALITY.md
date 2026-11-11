@@ -8,6 +8,18 @@ paper-disjoint sample. That bounded result does not establish a global quality
 guarantee. Document Recall@5 is a component diagnostic;
 it is not answer accuracy. RAGForge returns sources, not generated answers.
 
+## T9: first unscoped SciFact run
+
+The [command-only SciFact test](UNSEEN-T9-SCIFACT.md) retrieved a complete native
+rationale for **183/188 (97.34%)** evidence-labelled claims across all 5,183
+abstracts. **188/188** actual MCP requests were below 10 seconds;
+median 2.503 s, maximum 5.674 s. The 95% evidence target
+passed; the all-under-10-seconds target passed. Native no-evidence records
+(112) were not scored as successes. The frozen program received only native
+claim text, without title or document-ID hints, and no tuning used these outputs.
+This is source support on an English public-dev group, not claim-verdict or
+all-language answer accuracy. The first result remains separate from T8.
+
 ## Original independent T8 first test
 
 The [first QASPER test](UNSEEN-T8-QASPER.md) used 120 unchanged English questions
