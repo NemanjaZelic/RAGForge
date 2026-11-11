@@ -1,0 +1,63 @@
+{
+  "status": "prospective_protocol_before_first_retrieval",
+  "dataset": "QASPER v0.3 official test",
+  "publisher": "Allen Institute for AI",
+  "dataset_url": "https://huggingface.co/datasets/allenai/qasper",
+  "paper_url": "https://arxiv.org/abs/2105.03011",
+  "archive_url": "https://qasper-dataset.s3.us-west-2.amazonaws.com/qasper-test-and-evaluator-v0.3.tgz",
+  "archive_sha256": "72a52a41193e2838b8074f80ac074b94f956b84886c36a61c58a7df4171bdd72",
+  "json_sha256": "6e29ad410e6e39aa1936017fb965b30a20eb2e7751997f55b97c9d281aa884e5",
+  "license": "CC BY 4.0 dataset; native papers retain their own terms; no corpus redistribution in repository",
+  "application_commit": "94d61d233bd90b449f42acda144a2e245bd924ad",
+  "protocol_sha256": "3aedf82da802cf081ef5dee29226482e242239da513d3c3ffac579c4f3750fbe",
+  "case_and_reference_lock_sha256": "685959bba1bcb806ad1f441c742c8f500ca05765b49cecd0ef175d2bed1a9858",
+  "queries_sha256": "8eeb9b0d2f540e150783943cc6527e3a3db90e296b06d3b13e747cd90b5a946f",
+  "all_test_papers": 416,
+  "all_native_test_questions": 1451,
+  "eligible_text_questions": 1232,
+  "eligible_papers": 403,
+  "selected_questions": 120,
+  "distinct_selected_papers": 120,
+  "sampling_seed": "ragforge-unseen-t8-qasper-v03-20261111",
+  "selection_rule": "one eligible native question per paper chosen by seeded SHA256, then first120 papers by separate seeded SHA256; no runtime-output-based exclusions or replacements",
+  "eligibility": "at least one native answerable annotation with nonempty entirely textual evidence, no FLOAT SELECTED evidence, and every paragraph canonically locatable in that paper full text; retain alternative native annotations as alternatives",
+  "excluded_questions": {
+    "no_eligible_text_evidence_annotation": 140,
+    "all_unanswerable": 79
+  },
+  "rejected_annotations": {
+    "figure_or_table_annotation": 391,
+    "unanswerable_annotation": 366,
+    "text_not_locatable_in_supplied_full_text": 86,
+    "empty_evidence": 78
+  },
+  "first_alternative_types": {
+    "extractive": 86,
+    "free_form": 18,
+    "yes_no": 16
+  },
+  "retrieval_scope": "all 416 papers; no oracle document filters; original native question with original paper title metadata appended",
+  "retrieval_corpus_fields": "title, abstract, full supplied sections, textual captions; no QA or answer fields",
+  "language": "en",
+  "quality_metric": "complete coverage of all native textual evidence paragraphs for at least one valid annotator alternative, actual indexed source provenance checked; strict sufficiency lower bound, equivalent sources reviewed separately if necessary",
+  "quality_threshold": 0.95,
+  "quality_uncertainty": "Report Wilson95 interval for sampled distinct papers; no universal/all-language guarantee; not official generated-answer F1",
+  "latency_metric": "actual MCP search_docs wall time; all first outputs kept; startup separately; median,p95,max,under10,error and joint support/time counts",
+  "latency_seconds_target": 10,
+  "configuration": {
+    "build_profile": "same explicit English GPU quickstart factory policy: balanced, ANN, token-aware sections1000/100, facets-v3,section-gaps-v3,query_language=en,rerank_batch8,rerank_candidates100",
+    "top_k": 50,
+    "max_output_chars": 48000,
+    "reranker_pairs_cap": 400,
+    "threads": 8,
+    "rerank_workers": 2,
+    "reranker_cache_batches": 0,
+    "query_model": "intfloat/multilingual-e5-small@614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "reranker": "cross-encoder/ms-marco-MiniLM-L6-v2@233902d25c440f23af6f7d6e94d2946bac0bee0a",
+    "reranker_runtime": "openvino-gpu-f16"
+  },
+  "no_tuning_on_test_outputs": true,
+  "pretrained_model_training_overlap_unknown": true,
+  "no_full_3GPP_run": true,
+  "raw_questions_answers_sources_outputs_not_uploaded": true
+}
