@@ -50,6 +50,11 @@ source evidence is sufficient.
   scope during the session rather than listing it for every question.
 - Call `search_docs` with a focused question and the relevant identifiers/version.
   {search}
+- When the user asks about one named document and its exact indexed top-level
+  title is known, append `Document title: <exact title>` as the final query line.
+  The engine resolves a unique source-confirmed title and ranks the question within
+  that document. Unknown or ambiguous titles keep the ordinary collection search.
+  Do not guess titles or use this scope for a cross-document comparison.
 - Read the returned source text in both `results` and attached `context`.
   Context can include a verbatim neighbor excerpt with `text_offset` in its indexed chunk.
   Use `fetch_context` for the full chunk when that excerpt is insufficient.

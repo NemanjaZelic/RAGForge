@@ -128,6 +128,9 @@ class BundleEngine:
             request = request.model_copy(
                 update={"query": request.query_translation, "query_translation": None}
             )
+        from ragforge.core.document_scope import resolve_title_scope
+
+        request = resolve_title_scope(self.sqlite, request)
         response = self._retrieve(request)
         if self._source_context is not None:
             config = self.manifest.retrieval_configuration
