@@ -173,3 +173,28 @@ def test_document_identity_is_content_independent_and_collection_scoped() -> Non
     assert document_id("mini", "example.md") == expected
     assert document_id("mini", "renamed.md") != expected
     assert document_id("other", "example.md") != expected
+
+
+def test_manifest_preserves_case_distinct_source_identity() -> None:
+    data = manifest_data()
+    collection = data["collections"][0]
+    collection["documents"] = [
+        {
+            "document_id": document_id("mini", path),
+            "source_path": path,
+            "content_sha256": DIGEST,
+        }
+        for path in ["readme.txt", "Readme.txt", "Docs/a.txt", "docs/a.txt"]
+    ]
+    manifest = BundleManifest.model_validate(data)
+    documents = manifest.collections[0].documents
+    assert len({d.document_id for d in documents}) == 4
+    assert [d.source_path for d in documents] == [
+        "readme.txt",
+        "Readme.txt",
+        "Docs/a.txt",
+        "docs/a.txt",
+    ]
+    collection["documents"].append(collection["documents"][0].copy())
+    with pytest.raises(ValidationError, match="duplicate source path"):
+        BundleManifest.model_validate(data)

@@ -61,13 +61,16 @@ def test_bad_limits_rejected(value: int) -> None:
         ScanLimits(max_entries=value)
 
 
-def test_case_collision_is_never_silently_merged(tmp_path: Path) -> None:
+def test_case_distinct_sources_are_never_silently_merged(tmp_path: Path) -> None:
     (tmp_path / "A.md").write_text("first")
     (tmp_path / "a.MD").write_text("second")
     if len(list(tmp_path.iterdir())) == 1:
         pytest.skip("case-insensitive filesystem cannot create the collision")
-    with pytest.raises(ScanError, match="collision"):
-        scan_corpus(tmp_path, "mini")
+    report = scan_corpus(tmp_path, "mini")
+    assert [d.source_path for d in report.documents] == ["A.md", "a.MD"]
+    assert len({d.document_id for d in report.documents}) == 2
+    assert len({d.content_sha256 for d in report.documents}) == 2
+    assert scan_corpus(tmp_path, "mini") == report
 
 
 def test_non_nfc_source_is_not_silently_renamed(tmp_path: Path) -> None:

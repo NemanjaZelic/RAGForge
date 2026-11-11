@@ -90,8 +90,8 @@ class CollectionManifest(ContractModel):
     @model_validator(mode="after")
     def unique_document_identity(self) -> Self:
         paths = [doc.source_path for doc in self.documents]
-        if len({path.casefold() for path in paths}) != len(paths):
-            raise ValueError("duplicate or case-colliding source path in collection")
+        if len(set(paths)) != len(paths):
+            raise ValueError("duplicate source path in collection")
         for doc in self.documents:
             if doc.document_id != document_id(self.collection_id, doc.source_path):
                 raise ValueError("document_id does not match collection and source path")

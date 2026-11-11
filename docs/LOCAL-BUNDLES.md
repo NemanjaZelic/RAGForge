@@ -63,6 +63,20 @@ streams through the model files to check checksums, so cold verification
 has I/O cost. Missing/corrupt model files or an unsupported method are errors;
 there is no silent download or fallback.
 
+## Source filename case
+
+Source paths preserve case. On a filesystem that supports distinct entries such
+as `readme.txt` and `Readme.txt` (including case-distinct directories), each is
+indexed separately with its own document ID and exact source citation. No input
+file is renamed or merged. This supersedes the earlier source casefold-collision
+restriction in the architecture notes.
+
+The bundle stores source paths as metadata and text in SQLite, so it can be
+searched on Windows without recreating those original source files. Copying the
+raw source corpus to a case-insensitive filesystem still requires distinct names.
+Physical bundle and model files retain portable, case-insensitive inventory
+checks; exact duplicate source paths remain invalid.
+
 ## Data package, integrity and publication
 
 Build is local/offline and requires an explicitly prepared model directory

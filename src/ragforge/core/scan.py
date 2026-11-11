@@ -62,10 +62,11 @@ def _hash_file(path: Path, root: Path, remaining: int, limits: ScanLimits) -> tu
 
 
 def scan_corpus(root: Path, collection_id: str, limits: ScanLimits | None = None) -> ScanReport:
-    """Reject links, nonportable/colliding paths and all read/limit errors.
+    """Reject links, nonportable paths and all read/limit errors.
 
-    NFC paths are required, never silently rewritten. Casefold collisions are
-    rejected for Windows portability. Empty documents are inventoried. Unsupported
+    NFC paths are required, never silently rewritten. Source paths preserve case;
+    distinct filesystem entries remain distinct documents. Empty documents are inventoried.
+    Unsupported
     regular files are reported, not hashed. PDF discovery does not verify text.
     Callers must use a stable corpus; this is not an OS filesystem sandbox or an
     atomic snapshot against concurrent directory mutation by another process.
@@ -79,7 +80,7 @@ def scan_corpus(root: Path, collection_id: str, limits: ScanLimits | None = None
         if not root.is_dir():
             raise ScanError("corpus root must be a directory")
         pending = [root]
-        seen: dict[str, str] = {}
+        seen: set[str] = set()
         sources: list[tuple[str, Path]] = []
         ignored: list[str] = []
         entries_count = 0
@@ -98,10 +99,9 @@ def scan_corpus(root: Path, collection_id: str, limits: ScanLimits | None = None
                         relative = _path_adapter.validate_python(relative)
                     except ValueError as error:
                         raise ScanError(f"nonportable source path: {relative!r}") from error
-                    key = relative.casefold()
-                    if key in seen:
-                        raise ScanError(f"case collision: {seen[key]!r} and {relative!r}")
-                    seen[key] = relative
+                    if relative in seen:
+                        raise ScanError(f"duplicate source path: {relative!r}")
+                    seen.add(relative)
                     info = _checked_stat(path, root)
                     if stat.S_ISDIR(info.st_mode):
                         pending.append(path)

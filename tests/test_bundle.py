@@ -374,3 +374,31 @@ def test_balanced_pdf_bundle_keeps_physical_pages_and_parser_options(
     result = BundleEngine(output).retrieve(RetrieveRequest(query="authentication"))
     assert {r.source.page for r in result.results} == {1, 2}
     assert all(r.source.line_start is None for r in result.results)
+
+
+@pytest.mark.parametrize("nested", [False, True])
+def test_case_distinct_sources_build_verify_and_retrieve(tmp_path: Path, nested: bool) -> None:
+    source = tmp_path / "source"
+    source.mkdir()
+    paths = ["Readme.txt", "readme.txt"] if not nested else ["Docs/a.txt", "docs/a.txt"]
+    for path, text in zip(
+        paths, ["alpha transaction rollback", "beta authentication token"], strict=True
+    ):
+        file = source / path
+        file.parent.mkdir(exist_ok=True)
+        file.write_text(text, encoding="utf-8")
+    if (source / paths[0]).samefile(source / paths[1]):
+        pytest.skip("case-insensitive filesystem cannot create distinct source entries")
+    output = tmp_path / "bundle"
+    manifest = build_bundle(source, output, collection_id="mini", profile="minimal")
+    assert len(manifest.collections[0].documents) == 2
+    assert verify_bundle(output) == manifest
+    engine = BundleEngine(output)
+    for path, query in zip(paths, ["rollback", "authentication"], strict=True):
+        result = engine.retrieve(RetrieveRequest(query=query))
+        assert result.results[0].source.path == path
+        assert result.results[0].document_id == next(
+            d.document_id for d in manifest.collections[0].documents if d.source_path == path
+        )
+    second = build_bundle(source, tmp_path / "repeat", collection_id="mini", profile="minimal")
+    assert second.build_id == manifest.build_id
