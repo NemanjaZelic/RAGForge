@@ -131,3 +131,13 @@ A [later English lexical-policy check](ENGLISH-LEXICAL-TERMS.md) retains the
 strict 30/32 source score and improves the measured latency, with a guard for
 compound questions. Both the favorable first run and a slower low-memory repeat
 are retained. A stable ten-second bound and the 95% target remain open.
+
+## GPU memory and length grouping
+
+The [later memory checkpoint](GPU-MEMORY-BATCHING.md) reduces the execution
+batch limit to four and groups pairs by truncated token length. The packaged
+model, precision, candidates and source budgets remain. The original consumed
+3GPP subset stays at 30/32; 24 smaller-group MCP checks retain their source
+information. Isolated measurements and actual latency are reported separately,
+including calls over ten seconds. The original 95% and reliable ten-second
+targets remain open.

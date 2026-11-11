@@ -31,9 +31,11 @@ service. This profile is not a quality guarantee for non-English source document
 
 Setup downloads the pinned OpenVINO SDK and the FP32 ONNX graph from the same
 English MiniLM-L6 model revision as the CPU profile. The graph checksum is
-verified before publication. Computation uses GPU FP16 and batches of eight
-with at most two concurrent inference requests. Embeddings, indexing and
-lexical search keep their existing CPU implementations. Reranking candidates,
+verified before publication. Computation uses GPU FP16 and batches of at most
+four, grouped by passage length, with at most two concurrent inference requests.
+Sequence lengths use masked right-padding to a multiple of 16, capped by the
+model token limit. Embeddings, indexing and lexical search keep their existing
+CPU implementations. Reranking candidates,
 source text and evidence budgets are not reduced.
 
 GPU logits can differ from the quantized CPU model. Source-information
@@ -106,3 +108,8 @@ A [later English lexical-policy check](ENGLISH-LEXICAL-TERMS.md) retains the
 strict 30/32 source score and improves the measured latency, with a guard for
 compound questions. Both the favorable first run and a slower low-memory repeat
 are retained. A stable ten-second bound and the 95% target remain open.
+
+A [GPU memory and length-grouping checkpoint](GPU-MEMORY-BATCHING.md) records
+the unchanged 30/32 source score, bounded multilingual regressions and actual
+latency limits. Smaller batches and length grouping retain every candidate and
+source token; changed padding can change floating-point logits.

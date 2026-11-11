@@ -126,7 +126,7 @@ class ONNXReranker:
             self.session = OpenVINOSession(
                 graph,
                 max_tokens=self.spec.max_tokens,
-                batch_size=self.spec.batch_size,
+                batch_size=self.execution_batch_size,
                 requests=self.workers,
             )
         else:
@@ -196,6 +196,17 @@ class ONNXReranker:
             if not np.isfinite(original).all() or not np.array_equal(original, optimized):
                 return False
         return True
+
+    @property
+    def execution_batch_size(self) -> int:
+        # Smaller bounded GPU shapes reduce shared host/device scratch memory.
+        # The verified package still specifies the allowed/preferred batch size;
+        # CPU batching, complete passages and passage truncation stay unchanged.
+        return (
+            min(self.spec.batch_size, 4)
+            if self.spec.runtime == "openvino-gpu-f16"
+            else self.spec.batch_size
+        )
 
     def cache_info(self) -> dict[str, int]:
         with self._cache_lock:
@@ -286,12 +297,56 @@ class ONNXReranker:
         self.tokenizer.enable_truncation(max_length=self.spec.max_tokens, strategy="only_second")
         try:
             result: list[float] = []
-            batch_size = self.spec.batch_size
+            batch_size = self.execution_batch_size
+            order = list(range(len(passages)))
+            prepared: list[dict[str, NDArray[np.int64]]] = []
+            pad_id = self.tokenizer.token_to_id(self.spec.pad_token)
+            if self.spec.runtime == "openvino-gpu-f16":
+                # Keep the same truncated tokens for every pair, but group similar
+                # lengths so short GPU inputs do not inherit long-passage padding.
+                # Prepare only bounded batches: tokenizer overflow objects from
+                # long source passages must not accumulate across the whole call.
+                self.tokenizer.no_padding()
+                try:
+                    for start in range(0, len(passages), batch_size):
+                        encodings = self.tokenizer.encode_batch(
+                            [(query, p) for p in passages[start : start + batch_size]]
+                        )
+                        for encoding in encodings:
+                            prepared.append(
+                                {
+                                    "input_ids": np.asarray(encoding.ids, dtype=np.int64),
+                                    "attention_mask": np.asarray(
+                                        encoding.attention_mask, dtype=np.int64
+                                    ),
+                                    "token_type_ids": np.asarray(encoding.type_ids, dtype=np.int64),
+                                }
+                            )
+                finally:
+                    self.tokenizer.enable_padding(pad_id=pad_id, pad_token=self.spec.pad_token)
+                order.sort(key=lambda i: len(prepared[i]["input_ids"]))
 
             def inputs() -> Iterator[dict[str, NDArray[np.int64]]]:
-                # Tokenization stays on the caller thread. Inference workers see only
-                # immutable arrays, with the exact original batch membership/padding.
+                # Tokenization stays on the caller thread; workers receive only
+                # immutable arrays. CPU batch membership and padding are unchanged.
                 for start in range(0, len(passages), batch_size):
+                    if prepared:
+                        batch = [prepared[i] for i in order[start : start + batch_size]]
+                        length = max(len(row["input_ids"]) for row in batch)
+                        # Bound dynamic GPU shape variety across a long session.
+                        # Extra right-padding is masked; no source tokens are cut.
+                        length = min(self.spec.max_tokens, ((length + 15) // 16) * 16)
+                        values = {}
+                        for name in self.inputs:
+                            values[name] = np.full(
+                                (len(batch), length),
+                                pad_id if name == "input_ids" else 0,
+                                dtype=np.int64,
+                            )
+                            for i, row in enumerate(batch):
+                                values[name][i, : len(row[name])] = row[name]
+                        yield values
+                        continue
                     encodings = self.tokenizer.encode_batch(
                         [(query, passage) for passage in passages[start : start + batch_size]]
                     )
@@ -317,6 +372,11 @@ class ONNXReranker:
                         result.extend(scores)
                 finally:
                     pool.shutdown(wait=True, cancel_futures=True)
+            if prepared:
+                restored = [0.0] * len(result)
+                for index, value in zip(order, result, strict=True):
+                    restored[index] = value
+                return restored
             return result
         finally:
             self.tokenizer.no_truncation()

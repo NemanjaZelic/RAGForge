@@ -304,7 +304,7 @@ class BundleEngine:
         if rerank:
             model = self._get_reranker()
             # Distinct neutral inputs prepare worker buffers, not a user-query cache.
-            count = model.spec.batch_size * model.workers
+            count = model.execution_batch_size * model.workers
             model.score(
                 "warmup", [("warmup " + str(i) + " ") * model.spec.max_tokens for i in range(count)]
             )

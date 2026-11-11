@@ -137,7 +137,9 @@ def test_cpu_spec_keeps_legacy_serialization_and_gpu_dispatch(tiny_reranker, mon
     monkeypatch.setattr(intel_gpu, "OpenVINOSession", Session)
     model = ONNXReranker(tiny_reranker, threads=8, workers=8, cache_batches=0)
     assert model.workers == 2
-    assert calls == [{"max_tokens": 512, "batch_size": 8, "requests": 2}]
+    assert calls == [{"max_tokens": 512, "batch_size": 4, "requests": 2}]
+    assert model.spec.batch_size == 8
+    assert model.execution_batch_size == 4
     assert model.execution_optimization == "openvino-gpu-f16"
     assert len(model.score("warmup", ["warmup source"] * 9)) == 9
 
@@ -237,9 +239,177 @@ def test_gpu_graph_pages_warmed_after_shared_memory_allocations(runtime, expecte
     monkeypatch.setattr(engine, "_prepare_dense", lambda: None)
     model = SimpleNamespace(
         spec=SimpleNamespace(batch_size=8, max_tokens=512),
+        execution_batch_size=4 if runtime == "openvino-gpu-f16" else 8,
         workers=2,
         score=lambda *a: events.append("reranker"),
     )
     monkeypatch.setattr(engine, "_get_reranker", lambda: model)
     assert engine.warm_up() == {"query_model": True, "dense_index": True, "reranker": True}
     assert events == expected
+
+
+@pytest.mark.parametrize("declared", [1, 2, 4, 8])
+def test_gpu_execution_batch_respects_package_limit_and_keeps_every_passage(
+    tiny_reranker, monkeypatch, declared
+):
+    descriptor = tiny_reranker / "reranker.json"
+    spec = reranker_spec(tiny_reranker)
+    descriptor.write_text(
+        spec.model_copy(
+            update={"runtime": "openvino-gpu-f16", "batch_size": declared}
+        ).model_dump_json(),
+        encoding="utf-8",
+    )
+    batches = []
+
+    class Session:
+        def __init__(self, graph, **kwargs):
+            assert kwargs["batch_size"] == min(declared, 4)
+
+        def get_inputs(self):
+            return [SimpleNamespace(name="input_ids"), SimpleNamespace(name="attention_mask")]
+
+        def get_outputs(self):
+            return [SimpleNamespace(shape=[None, 1])]
+
+        def run(self, outputs, values):
+            batches.append(len(values["input_ids"]))
+            return [values["input_ids"].sum(axis=1, keepdims=True).astype(np.float32)]
+
+    monkeypatch.setattr(intel_gpu, "OpenVINOSession", Session)
+    model = ONNXReranker(tiny_reranker, threads=2, workers=2, cache_batches=0)
+    passages = ["warmup source " * (i + 1) for i in range(9)]
+    expected = [float(sum(model.tokenizer.encode("warmup", p).ids)) for p in passages]
+    assert model.score("warmup", passages) == expected
+    assert sum(batches) == 9 and max(batches) <= min(declared, 4)
+    assert model.spec.batch_size == declared
+    assert model.cache_info()["hits"] == 0
+    assert model.tokenizer.truncation is None
+
+
+@pytest.mark.parametrize("workers", [1, 2])
+def test_gpu_length_groups_keep_pair_tokens_masks_and_original_score_slots(
+    tiny_reranker, monkeypatch, workers
+):
+    from collections import Counter
+    from threading import Lock
+
+    spec = reranker_spec(tiny_reranker).model_copy(
+        update={"runtime": "openvino-gpu-f16", "pad_token": "[UNK]"}
+    )
+    (tiny_reranker / "reranker.json").write_text(spec.model_dump_json(), encoding="utf-8")
+    captured = []
+    shapes = []
+    lock = Lock()
+    fail = False
+
+    class Session:
+        def __init__(self, content, **kwargs):
+            pass
+
+        def get_inputs(self):
+            return [
+                SimpleNamespace(name=name)
+                for name in ("input_ids", "attention_mask", "token_type_ids")
+            ]
+
+        def get_outputs(self):
+            return [SimpleNamespace(shape=[None, 1])]
+
+        def run(self, outputs, values):
+            if fail:
+                raise RuntimeError("GPU failure")
+            scores = []
+            for ids, mask, types in zip(
+                values["input_ids"],
+                values["attention_mask"],
+                values["token_type_ids"],
+                strict=True,
+            ):
+                active = mask.astype(bool)
+                assert not types[~active].any()
+                assert (ids[~active] == model.tokenizer.token_to_id("[UNK]")).all()
+                tokens = tuple(
+                    zip(
+                        ids[active].tolist(),
+                        mask[active].tolist(),
+                        types[active].tolist(),
+                        strict=True,
+                    )
+                )
+                with lock:
+                    captured.append(tokens)
+                scores.append(sum((i + 1) * int(v) for i, v in enumerate(ids[active])))
+            with lock:
+                shapes.append(values["input_ids"].shape)
+            return [np.asarray(scores, dtype=np.float32).reshape(-1, 1)]
+
+    monkeypatch.setattr(intel_gpu, "OpenVINOSession", Session)
+    model = ONNXReranker(tiny_reranker, threads=2, workers=workers, cache_batches=0)
+    query = "transaction rollback"
+    passages = ["source " * n + "token" for n in [80, 1, 50, 3, 900, 5, 4, 100, 2]]
+    model.tokenizer.no_padding()
+    model.tokenizer.enable_truncation(max_length=512, strategy="only_second")
+    encodings = model.tokenizer.encode_batch([(query, p) for p in passages])
+    expected = [float(sum((i + 1) * v for i, v in enumerate(e.ids))) for e in encodings]
+    expected_tokens = [
+        tuple(zip(e.ids, e.attention_mask, e.type_ids, strict=True)) for e in encodings
+    ]
+    original_padding_work = sum(
+        max(len(e.ids) for e in encodings[i : i + 4]) * len(encodings[i : i + 4])
+        for i in range(0, len(encodings), 4)
+    )
+    model.tokenizer.no_truncation()
+    model.tokenizer.enable_padding(pad_id=model.tokenizer.token_to_id("[UNK]"), pad_token="[UNK]")
+    assert model.score(query, passages) == expected
+    assert Counter(captured) == Counter(expected_tokens)
+    assert sum(batch * length for batch, length in shapes) < original_padding_work
+    assert max(batch for batch, _ in shapes) <= 4
+    assert all(length % 16 == 0 for _, length in shapes)
+    assert model.tokenizer.truncation is None
+    assert model.tokenizer.padding["direction"] == "right"
+    assert model.cache_info()["hits"] == 0
+    fail = True
+    with pytest.raises(RuntimeError, match="GPU failure"):
+        model.score(query, passages)
+    assert model.tokenizer.truncation is None
+    assert model.tokenizer.padding["pad_token"] == "[UNK]"
+    fail = False
+    assert model.score(query, passages) == expected
+
+
+@pytest.mark.parametrize("max_tokens", [47, 48, 63, 512])
+def test_gpu_sequence_padding_is_bounded_by_the_packaged_token_limit(
+    tiny_reranker, monkeypatch, max_tokens
+):
+    spec = reranker_spec(tiny_reranker).model_copy(
+        update={"runtime": "openvino-gpu-f16", "max_tokens": max_tokens}
+    )
+    (tiny_reranker / "reranker.json").write_text(spec.model_dump_json(), encoding="utf-8")
+    seen = []
+
+    class Session:
+        def __init__(self, content, **kwargs):
+            assert kwargs["max_tokens"] == max_tokens
+
+        def get_inputs(self):
+            return [SimpleNamespace(name=n) for n in ("input_ids", "attention_mask")]
+
+        def get_outputs(self):
+            return [SimpleNamespace(shape=[None, 1])]
+
+        def run(self, outputs, values):
+            length = values["input_ids"].shape[1]
+            active = values["attention_mask"].sum(axis=1)
+            assert (active <= length).all()
+            assert length <= max_tokens
+            seen.append(length)
+            return [active.astype(np.float32).reshape(-1, 1)]
+
+    monkeypatch.setattr(intel_gpu, "OpenVINOSession", Session)
+    model = ONNXReranker(tiny_reranker, threads=1, workers=1, cache_batches=0)
+    short = model.score("token", ["source", "source source"])
+    assert len(short) == 2 and seen[-1] == 16
+    long = model.score("token", ["source " * 900])
+    assert long == [float(max_tokens)] and seen[-1] == max_tokens
+    assert model.tokenizer.truncation is None
