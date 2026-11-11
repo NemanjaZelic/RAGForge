@@ -243,6 +243,23 @@ def parser() -> argparse.ArgumentParser:
             sub.add_argument(
                 "--query-translation", help="Faithful query in the documentation language."
             )
+    for name in ("server-setup", "server"):
+        sub = commands.add_parser(
+            name,
+            help=(
+                "Prepare or renew remote AI client access."
+                if name == "server-setup"
+                else "Serve the latest documentation over authenticated HTTPS."
+            ),
+        )
+        sub.add_argument("--bundle", type=Path)
+        if name == "server-setup":
+            sub.add_argument("--url", help="Public HTTPS MCP URL, ending in /mcp.")
+            sub.add_argument("--tls-cert", type=Path)
+            sub.add_argument("--tls-key", type=Path)
+            sub.add_argument("--client", action="append", help="AI client ID; may be repeated.")
+        else:
+            sub.add_argument("--threads", type=int, choices=range(1, 33), default=default_threads)
     build.add_argument("--threads", type=int, choices=range(1, 33), default=default_threads)
     return command
 
@@ -269,7 +286,23 @@ def main(argv: list[str] | None = None) -> int:
             )
         else:
             bundle = arguments.bundle if arguments.bundle is not None else active_bundle(project)
-            if arguments.action == "agent":
+            if arguments.action == "server-setup":
+                from ragforge.shared.quickstart import prepare_server
+
+                prepare_server(
+                    project,
+                    bundle,
+                    url=arguments.url,
+                    tls_cert=arguments.tls_cert,
+                    tls_key=arguments.tls_key,
+                    clients=arguments.client,
+                )
+                print(f"Start the server: {LAUNCHER} server")
+            elif arguments.action == "server":
+                from ragforge.shared.quickstart import start_server
+
+                start_server(project, bundle, threads=arguments.threads)
+            elif arguments.action == "agent":
                 stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S") + "-" + uuid4().hex[:8]
                 output = (
                     arguments.output if arguments.output is not None else project / "agent" / stamp

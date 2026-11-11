@@ -1,5 +1,51 @@
 # RAGForge server za udaljene AI agente
 
+## Najkraće: dve komande
+
+Posle postojećeg `setup` i `build` toka, priprema pristupa i pokretanje servera
+rade kroz originalni launcher. Pre toga usmeri domen na server, otvori njegov
+port i smesti HTTPS sertifikat u `secrets/server.pem`, a njegov ključ u
+`secrets/server-key.pem`. Ove datoteke nisu JWT signing key: program njega pravi sam.
+
+**Windows PowerShell:**
+
+```powershell
+.\ragforge.cmd server-setup --url https://rag.tvoj-domen.com:8765/mcp
+.\ragforge.cmd server
+```
+
+**Linux Bash:**
+
+```bash
+bash ragforge.sh server-setup --url https://rag.tvoj-domen.com:8765/mcp
+bash ragforge.sh server
+```
+
+Prva komanda traži lozinku za šifrovanje novog signing ključa, automatski pravi
+policy za kolekciju poslednjeg uspešnog build-a, token za `ai-client-1` i
+uputstvo `CONNECT.md`. Ispisuje URL i putanju foldera sa klijentskim fajlovima,
+bez prikazivanja tokena. Nije potrebno kopirati dodatnu Python skriptu niti
+obezbediti odvojeni issuer servis. Ovo je ručno izdavanje Bearer tokena;
+interaktivni OAuth login nije uključen.
+
+Za više AI klijenata prvoj komandi dodaj `--client ai-one --client ai-two`.
+Svaki dobija svoj `.jwt` fajl. Sertifikat i ključ na drugom mestu navode se
+opcijama `--tls-cert` i `--tls-key`. Podešavanja se čuvaju u `secrets/server/`,
+koji je izuzet iz Git-a. Nikada ne šalji taj ceo folder klijentima.
+
+Druga komanda čita sačuvani policy i sertifikat, bira poslednji gotov paket i
+ostaje pokrenuta kao HTTPS server. Koristi port iz URL-a (443 ako port izostaviš).
+AI aplikaciji zadaj ispisani MCP URL, Streamable HTTP transport i Bearer token
+iz njenog `.jwt` fajla. Klijent mora podržavati podešavanje Bearer autorizacije.
+
+Tokeni važe 60 minuta. Za obnovu ponovi `server-setup` bez argumenata; unesi
+istu lozinku i uzmi tokene iz novog ispisanog foldera. Ključ i grantovi ostaju isti;
+stari tokeni važe do svog isteka. Obnova tokena ne zahteva restart servera.
+Promenu URL-a/grantova radi kroz napredni policy tok ispod. Novi build zahteva
+restart `server` komande da bi server učitao novi paket iste kolekcije.
+
+## Napredno: ručna konfiguracija i postojeći identity provider
+
 Serverski REST i MCP HTTP režim već su implementirani. Ovaj vodič koristi
 postojeće komande i isti retrieval engine kao lokalni build. Ne instalira uslugu
 na udaljenom hostu. Stvarni domen, sertifikat, naloge i tokene priprema operator.
