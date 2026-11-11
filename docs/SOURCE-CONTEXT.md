@@ -105,3 +105,9 @@ old fallback within the same three-query ceiling. Source text, grants, output
 budgets and the 16 duplicate-slot limit remain. No extra neural pass or catalogue
 rebuild is needed. See the [compound-definition check](COMPOUND-DEFINITION-RECOVERY.md)
 for the demonstrated recovery, unchanged original 30/32 score and measured costs.
+
+## Later acronym experiment
+
+A [bounded three-prototype comparison](ACRONYM-CONTEXT-EXPERIMENT.md) found no
+confirmed additional whole-question recovery. None of its acronym-ranking
+changes was adopted; the preceding retrieval implementation remains in use.
