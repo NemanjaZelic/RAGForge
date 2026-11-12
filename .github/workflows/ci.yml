@@ -109,3 +109,18 @@ jobs:
           bash ragforge.sh agent --output ".cache/English agent with spaces"
       - name: English profile actual generated MCP connection
         run: .venv/bin/python scripts/check_quickstart_mcp.py ".cache/English agent with spaces/mcp.json"
+
+  docker-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.13.6"
+          python-version: "3.13"
+      - run: uv sync --locked --all-extras
+      - name: Verify public Docker proxy, TLS, auth and retrieval
+        env:
+          RAGFORGE_TEST_DOCKER: "1"
+        run: uv run --no-sync pytest tests/test_public_docker.py -q

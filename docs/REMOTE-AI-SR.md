@@ -1,5 +1,7 @@
 # RAGForge server za udaljene AI agente
 
+Za VPS sa Docker-om i javnim domenom koristi novi [Docker + automatski HTTPS + AI povezivanje](PUBLIC-DEPLOY.md) tok. On generiše stranicu `/connect`, gotov skill i klijentske konfiguracije, bez ručnog pravljenja sertifikata.
+
 ## Najkraće: dve komande
 
 Posle postojećeg `setup` i `build` toka, priprema pristupa i pokretanje servera

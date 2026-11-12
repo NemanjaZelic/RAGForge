@@ -260,6 +260,16 @@ def parser() -> argparse.ArgumentParser:
             sub.add_argument("--client", action="append", help="AI client ID; may be repeated.")
         else:
             sub.add_argument("--threads", type=int, choices=range(1, 33), default=default_threads)
+    renewal = commands.add_parser(
+        "publish-renew", help="Renew a public deployment's client tokens."
+    )
+    renewal.add_argument("--deployment", required=True, type=Path)
+    public = commands.add_parser("publish", help="Prepare a portable Docker/Caddy public server.")
+    public.add_argument("--domain", required=True, help="Public DNS name, e.g. rag.example.com.")
+    public.add_argument("--bundle", type=Path)
+    public.add_argument("--output", type=Path)
+    public.add_argument("--client", action="append")
+    public.add_argument("--start", action="store_true", help="Build/start Docker on this machine.")
     build.add_argument("--threads", type=int, choices=range(1, 33), default=default_threads)
     return command
 
@@ -268,7 +278,11 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser().parse_args(argv)
     try:
         project = arguments.project.resolve(strict=True)
-        if arguments.action == "build":
+        if arguments.action == "publish-renew":
+            from ragforge.shared.public_docker import renew_clients
+
+            renew_clients(arguments.deployment)
+        elif arguments.action == "build":
             bundle = ready_documentation(
                 project,
                 arguments.documents,
@@ -286,7 +300,17 @@ def main(argv: list[str] | None = None) -> int:
             )
         else:
             bundle = arguments.bundle if arguments.bundle is not None else active_bundle(project)
-            if arguments.action == "server-setup":
+            if arguments.action == "publish":
+                from ragforge.shared.public_docker import create_deployment, start_deployment
+
+                stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S") + "-" + uuid4().hex[:8]
+                output = arguments.output or project / "deployments" / ("public-" + stamp)
+                directory = create_deployment(
+                    project, bundle, output, domain=arguments.domain, clients=arguments.client
+                )
+                if arguments.start:
+                    start_deployment(directory)
+            elif arguments.action == "server-setup":
                 from ragforge.shared.quickstart import prepare_server
 
                 prepare_server(

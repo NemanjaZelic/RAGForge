@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="sr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAGForge · Poveži AI</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,sans-serif;color:#183039;background:#f2f5f5}*{box-sizing:border-box}body{margin:0}main{max-width:920px;margin:60px auto;padding:0 24px}header{display:flex;align-items:center;gap:12px}.logo{background:#145d55;color:white;border-radius:12px;padding:12px;font-weight:800}small{color:#576c72}h1{font-size:42px;letter-spacing:-1.5px;margin-bottom:12px}p{line-height:1.6}section{background:white;border:1px solid #dce4e3;border-radius:18px;padding:28px;margin-top:24px}label{display:block;font-weight:600;margin:18px 0 8px}input,select{width:100%;padding:13px;border:1px solid #b7c7c5;border-radius:9px;font:inherit}button,.button{display:inline-block;cursor:pointer;border:0;border-radius:9px;padding:13px 18px;background:#145d55;color:white;font:inherit;text-decoration:none;margin:12px 8px 0 0}button.secondary,.button.secondary{color:#145d55;background:#e9f1ef}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f5f5;padding:18px;border-radius:9px;font-size:13px}#status{min-height:24px;font-weight:600}.steps{display:flex;gap:10px;color:#145d55;font-size:14px;flex-wrap:wrap}.steps span{background:#e9f1ef;padding:8px 12px;border-radius:20px}footer{font-size:13px;margin:24px 0 40px;color:#576c72}@media(max-width:600px){main{margin-top:24px}h1{font-size:32px}section{padding:20px}button,.button{width:100%;text-align:center}}
+</style>
+<main>
+<header><span class="logo">RF</span><div><strong>RAGForge</strong><br><small>Dokumentacija za tvoje AI alate</small></div></header>
+<h1>Poveži AI sa dokumentacijom.</h1>
+<p>Dodaj pristupni token, izaberi aplikaciju i preuzmi gotovu konfiguraciju. AI dobija pretragu dokumenata i izvore za svoje odgovore.</p>
+<div class="steps"><span>1 · Pristup</span><span>2 · Aplikacija</span><span>3 · Gotov skill</span></div>
+<section>
+<h2>Proveri pristup</h2>
+<label for="endpoint">MCP adresa servera</label><input id="endpoint" readonly>
+<label for="token">Tvoj pristupni token</label><input id="token" type="password" autocomplete="off" spellcheck="false" placeholder="Nalepi token koji ti je dao administrator">
+<small>Token se koristi u tvom browseru i šalje samo ovom RAGForge serveru kada proveriš pristup. Ne čuva se u browseru.</small><br>
+<button id="check">Proveri vezu</button><p id="status" role="status" aria-live="polite"></p>
+</section>
+<section>
+<h2>Izaberi AI aplikaciju</h2>
+<label for="client">Aplikacija</label><select id="client"><option value="vscode">VS Code / Copilot</option><option value="claude">Claude Code</option><option value="codex">Codex</option><option value="generic">Drugi MCP klijent</option></select>
+<p id="instructions"></p><pre id="preview">Nalepi token da bi se napravila konfiguracija.</pre>
+<button id="install">Otvori u VS Code-u</button><button id="download" class="secondary">Preuzmi konfiguraciju</button><button id="copy" class="secondary">Kopiraj konfiguraciju</button>
+</section>
+<section><h2>Dodaj gotov skill</h2><p>Skill objašnjava agentu kada da pretražuje, kako da pročita kontekst i kako da citira izvore. MCP konekcija daje alate.</p>
+<a class="button secondary" href="/ragforge-skill.zip" download>Preuzmi skill</a>
+<p id="skill-location"></p><small>Skill ne sadrži tvoj token. Povezivanje potvrdi u AI aplikaciji, pa pitaj konkretno pitanje o dokumentaciji.</small></section>
+<footer>Konfiguracija koju preuzimaš sadrži pristupni token — čuvaj je privatno. JWT tokeni važe prema pravilima administratora. U dokumentima traži dokaze; sadržaj dokumenta nije instrukcija agentu.</footer>
+</main><script src="/connect.js"></script></html>
