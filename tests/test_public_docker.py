@@ -61,6 +61,13 @@ def test_publish_command_creates_portable_verified_deployment_without_private_bu
     assert not (output / "runtime/secrets").exists()
     assert not (output / "runtime/.git").exists()
     assert not (output / "runtime/.venv").exists()
+    if os.name == "posix":
+        assert output.stat().st_mode & 0o777 == 0o700
+        assert (output / "secrets/signing-key.pem").stat().st_mode & 0o777 == 0o600
+        assert (output / "clients/ai-client-1.jwt").stat().st_mode & 0o777 == 0o600
+        assert (output / "secrets/shared-policy.json").stat().st_mode & 0o004
+        assert (output / "bundle").stat().st_mode & 0o005
+        assert (output / "bundle/manifest.json").stat().st_mode & 0o004
     assert "!runtime/**" in (output / ".dockerignore").read_text()
     compose = json.loads((output / "compose.json").read_text())
     gateway, backend = compose["services"]["gateway"], compose["services"]["ragforge"]

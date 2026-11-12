@@ -2,6 +2,7 @@
 
 import getpass
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -123,6 +124,14 @@ def create_deployment(
                 serialization.BestAvailableEncryption(password.encode("utf-8")),
             ),
         )
+        if os.name == "posix":
+            # cap_drop=ALL also removes root's DAC override. Only the copied
+            # read-only inputs must be readable across the bind mount. The outer
+            # deployment stays mode 0700; signing/client credentials stay 0600.
+            (secrets / "shared-policy.json").chmod(0o644)
+            for copied in (stage / "bundle").rglob("*"):
+                copied.chmod(0o755 if copied.is_dir() else 0o644)
+            (stage / "bundle").chmod(0o755)
         credentials = write_clients(secrets, policy, private)
         shutil.move(str(credentials), str(stage / "clients"))
         (stage / "Dockerfile").write_text(DOCKERFILE, encoding="utf-8")
